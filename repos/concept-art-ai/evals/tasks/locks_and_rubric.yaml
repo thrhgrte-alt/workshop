@@ -1,0 +1,391 @@
+- id: lock-focal-holds
+  title: A bright focal box centred as locked passes
+  input:
+    op: lock
+    image: &id002
+      kind: box
+      bg: '#101010'
+      fg: '#f0f0f0'
+      box:
+      - 0.4
+      - 0.4
+      - 0.6
+      - 0.6
+    lock:
+      focal_box: &id001
+      - 0.4
+      - 0.4
+      - 0.6
+      - 0.6
+  checks:
+  - type: equals
+    path: errors
+    value: []
+  - type: equals
+    path: codes
+    value: []
+- id: lock-flat-fails
+  title: A flat image fails a focal-contrast lock
+  input:
+    op: lock
+    image:
+      kind: solid
+      color: '#808080'
+    lock:
+      focal_box: *id001
+  checks:
+  - type: list_contains
+    path: errors
+    items:
+    - focal_contrast_low
+- id: lock-detail-elsewhere
+  title: Strong detail in a far corner fails contrast and warns that edge energy is far from the focus
+  input:
+    op: lock
+    image:
+      kind: box
+      bg: '#101010'
+      fg: '#f0f0f0'
+      box:
+      - 0.0
+      - 0.0
+      - 0.2
+      - 0.2
+    lock:
+      focal_box: *id001
+  checks:
+  - type: list_contains
+    path: codes
+    items:
+    - focal_contrast_low
+    - detail_far_from_focus
+- id: lock-tolerance-configurable
+  title: A looser tolerance accepts off-centre detail
+  input:
+    op: lock
+    image:
+      kind: box
+      bg: '#101010'
+      fg: '#f0f0f0'
+      box:
+      - 0.55
+      - 0.4
+      - 0.8
+      - 0.6
+    lock:
+      focal_box: *id001
+      min_focal_contrast: 0.01
+      centroid_tolerance: 0.9
+  checks:
+  - type: equals
+    path: errors
+    value: []
+  - type: list_excludes
+    path: codes
+    items:
+    - detail_far_from_focus
+- id: lock-without-box-has-no-findings
+  title: No focal box locked means nothing to check
+  input:
+    op: lock
+    image: *id002
+    lock: {}
+  checks:
+  - type: equals
+    path: codes
+    value: []
+- id: lock-rejects-inverted-box
+  title: A malformed focal_box (inverted) is refused
+  input:
+    op: lock
+    image: *id002
+    lock:
+      focal_box:
+      - 0.6
+      - 0.6
+      - 0.4
+      - 0.4
+  checks:
+  - type: error_contains
+    text: focal_box must be
+- id: lock-rejects-out-of-range-box
+  title: A malformed focal_box (out-of-range) is refused
+  input:
+    op: lock
+    image: *id002
+    lock:
+      focal_box:
+      - 0.4
+      - 0.4
+      - 1.4
+      - 0.6
+  checks:
+  - type: error_contains
+    text: focal_box must be
+- id: lock-rejects-wrong-length-box
+  title: A malformed focal_box (wrong-length) is refused
+  input:
+    op: lock
+    image: *id002
+    lock:
+      focal_box:
+      - 0.4
+      - 0.4
+      - 0.6
+  checks:
+  - type: error_contains
+    text: focal_box must be
+- id: rubric-env-incomplete-without-judgment
+  title: Without manual scores the rubric is incomplete and does not pass, whatever the pixels say
+  input:
+    op: evaluate
+    brief: &id003
+      subject: a ruined lighthouse
+      kind: environment
+    image:
+      kind: direction
+      size:
+      - 384
+      - 216
+      seed: 1
+  checks:
+  - type: equals
+    path: complete
+    value: false
+  - type: equals
+    path: passed
+    value: false
+  - type: list_contains
+    path: unscored
+    items:
+    - brief_adherence
+    - usability_as_reference
+    - style_cohesion
+    - readability
+  - type: equals
+    path: status
+    value: concept_only
+- id: rubric-judged-by-a-person-lists-manual
+  title: The result says which criteria need a person
+  input:
+    op: evaluate
+    brief: *id003
+    image:
+      kind: direction
+      size:
+      - 384
+      - 216
+      seed: 1
+  checks:
+  - type: list_contains
+    path: judged_by_a_person
+    items:
+    - brief_adherence
+    - usability_as_reference
+    - style_cohesion
+    - readability
+- id: rubric-env-passes-with-judgment
+  title: A well-formed image plus positive human scores passes
+  input:
+    op: evaluate
+    brief: *id003
+    image:
+      kind: direction
+      size:
+      - 384
+      - 216
+      seed: 1
+    manual_scores:
+      brief_adherence: 0.8
+      usability_as_reference: 0.8
+      style_cohesion: 0.9
+      readability: 0.9
+  checks:
+  - type: equals
+    path: complete
+    value: true
+  - type: equals
+    path: passed
+    value: true
+  - type: equals
+    path: required_failures
+    value: []
+- id: rubric-human-veto-brief
+  title: A person who says it ignores the brief fails it
+  input:
+    op: evaluate
+    brief: *id003
+    image:
+      kind: direction
+      size:
+      - 384
+      - 216
+      seed: 1
+    manual_scores:
+      brief_adherence: 0.1
+      usability_as_reference: 0.9
+      style_cohesion: 0.9
+      readability: 0.9
+  checks:
+  - type: equals
+    path: passed
+    value: false
+  - type: list_contains
+    path: required_failures
+    items:
+    - brief_adherence
+- id: rubric-hybrid-takes-the-lower
+  title: 'A hybrid criterion takes the lower of metric and person: a high metric cannot overrule a low human score'
+  input:
+    op: evaluate
+    brief: *id003
+    image:
+      kind: direction
+      size:
+      - 384
+      - 216
+      seed: 1
+    manual_scores:
+      brief_adherence: 0.9
+      usability_as_reference: 0.9
+      style_cohesion: 0.2
+      readability: 0.9
+  checks:
+  - type: equals
+    path: passed
+    value: false
+  - type: list_contains
+    path: required_failures
+    items:
+    - style_cohesion
+  - type: approx
+    path: criteria.style_cohesion
+    value: 0.2
+    tol: 0.001
+- id: rubric-flat-image-fails-required
+  title: A flat image fails the not_degenerate requirement even with generous human scores
+  input:
+    op: evaluate
+    brief: *id003
+    with_direction: false
+    image:
+      kind: solid
+      color: '#808080'
+    manual_scores:
+      brief_adherence: 0.9
+      usability_as_reference: 0.9
+      style_cohesion: 0.9
+      readability: 0.9
+  checks:
+  - type: equals
+    path: passed
+    value: false
+  - type: list_contains
+    path: required_failures
+    items:
+    - not_degenerate
+  - type: approx
+    path: criteria.not_degenerate
+    value: 0.0
+    tol: 0.001
+- id: rubric-lock-violation-fails
+  title: A locked composition that does not hold fails locks_respected
+  input:
+    op: evaluate
+    brief:
+      subject: a ruined lighthouse
+      kind: environment
+      locked:
+        composition:
+          focal_box: *id001
+    with_direction: false
+    image:
+      kind: split
+      left: '#303030'
+      right: '#303838'
+    manual_scores:
+      brief_adherence: 0.9
+      usability_as_reference: 0.9
+      style_cohesion: 0.9
+      readability: 0.9
+  checks:
+  - type: equals
+    path: passed
+    value: false
+  - type: list_contains
+    path: required_failures
+    items:
+    - locks_respected
+- id: rubric-no-lock-scores-one
+  title: Nothing locked means locks_respected scores 1.0 (not applicable), not unscored
+  input:
+    op: evaluate
+    brief: *id003
+    image:
+      kind: direction
+      size:
+      - 384
+      - 216
+      seed: 1
+  checks:
+  - type: approx
+    path: criteria.locks_respected
+    value: 1.0
+    tol: 0.001
+- id: rubric-prop-has-silhouette-criterion
+  title: The prop rubric adds a silhouette criterion; environments do not have it
+  input:
+    op: evaluate
+    brief: &id004
+      subject: an iron lantern
+      kind: prop
+    image:
+      kind: direction
+      size:
+      - 256
+      - 256
+      seed: 2
+      brief: *id004
+  checks:
+  - type: list_contains
+    path: unscored
+    items:
+    - silhouette_clear
+  - type: text_has
+    path: criteria
+    text: silhouette_clear
+- id: rubric-env-has-no-silhouette-criterion
+  title: Environment rubric has no silhouette criterion
+  input:
+    op: evaluate
+    brief: *id003
+    image:
+      kind: direction
+      size:
+      - 384
+      - 216
+      seed: 1
+  checks:
+  - type: text_lacks
+    path: criteria
+    text: silhouette_clear
+- id: rubric-passes-need-scores-in-range
+  title: Subjective criteria are labelled subjective, not ground truth
+  input:
+    op: evaluate
+    brief: *id003
+    image:
+      kind: direction
+      size:
+      - 384
+      - 216
+      seed: 1
+    manual_scores:
+      brief_adherence: 0.7
+  checks:
+  - type: equals
+    path: passed
+    value: false
+  - type: equals
+    path: complete
+    value: false

@@ -1,0 +1,21 @@
+- id: search-purple-magic-burst
+  title: Retrieval finds the burst reference and surfaces matching 'avoid' examples
+  input: {op: search, query: "purple magic burst", k: 3}
+  checks:
+    - {type: equals, path: retrieved.0, value: arcane-burst-purple-001}
+    - {type: retrieved_not, ids: [burst-unreviewed-import, burst-too-heavy]}
+    - {type: list_contains, path: avoid, items: [burst-too-heavy]}
+- id: search-kind-filter-beam
+  input: {op: search, query: "cyan beam", effect_kind: beam, k: 5}
+  checks:
+    - {type: equals, path: retrieved.0, value: energy-beam-cyan-001}
+    - {type: retrieved_not, ids: [arcane-burst-purple-001, ember-aura-warm-001]}
+- id: search-warm-palette
+  input: {op: search, query: "", palette: ["#ff8c26", "#8c1f14"], k: 2}
+  checks: [{type: equals, path: retrieved.0, value: ember-aura-warm-001}]
+- id: search-trail
+  input: {op: search, query: "speed movement trail", k: 2}
+  checks: [{type: equals, path: retrieved.0, value: sprint-trail-blue-001}]
+- id: search-hides-uncurated
+  input: {op: search, query: "unreviewed burst import", k: 10}
+  checks: [{type: retrieved_not, ids: [burst-unreviewed-import]}]

@@ -1,0 +1,5 @@
+id: fx_missing_output
+parameters: {}
+nodes: [{id: col, node: uniform}]
+connections: []
+outputs: [{usage: baseColor, from: col.output}]

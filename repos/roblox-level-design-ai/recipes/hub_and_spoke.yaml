@@ -1,0 +1,37 @@
+id: hub_and_spoke
+title: Hub and spoke
+description: >
+  A central hub with four spokes (N/E/S/W). Two teams spawn in the west and east spokes and contest the hub objective. Doors are staggered so no straight sightline crosses the hub from spawn to spawn.
+  North and south are loot dead ends. A classic readable layout; it has no loops by design.
+parameters:
+  hub:     {min: 24, max: 64, default: 40, description: Hub width and depth in studs}
+  spoke_w: {min: 24, max: 40, default: 24, description: Spoke width in studs (at least 24 so staggered doors fit the wall frame; must not exceed the hub)}
+  spoke_d: {min: 16, max: 48, default: 32, description: Spoke length in studs}
+  room_h:  {min: 12, max: 40, default: 16, description: Ceiling height of every room}
+spec:
+  profile: hub
+  title: Hub and spoke
+  purpose: Two-team objective fight around a central hub
+  bounds: {width: "=hub + 2*spoke_d", depth: "=hub + 2*spoke_d", ceiling: "=room_h"}
+  rooms:
+    - {id: hub,   rect: ["=spoke_d", "=spoke_d", "=hub", "=hub"], height: "=room_h", tags: [hub]}
+    - {id: north, rect: ["=spoke_d + round((hub - spoke_w)/8)*4", 0, "=spoke_w", "=spoke_d"], height: "=room_h", tags: [loot]}
+    - {id: south, rect: ["=spoke_d + round((hub - spoke_w)/8)*4", "=spoke_d + hub", "=spoke_w", "=spoke_d"], height: "=room_h", tags: [loot]}
+    - {id: west,  rect: [0, "=spoke_d + round((hub - spoke_w)/8)*4", "=spoke_d", "=spoke_w"], height: "=room_h", tags: [spawn]}
+    - {id: east,  rect: ["=spoke_d + hub", "=spoke_d + round((hub - spoke_w)/8)*4", "=spoke_d", "=spoke_w"], height: "=room_h", tags: [spawn]}
+  connections:
+    - {id: c_north, from: hub, to: north, kind: door, at: "=spoke_d + round((hub - spoke_w)/8)*4 + spoke_w/4"}
+    - {id: c_south, from: hub, to: south, kind: door, at: "=spoke_d + round((hub - spoke_w)/8)*4 + 3*spoke_w/4"}
+    - {id: c_west,  from: hub, to: west,  kind: door, at: "=spoke_d + round((hub - spoke_w)/8)*4 + spoke_w/4"}
+    - {id: c_east,  from: hub, to: east,  kind: door, at: "=spoke_d + round((hub - spoke_w)/8)*4 + 3*spoke_w/4"}
+  spawns:
+    - {id: spawn_a, at: ["=spoke_d/2", "=spoke_d + hub/2"], team: a}
+    - {id: spawn_b, at: ["=spoke_d + hub + spoke_d/2", "=spoke_d + hub/2"], team: b}
+  objectives:
+    - {id: core, at: ["=spoke_d + hub/2", "=spoke_d + hub/2"], kind: capture}
+  landmarks:
+    - {id: tower, at: ["=spoke_d + hub/2", "=spoke_d + hub/2 + 8"], height: 36, tags: [central]}
+  encounters:
+    - {id: fight_hub, room: hub, intensity: 4}
+    - {id: guard_north, room: north, intensity: 2}
+    - {id: guard_south, room: south, intensity: 2}

@@ -1,0 +1,48 @@
+# Machine-readable style spec. Read by tools and checks. The human-editable companion is STYLE.md.
+#
+# !! This is a STARTER TEMPLATE for a chunky, readable, stylized look (the kind that suits low-poly
+# !! environments). It is NOT your style until you edit it: replace the traits, palette and ranges
+# !! with measurements from your own approved materials (see STYLE.md, "Calibrating the ranges").
+version: 1
+name: Chunky stylized materials (starter template)
+summary: >
+  Large readable shapes, softened bevels, low micro-detail, restrained two-tone palettes with a clear
+  value separation between raised surfaces and crevices. Materials must tile and stay legible at a
+  distance.
+required_maps: [baseColor, normal, roughness, height]
+traits:
+  shape_language: [chunky, rounded-bevels, large-forms]
+  detail_density: low
+  surface_treatment: hand-painted, gentle gradients, minimal noise
+  value_structure: dark crevices, mid-value faces, soft highlights on raised edges
+  palette_family: cool greys for stone, warm browns for wood and soil
+  palette_hex: ["#5c6670", "#8a96a3", "#2b3036", "#8b5a2b", "#c68642", "#4a2f17"]
+  roughness: mostly 0.6-0.9, little variation
+  graph_organization: one frame per stage (shape, detail, colour, outputs); expose 4-8 meaningful parameters
+ranges:
+  baseColor_seam_score: {max: 2.0, severity: error, note: base colour must tile (a hard seam scores ~9, clean tiles ~1-1.5)}
+  normal_seam_score: {max: 2.0, severity: error, note: normal map must tile (a hard seam scores ~9, clean tiles ~1-1.5)}
+  roughness_seam_score: {max: 2.0, severity: error, note: roughness must tile (a hard seam scores ~9, clean tiles ~1-1.5)}
+  height_seam_score: {max: 2.0, severity: error, note: height must tile (a hard seam scores ~9, clean tiles ~1-1.5)}
+  basecolor_contrast:   {min: 0.15, max: 0.85, severity: warning, note: p95-p5 luminance; keep readable but not harsh}
+  basecolor_saturation: {max: 0.75, severity: warning, note: avoid garish colour}
+  basecolor_detail_frequency: {max: 0.45, severity: warning, note: share of fine-detail spectral energy; low = stylized}
+  basecolor_palette_adherence: {min: 0.35, severity: warning, note: similarity to the palette in traits.palette_hex}
+  roughness_mean:   {min: 0.3, max: 1.0, severity: warning, note: avoid mirror-like surfaces}
+  roughness_spread: {max: 0.5, severity: warning, note: roughness should vary gently}
+  height_spread:    {min: 0.1, severity: warning, note: height must have usable range}
+  normal_mean_length: {min: 0.85, max: 1.15, severity: error, note: decoded normals should be roughly unit length}
+  normal_mean_z:    {min: 0.5, severity: error, note: tangent-space normals should face outward}
+constraints:
+  - {id: S1, severity: must,   rule: Every material tiles seamlessly in both directions.}
+  - {id: S2, severity: must,   rule: Output the maps required by the project (baseColor, normal, roughness, height).}
+  - {id: S3, severity: must,   rule: Use only nodes from recipes/node_catalog.yaml; never invent node ids or parameter ids.}
+  - {id: S4, severity: should, rule: Prefer a recipe plus parameters over building a graph node by node.}
+  - {id: S5, severity: should, rule: Keep the dominant form readable at a quarter of the texture resolution.}
+  - {id: S6, severity: should, rule: Expose parameters for scale, bevel softness, contrast and colours.}
+exclusions:
+  - photoreal micro detail or heavy grunge noise
+  - high-frequency noise in base colour
+  - strong specular variation in roughness
+  - saturated, neon, or highly contrasting palettes unless the brief asks for it
+correction_dimensions: [shape_scale, bevel_roundness, edge_wear, palette, contrast, roughness, detail_density, tiling, graph_organization]

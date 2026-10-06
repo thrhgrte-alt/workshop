@@ -1,0 +1,15 @@
+# Material rubric. 'auto' = measured from exported maps. 'manual' = a person or a vision model looks at
+# the preview and scores 0-1; those scores are JUDGMENTS, recorded as subjective, never ground truth.
+# 'hybrid' needs both and takes the lower (either can veto).
+pass_at: 0.7
+criteria:
+  - {id: maps_present,    method: auto,   weight: 2, required: true, description: All required maps were exported.}
+  - {id: tileable,        method: auto,   weight: 3, required: true, description: No visible seam when tiled.}
+  - {id: normal_valid,    method: auto,   weight: 1, required: true, description: Normal map decodes to plausible unit vectors.}
+  - {id: value_contrast,  method: auto,   weight: 1, description: Base colour has readable value separation.}
+  - {id: palette_match,   method: auto,   weight: 1, description: Dominant colours resemble the style palette.}
+  - {id: detail_level,    method: auto,   weight: 1, description: Detail stays in the style's low range.}
+  - {id: roughness_range, method: auto,   weight: 1, description: Roughness is in the allowed band.}
+  - {id: reads_as_intended, method: manual, weight: 2, required: true, description: Looks like the requested material at a glance.}
+  - {id: matches_style,   method: hybrid, weight: 3, required: true, description: Matches the user's shape language and detail level (manual verdict + measured ranges).}
+  - {id: graph_quality,   method: manual, weight: 1, description: Graph is organized and parameters are meaningful.}

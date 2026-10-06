@@ -1,0 +1,665 @@
+{
+ "classes": {
+  "BasePart": {
+   "inherits": [
+    "PVInstance"
+   ],
+   "methods": [
+    "AngularAccelerationToTorque",
+    "ApplyAngularImpulse",
+    "ApplyImpulse",
+    "ApplyImpulseAtPosition",
+    "BreakJoints",
+    "breakJoints",
+    "CanCollideWith",
+    "CanSetNetworkOwnership",
+    "GetClosestPointOnSurface",
+    "GetConnectedParts",
+    "GetJoints",
+    "GetMass",
+    "getMass",
+    "GetNetworkOwner",
+    "GetNetworkOwnershipAuto",
+    "GetNoCollisionConstraints",
+    "GetRenderCFrame",
+    "GetRootPart",
+    "GetTouchingParts",
+    "GetVelocityAtPosition",
+    "IntersectAsync",
+    "IsGrounded",
+    "MakeJoints",
+    "makeJoints",
+    "Resize",
+    "resize",
+    "SetNetworkOwner",
+    "SetNetworkOwnershipAuto",
+    "SubtractAsync",
+    "TorqueToAngularAcceleration",
+    "UnionAsync"
+   ],
+   "properties": {
+    "Anchored": {
+     "deprecated": false,
+     "summary": "Determines whether a part is immovable by physics.",
+     "type": "boolean"
+    },
+    "AssemblyAngularVelocity": {
+     "deprecated": false,
+     "summary": "The angular velocity of the part's assembly.",
+     "type": "Vector3"
+    },
+    "AssemblyCenterOfMass": {
+     "deprecated": false,
+     "summary": "The center of mass of the part's assembly in world space.",
+     "type": "Vector3"
+    },
+    "AssemblyLinearVelocity": {
+     "deprecated": false,
+     "summary": "The linear velocity of the part's assembly.",
+     "type": "Vector3"
+    },
+    "AssemblyMass": {
+     "deprecated": false,
+     "summary": "The total mass of the part's assembly.",
+     "type": "float"
+    },
+    "AssemblyRootPart": {
+     "deprecated": false,
+     "summary": "A reference to the root part of the assembly.",
+     "type": "BasePart"
+    },
+    "AudioCanCollide": {
+     "deprecated": false,
+     "summary": "Determines whether the part will physically interact with audio simulation, similar to `Class.BasePart.CastShadow|CastShadow` for lighting.",
+     "type": "boolean"
+    },
+    "BackParamA": {
+     "deprecated": false,
+     "summary": "Determines the first parameter for the SurfaceType on the Back face of a part.",
+     "type": "float"
+    },
+    "BackParamB": {
+     "deprecated": false,
+     "summary": "Determines the second parameter for the SurfaceType on the Back face of a part.",
+     "type": "float"
+    },
+    "BackSurface": {
+     "deprecated": false,
+     "summary": "Determines the type of surface for the back face of a part.",
+     "type": "SurfaceType"
+    },
+    "BackSurfaceInput": {
+     "deprecated": false,
+     "summary": "Determines the kind of input for the Back face of a part.",
+     "type": "InputType"
+    },
+    "BottomParamA": {
+     "deprecated": false,
+     "summary": "Determines the first parameter for the SurfaceType on the Bottom face of a part.",
+     "type": "float"
+    },
+    "BottomParamB": {
+     "deprecated": false,
+     "summary": "Determines the second parameter for the SurfaceType on the Bottom face of a part.",
+     "type": "float"
+    },
+    "BottomSurface": {
+     "deprecated": false,
+     "summary": "Determines the type of surface for the bottom face of a part.",
+     "type": "SurfaceType"
+    },
+    "BottomSurfaceInput": {
+     "deprecated": false,
+     "summary": "Determines the kind of input for the Bottom face of a part.",
+     "type": "InputType"
+    },
+    "BrickColor": {
+     "deprecated": false,
+     "summary": "Determines the color of a part.",
+     "type": "BrickColor"
+    },
+    "CFrame": {
+     "deprecated": false,
+     "summary": "Determines the position and orientation of the `Class.BasePart` in the world.",
+     "type": "CFrame"
+    },
+    "CanCollide": {
+     "deprecated": false,
+     "summary": "Determines whether a part may collide with other parts.",
+     "type": "boolean"
+    },
+    "CanQuery": {
+     "deprecated": false,
+     "summary": "Determines whether the part is considered during spatial query operations.",
+     "type": "boolean"
+    },
+    "CanTouch": {
+     "deprecated": false,
+     "summary": "Determines if `Class.BasePart.Touched|Touched` and `Class.BasePart.TouchEnded|TouchEnded` events fire on the part.",
+     "type": "boolean"
+    },
+    "CastShadow": {
+     "deprecated": false,
+     "summary": "Determines whether or not a part casts a shadow.",
+     "type": "boolean"
+    },
+    "CenterOfMass": {
+     "deprecated": false,
+     "summary": "Describes the world position in which a part's center of mass is located.",
+     "type": "Vector3"
+    },
+    "CollisionGroup": {
+     "deprecated": false,
+     "summary": "Describes the name of a part's collision group.",
+     "type": "string"
+    },
+    "CollisionGroupId": {
+     "deprecated": false,
+     "summary": "Describes the automatically set ID number of a part's collision group.",
+     "type": "int"
+    },
+    "Color": {
+     "deprecated": false,
+     "summary": "Determines the color of a part.",
+     "type": "Color3"
+    },
+    "CurrentPhysicalProperties": {
+     "deprecated": false,
+     "summary": "Indicates the current physical properties of the part.",
+     "type": "PhysicalProperties"
+    },
+    "CustomPhysicalProperties": {
+     "deprecated": false,
+     "summary": "Determines several physical properties of a part.",
+     "type": "PhysicalProperties"
+    },
+    "Elasticity": {
+     "deprecated": true,
+     "summary": "Used to control the Elasticity of the part, but it no longer does anything.",
+     "type": "float"
+    },
+    "EnableFluidForces": {
+     "deprecated": false,
+     "summary": "Used to enable or disable aerodynamic forces on parts and assemblies.",
+     "type": "boolean"
+    },
+    "ExtentsCFrame": {
+     "deprecated": false,
+     "summary": "The `Datatype.CFrame` of the physical extents of the `Class.BasePart`.",
+     "type": "CFrame"
+    },
+    "ExtentsSize": {
+     "deprecated": false,
+     "summary": "The actual physical size of the `Class.BasePart` as regarded by the physics engine.",
+     "type": "Vector3"
+    },
+    "Friction": {
+     "deprecated": true,
+     "summary": "Used to control the Friction of the part, but now it no longer does anything.",
+     "type": "float"
+    },
+    "FrontParamA": {
+     "deprecated": false,
+     "summary": "Determines the first parameter for the SurfaceType on the Front face of a part.",
+     "type": "float"
+    },
+    "FrontParamB": {
+     "deprecated": false,
+     "summary": "Determines the second parameter for the SurfaceType on the Front face of a part.",
+     "type": "float"
+    },
+    "FrontSurface": {
+     "deprecated": false,
+     "summary": "Determines the type of surface for the front face of a part.",
+     "type": "SurfaceType"
+    },
+    "FrontSurfaceInput": {
+     "deprecated": false,
+     "summary": "Determines the kind of input for the Front face of a part (-Z direction).",
+     "type": "InputType"
+    },
+    "LeftParamA": {
+     "deprecated": false,
+     "summary": "Determines the first parameter for the SurfaceType on the Left face of a part.",
+     "type": "float"
+    },
+    "LeftParamB": {
+     "deprecated": false,
+     "summary": "Determines the second parameter for the SurfaceType on the Left face of a part.",
+     "type": "float"
+    },
+    "LeftSurface": {
+     "deprecated": false,
+     "summary": "Determines the type of surface for the left face of a part.",
+     "type": "SurfaceType"
+    },
+    "LeftSurfaceInput": {
+     "deprecated": false,
+     "summary": "Determines the kind of input for the Left face of a part.",
+     "type": "InputType"
+    },
+    "LocalTransparencyModifier": {
+     "deprecated": false,
+     "summary": "Determines a multiplier for `Class.BasePart.Transparency` that is only visible to the local client.",
+     "type": "float"
+    },
+    "Locked": {
+     "deprecated": false,
+     "summary": "Determines whether a part is selectable in Studio.",
+     "type": "boolean"
+    },
+    "Mass": {
+     "deprecated": false,
+     "summary": "Describes the mass of the part, the product of its density and volume.",
+     "type": "float"
+    },
+    "Massless": {
+     "deprecated": false,
+     "summary": "Determines whether the part contributes to the total mass or inertia of its rigid body.",
+     "type": "boolean"
+    },
+    "Material": {
+     "deprecated": false,
+     "summary": "Determines the texture and default physical properties of a part.",
+     "type": "Material"
+    },
+    "MaterialVariant": {
+     "deprecated": false,
+     "summary": "The name of `Class.MaterialVariant`.",
+     "type": "string"
+    },
+    "Orientation": {
+     "deprecated": false,
+     "summary": "Describes the rotation of the part in the world.",
+     "type": "Vector3"
+    },
+    "PivotOffset": {
+     "deprecated": false,
+     "summary": "Specifies the offset of the part's pivot from its `Datatype.CFrame`.",
+     "type": "CFrame"
+    },
+    "Position": {
+     "deprecated": false,
+     "summary": "Describes the position of the part in the world.",
+     "type": "Vector3"
+    },
+    "ReceiveAge": {
+     "deprecated": false,
+     "summary": "Time since last recorded physics update.",
+     "type": "float"
+    },
+    "Reflectance": {
+     "deprecated": false,
+     "summary": "Determines how much a part reflects the skybox.",
+     "type": "float"
+    },
+    "ResizeIncrement": {
+     "deprecated": false,
+     "summary": "Describes the smallest change in size allowable by the `Class.BasePart:Resize()|Resize()` method.",
+     "type": "int"
+    },
+    "ResizeableFaces": {
+     "deprecated": false,
+     "summary": "Describes the faces on which a part may be resized.",
+     "type": "Faces"
+    },
+    "RightParamA": {
+     "deprecated": false,
+     "summary": "Determines the first parameter for the SurfaceType on the Right face of a part.",
+     "type": "float"
+    },
+    "RightParamB": {
+     "deprecated": false,
+     "summary": "Determines the second parameter for the SurfaceType on the Right face of a part.",
+     "type": "float"
+    },
+    "RightSurface": {
+     "deprecated": false,
+     "summary": "Determines the type of surface for the right face of a part.",
+     "type": "SurfaceType"
+    },
+    "RightSurfaceInput": {
+     "deprecated": false,
+     "summary": "Determines the kind of input for the Right face of a part (-X direction).",
+     "type": "InputType"
+    },
+    "RootPriority": {
+     "deprecated": false,
+     "summary": "The main rule in determining the root part of an assembly.",
+     "type": "int"
+    },
+    "RotVelocity": {
+     "deprecated": true,
+     "summary": "Determines a part's change in orientation over time.",
+     "type": "Vector3"
+    },
+    "Rotation": {
+     "deprecated": false,
+     "summary": "The rotation of the part in degrees for the three axes.",
+     "type": "Vector3"
+    },
+    "Size": {
+     "deprecated": false,
+     "summary": "Determines the dimensions of a part (length, height, width).",
+     "type": "Vector3"
+    },
+    "SpecificGravity": {
+     "deprecated": true,
+     "summary": "The ratio of the part's density to the density of water determined by the `Class.BasePart.Material`.",
+     "type": "float"
+    },
+    "TopParamA": {
+     "deprecated": false,
+     "summary": "Determines the first parameter for the SurfaceType on the Top face of a part.",
+     "type": "float"
+    },
+    "TopParamB": {
+     "deprecated": false,
+     "summary": "Determines the second parameter for the SurfaceType on the Top face of a part.",
+     "type": "float"
+    },
+    "TopSurface": {
+     "deprecated": false,
+     "summary": "Determines the type of surface for the top face of a part.",
+     "type": "SurfaceType"
+    },
+    "TopSurfaceInput": {
+     "deprecated": false,
+     "summary": "Determines the kind of input for the Top face of a part (+Y direction).",
+     "type": "InputType"
+    },
+    "Transparency": {
+     "deprecated": false,
+     "summary": "Determines how much a part can be seen through (the inverse of part opacity).",
+     "type": "float"
+    },
+    "Velocity": {
+     "deprecated": true,
+     "summary": "Determines a part's change in position over time.",
+     "type": "Vector3"
+    },
+    "brickColor": {
+     "deprecated": true,
+     "summary": "",
+     "type": "BrickColor"
+    }
+   }
+  },
+  "Folder": {
+   "inherits": [
+    "Instance"
+   ],
+   "methods": [],
+   "properties": {}
+  },
+  "FormFactorPart": {
+   "inherits": [
+    "BasePart"
+   ],
+   "methods": [],
+   "properties": {
+    "FormFactor": {
+     "deprecated": true,
+     "summary": "",
+     "type": "FormFactor"
+    },
+    "formFactor": {
+     "deprecated": true,
+     "summary": "",
+     "type": "FormFactor"
+    }
+   }
+  },
+  "Instance": {
+   "inherits": [
+    "Object"
+   ],
+   "methods": [
+    "AddTag",
+    "children",
+    "ClearAllChildren",
+    "Clone",
+    "clone",
+    "Destroy",
+    "destroy",
+    "FindFirstAncestor",
+    "FindFirstAncestorOfClass",
+    "FindFirstAncestorWhichIsA",
+    "FindFirstChild",
+    "findFirstChild",
+    "FindFirstChildOfClass",
+    "FindFirstChildWhichIsA",
+    "FindFirstDescendant",
+    "GetActor",
+    "GetAttribute",
+    "GetAttributeChangedSignal",
+    "GetAttributes",
+    "GetChildren",
+    "getChildren",
+    "GetDebugId",
+    "GetDescendants",
+    "GetFullName",
+    "GetStyled",
+    "GetStyledPropertyChangedSignal",
+    "GetTags",
+    "HasTag",
+    "IsAncestorOf",
+    "IsDescendantOf",
+    "isDescendantOf",
+    "IsPropertyModified",
+    "QueryDescendants",
+    "Remove",
+    "remove",
+    "RemoveTag",
+    "ResetPropertyToDefault",
+    "SetAttribute",
+    "WaitForChild"
+   ],
+   "properties": {
+    "Archivable": {
+     "deprecated": false,
+     "summary": "Determines if an `Class.Instance` and its descendants can be cloned using `Class.Instance:Clone()`, and can be saved/published.",
+     "type": "boolean"
+    },
+    "Name": {
+     "deprecated": false,
+     "summary": "A non-unique identifier of the `Class.Instance`.",
+     "type": "string"
+    },
+    "Parent": {
+     "deprecated": false,
+     "summary": "Determines the hierarchical parent of the `Class.Instance`.",
+     "type": "Instance"
+    }
+   }
+  },
+  "Model": {
+   "inherits": [
+    "PVInstance"
+   ],
+   "methods": [
+    "AddPersistentPlayer",
+    "BreakJoints",
+    "breakJoints",
+    "GetBoundingBox",
+    "GetExtentsSize",
+    "GetModelCFrame",
+    "GetModelSize",
+    "GetPersistentPlayers",
+    "GetPrimaryPartCFrame",
+    "GetScale",
+    "MakeJoints",
+    "makeJoints",
+    "move",
+    "MoveTo",
+    "moveTo",
+    "RemovePersistentPlayer",
+    "ResetOrientationToIdentity",
+    "ScaleTo",
+    "SetIdentityOrientation",
+    "SetPrimaryPartCFrame",
+    "TranslateBy"
+   ],
+   "properties": {
+    "LevelOfDetail": {
+     "deprecated": false,
+     "summary": "Sets the level of detail on the model for experiences with instance streaming enabled.",
+     "type": "ModelLevelOfDetail"
+    },
+    "ModelStreamingMode": {
+     "deprecated": false,
+     "summary": "Controls the model streaming behavior on `Class.Model|Models` when instance streaming is enabled.",
+     "type": "ModelStreamingMode"
+    },
+    "PrimaryPart": {
+     "deprecated": false,
+     "summary": "The primary part of the `Class.Model`, or `nil` if not explicitly set.",
+     "type": "BasePart"
+    },
+    "Scale": {
+     "deprecated": false,
+     "summary": "Editor-only property used to scale the model around its pivot. Setting this property will move the scale as though `Class.Model:ScaleTo()` was called on it.",
+     "type": "float"
+    },
+    "WorldPivot": {
+     "deprecated": false,
+     "summary": "Determines where the pivot of a `Class.Model` which does **not** have a set `Class.Model.PrimaryPart` is located.",
+     "type": "CFrame"
+    }
+   }
+  },
+  "PVInstance": {
+   "inherits": [
+    "Instance"
+   ],
+   "methods": [
+    "GetPivot",
+    "PivotTo"
+   ],
+   "properties": {
+    "Origin": {
+     "deprecated": false,
+     "summary": "Editor-only property that reads and sets the world `Datatype.CFrame` of the `Class.PVInstance`'s pivot, moving the entire instance when changed from the Studio ",
+     "type": "CFrame"
+    },
+    "Pivot Offset": {
+     "deprecated": false,
+     "summary": "Editor-only property that displays and edits the pivot's `Datatype.CFrame` relative to the instance, moving only the pivot and leaving the instance in place.",
+     "type": "CFrame"
+    }
+   }
+  },
+  "Part": {
+   "inherits": [
+    "FormFactorPart"
+   ],
+   "methods": [],
+   "properties": {
+    "Shape": {
+     "deprecated": false,
+     "summary": "Sets the overall shape of the object.",
+     "type": "PartType"
+    }
+   }
+  },
+  "SpawnLocation": {
+   "inherits": [
+    "Part"
+   ],
+   "methods": [],
+   "properties": {
+    "AllowTeamChangeOnTouch": {
+     "deprecated": false,
+     "summary": "Allows a `Class.Player` to join the team by touching the `Class.SpawnLocation`. When set to true, if a `Class.Player` character comes into contact with the `Cla",
+     "type": "boolean"
+    },
+    "Duration": {
+     "deprecated": false,
+     "summary": "The length of time, in seconds, that a `Class.ForceField` will be applied to a `Class.Player` character spawning at this `Class.SpawnLocation`. If Duration is z",
+     "type": "int"
+    },
+    "Enabled": {
+     "deprecated": false,
+     "summary": "Sets whether or not the `Class.SpawnLocation` is enabled. When disabled players cannot spawn at the `Class.SpawnLocation` and the AllowTeamChangeOnTouch functio",
+     "type": "boolean"
+    },
+    "Neutral": {
+     "deprecated": false,
+     "summary": "Whether or not a `Class.SpawnLocation` is affiliated with a specific team. This means that any `Class.Player`, of any `Class.Team`, can spawn on it if this prop",
+     "type": "boolean"
+    },
+    "TeamColor": {
+     "deprecated": false,
+     "summary": "Sets what team the `Class.SpawnLocation` is affiliated to. If `Class.SpawnLocation.Neutral` property is false, only `Class.Player|Players` with the same `Class.",
+     "type": "BrickColor"
+    }
+   }
+  }
+ },
+ "enums": {
+  "Material": [
+   "Plastic",
+   "SmoothPlastic",
+   "Neon",
+   "Wood",
+   "WoodPlanks",
+   "Marble",
+   "Basalt",
+   "Slate",
+   "CrackedLava",
+   "Concrete",
+   "Limestone",
+   "Granite",
+   "Pavement",
+   "Brick",
+   "Pebble",
+   "Cobblestone",
+   "Rock",
+   "Sandstone",
+   "CorrodedMetal",
+   "DiamondPlate",
+   "Foil",
+   "Metal",
+   "Grass",
+   "LeafyGrass",
+   "Sand",
+   "Fabric",
+   "Snow",
+   "Mud",
+   "Ground",
+   "Asphalt",
+   "Salt",
+   "Ice",
+   "Glacier",
+   "Glass",
+   "ForceField",
+   "Air",
+   "Water",
+   "Cardboard",
+   "Carpet",
+   "CeramicTiles",
+   "ClayRoofTiles",
+   "RoofShingles",
+   "Leather",
+   "Plaster",
+   "Rubber"
+  ],
+  "NormalId": [
+   "Right",
+   "Top",
+   "Back",
+   "Left",
+   "Bottom",
+   "Front"
+  ],
+  "PartType": [
+   "Ball",
+   "Block",
+   "Cylinder",
+   "Wedge",
+   "CornerWedge"
+  ]
+ },
+ "generated_at": "2026-10-06T03:03:53+00:00",
+ "source": "https://github.com/Roblox/creator-docs (content/en-us/reference/engine, branch main)"
+}

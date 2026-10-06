@@ -1,0 +1,5 @@
+id: fx_duplicate_input
+parameters: {}
+nodes: [{id: a, node: uniform}, {id: b, node: uniform}, {id: m, node: blur}]
+connections: [{from: a.output, to: m.input}, {from: b.output, to: m.input}]
+outputs: [{usage: baseColor, from: m.output}]

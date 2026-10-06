@@ -1,0 +1,51 @@
+# AGENTS.md - concept-art-ai
+
+A toolkit that lets an AI agent produce **concept art for Roblox-style environments and props**: several meaningfully different directions, environment-vs-prop prompts, generation through
+an adapter the user configures, a record of every run, pixel measurements, a rubric whose subjective half belongs to a person, and a curation step before anything enters the library.
+An optional, separate LoRA/PEFT workflow validates datasets and prepares configs. It does not retrain any model and never trains anything itself.
+
+## Setup and commands
+
+```bash
+python -m venv .venv && . .venv/bin/activate
+pip install -e ".[dev]"              # Pillow, numpy included
+python -m conceptai doctor           # what works on this machine right now
+python -m pytest                     # unit, adapter (real subprocess), rubric, curation, MCP and eval tests
+python -m conceptai directions examples/briefs/lighthouse_env.yaml -n 4     # directions for a brief file
+python -m conceptai prompt examples/briefs/lantern_prop.yaml --index 0      # one prompt
+python -m conceptai analyze path/to/image.png [--kind prop] [--palette '#aa5522' ...]
+python -m conceptai adapters         # which image adapters are usable
+python -m conceptai lora-validate path/to/dataset                          # validate only
+python -m conceptai eval run --label x       # eval suite (compare: eval compare baseline x)
+python -m conceptai serve                    # MCP server over stdio
+python -m conceptai call                     # list tools; `call <tool> --json '{...}'` runs one without an MCP client
+python scripts/make_examples.py              # regenerate the SYNTHETIC fixtures and examples/library/assets.jsonl
+python scripts/sync_agent_files.py           # regenerate CLAUDE.md, GEMINI.md, copilot file, skill mirrors
+```
+
+## Operating rules for an AI agent using this repo
+
+1. Load `skills/concept-art-workflow/SKILL.md` and follow it. Keep context small; read reference files only when needed.
+2. **A generated image is concept art only.** Never describe it as a production-ready mesh, Substance graph or finished Roblox scene. Say what it leaves open for the modeller.
+3. **Environments and props are separate workflows** (different prompt structure, different rubric). Do not mix them in one brief.
+4. **Offer several directions that differ on at least three axes** (`propose_directions`). Never present near-identical variations as options; check `compare_outputs` after generating.
+5. **Dry run first.** `generate_concepts` and every write default to `dry_run=true`. Show the prompts, then generate with the adapter the user configured (`list_image_adapters`). The
+   `placeholder` adapter makes synthetic fixtures, not art. If no generator is configured, say so and stop at the prompts.
+6. Every generation is recorded (model as declared, prompts, reference ids, settings, seeds, outputs, hashes). The declared model is **not verified**; do not claim which model ran beyond what the user declared.
+7. Only use reference images the user owns or is licensed to use. Never upload or copy private assets; they are read in place (`CONCEPTAI_ASSET_ROOT`).
+8. **Look at the images yourself** before reporting. Pixel metrics are measurements: they cannot tell whether a concept matches the brief or is good. Leave `brief_adherence`,
+   `usability_as_reference` and the human half of the hybrid criteria unscored until a person scores them.
+9. **Record feedback only with the user's actual words** (`rate_concept`). Do not infer verdicts. Promote to the library only with a yes: `promote_concept` makes a candidate; `confirm=true` only after an accept.
+10. LoRA tools prepare and validate only. Never claim a LoRA was trained, never run a trainer for the user unprompted, and never include images without a stated licence and owner.
+11. Report assumptions, open questions, and the limits of the measurements. Do not claim a hosted provider or model that is not configured.
+
+## Conventions for editing this repo
+
+- Python 3.10+. `numpy`/`Pillow` only in `core/imaging.py`, `domain/analysis.py`, `domain/synthetic.py`, `domain/imaging_compat.py`.
+- `conceptai/core/` is vendored from the suite kit: do not edit it here.
+- Tool functions are annotated `-> dict[str, Any]` and raise `ValueError` with an actionable message.
+- **No provider APIs.** An integration is a script behind the `command` adapter, or a new `ImageAdapter` subclass registered in `domain/adapters.py`. Do not hard-code an API you cannot verify.
+- `domain/lora.py` must never import `subprocess` or start a process (a test enforces it).
+- New direction axis or option: edit `domain/direction.py` (`AXES`, `WEIGHTS`, `INCOMPATIBLE`), add eval tasks, run the suite.
+- The fixtures in `examples/` are generated; edit `scripts/make_examples.py`, not the PNGs. Keep them labelled synthetic.
+- After editing `AGENTS.md` or `skills/`, run `python scripts/sync_agent_files.py`; CI fails on drift.

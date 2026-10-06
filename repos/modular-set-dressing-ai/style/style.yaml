@@ -1,0 +1,44 @@
+# Machine-readable style spec. Human-editable companion: STYLE.md.
+#
+# !! STARTER TEMPLATE for lived-in, readable, performant set dressing. It is NOT your art direction until you edit it.
+# !! Thresholds are HEURISTIC defaults, not engine limits: tune them against scenes you consider good.
+version: 1
+name: Lived-in, readable set dressing (starter template)
+summary: >
+  Scenes read at a glance: one clear focal point with a high-priority hero module, supporting furniture in a believable
+  hierarchy (large, medium, small), props grouped with purpose, breathing room (negative space), a restrained colour spread,
+  and no repeated copies in a row. Functional paths and sightlines stay clear, and locked pieces are never touched.
+traits:
+  hierarchy: one hero piece, a few large supports, many small accents
+  grouping: props cluster around furniture (chairs at tables, items on surfaces) instead of scattering evenly
+  repetition: no module is more than 40% of the scene; neighbouring props differ
+  negative_space: at least ~12% of the region is a single open rectangle
+  colour: a dominant warm wood family with one or two accent colours
+  scale: modules stay within their stated scale range
+ranges:
+  coverage: {min: 0.08, max: 0.35, severity: warning, note: share of the region covered by solid footprints}
+  max_module_share: {max: 0.4, severity: warning, note: one module should not dominate (measured with >= 5 items)}
+  adjacent_same_ratio: {max: 0.5, severity: warning, note: share of nearby prop pairs that are the same module}
+  color_balance: {min: 0.2, severity: warning, note: normalised hue entropy; very low = monotone}
+  largest_free_rect_fraction: {min: 0.12, severity: warning, note: biggest empty rectangle as a share of the region}
+  focal_satisfied: {min: 1.0, severity: warning, note: every focal point has a high-priority module within its radius}
+  size_classes_present: {min: 2, severity: warning, note: at least two of large/medium/small}
+  collisions: {max: 0, severity: error, note: no overlapping solid modules}
+  blocked_paths: {max: 0, severity: error, note: functional paths stay clear}
+  blocked_sightlines: {max: 0, severity: error, note: eye-height sightlines stay clear}
+  outside_region: {max: 0, severity: error, note: nothing outside the region or inside an exclusion}
+  locked_violations: {max: 0, severity: error, note: locked instances are untouched}
+  unresolved_modules: {max: 0, severity: warning, note: modules used with defaulted metadata}
+constraints:
+  - {id: D1, severity: must,   rule: "Only place modules from the approved kit; search the kit before proposing a replacement."}
+  - {id: D2, severity: must,   rule: "Never move or remove locked instances; keep functional paths and sightlines clear."}
+  - {id: D3, severity: must,   rule: "Placements are deterministic and reversible: review a plan before applying it."}
+  - {id: D4, severity: should, rule: "Give every focal point a high-priority hero module and arrange supports around it."}
+  - {id: D5, severity: should, rule: "Prefer snapping to sockets (chairs to tables, items to surfaces) over free placement."}
+  - {id: D6, severity: should, rule: "Report unresolved kit metadata instead of guessing."}
+exclusions:
+  - one prop copied across the whole region
+  - furniture clipping through other furniture
+  - props blocking doors, paths or the camera's sightline
+  - evenly spaced grids of props
+correction_dimensions: [density, grouping, hierarchy, repetition, color, focal_point, clearance, scale, orientation, negative_space]

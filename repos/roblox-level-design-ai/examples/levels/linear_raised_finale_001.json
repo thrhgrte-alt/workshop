@@ -1,0 +1,193 @@
+{
+ "bounds": {
+  "ceiling": 28,
+  "depth": 52,
+  "width": 128
+ },
+ "connections": [
+  {
+   "at": 24.0,
+   "from": "start",
+   "id": "c_start_mid1",
+   "kind": "door",
+   "to": "mid1"
+  },
+  {
+   "at": 8.0,
+   "from": "mid1",
+   "id": "c_mid1_mid2",
+   "kind": "door",
+   "to": "mid2"
+  },
+  {
+   "at": 20.0,
+   "from": "mid2",
+   "id": "c_mid2_final",
+   "kind": "ramp",
+   "to": "finale",
+   "width": 10
+  },
+  {
+   "from": "mid1",
+   "id": "c_side1",
+   "kind": "door",
+   "to": "side1"
+  },
+  {
+   "from": "mid2",
+   "id": "c_side2",
+   "kind": "door",
+   "to": "side2"
+  }
+ ],
+ "encounters": [
+  {
+   "id": "ambush_1",
+   "intensity": 2,
+   "room": "mid1"
+  },
+  {
+   "id": "ambush_2",
+   "intensity": 3,
+   "room": "mid2"
+  },
+  {
+   "id": "guardians",
+   "intensity": 4,
+   "room": "finale"
+  }
+ ],
+ "id": "linear_raised_finale_001",
+ "landmarks": [
+  {
+   "at": [
+    112.0,
+    8.0
+   ],
+   "height": 30,
+   "id": "beacon",
+   "tags": [
+    "goal"
+   ]
+  },
+  {
+   "at": [
+    48.0,
+    16.0
+   ],
+   "height": 14,
+   "id": "banner",
+   "tags": [
+    "waypoint"
+   ]
+  }
+ ],
+ "objectives": [
+  {
+   "at": [
+    112.0,
+    16.0
+   ],
+   "id": "goal",
+   "kind": "reach"
+  }
+ ],
+ "profile": "linear",
+ "purpose": "Single-player or co-op route with optional side rooms and a raised finale",
+ "rooms": [
+  {
+   "height": 20,
+   "id": "start",
+   "rect": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "tags": [
+    "spawn"
+   ]
+  },
+  {
+   "height": 20,
+   "id": "mid1",
+   "rect": [
+    32,
+    0,
+    32,
+    32
+   ]
+  },
+  {
+   "height": 20,
+   "id": "mid2",
+   "rect": [
+    64,
+    0,
+    32,
+    32
+   ]
+  },
+  {
+   "floor": 8,
+   "height": 20,
+   "id": "finale",
+   "rect": [
+    96,
+    0,
+    32,
+    32
+   ],
+   "tags": [
+    "objective"
+   ]
+  },
+  {
+   "height": 20,
+   "id": "side1",
+   "rect": [
+    40,
+    32,
+    16,
+    20
+   ],
+   "tags": [
+    "loot"
+   ]
+  },
+  {
+   "height": 20,
+   "id": "side2",
+   "rect": [
+    72,
+    32,
+    16,
+    20
+   ],
+   "tags": [
+    "secret"
+   ]
+  }
+ ],
+ "spawns": [
+  {
+   "at": [
+    16.0,
+    16.0
+   ],
+   "id": "spawn_a",
+   "team": "a"
+  }
+ ],
+ "template": {
+  "id": "linear_with_branches",
+  "parameters": {
+   "end_floor": 8,
+   "room_d": 32,
+   "room_h": 20,
+   "room_w": 32,
+   "side_d": 20
+  }
+ },
+ "title": "Linear with branches"
+}

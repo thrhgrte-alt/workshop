@@ -1,0 +1,150 @@
+- id: dress-is-deterministic-and-respects-every-constraint
+  input: {op: dress, scene: tavern_bare, seed: 3, rules: {density: 0.2, orient: face_wall, exclude_tags: [wall, light, textile]}}
+  checks: [{type: equals, path: deterministic, value: true}, {type: equals, path: errors, value: []}, {type: equals, path: locks_ok, value: true}, {type: equals, path: explained, value: true}, {type: in_range, path: adds, min: 5}]
+- id: dress-seeds-give-controlled-variations
+  input: {op: dress, scene: tavern_bare, seed: 11, rules: {density: 0.2, exclude_tags: [wall]}}
+  checks: [{type: equals, path: seed_changes_result, value: true}, {type: equals, path: errors, value: []}]
+- id: dress-reaches-the-target-density
+  input: {op: dress, scene: tavern_bare, seed: 5, rules: {density: 0.2, exclude_tags: [wall]}}
+  checks: [{type: in_range, path: coverage_after, min: 0.17, max: 0.3}]
+- id: dress-include-tags-limit-the-modules
+  input: {op: dress, scene: tavern_bare, seed: 2, rules: {density: 0.15, include_tags: [container]}}
+  checks: [{type: list_excludes, path: used, items: [table_round, chair, bench, plant_pot]}, {type: equals, path: errors, value: []}]
+- id: dress-exclude-tags-remove-modules
+  input: {op: dress, scene: tavern_bare, seed: 2, rules: {density: 0.15, exclude_tags: [container, wall]}}
+  checks: [{type: list_excludes, path: used, items: [crate_small, crate_tiny, barrel]}]
+- id: dress-include-modules-limit-the-modules
+  input: {op: dress, scene: tavern_bare, seed: 4, rules: {density: 0.2, include_modules: [barrel, crate_small, chair]}}
+  checks: [{type: list_excludes, path: used, items: [table_round, bench, plant_pot, pillar]}]
+- id: dress-limits-one-module-from-dominating
+  input: {op: dress, scene: tavern_bare, seed: 4, rules: {density: 0.25, include_modules: [barrel, crate_small, chair], max_items: 30}}
+  checks: [{type: in_range, path: max_share, max: 0.55}]
+- id: dress-clusters-props
+  input: {op: dress, scene: tavern_bare, seed: 6, rules: {density: 0.12, exclude_tags: [wall], cluster: {count: 2, radius: 6}}}
+  checks: [{type: equals, path: errors, value: []}, {type: in_range, path: adds, min: 3}]
+- id: dress-explains-why-candidates-were-rejected
+  input: {op: dress, scene: tavern_bare, seed: 3, rules: {density: 0.2, exclude_tags: [wall]}}
+  checks: [{type: list_contains, path: rejected, items: [blocks_path, collision]}]
+- id: dress-places-a-hero-module-at-an-unsatisfied-focal-point
+  title: With the locked fireplace removed, the focal point pulls a priority >= 4 module next to it
+  input: {op: dress, scene: tavern_bare, mutations: [{op: set_top, field: locked, value: {}}, {op: remove, id: hearth_001}], seed: 1, rules: {density: 0.0}}
+  checks: [{type: list_contains, path: used, items: [fireplace]}, {type: equals, path: errors, value: []}]
+- id: dress-refuses-when-no-module-matches
+  input: {op: dress_error, scene: tavern_bare, rules: {include_tags: [spaceship]}}
+  checks: [{type: error_contains, text: no module in the kit matches}]
+- id: plan-add-then-invert-restores-the-scene
+  input: {op: plan, scene: tavern_bare, plan: {adds: [{id: c9, module: crate_small, at: [10, 24]}]}}
+  checks: [{type: list_contains, path: added, items: [c9]}, {type: equals, path: round_trip, value: true}, {type: equals, path: hash_restored, value: true}]
+- id: plan-cannot-move-a-locked-instance
+  input: {op: plan, scene: tavern_bare, plan: {moves: [{id: hearth_001, from: {at: [2, 15]}, to: {at: [5, 15]}}]}}
+  checks: [{type: error_contains, text: locked}]
+- id: plan-cannot-remove-a-locked-instance
+  input: {op: plan, scene: tavern_bare, plan: {removes: [bar_001]}}
+  checks: [{type: error_contains, text: locked}]
+- id: plan-rejects-duplicate-ids
+  input: {op: plan, scene: tavern_bare, plan: {adds: [{id: bar_001, module: crate_small, at: [10, 24]}]}}
+  checks: [{type: error_contains, text: already exists}]
+- id: locks-detect-a-moved-locked-piece
+  input: {op: locks, scene: tavern_corner, mutations: [{op: set, id: bar_001, field: at, value: [28, 3]}]}
+  checks: [{type: list_contains, path: codes, items: [locked_changed]}]
+- id: locks-detect-a-removed-locked-piece
+  input: {op: locks, scene: tavern_corner, mutations: [{op: remove, id: hearth_001}]}
+  checks: [{type: list_contains, path: codes, items: [locked_removed]}]
+- id: locks-allow-changes-to-unlocked-pieces
+  input: {op: locks, scene: tavern_corner, mutations: [{op: set, id: table_001, field: at, value: [13, 20]}]}
+  checks: [{type: equals, path: ok, value: true}, {type: list_contains, path: locked, items: [hearth_001, bar_001]}]
+- id: measure-dressed-scene-is-clean
+  input: {op: measure, scene: tavern_corner}
+  checks: [{type: equals, path: flagged, value: []}]
+- id: measure-bare-scene-is-too-empty
+  input: {op: measure, scene: tavern_bare}
+  checks: [{type: list_contains, path: flagged, items: [coverage]}, {type: approx, path: metrics.coverage, value: 0.045, tol: 0.001}]
+- id: measure-largest-free-rectangle
+  input: {op: measure, scene: tavern_bare}
+  checks: [{type: approx, path: metrics.largest_free_rect_fraction, value: 0.75, tol: 0.03}]
+- id: measure-flags-one-prop-everywhere
+  input: {op: measure, scene: tavern_all_barrels}
+  checks: [{type: list_contains, path: flagged, items: [max_module_share, adjacent_same_ratio, color_balance]}]
+- id: measure-flags-blocked-paths-and-sightlines
+  input: {op: measure, scene: tavern_blocked_path}
+  checks: [{type: list_contains, path: flagged, items: [collisions, blocked_paths, blocked_sightlines]}]
+- id: measure-flags-overcrowding
+  input: {op: measure, scene: tavern_crowded}
+  checks: [{type: list_contains, path: flagged, items: [coverage, largest_free_rect_fraction]}]
+- id: measure-flags-a-missing-focal-piece
+  input: {op: measure, scene: tavern_corner, mutations: [{op: set_top, field: locked, value: {}}, {op: remove, id: hearth_001}]}
+  checks: [{type: list_contains, path: flagged, items: [focal_satisfied]}]
+- id: export-luau-is-clean-and-deterministic
+  input: {op: export, scene: tavern_corner}
+  checks: [{type: lint_clean}, {type: equals, path: deterministic, value: true}, {type: equals, path: has_guard, value: true}]
+- id: export-clone-mode-is-clean
+  input: {op: export, scene: tavern_corner, mode: clone}
+  checks: [{type: lint_clean}]
+- id: export-clone-mode-needs-a-template-name
+  input: {op: export, scene: tavern_corner, mode: clone, kit_mutations: [{op: unset, module: chair, field: template}]}
+  checks: [{type: error_contains, text: template}]
+- id: export-rejects-injected-target-paths
+  input: {op: export, scene: tavern_corner, target_path: "workspace; os.exit()"}
+  checks: [{type: error_contains, text: dotted path}]
+- id: export-rejects-unsafe-instance-ids
+  input: {op: export, scene: tavern_corner, mutations: [{op: set, id: table_001, field: id, value: "t\"]=nil--"}]}
+  checks: [{type: error_contains, text: unsafe id}]
+- id: export-respects-the-item-limit
+  input: {op: export, scene: tavern_crowded, max_items: 20}
+  checks: [{type: error_contains, text: limit 20}]
+- id: export-json-is-engine-neutral
+  input: {op: json_export, scene: tavern_corner}
+  checks: [{type: equals, path: format, value: "setdress-scene/1"}, {type: equals, path: count, value: 25}]
+- id: lint-rejects-publishing
+  input: {op: lint_text, code: "game:GetService('AssetService'):CreatePlaceAsync('x', 1)"}
+  checks: [{type: lint_mentions, text: forbidden token}]
+- id: lint-rejects-unguarded-destroy
+  input: {op: lint_text, code: "workspace:FindFirstChild('x'):Destroy()"}
+  checks: [{type: lint_mentions, text: not directly guarded}]
+- id: lint-accepts-guarded-destroy
+  input: {op: lint_text, code: "if x:GetAttribute(\"AIGeneratedBy\") == \"setdress\" then\n x:Destroy()\nend"}
+  checks: [{type: lint_clean}]
+- id: simulate-primitives-creates-every-instance
+  input: {op: simulate, scene: tavern_corner}
+  checks: [{type: equals, path: ok, value: true}, {type: equals, path: status, value: ok}, {type: equals, path: children, value: 25}, {type: equals, path: expected, value: 25}]
+- id: simulate-clone-mode-pivots-every-clone
+  title: Clone mode clones the kit's templates and calls PivotTo on each (kit stubbed on the mock)
+  input: {op: simulate, scene: tavern_corner, mode: clone}
+  checks: [{type: equals, path: ok, value: true}, {type: equals, path: pivots, value: 25}, {type: equals, path: children, value: 25}]
+- id: simulate-clone-mode-reports-a-missing-template
+  input: {op: simulate, scene: tavern_corner, mode: clone, missing_template: Chair}
+  checks: [{type: equals, path: ok, value: false}, {type: error_contains, text: was not found in the kit folder}]
+- id: inspect-placed-scene-is-in-sync
+  input: {op: inspect, scene: tavern_corner}
+  checks: [{type: equals, path: in_sync, value: true}, {type: equals, path: found, value: 25}]
+- id: inspect-detects-a-moved-piece
+  input: {op: inspect, scene: tavern_corner, tamper: "workspace:FindFirstChild('AI_SetDress_tavern_corner'):FindFirstChild('table_001').Position = Vector3.new(0, 0, 0)"}
+  checks: [{type: list_contains, path: moved, items: [table_001]}]
+- id: inspect-detects-a-rotated-piece
+  input: {op: inspect, scene: tavern_corner, tamper: "workspace:FindFirstChild('AI_SetDress_tavern_corner'):FindFirstChild('table_001').Orientation = Vector3.new(0, 45, 0)"}
+  checks: [{type: list_contains, path: moved, items: [table_001]}]
+- id: inspect-detects-a-deleted-piece
+  input: {op: inspect, scene: tavern_corner, tamper: "workspace:FindFirstChild('AI_SetDress_tavern_corner'):FindFirstChild('table_001'):Destroy()"}
+  checks: [{type: list_contains, path: missing, items: [table_001]}]
+- id: inspect-detects-an-extra-piece
+  input: {op: inspect, scene: tavern_corner, tamper: "local p = Instance.new('Part'); p.Name = 'handmade'; p.Parent = workspace:FindFirstChild('AI_SetDress_tavern_corner')"}
+  checks: [{type: list_contains, path: extra, items: [handmade]}]
+- id: map-renders
+  input: {op: map, scene: tavern_corner}
+  checks: [{type: in_range, path: width, min: 400}]
+- id: search-finds-the-dressed-reference-and-avoid-examples
+  input: {op: search_library, query: "tavern interior hero pieces balanced", k: 3}
+  checks: [{type: equals, path: retrieved.0, value: tavern-corner-001}, {type: retrieved_not, ids: [scene-unreviewed-import]}]
+- id: search-surfaces-avoid-examples
+  input: {op: search_library, query: "tavern path blocked sightline", k: 3}
+  checks: [{type: list_contains, path: avoid, items: [tavern-blocked-path]}]
+- id: correction-is-recalled-for-similar-request
+  input:
+    op: feedback
+    request: "dress the tavern interior around the fireplace"
+    reason: "too many barrels near the hearth"
+    corrections:
+      - {dimension: repetition, note: "fewer barrels, mix furniture and decor near the fireplace"}
+      - {dimension: focal_point, note: "keep the area in front of the hearth open"}
+    later_request: "another tavern interior with a fireplace"
+  checks: [{type: equals, path: found_run, value: true}]

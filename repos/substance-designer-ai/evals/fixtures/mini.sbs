@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Hand-written fixture shaped like a minimal .sbs. Real files are larger; see sdai/domain/sbsinfo.py. -->
+<package>
+  <identifier v="mini_package"/>
+  <content>
+    <graph>
+      <identifier v="mini_stone"/>
+      <paramsInput>
+        <paramInput><identifier v="brick_scale"/></paramInput>
+        <paramInput><identifier v="bevel"/></paramInput>
+      </paramsInput>
+      <compOutputs>
+        <compOutput><uid v="10"/><identifier v="baseColor"/></compOutput>
+        <compOutput><uid v="11"/><identifier v="normal"/></compOutput>
+      </compOutputs>
+      <compNodes>
+        <compNode><uid v="1"/><compImplementation><compFilter><filter v="blur"/></compFilter></compImplementation></compNode>
+        <compNode><uid v="2"/><compImplementation><compFilter><filter v="blend"/></compFilter></compImplementation></compNode>
+        <compNode><uid v="3"/><compImplementation><compFilter><filter v="blend"/></compFilter></compImplementation></compNode>
+        <compNode><uid v="4"/><compImplementation><compInstance><path v="pkg:///tile_generator?dependency=1234567"/></compInstance></compImplementation></compNode>
+      </compNodes>
+    </graph>
+  </content>
+</package>

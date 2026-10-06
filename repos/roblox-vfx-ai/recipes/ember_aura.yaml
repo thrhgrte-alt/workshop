@@ -1,0 +1,56 @@
+id: ember_aura
+title: Ember aura
+kind: aura
+mount: part
+description: >
+  Looping rising embers with a soft haze and a warm point light. For a character or object that should read as
+  "heated" or "charged". Continuous, so its particle budget is steady-state.
+parameters:
+  color_hot:  {type: color, default: [1.0, 0.55, 0.15], description: Ember start colour and light colour}
+  color_cool: {type: color, default: [0.55, 0.12, 0.08], description: Ember end colour}
+  rate:       {type: float, min: 4,   max: 40, default: 14,  description: Embers per second}
+  rise_speed: {type: float, min: 1,   max: 8,  default: 3,   description: Upward speed in studs/second}
+  size:       {type: float, min: 0.1, max: 1.0, default: 0.35, description: Peak ember size in studs}
+  glow:       {type: float, min: 0.0, max: 1.0, default: 0.9, description: LightEmission}
+  light_range:      {type: float, min: 0, max: 30, default: 10, description: PointLight range in studs}
+  light_brightness: {type: float, min: 0, max: 4,  default: 1.2, description: PointLight brightness}
+  texture:    {type: string, default: "", description: "Optional rbxassetid://<your texture>"}
+instances:
+  - id: embers
+    class: ParticleEmitter
+    parent: root
+    properties:
+      Enabled: true
+      Rate: {from: rate}
+      Lifetime: [1.2, 2.2]
+      Speed: [{from: rise_speed, scale: 0.4}, {from: rise_speed}]
+      SpreadAngle: [15, 35]
+      EmissionDirection: Top
+      Acceleration: [0, 2, 0]
+      Size: {sequence: [[0, 0], [0.1, {from: size}], [0.7, {from: size, scale: 0.6}], [1, 0]]}
+      Transparency: {sequence: [[0, 1], [0.12, 0.15], [0.7, 0.5], [1, 1]]}
+      Color: {gradient: [[0, {from: color_hot}], [0.6, {from: color_cool}], [1, {from: color_cool}]]}
+      LightEmission: {from: glow}
+      Texture: {from: texture}
+  - id: haze
+    class: ParticleEmitter
+    parent: root
+    properties:
+      Enabled: true
+      Rate: 3
+      Lifetime: [1.5, 2.5]
+      Speed: [0.5, 1.5]
+      EmissionDirection: Top
+      Size: {sequence: [[0, 1.0], [1, 2.2]]}
+      Transparency: {sequence: [[0, 1], [0.3, 0.88], [1, 1]]}
+      Color: {from: color_hot}
+      LightEmission: 1
+      Texture: {from: texture}
+  - id: warm_light
+    class: PointLight
+    parent: root
+    properties:
+      Range: {from: light_range}
+      Brightness: {from: light_brightness}
+      Color: {from: color_hot}
+      Enabled: true

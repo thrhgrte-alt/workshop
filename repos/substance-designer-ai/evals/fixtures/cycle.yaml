@@ -1,0 +1,5 @@
+id: fx_cycle
+parameters: {}
+nodes: [{id: a, node: blur}, {id: b, node: blur}]
+connections: [{from: a.output, to: b.input}, {from: b.output, to: a.input}]
+outputs: [{usage: height, from: a.output}]

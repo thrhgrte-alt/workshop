@@ -1,0 +1,65 @@
+# SYNTHETIC example kit (a tavern-style set). Real kits are yours: point SETDRESS_KIT at your own file.
+# Sockets: pos is [x, y, z] in module space (y measured from the module's base); yaw is the outward direction (0 = +Z).
+kit: {id: tavern_kit, units: studs, template_root: ReplicatedStorage.Kit}
+defaults: {pivot: bottom_center, collision: true, scale: {min: 0.9, max: 1.15}}
+modules:
+  - {id: wall_straight, title: Straight wall segment, template: WallStraight, footprint: [8, 1], height: 10, tags: [wall, structure], material: stone, color: "#8d8f94", priority: 0,
+     sockets: [{name: end_a, pos: [-4, 0, 0], yaw: -90, type: wall_end}, {name: end_b, pos: [4, 0, 0], yaw: 90, type: wall_end}]}
+  - {id: pillar, title: Stone pillar, template: Pillar, footprint: [2, 2], height: 12, tags: [structure, pillar], material: stone, color: "#a9abb0", priority: 2}
+  - {id: fireplace, title: Stone fireplace, template: Fireplace, footprint: [8, 3], height: 9, tags: [focal, hearth, structure], material: stone, color: "#7a6f66", priority: 5}
+  - {id: bar_counter, title: Bar counter, template: BarCounter, footprint: [10, 3], height: 4, tags: [focal, counter, furniture], material: wood, color: "#8b5a2b", priority: 4}
+  - {id: shelf_wall, title: Wall shelf unit, template: ShelfWall, footprint: [6, 2], height: 8, tags: [furniture, storage, wall_mounted], material: wood, color: "#6b4a2b", priority: 1}
+  - id: table_round
+    title: Round table
+    template: TableRound
+    footprint: [5, 5]
+    height: 3
+    tags: [furniture, table]
+    material: wood
+    color: "#a8743a"
+    priority: 1
+    sockets:
+      - {name: top, pos: [0, 3, 0], yaw: 0, type: surface, mates: [surface]}
+      - {name: seat_front, pos: [0, 0, 2.5], yaw: 0, type: seat, mates: [seat]}
+      - {name: seat_back, pos: [0, 0, -2.5], yaw: 180, type: seat, mates: [seat]}
+  - id: chair
+    title: Wooden chair
+    template: Chair
+    footprint: [2, 2]
+    height: 3.5
+    tags: [furniture, seat]
+    material: wood
+    color: "#c68642"
+    priority: 0
+    sockets:
+      - {name: front, pos: [0, 0, 1], yaw: 0, type: seat, mates: [seat]}
+  - {id: bench, title: Bench, template: Bench, footprint: [6, 2], height: 3.5, tags: [furniture, seat], material: wood, color: "#9c6b3a", priority: 0}
+  - id: lantern
+    title: Table lantern
+    template: Lantern
+    footprint: [1, 1]
+    height: 1.5
+    tags: [decor, light, small]
+    material: metal
+    color: "#e0b040"
+    priority: 0
+    sockets:
+      - {name: base, pos: [0, 0, 0], yaw: 0, type: surface, mates: [surface]}
+  - id: crate_small
+    title: Small crate
+    template: CrateSmall
+    footprint: [3, 3]
+    height: 3
+    tags: [container, crate, storage]
+    material: wood
+    color: "#b08850"
+    priority: 0
+    max_repeat: 2
+    sockets:
+      - {name: top, pos: [0, 3, 0], yaw: 0, type: surface, mates: [surface]}
+  - {id: crate_tiny, title: Tiny crate, template: CrateTiny, footprint: [2, 2], height: 2, tags: [container, crate, small], material: wood, color: "#a07840", priority: 0, max_repeat: 2}
+  - {id: barrel, title: Barrel, template: Barrel, footprint: [3, 3], height: 4, tags: [container, barrel, storage], material: wood, color: "#7a5230", priority: 0, max_repeat: 2}
+  - {id: plant_pot, title: Potted plant, template: PlantPot, footprint: [2, 2], height: 4, tags: [decor, plant], material: plant, color: "#4f8a4a", priority: 0}
+  - {id: rug, title: Floor rug, template: Rug, footprint: [8, 6], height: 0.2, tags: [decor, textile], material: fabric, color: "#a03a3a", collision: false, priority: 0}
+  - {id: stool, title: Bar stool, template: Stool, footprint: [1.6, 1.6], height: 3, tags: [furniture, seat, small], material: wood, color: "#d0a060", priority: 0}
+  - {id: banner, title: Hanging banner, template: Banner, footprint: [3, 0.5], height: 6, tags: [decor, wall_mounted], material: fabric, color: "#3a5fa0", priority: 1}

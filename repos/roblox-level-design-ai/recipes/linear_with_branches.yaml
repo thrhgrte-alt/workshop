@@ -1,0 +1,40 @@
+id: linear_with_branches
+title: Linear with branches
+description: >
+  A zig-zag chain of four rooms from spawn to objective, with two side rooms (loot and a secret) and a ramp up to the
+  final, raised room. Doors are staggered so you never see down the whole chain. One route; branches are dead ends by design.
+parameters:
+  room_w:    {min: 24, max: 48, default: 32, description: Width of each chain room}
+  room_d:    {min: 24, max: 48, default: 32, description: Depth of each chain room}
+  side_d:    {min: 16, max: 32, default: 20, description: Depth of the side rooms}
+  end_floor: {min: 4, max: 16, default: 8, description: Floor height of the final room (reached by a ramp)}
+  room_h:    {min: 16, max: 40, default: 20, description: Ceiling height}
+spec:
+  profile: linear
+  title: Linear with branches
+  purpose: Single-player or co-op route with optional side rooms and a raised finale
+  bounds: {width: "=4*room_w", depth: "=room_d + side_d", ceiling: "=room_h + end_floor"}
+  rooms:
+    - {id: start,  rect: [0, 0, "=room_w", "=room_d"], height: "=room_h", tags: [spawn]}
+    - {id: mid1,   rect: ["=room_w", 0, "=room_w", "=room_d"], height: "=room_h"}
+    - {id: mid2,   rect: ["=2*room_w", 0, "=room_w", "=room_d"], height: "=room_h"}
+    - {id: finale, rect: ["=3*room_w", 0, "=room_w", "=room_d"], floor: "=end_floor", height: "=room_h", tags: [objective]}
+    - {id: side1,  rect: ["=room_w + round(room_w/16)*4", "=room_d", "=round(room_w/8)*4", "=side_d"], height: "=room_h", tags: [loot]}
+    - {id: side2,  rect: ["=2*room_w + round(room_w/16)*4", "=room_d", "=round(room_w/8)*4", "=side_d"], height: "=room_h", tags: [secret]}
+  connections:
+    - {id: c_start_mid1, from: start, to: mid1, kind: door, at: "=room_d*3/4"}
+    - {id: c_mid1_mid2,  from: mid1, to: mid2, kind: door, at: "=room_d/4"}
+    - {id: c_mid2_final, from: mid2, to: finale, kind: ramp, width: 10, at: "=room_d*5/8"}
+    - {id: c_side1, from: mid1, to: side1, kind: door}
+    - {id: c_side2, from: mid2, to: side2, kind: door}
+  spawns:
+    - {id: spawn_a, at: ["=room_w/2", "=room_d/2"], team: a}
+  objectives:
+    - {id: goal, at: ["=3.5*room_w", "=room_d/2"], kind: reach}
+  landmarks:
+    - {id: beacon, at: ["=3.5*room_w", "=room_d/2 - 8"], height: 30, tags: [goal]}
+    - {id: banner, at: ["=1.5*room_w", "=room_d/2"], height: 14, tags: [waypoint]}
+  encounters:
+    - {id: ambush_1, room: mid1, intensity: 2}
+    - {id: ambush_2, room: mid2, intensity: 3}
+    - {id: guardians, room: finale, intensity: 4}

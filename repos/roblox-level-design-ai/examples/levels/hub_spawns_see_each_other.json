@@ -1,0 +1,173 @@
+{
+ "bounds": {
+  "ceiling": 16,
+  "depth": 104,
+  "width": 104
+ },
+ "connections": [
+  {
+   "at": 46.0,
+   "from": "hub",
+   "id": "c_north",
+   "kind": "door",
+   "to": "north"
+  },
+  {
+   "at": 58.0,
+   "from": "hub",
+   "id": "c_south",
+   "kind": "door",
+   "to": "south"
+  },
+  {
+   "from": "hub",
+   "id": "c_west",
+   "kind": "door",
+   "to": "west"
+  },
+  {
+   "from": "hub",
+   "id": "c_east",
+   "kind": "door",
+   "to": "east"
+  }
+ ],
+ "encounters": [
+  {
+   "id": "fight_hub",
+   "intensity": 4,
+   "room": "hub"
+  },
+  {
+   "id": "guard_north",
+   "intensity": 2,
+   "room": "north"
+  },
+  {
+   "id": "guard_south",
+   "intensity": 2,
+   "room": "south"
+  }
+ ],
+ "id": "hub_spawns_see_each_other",
+ "landmarks": [
+  {
+   "at": [
+    52.0,
+    60.0
+   ],
+   "height": 36,
+   "id": "tower",
+   "tags": [
+    "central"
+   ]
+  }
+ ],
+ "objectives": [
+  {
+   "at": [
+    52.0,
+    52.0
+   ],
+   "id": "core",
+   "kind": "capture"
+  }
+ ],
+ "profile": "hub",
+ "purpose": "Two-team objective fight around a central hub",
+ "rooms": [
+  {
+   "height": 16,
+   "id": "hub",
+   "rect": [
+    32,
+    32,
+    40,
+    40
+   ],
+   "tags": [
+    "hub"
+   ]
+  },
+  {
+   "height": 16,
+   "id": "north",
+   "rect": [
+    40,
+    0,
+    24,
+    32
+   ],
+   "tags": [
+    "loot"
+   ]
+  },
+  {
+   "height": 16,
+   "id": "south",
+   "rect": [
+    40,
+    72,
+    24,
+    32
+   ],
+   "tags": [
+    "loot"
+   ]
+  },
+  {
+   "height": 16,
+   "id": "west",
+   "rect": [
+    0,
+    40,
+    32,
+    24
+   ],
+   "tags": [
+    "spawn"
+   ]
+  },
+  {
+   "height": 16,
+   "id": "east",
+   "rect": [
+    72,
+    40,
+    32,
+    24
+   ],
+   "tags": [
+    "spawn"
+   ]
+  }
+ ],
+ "spawns": [
+  {
+   "at": [
+    16.0,
+    52.0
+   ],
+   "id": "spawn_a",
+   "team": "a"
+  },
+  {
+   "at": [
+    88.0,
+    52.0
+   ],
+   "id": "spawn_b",
+   "team": "b"
+  }
+ ],
+ "template": {
+  "id": "hub_and_spoke",
+  "parameters": {
+   "hub": 40,
+   "room_h": 16,
+   "spoke_d": 32,
+   "spoke_w": 24
+  }
+ },
+ "title": "Hub and spoke"
+}

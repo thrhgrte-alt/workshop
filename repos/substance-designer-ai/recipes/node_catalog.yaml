@@ -1,0 +1,160 @@
+# Node catalog: the ONLY nodes recipes may use.
+#
+# STATUS: DRAFT. These identifiers were written from general knowledge of Substance 3D Designer
+# and could not be checked against a real installation when this repository was created.
+# Every entry is therefore marked `verified: false`.
+#
+# To verify on YOUR install (this is the supported workflow):
+#   1. python -m sdai probe-script > probe_designer.py
+#   2. In Designer: Tools > Scripts > (or the Python console) run probe_designer.py
+#   3. python -m sdai catalog-diff <path-to-probe-result.json>
+# The diff lists every node/parameter/slot id that does not exist on your version and what is
+# available instead. Fix the entries below, then re-run `catalog-diff` until it is clean.
+# Recipes that use an unverified node are reported as warnings by the validator.
+#
+# Slot types: color | gray | any (any = accepts both). `follows` means the output type equals the
+# type connected to the named input slot (atomic nodes are polymorphic in Designer).
+version: 1
+nodes:
+  uniform:
+    source: atomic
+    definition: sbs::compositing::uniform
+    category: generator
+    inputs: []
+    outputs: [{id: output, type: color}]
+    params:
+      outputcolor: {type: color, default: [0.5, 0.5, 0.5, 1.0]}
+    verified: false
+
+  blend:
+    source: atomic
+    definition: sbs::compositing::blend
+    category: filter
+    inputs:
+      - {id: source, type: any, required: true}
+      - {id: destination, type: any, required: true}
+      - {id: opacity, type: gray, required: false}
+    outputs: [{id: output, type: any, follows: destination}]
+    params:
+      blendingmode: {type: enum, default: copy, values: {copy: 0, add: 1, multiply: 3, max: 5, min: 6, overlay: 9}}
+      opacitymult: {type: float, min: 0.0, max: 1.0, default: 1.0}
+    verified: false
+
+  levels:
+    source: atomic
+    definition: sbs::compositing::levels
+    category: filter
+    inputs: [{id: input1, type: any, required: true}]
+    outputs: [{id: output, type: any, follows: input1}]
+    params:
+      level_in_low: {type: float, min: 0.0, max: 1.0, default: 0.0}
+      level_in_high: {type: float, min: 0.0, max: 1.0, default: 1.0}
+      level_out_low: {type: float, min: 0.0, max: 1.0, default: 0.0}
+      level_out_high: {type: float, min: 0.0, max: 1.0, default: 1.0}
+    verified: false
+
+  blur:
+    source: atomic
+    definition: sbs::compositing::blur
+    category: filter
+    inputs: [{id: input, type: any, required: true}]
+    outputs: [{id: output, type: any, follows: input}]
+    params:
+      intensity: {type: float, min: 0.0, max: 16.0, default: 1.0}
+    verified: false
+
+  warp:
+    source: atomic
+    definition: sbs::compositing::warp
+    category: filter
+    inputs:
+      - {id: input, type: any, required: true}
+      - {id: inputgradient, type: gray, required: true}
+    outputs: [{id: output, type: any, follows: input}]
+    params:
+      intensity: {type: float, min: 0.0, max: 16.0, default: 1.0}
+    verified: false
+
+  normal:
+    source: atomic
+    definition: sbs::compositing::normal
+    category: filter
+    inputs: [{id: input1, type: gray, required: true}]
+    outputs: [{id: output, type: color}]
+    params:
+      intensity: {type: float, min: 0.0, max: 4.0, default: 1.0}
+    verified: false
+
+  histogram_scan:
+    source: atomic
+    definition: sbs::compositing::histogramscan
+    category: filter
+    inputs: [{id: input1, type: gray, required: true}]
+    outputs: [{id: output, type: gray}]
+    params:
+      position: {type: float, min: 0.0, max: 1.0, default: 0.5}
+      contrast: {type: float, min: 0.0, max: 1.0, default: 0.5}
+    verified: false
+
+  hsl:
+    source: atomic
+    definition: sbs::compositing::hsl
+    category: filter
+    inputs: [{id: input, type: color, required: true}]
+    outputs: [{id: output, type: color}]
+    params:
+      hue: {type: float, min: 0.0, max: 1.0, default: 0.5}
+      saturation: {type: float, min: 0.0, max: 1.0, default: 0.5}
+      lightness: {type: float, min: 0.0, max: 1.0, default: 0.5}
+    verified: false
+
+  grayscale_conversion:
+    source: atomic
+    definition: sbs::compositing::grayscaleconversion
+    category: filter
+    inputs: [{id: input, type: color, required: true}]
+    outputs: [{id: output, type: gray}]
+    params: {}
+    verified: false
+
+  # --- library (non-atomic) nodes: resolved by label at runtime, see scriptgen.resolve_library ---
+  tile_generator:
+    source: library
+    label: Tile Generator
+    category: generator
+    inputs: []
+    outputs: [{id: output, type: gray}]
+    params:
+      x_amount: {type: int, min: 1, max: 64, default: 8}
+      y_amount: {type: int, min: 1, max: 64, default: 8}
+    verified: false
+
+  clouds_2:
+    source: library
+    label: Clouds 2
+    category: generator
+    inputs: []
+    outputs: [{id: output, type: gray}]
+    params:
+      scale: {type: int, min: 1, max: 32, default: 3}
+    verified: false
+
+  cells_1:
+    source: library
+    label: Cells 1
+    category: generator
+    inputs: []
+    outputs: [{id: output, type: gray}]
+    params:
+      scale: {type: int, min: 1, max: 64, default: 8}
+    verified: false
+
+  edge_detect:
+    source: library
+    label: Edge Detect
+    category: filter
+    inputs: [{id: input, type: gray, required: true}]
+    outputs: [{id: output, type: gray}]
+    params:
+      edge_width: {type: float, min: 0.0, max: 1.0, default: 0.2}
+    verified: false

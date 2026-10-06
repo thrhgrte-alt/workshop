@@ -1,0 +1,52 @@
+id: loop_arena
+title: Loop arena
+description: >
+  A 3x3 grid of rooms. An outer ring of doors lets players circle the arena, and four spokes lead to a central
+  objective room. Two teams spawn in opposite corners. Multiple routes and loops by design. Doors are staggered (1/4 and 3/4 along each wall) so sightlines stay short, and placed point-symmetrically so both teams have equal routes.
+parameters:
+  cell_w: {min: 24, max: 48, default: 32, description: Width of every cell}
+  cell_d: {min: 24, max: 48, default: 32, description: Depth of every cell}
+  room_h: {min: 12, max: 40, default: 16, description: Ceiling height}
+spec:
+  profile: arena
+  title: Loop arena
+  purpose: Two-team arena with a ring route and central objective
+  bounds: {width: "=3*cell_w", depth: "=3*cell_d", ceiling: "=room_h"}
+  rooms:
+    - {id: r00, rect: [0, 0, "=cell_w", "=cell_d"], height: "=room_h", tags: [spawn]}
+    - {id: r01, rect: ["=cell_w", 0, "=cell_w", "=cell_d"], height: "=room_h"}
+    - {id: r02, rect: ["=2*cell_w", 0, "=cell_w", "=cell_d"], height: "=room_h", tags: [loot]}
+    - {id: r10, rect: [0, "=cell_d", "=cell_w", "=cell_d"], height: "=room_h"}
+    - {id: r11, rect: ["=cell_w", "=cell_d", "=cell_w", "=cell_d"], height: "=room_h", tags: [objective]}
+    - {id: r12, rect: ["=2*cell_w", "=cell_d", "=cell_w", "=cell_d"], height: "=room_h"}
+    - {id: r20, rect: [0, "=2*cell_d", "=cell_w", "=cell_d"], height: "=room_h", tags: [loot]}
+    - {id: r21, rect: ["=cell_w", "=2*cell_d", "=cell_w", "=cell_d"], height: "=room_h"}
+    - {id: r22, rect: ["=2*cell_w", "=2*cell_d", "=cell_w", "=cell_d"], height: "=room_h", tags: [spawn]}
+  connections:
+    - {id: ring_01, from: r00, to: r01, at: "=0.25*cell_d"}
+    - {id: ring_02, from: r01, to: r02, at: "=0.75*cell_d"}
+    - {id: ring_03, from: r02, to: r12, at: "=2*cell_w + 0.25*cell_w"}
+    - {id: ring_04, from: r12, to: r22, at: "=2*cell_w + 0.75*cell_w"}
+    - {id: ring_05, from: r22, to: r21, at: "=2*cell_d + 0.75*cell_d"}
+    - {id: ring_06, from: r21, to: r20, at: "=2*cell_d + 0.25*cell_d"}
+    - {id: ring_07, from: r20, to: r10, at: "=0.75*cell_w"}
+    - {id: ring_08, from: r10, to: r00, at: "=0.25*cell_w"}
+    - {id: spoke_n, from: r11, to: r01, at: "=cell_w + 0.25*cell_w"}
+    - {id: spoke_e, from: r11, to: r12, at: "=cell_d + 0.25*cell_d"}
+    - {id: spoke_s, from: r11, to: r21, at: "=cell_w + 0.75*cell_w"}
+    - {id: spoke_w, from: r11, to: r10, at: "=cell_d + 0.75*cell_d"}
+  spawns:
+    - {id: spawn_a, at: ["=cell_w/2", "=cell_d/2"], team: a}
+    - {id: spawn_b, at: ["=2.5*cell_w", "=2.5*cell_d"], team: b}
+  objectives:
+    - {id: core, at: ["=1.5*cell_w", "=1.5*cell_d"], kind: capture}
+  landmarks:
+    - {id: beacon, at: ["=1.5*cell_w", "=1.5*cell_d + 6"], height: 40, tags: [central]}
+    - {id: obelisk_a, at: ["=2.5*cell_w", "=0.5*cell_d"], height: 28, tags: [corner]}
+    - {id: obelisk_b, at: ["=0.5*cell_w", "=2.5*cell_d"], height: 28, tags: [corner]}
+  encounters:
+    - {id: centre, room: r11, intensity: 5}
+    - {id: flank_n, room: r01, intensity: 3}
+    - {id: flank_s, room: r21, intensity: 3}
+    - {id: flank_e, room: r12, intensity: 3}
+    - {id: flank_w, room: r10, intensity: 3}

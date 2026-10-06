@@ -1,0 +1,15 @@
+{
+  "servers": {
+    "roblox-vfx-ai": {
+      "type": "stdio",
+      "command": "python",
+      "args": [
+        "-m",
+        "rbxvfx.server"
+      ],
+      "env": {
+        "RBXVFX_ROOT": "/ABSOLUTE/PATH/TO/roblox-vfx-ai"
+      }
+    }
+  }
+}

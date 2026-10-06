@@ -1,0 +1,40 @@
+# Machine-readable style spec. Human-editable companion: STYLE.md.
+#
+# !! STARTER TEMPLATE for readable, cohesive Roblox-friendly environment and prop concept art. It is NOT your art direction until you edit it.
+# !! Thresholds are HEURISTIC defaults for pixel measurements, not quality judgments: tune them against concepts you consider good.
+version: 1
+name: Readable, cohesive concept art for stylised Roblox worlds (starter template)
+summary: >
+  Concepts read at thumbnail size: a clear value structure (dark / mid / light), one focal point that stands out, a restrained palette that
+  follows the chosen direction, and shapes a modeller can build from. Environments show depth layers and scale cues; props are single
+  isolated objects with a silhouette that reads in solid black. Directions differ on purpose; nothing is a copy of an existing library image.
+traits:
+  value_structure: three clear value groups; the focal point is separated from its surround by value first, colour second
+  palette: a dominant family, one secondary, one accent; shadows are tinted, not black
+  silhouette: environments have a recognisable skyline; props read in solid black at 64 px
+  shape_language: chunky, simplified forms suited to stylised low-poly or lightly textured builds
+  detail: detail is concentrated near the focal point; large areas stay calm
+  scale: include human-scale cues (doors, steps, railings) in environments
+ranges:
+  value_range: {min: 0.35, severity: warning, note: "5th-95th percentile luminance span; below this the image is flat"}
+  edge_density: {min: 0.01, max: 0.35, severity: warning, note: "share of pixels with strong gradients; too low = blurry, too high = noisy"}
+  palette_adherence: {min: 0.55, severity: warning, note: "similarity of dominant colours to the direction's palette"}
+  focal_contrast: {min: 0.06, severity: warning, note: "luminance difference between the focal box and the rest (only when a focal box is set)"}
+  novelty: {min: 0.15, severity: warning, note: "1 - similarity to the nearest curated library image (unknown when the library is empty)"}
+  silhouette_components: {max: 4, severity: warning, note: "separate shapes in the thresholded silhouette (props)"}
+  silhouette_fill: {min: 0.08, max: 0.8, severity: warning, note: "share of the frame the subject covers (props)"}
+constraints:
+  - {id: C1, severity: must,   rule: "A generated image is concept art only. Never present it as a production-ready mesh, Substance graph or finished Roblox scene."}
+  - {id: C2, severity: must,   rule: "Record model, prompt, reference ids, settings, seed and outputs for every generation (generate_concepts with dry_run=false does this)."}
+  - {id: C3, severity: must,   rule: "Offer several directions that differ on at least three axes; never five near-identical variations."}
+  - {id: C4, severity: must,   rule: "Only licensed or owned images are used as references or training data; AI outputs enter the library only after a person accepts them."}
+  - {id: C5, severity: should, rule: "Keep environment and prop work separate: different prompt structure, different rubric."}
+  - {id: C6, severity: should, rule: "Check novelty against the curated library so concepts do not repeat what is already there."}
+  - {id: C7, severity: should, rule: "Say what a concept leaves open for the modeller (back sides, hidden areas, exact proportions)."}
+exclusions:
+  - text, watermarks or logos in the image
+  - near-duplicate variations presented as different directions
+  - props with background scenery, or cropped subjects
+  - environments with no value separation between focal point and surround
+  - images copied from a reference rather than inspired by its palette and shape language
+correction_dimensions: [palette, silhouette, composition, lighting, materials, mood, readability, scale, detail_level, novelty, brief_adherence]

@@ -1,0 +1,5 @@
+id: fx_dangling
+parameters: {}
+nodes: [{id: c, node: uniform}, {id: unused, node: uniform}]
+connections: []
+outputs: [{usage: baseColor, from: c.output}]

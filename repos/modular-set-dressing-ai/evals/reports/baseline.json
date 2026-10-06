@@ -1,0 +1,1380 @@
+{
+  "label": "baseline",
+  "mode": "solver",
+  "at": "2026-10-06T03:34:39+00:00",
+  "git_rev": "unknown",
+  "python": "3.11.15",
+  "meta": {},
+  "passed": 103,
+  "total": 103,
+  "tasks": [
+    {
+      "id": "dress-is-deterministic-and-respects-every-constraint",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "deterministic == True (got True)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "errors == [] (got [])"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "locks_ok == True (got True)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "explained == True (got True)"
+        },
+        {
+          "check": "in_range",
+          "passed": true,
+          "message": "adds in [5, None] (got 27)"
+        }
+      ]
+    },
+    {
+      "id": "dress-seeds-give-controlled-variations",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "seed_changes_result == True (got True)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "errors == [] (got [])"
+        }
+      ]
+    },
+    {
+      "id": "dress-reaches-the-target-density",
+      "passed": true,
+      "checks": [
+        {
+          "check": "in_range",
+          "passed": true,
+          "message": "coverage_after in [0.17, 0.3] (got 0.203)"
+        }
+      ]
+    },
+    {
+      "id": "dress-include-tags-limit-the-modules",
+      "passed": true,
+      "checks": [
+        {
+          "check": "list_excludes",
+          "passed": true,
+          "message": "used=['barrel', 'crate_small', 'crate_tiny']; must not contain ['table_round', 'chair', 'bench', 'plant_pot']"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "errors == [] (got [])"
+        }
+      ]
+    },
+    {
+      "id": "dress-exclude-tags-remove-modules",
+      "passed": true,
+      "checks": [
+        {
+          "check": "list_excludes",
+          "passed": true,
+          "message": "used=['banner', 'bar_counter', 'bench', 'chair', 'fireplace', 'pillar', 'plant_pot', 'shelf_wall', 'stool']; must not contain ['crate_small', 'crate_tiny', 'barrel']"
+        }
+      ]
+    },
+    {
+      "id": "dress-include-modules-limit-the-modules",
+      "passed": true,
+      "checks": [
+        {
+          "check": "list_excludes",
+          "passed": true,
+          "message": "used=['barrel', 'chair', 'crate_small']; must not contain ['table_round', 'bench', 'plant_pot', 'pillar']"
+        }
+      ]
+    },
+    {
+      "id": "dress-limits-one-module-from-dominating",
+      "passed": true,
+      "checks": [
+        {
+          "check": "in_range",
+          "passed": true,
+          "message": "max_share in [None, 0.55] (got 0.4)"
+        }
+      ]
+    },
+    {
+      "id": "dress-clusters-props",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "errors == [] (got [])"
+        },
+        {
+          "check": "in_range",
+          "passed": true,
+          "message": "adds in [3, None] (got 16)"
+        }
+      ]
+    },
+    {
+      "id": "dress-explains-why-candidates-were-rejected",
+      "passed": true,
+      "checks": [
+        {
+          "check": "list_contains",
+          "passed": true,
+          "message": "rejected=['blocks_path', 'blocks_sightline', 'collision', 'in_exclusion', 'outside_region']; expected to contain ['blocks_path', 'collision']"
+        }
+      ]
+    },
+    {
+      "id": "dress-places-a-hero-module-at-an-unsatisfied-focal-point",
+      "passed": true,
+      "checks": [
+        {
+          "check": "list_contains",
+          "passed": true,
+          "message": "used=['fireplace']; expected to contain ['fireplace']"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "errors == [] (got [])"
+        }
+      ]
+    },
+    {
+      "id": "dress-refuses-when-no-module-matches",
+      "passed": true,
+      "checks": [
+        {
+          "check": "error_contains",
+          "passed": true,
+          "message": "error should mention 'no module in the kit matches' (got 'no module in the kit matches the rules (include_modules/include_tags/exclude_tags); use search_kit to see what is available')"
+        }
+      ]
+    },
+    {
+      "id": "plan-add-then-invert-restores-the-scene",
+      "passed": true,
+      "checks": [
+        {
+          "check": "list_contains",
+          "passed": true,
+          "message": "added=['c9']; expected to contain ['c9']"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "round_trip == True (got True)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "hash_restored == True (got True)"
+        }
+      ]
+    },
+    {
+      "id": "plan-cannot-move-a-locked-instance",
+      "passed": true,
+      "checks": [
+        {
+          "check": "error_contains",
+          "passed": true,
+          "message": "error should mention 'locked' (got \"instance 'hearth_001' is locked and cannot be moved\")"
+        }
+      ]
+    },
+    {
+      "id": "plan-cannot-remove-a-locked-instance",
+      "passed": true,
+      "checks": [
+        {
+          "check": "error_contains",
+          "passed": true,
+          "message": "error should mention 'locked' (got \"instance 'bar_001' is locked and cannot be removed\")"
+        }
+      ]
+    },
+    {
+      "id": "plan-rejects-duplicate-ids",
+      "passed": true,
+      "checks": [
+        {
+          "check": "error_contains",
+          "passed": true,
+          "message": "error should mention 'already exists' (got \"instance id 'bar_001' already exists\")"
+        }
+      ]
+    },
+    {
+      "id": "locks-detect-a-moved-locked-piece",
+      "passed": true,
+      "checks": [
+        {
+          "check": "list_contains",
+          "passed": true,
+          "message": "codes=['locked_changed']; expected to contain ['locked_changed']"
+        }
+      ]
+    },
+    {
+      "id": "locks-detect-a-removed-locked-piece",
+      "passed": true,
+      "checks": [
+        {
+          "check": "list_contains",
+          "passed": true,
+          "message": "codes=['locked_removed']; expected to contain ['locked_removed']"
+        }
+      ]
+    },
+    {
+      "id": "locks-allow-changes-to-unlocked-pieces",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "ok == True (got True)"
+        },
+        {
+          "check": "list_contains",
+          "passed": true,
+          "message": "locked=['bar_001', 'hearth_001']; expected to contain ['hearth_001', 'bar_001']"
+        }
+      ]
+    },
+    {
+      "id": "measure-dressed-scene-is-clean",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "flagged == [] (got [])"
+        }
+      ]
+    },
+    {
+      "id": "measure-bare-scene-is-too-empty",
+      "passed": true,
+      "checks": [
+        {
+          "check": "list_contains",
+          "passed": true,
+          "message": "flagged=['coverage']; expected to contain ['coverage']"
+        },
+        {
+          "check": "approx",
+          "passed": true,
+          "message": "metrics.coverage=0.045; expected 0.045 +/- 0.001"
+        }
+      ]
+    },
+    {
+      "id": "measure-largest-free-rectangle",
+      "passed": true,
+      "checks": [
+        {
+          "check": "approx",
+          "passed": true,
+          "message": "metrics.largest_free_rect_fraction=0.75; expected 0.75 +/- 0.03"
+        }
+      ]
+    },
+    {
+      "id": "measure-flags-one-prop-everywhere",
+      "passed": true,
+      "checks": [
+        {
+          "check": "list_contains",
+          "passed": true,
+          "message": "flagged=['adjacent_same_ratio', 'color_balance', 'max_module_share']; expected to contain ['max_module_share', 'adjacent_same_ratio', 'color_balance']"
+        }
+      ]
+    },
+    {
+      "id": "measure-flags-blocked-paths-and-sightlines",
+      "passed": true,
+      "checks": [
+        {
+          "check": "list_contains",
+          "passed": true,
+          "message": "flagged=['blocked_paths', 'blocked_sightlines', 'collisions']; expected to contain ['collisions', 'blocked_paths', 'blocked_sightlines']"
+        }
+      ]
+    },
+    {
+      "id": "measure-flags-overcrowding",
+      "passed": true,
+      "checks": [
+        {
+          "check": "list_contains",
+          "passed": true,
+          "message": "flagged=['coverage', 'largest_free_rect_fraction']; expected to contain ['coverage', 'largest_free_rect_fraction']"
+        }
+      ]
+    },
+    {
+      "id": "measure-flags-a-missing-focal-piece",
+      "passed": true,
+      "checks": [
+        {
+          "check": "list_contains",
+          "passed": true,
+          "message": "flagged=['focal_satisfied']; expected to contain ['focal_satisfied']"
+        }
+      ]
+    },
+    {
+      "id": "export-luau-is-clean-and-deterministic",
+      "passed": true,
+      "checks": [
+        {
+          "check": "lint_clean",
+          "passed": true,
+          "message": "lint problems: []"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "deterministic == True (got True)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "has_guard == True (got True)"
+        }
+      ]
+    },
+    {
+      "id": "export-clone-mode-is-clean",
+      "passed": true,
+      "checks": [
+        {
+          "check": "lint_clean",
+          "passed": true,
+          "message": "lint problems: []"
+        }
+      ]
+    },
+    {
+      "id": "export-clone-mode-needs-a-template-name",
+      "passed": true,
+      "checks": [
+        {
+          "check": "error_contains",
+          "passed": true,
+          "message": "error should mention 'template' (got \"module 'chair' has no valid 'template' name for clone mode; add one to the kit or use mode='primitives'\")"
+        }
+      ]
+    },
+    {
+      "id": "export-rejects-injected-target-paths",
+      "passed": true,
+      "checks": [
+        {
+          "check": "error_contains",
+          "passed": true,
+          "message": "error should mention 'dotted path' (got \"path 'workspace; os.exit()' must be a dotted path like workspace.Props or ReplicatedStorage.Kit\")"
+        }
+      ]
+    },
+    {
+      "id": "export-rejects-unsafe-instance-ids",
+      "passed": true,
+      "checks": [
+        {
+          "check": "error_contains",
+          "passed": true,
+          "message": "error should mention 'unsafe id' (got 'refusing to generate Luau: unsafe id \\'t\"]=nil--\\' / \\'table_round\\'')"
+        }
+      ]
+    },
+    {
+      "id": "export-respects-the-item-limit",
+      "passed": true,
+      "checks": [
+        {
+          "check": "error_contains",
+          "passed": true,
+          "message": "error should mention 'limit 20' (got 'scene has 102 instances (limit 20); split it into regions')"
+        }
+      ]
+    },
+    {
+      "id": "export-json-is-engine-neutral",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "format == 'setdress-scene/1' (got 'setdress-scene/1')"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "count == 25 (got 25)"
+        }
+      ]
+    },
+    {
+      "id": "lint-rejects-publishing",
+      "passed": true,
+      "checks": [
+        {
+          "check": "lint_mentions",
+          "passed": true,
+          "message": "lint [\"forbidden token 'AssetService'\"] should mention 'forbidden token'"
+        }
+      ]
+    },
+    {
+      "id": "lint-rejects-unguarded-destroy",
+      "passed": true,
+      "checks": [
+        {
+          "check": "lint_mentions",
+          "passed": true,
+          "message": "lint ['Destroy() is not directly guarded by the AIGeneratedBy check'] should mention 'not directly guarded'"
+        }
+      ]
+    },
+    {
+      "id": "lint-accepts-guarded-destroy",
+      "passed": true,
+      "checks": [
+        {
+          "check": "lint_clean",
+          "passed": true,
+          "message": "lint problems: []"
+        }
+      ]
+    },
+    {
+      "id": "simulate-primitives-creates-every-instance",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "ok == True (got True)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "status == 'ok' (got 'ok')"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "children == 25 (got 25)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "expected == 25 (got 25)"
+        }
+      ]
+    },
+    {
+      "id": "simulate-clone-mode-pivots-every-clone",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "ok == True (got True)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "pivots == 25 (got 25)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "children == 25 (got 25)"
+        }
+      ]
+    },
+    {
+      "id": "simulate-clone-mode-reports-a-missing-template",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "ok == False (got False)"
+        },
+        {
+          "check": "error_contains",
+          "passed": true,
+          "message": "error should mention 'was not found in the kit folder' (got \"blockout:72: kit template 'Chair' was not found in the kit folder\")"
+        }
+      ]
+    },
+    {
+      "id": "inspect-placed-scene-is-in-sync",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "in_sync == True (got True)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "found == 25 (got 25)"
+        }
+      ]
+    },
+    {
+      "id": "inspect-detects-a-moved-piece",
+      "passed": true,
+      "checks": [
+        {
+          "check": "list_contains",
+          "passed": true,
+          "message": "moved=['table_001']; expected to contain ['table_001']"
+        }
+      ]
+    },
+    {
+      "id": "inspect-detects-a-rotated-piece",
+      "passed": true,
+      "checks": [
+        {
+          "check": "list_contains",
+          "passed": true,
+          "message": "moved=['table_001']; expected to contain ['table_001']"
+        }
+      ]
+    },
+    {
+      "id": "inspect-detects-a-deleted-piece",
+      "passed": true,
+      "checks": [
+        {
+          "check": "list_contains",
+          "passed": true,
+          "message": "missing=['table_001']; expected to contain ['table_001']"
+        }
+      ]
+    },
+    {
+      "id": "inspect-detects-an-extra-piece",
+      "passed": true,
+      "checks": [
+        {
+          "check": "list_contains",
+          "passed": true,
+          "message": "extra=['handmade']; expected to contain ['handmade']"
+        }
+      ]
+    },
+    {
+      "id": "map-renders",
+      "passed": true,
+      "checks": [
+        {
+          "check": "in_range",
+          "passed": true,
+          "message": "width in [400, None] (got 504)"
+        }
+      ]
+    },
+    {
+      "id": "search-finds-the-dressed-reference-and-avoid-examples",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "retrieved.0 == 'tavern-corner-001' (got 'tavern-corner-001')"
+        },
+        {
+          "check": "retrieved_not",
+          "passed": true,
+          "message": "retrieved ['tavern-corner-001']; must not include ['scene-unreviewed-import']"
+        }
+      ]
+    },
+    {
+      "id": "search-surfaces-avoid-examples",
+      "passed": true,
+      "checks": [
+        {
+          "check": "list_contains",
+          "passed": true,
+          "message": "avoid=['tavern-blocked-path', 'tavern-bare', 'tavern-all-barrels']; expected to contain ['tavern-blocked-path']"
+        }
+      ]
+    },
+    {
+      "id": "correction-is-recalled-for-similar-request",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "found_run == True (got True)"
+        }
+      ]
+    },
+    {
+      "id": "kit-search-by-text",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "ids.0 == 'table_round' (got 'table_round')"
+        }
+      ]
+    },
+    {
+      "id": "kit-search-by-tag",
+      "passed": true,
+      "checks": [
+        {
+          "check": "list_contains",
+          "passed": true,
+          "message": "ids=['bench', 'chair', 'stool']; expected to contain ['chair', 'bench', 'stool']"
+        }
+      ]
+    },
+    {
+      "id": "kit-search-by-socket-type",
+      "passed": true,
+      "checks": [
+        {
+          "check": "list_contains",
+          "passed": true,
+          "message": "ids=['crate_small', 'lantern', 'table_round']; expected to contain ['table_round', 'lantern', 'crate_small']"
+        },
+        {
+          "check": "list_excludes",
+          "passed": true,
+          "message": "ids=['crate_small', 'lantern', 'table_round']; must not contain ['bench', 'pillar']"
+        }
+      ]
+    },
+    {
+      "id": "kit-search-by-size-class",
+      "passed": true,
+      "checks": [
+        {
+          "check": "list_contains",
+          "passed": true,
+          "message": "ids=['crate_tiny', 'lantern']; expected to contain ['lantern', 'crate_tiny']"
+        },
+        {
+          "check": "list_excludes",
+          "passed": true,
+          "message": "ids=['crate_tiny', 'lantern']; must not contain ['fireplace', 'bar_counter']"
+        }
+      ]
+    },
+    {
+      "id": "kit-search-by-footprint-limit",
+      "passed": true,
+      "checks": [
+        {
+          "check": "list_contains",
+          "passed": true,
+          "message": "ids=['chair', 'crate_tiny', 'lantern', 'pillar', 'plant_pot', 'stool']; expected to contain ['chair', 'lantern', 'pillar']"
+        },
+        {
+          "check": "list_excludes",
+          "passed": true,
+          "message": "ids=['chair', 'crate_tiny', 'lantern', 'pillar', 'plant_pot', 'stool']; must not contain ['bar_counter', 'rug', 'table_round']"
+        }
+      ]
+    },
+    {
+      "id": "kit-unknown-module-suggests-the-approved-one",
+      "passed": true,
+      "checks": [
+        {
+          "check": "error_contains",
+          "passed": true,
+          "message": "error should mention 'Did you mean' (got \"module 'tabel_round' is not in the approved kit. Did you mean: ['table_round']? Use search_kit to find an approved module instead of creating a replacement.\")"
+        },
+        {
+          "check": "error_contains",
+          "passed": true,
+          "message": "error should mention 'table_round' (got \"module 'tabel_round' is not in the approved kit. Did you mean: ['table_round']? Use search_kit to find an approved module instead of creating a replacement.\")"
+        },
+        {
+          "check": "error_contains",
+          "passed": true,
+          "message": "error should mention 'search_kit' (got \"module 'tabel_round' is not in the approved kit. Did you mean: ['table_round']? Use search_kit to find an approved module instead of creating a replacement.\")"
+        }
+      ]
+    },
+    {
+      "id": "kit-example-is-valid",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "errors == [] (got [])"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "unresolved == [] (got [])"
+        }
+      ]
+    },
+    {
+      "id": "kit-reports-unresolved-metadata",
+      "passed": true,
+      "checks": [
+        {
+          "check": "list_contains",
+          "passed": true,
+          "message": "unresolved=['barrel']; expected to contain ['barrel']"
+        }
+      ]
+    },
+    {
+      "id": "kit-rejects-missing-footprint",
+      "passed": true,
+      "checks": [
+        {
+          "check": "list_contains",
+          "passed": true,
+          "message": "errors=['bad_footprint']; expected to contain ['bad_footprint']"
+        }
+      ]
+    },
+    {
+      "id": "kit-rejects-missing-height",
+      "passed": true,
+      "checks": [
+        {
+          "check": "list_contains",
+          "passed": true,
+          "message": "errors=['bad_height']; expected to contain ['bad_height']"
+        }
+      ]
+    },
+    {
+      "id": "kit-rejects-unknown-pivot",
+      "passed": true,
+      "checks": [
+        {
+          "check": "list_contains",
+          "passed": true,
+          "message": "errors=['bad_pivot']; expected to contain ['bad_pivot']"
+        }
+      ]
+    },
+    {
+      "id": "kit-rejects-duplicate-ids",
+      "passed": true,
+      "checks": [
+        {
+          "check": "list_contains",
+          "passed": true,
+          "message": "errors=['duplicate_id']; expected to contain ['duplicate_id']"
+        }
+      ]
+    },
+    {
+      "id": "kit-rejects-unsafe-ids",
+      "passed": true,
+      "checks": [
+        {
+          "check": "list_contains",
+          "passed": true,
+          "message": "errors=['bad_id']; expected to contain ['bad_id']"
+        }
+      ]
+    },
+    {
+      "id": "kit-rejects-bad-colour",
+      "passed": true,
+      "checks": [
+        {
+          "check": "list_contains",
+          "passed": true,
+          "message": "errors=['bad_color']; expected to contain ['bad_color']"
+        }
+      ]
+    },
+    {
+      "id": "kit-rejects-bad-scale-range",
+      "passed": true,
+      "checks": [
+        {
+          "check": "list_contains",
+          "passed": true,
+          "message": "errors=['bad_scale']; expected to contain ['bad_scale']"
+        }
+      ]
+    },
+    {
+      "id": "kit-rejects-bad-priority",
+      "passed": true,
+      "checks": [
+        {
+          "check": "list_contains",
+          "passed": true,
+          "message": "errors=['bad_priority']; expected to contain ['bad_priority']"
+        }
+      ]
+    },
+    {
+      "id": "kit-rejects-malformed-socket",
+      "passed": true,
+      "checks": [
+        {
+          "check": "list_contains",
+          "passed": true,
+          "message": "errors=['bad_socket']; expected to contain ['bad_socket']"
+        }
+      ]
+    },
+    {
+      "id": "kit-warns-about-orphan-socket-types",
+      "passed": true,
+      "checks": [
+        {
+          "check": "list_contains",
+          "passed": true,
+          "message": "codes=['orphan_socket_type']; expected to contain ['orphan_socket_type']"
+        }
+      ]
+    },
+    {
+      "id": "kit-warns-about-untagged-modules",
+      "passed": true,
+      "checks": [
+        {
+          "check": "list_contains",
+          "passed": true,
+          "message": "codes=['no_tags']; expected to contain ['no_tags']"
+        }
+      ]
+    },
+    {
+      "id": "geom-forward-vectors",
+      "passed": true,
+      "checks": [
+        {
+          "check": "approx",
+          "passed": true,
+          "message": "x=1.0; expected 1 +/- 0.01"
+        },
+        {
+          "check": "approx",
+          "passed": true,
+          "message": "z=0.0; expected 0 +/- 0.01"
+        }
+      ]
+    },
+    {
+      "id": "geom-forward-north",
+      "passed": true,
+      "checks": [
+        {
+          "check": "approx",
+          "passed": true,
+          "message": "x=0.0; expected 0 +/- 0.01"
+        },
+        {
+          "check": "approx",
+          "passed": true,
+          "message": "z=1.0; expected 1 +/- 0.01"
+        }
+      ]
+    },
+    {
+      "id": "geom-local-forward-point-rotates-with-yaw",
+      "passed": true,
+      "checks": [
+        {
+          "check": "approx",
+          "passed": true,
+          "message": "x=11.0; expected 11 +/- 0.01"
+        },
+        {
+          "check": "approx",
+          "passed": true,
+          "message": "z=10.0; expected 10 +/- 0.01"
+        }
+      ]
+    },
+    {
+      "id": "geom-local-side-point-rotates-with-yaw",
+      "passed": true,
+      "checks": [
+        {
+          "check": "approx",
+          "passed": true,
+          "message": "x=0.0; expected 0 +/- 0.01"
+        },
+        {
+          "check": "approx",
+          "passed": true,
+          "message": "z=-1.0; expected -1 +/- 0.01"
+        }
+      ]
+    },
+    {
+      "id": "geom-scale-applies-to-local-points",
+      "passed": true,
+      "checks": [
+        {
+          "check": "approx",
+          "passed": true,
+          "message": "z=2.5; expected 2.5 +/- 0.01"
+        }
+      ]
+    },
+    {
+      "id": "geom-boxes-overlap",
+      "passed": true,
+      "checks": [
+        {
+          "check": "approx",
+          "passed": true,
+          "message": "depth=0.1; expected 0.1 +/- 0.01"
+        }
+      ]
+    },
+    {
+      "id": "geom-touching-boxes-do-not-overlap",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "depth == 0 (got 0.0)"
+        }
+      ]
+    },
+    {
+      "id": "geom-rotated-box-overlap-uses-the-oriented-footprint",
+      "passed": true,
+      "checks": [
+        {
+          "check": "in_range",
+          "passed": true,
+          "message": "depth in [0.5, None] (got 1.0)"
+        }
+      ]
+    },
+    {
+      "id": "geom-snapping",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "value == 3 (got 3)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "yaw == 90 (got 90.0)"
+        }
+      ]
+    },
+    {
+      "id": "snap-chair-to-table-front",
+      "passed": true,
+      "checks": [
+        {
+          "check": "approx",
+          "passed": true,
+          "message": "at.0=20.0; expected 20 +/- 0.01"
+        },
+        {
+          "check": "approx",
+          "passed": true,
+          "message": "at.1=18.5; expected 18.5 +/- 0.01"
+        },
+        {
+          "check": "approx",
+          "passed": true,
+          "message": "yaw=180.0; expected 180 +/- 0.01"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "errors == [] (got [])"
+        }
+      ]
+    },
+    {
+      "id": "snap-chair-to-table-back",
+      "passed": true,
+      "checks": [
+        {
+          "check": "approx",
+          "passed": true,
+          "message": "at.1=11.5; expected 11.5 +/- 0.01"
+        },
+        {
+          "check": "approx",
+          "passed": true,
+          "message": "yaw=0.0; expected 0 +/- 0.01"
+        }
+      ]
+    },
+    {
+      "id": "snap-follows-the-targets-rotation",
+      "passed": true,
+      "checks": [
+        {
+          "check": "approx",
+          "passed": true,
+          "message": "at.0=23.5; expected 23.5 +/- 0.01"
+        },
+        {
+          "check": "approx",
+          "passed": true,
+          "message": "yaw=-90.0; expected -90 +/- 0.01"
+        }
+      ]
+    },
+    {
+      "id": "snap-lantern-onto-the-tabletop",
+      "passed": true,
+      "checks": [
+        {
+          "check": "approx",
+          "passed": true,
+          "message": "y=3.0; expected 3 +/- 0.01"
+        },
+        {
+          "check": "approx",
+          "passed": true,
+          "message": "at.0=20.0; expected 20 +/- 0.01"
+        },
+        {
+          "check": "approx",
+          "passed": true,
+          "message": "at.1=15.0; expected 15 +/- 0.01"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "errors == [] (got [])"
+        }
+      ]
+    },
+    {
+      "id": "snap-wall-segments-end-to-end",
+      "passed": true,
+      "checks": [
+        {
+          "check": "approx",
+          "passed": true,
+          "message": "at.0=18.0; expected 18 +/- 0.01"
+        },
+        {
+          "check": "approx",
+          "passed": true,
+          "message": "at.1=10.0; expected 10 +/- 0.01"
+        },
+        {
+          "check": "approx",
+          "passed": true,
+          "message": "yaw=0.0; expected 0 +/- 0.01"
+        }
+      ]
+    },
+    {
+      "id": "snap-wall-segments-around-a-turn",
+      "passed": true,
+      "checks": [
+        {
+          "check": "approx",
+          "passed": true,
+          "message": "at.0=10.0; expected 10 +/- 0.01"
+        },
+        {
+          "check": "approx",
+          "passed": true,
+          "message": "at.1=2.0; expected 2 +/- 0.01"
+        },
+        {
+          "check": "approx",
+          "passed": true,
+          "message": "yaw=90.0; expected 90 +/- 0.01"
+        }
+      ]
+    },
+    {
+      "id": "snap-rejects-incompatible-sockets",
+      "passed": true,
+      "checks": [
+        {
+          "check": "error_contains",
+          "passed": true,
+          "message": "error should mention 'incompatible' (got \"sockets are incompatible: target 'top' is surface (mates ['surface']), 'chair.front' is seat (mates ['seat'])\")"
+        }
+      ]
+    },
+    {
+      "id": "snap-rejects-unknown-socket",
+      "passed": true,
+      "checks": [
+        {
+          "check": "error_contains",
+          "passed": true,
+          "message": "error should mention 'has no socket' (got \"module 'table_round' has no socket 'nope'. Sockets: ['top', 'seat_front', 'seat_back']\")"
+        }
+      ]
+    },
+    {
+      "id": "snap-rejects-unknown-target",
+      "passed": true,
+      "checks": [
+        {
+          "check": "error_contains",
+          "passed": true,
+          "message": "error should mention 'unknown target' (got \"unknown target instance 'ghost'\")"
+        }
+      ]
+    },
+    {
+      "id": "place-clean-table",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "codes == [] (got [])"
+        }
+      ]
+    },
+    {
+      "id": "place-snaps-to-the-grid-and-yaw-step",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "at == [10, 25] (got [10.0, 25.0])"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "yaw == 90 (got 90.0)"
+        }
+      ]
+    },
+    {
+      "id": "place-rejects-outside-the-region",
+      "passed": true,
+      "checks": [
+        {
+          "check": "list_contains",
+          "passed": true,
+          "message": "codes=['outside_region']; expected to contain ['outside_region']"
+        }
+      ]
+    },
+    {
+      "id": "place-rejects-the-door-exclusion",
+      "passed": true,
+      "checks": [
+        {
+          "check": "list_contains",
+          "passed": true,
+          "message": "codes=['blocks_path', 'in_exclusion']; expected to contain ['in_exclusion']"
+        }
+      ]
+    },
+    {
+      "id": "place-rejects-collision-with-a-locked-hero-piece",
+      "passed": true,
+      "checks": [
+        {
+          "check": "list_contains",
+          "passed": true,
+          "message": "codes=['collision']; expected to contain ['collision']"
+        }
+      ]
+    },
+    {
+      "id": "place-rejects-blocking-a-path",
+      "passed": true,
+      "checks": [
+        {
+          "check": "list_contains",
+          "passed": true,
+          "message": "codes=['blocks_path']; expected to contain ['blocks_path']"
+        }
+      ]
+    },
+    {
+      "id": "place-rejects-blocking-a-sightline",
+      "passed": true,
+      "checks": [
+        {
+          "check": "list_contains",
+          "passed": true,
+          "message": "codes=['blocks_path', 'blocks_sightline']; expected to contain ['blocks_sightline']"
+        }
+      ]
+    },
+    {
+      "id": "place-decor-without-collision-never-blocks",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "codes == [] (got [])"
+        }
+      ]
+    },
+    {
+      "id": "place-stacking-on-a-surface-is-allowed",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "codes == [] (got [])"
+        }
+      ]
+    },
+    {
+      "id": "place-same-height-collides",
+      "passed": true,
+      "checks": [
+        {
+          "check": "list_contains",
+          "passed": true,
+          "message": "codes=['collision']; expected to contain ['collision']"
+        }
+      ]
+    },
+    {
+      "id": "place-spacing-adds-a-required-gap",
+      "passed": true,
+      "checks": [
+        {
+          "check": "list_contains",
+          "passed": true,
+          "message": "codes=['collision']; expected to contain ['collision']"
+        }
+      ]
+    },
+    {
+      "id": "place-without-spacing-the-same-spot-is-fine",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "codes == [] (got [])"
+        }
+      ]
+    },
+    {
+      "id": "place-rejects-scale-outside-the-modules-range",
+      "passed": true,
+      "checks": [
+        {
+          "check": "list_contains",
+          "passed": true,
+          "message": "codes=['scale_out_of_range']; expected to contain ['scale_out_of_range']"
+        }
+      ]
+    },
+    {
+      "id": "place-rejects-modules-outside-the-kit",
+      "passed": true,
+      "checks": [
+        {
+          "check": "error_contains",
+          "passed": true,
+          "message": "error should mention 'not in the approved kit' (got \"module 'dragon_statue' is not in the approved kit. Use search_kit to find an approved module instead of creating a replacement.\")"
+        }
+      ]
+    },
+    {
+      "id": "validate-hero-only-scene-is-clean",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "errors == [] (got [])"
+        }
+      ]
+    },
+    {
+      "id": "validate-dressed-scene-is-clean",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "errors == [] (got [])"
+        }
+      ]
+    },
+    {
+      "id": "validate-blocked-scene-reports-each-problem",
+      "passed": true,
+      "checks": [
+        {
+          "check": "list_contains",
+          "passed": true,
+          "message": "errors=['blocks_path', 'blocks_sightline', 'collision']; expected to contain ['blocks_path', 'blocks_sightline', 'collision']"
+        }
+      ]
+    },
+    {
+      "id": "validate-unknown-module-in-a-scene",
+      "passed": true,
+      "checks": [
+        {
+          "check": "list_contains",
+          "passed": true,
+          "message": "errors=['unknown_module']; expected to contain ['unknown_module']"
+        }
+      ]
+    },
+    {
+      "id": "validate-duplicate-instance-ids",
+      "passed": true,
+      "checks": [
+        {
+          "check": "list_contains",
+          "passed": true,
+          "message": "errors=['duplicate_id']; expected to contain ['duplicate_id']"
+        }
+      ]
+    }
+  ]
+}

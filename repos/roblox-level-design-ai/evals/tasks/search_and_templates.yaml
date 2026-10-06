@@ -1,0 +1,46 @@
+- id: search-arena
+  title: Retrieval finds the arena reference and surfaces matching 'avoid' examples
+  input: {op: search, query: "two team arena with loops and flanking", k: 3}
+  checks:
+    - {type: equals, path: retrieved.0, value: arena-two-team-loops-001}
+    - {type: retrieved_not, ids: [level-unreviewed-import, arena-without-loops]}
+    - {type: list_contains, path: avoid, items: [arena-without-loops]}
+- id: search-level-type-filter
+  input: {op: search, query: "ramp branches", level_type: linear, k: 5}
+  checks:
+    - {type: equals, path: retrieved.0, value: linear-raised-finale-001}
+    - {type: retrieved_not, ids: [arena-two-team-loops-001, hub-two-team-001]}
+- id: search-hides-uncurated
+  input: {op: search, query: "unreviewed level import arena", k: 10}
+  checks: [{type: retrieved_not, ids: [level-unreviewed-import]}]
+- id: search-hub-spawn-problem-is-an-avoid-example
+  input: {op: search, query: "hub spawn exposed sightline", level_type: hub, k: 5}
+  checks: [{type: list_contains, path: avoid, items: [hub-spawns-see-each-other]}]
+- id: template-parameter-out-of-range
+  input: {op: template_params, template: hub_and_spoke, params: {hub: 500}}
+  checks: [{type: error_contains, text: above maximum}]
+- id: template-unknown-parameter
+  input: {op: template_params, template: loop_arena, params: {sparkle: 1}}
+  checks: [{type: error_contains, text: unknown parameter}]
+- id: template-parameter-wrong-type
+  input: {op: template_params, template: loop_arena, params: {cell_w: "wide"}}
+  checks: [{type: error_contains, text: expected a number}]
+- id: expr-arithmetic-ok
+  input: {op: expr, expr: "round(a/8)*4 + b", names: {a: 20, b: 3}}
+  checks: [{type: equals, path: value, value: 11}]
+- id: expr-rejects-code-execution
+  title: Template expressions are arithmetic only
+  input: {op: expr, expr: "__import__('os').system('echo hi')", names: {}}
+  checks: [{type: error_contains, text: arithmetic}]
+- id: expr-rejects-attribute-access
+  input: {op: expr, expr: "a.__class__", names: {a: 1}}
+  checks: [{type: error_contains, text: arithmetic}]
+- id: expr-rejects-power-and-unknown-names
+  input: {op: expr, expr: "9**9**9", names: {}}
+  checks: [{type: error_contains, text: arithmetic}]
+- id: expr-rejects-unknown-name
+  input: {op: expr, expr: "nope + 1", names: {}}
+  checks: [{type: error_contains, text: unknown name}]
+- id: expr-division-by-zero-is-a-clean-error
+  input: {op: expr, expr: "1/0", names: {}}
+  checks: [{type: error_contains, text: could not be evaluated}]

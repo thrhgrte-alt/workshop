@@ -1,0 +1,235 @@
+{
+ "corridors": [
+  {
+   "eye_height": 4.5,
+   "from": [
+    20,
+    28
+   ],
+   "id": "bar_view",
+   "to": [
+    31,
+    5
+   ],
+   "width": 2.5
+  }
+ ],
+ "exclusions": [
+  [
+   17,
+   0,
+   6,
+   3
+  ]
+ ],
+ "focal": [
+  {
+   "at": [
+    2,
+    15
+   ],
+   "id": "hearth",
+   "min_priority": 4,
+   "radius": 10
+  },
+  {
+   "at": [
+    30,
+    3
+   ],
+   "id": "bar",
+   "min_priority": 4,
+   "radius": 9
+  }
+ ],
+ "grid": {
+  "step": 1.0,
+  "yaw_step": 90.0
+ },
+ "id": "tavern_blocked_path",
+ "instances": [
+  {
+   "at": [
+    2.0,
+    15.0
+   ],
+   "id": "hearth_001",
+   "locked": true,
+   "module": "fireplace",
+   "scale": 1.0,
+   "source": "user",
+   "why": "locked hero piece",
+   "y": 0,
+   "yaw": 90.0
+  },
+  {
+   "at": [
+    30.0,
+    3.0
+   ],
+   "id": "bar_001",
+   "locked": true,
+   "module": "bar_counter",
+   "scale": 1.0,
+   "source": "user",
+   "why": "locked hero piece",
+   "y": 0,
+   "yaw": 0.0
+  },
+  {
+   "at": [
+    12.0,
+    20.0
+   ],
+   "id": "table_001",
+   "locked": false,
+   "module": "table_round",
+   "scale": 1.0,
+   "source": "ai",
+   "why": "table group anchor",
+   "y": 0,
+   "yaw": 0.0
+  },
+  {
+   "at": [
+    12.0,
+    23.5
+   ],
+   "id": "chair_front",
+   "locked": false,
+   "module": "chair",
+   "scale": 1.0,
+   "source": "ai",
+   "why": "snapped chair.front to table_001.seat_front",
+   "y": 0.0,
+   "yaw": 180.0
+  },
+  {
+   "at": [
+    12.0,
+    16.5
+   ],
+   "id": "chair_back",
+   "locked": false,
+   "module": "chair",
+   "scale": 1.0,
+   "source": "ai",
+   "why": "snapped chair.front to table_001.seat_back",
+   "y": 0.0,
+   "yaw": 0.0
+  },
+  {
+   "at": [
+    12.0,
+    20.0
+   ],
+   "id": "lantern_001",
+   "locked": false,
+   "module": "lantern",
+   "scale": 1.0,
+   "source": "ai",
+   "why": "snapped lantern.base to table_001.top",
+   "y": 3.0,
+   "yaw": 0.0
+  },
+  {
+   "at": [
+    12.0,
+    20.0
+   ],
+   "id": "rug_001",
+   "locked": false,
+   "module": "rug",
+   "scale": 1.0,
+   "source": "ai",
+   "why": "under the table group",
+   "y": 0,
+   "yaw": 0.0
+  },
+  {
+   "at": [
+    20.0,
+    8.0
+   ],
+   "id": "crate_000",
+   "locked": false,
+   "module": "crate_small",
+   "scale": 1.0,
+   "source": "ai",
+   "why": "",
+   "y": 0.0,
+   "yaw": 0.0
+  },
+  {
+   "at": [
+    20.0,
+    11.0
+   ],
+   "id": "crate_001",
+   "locked": false,
+   "module": "crate_small",
+   "scale": 1.0,
+   "source": "ai",
+   "why": "",
+   "y": 0.0,
+   "yaw": 0.0
+  },
+  {
+   "at": [
+    26.0,
+    14.0
+   ],
+   "id": "crate_002",
+   "locked": false,
+   "module": "crate_small",
+   "scale": 1.0,
+   "source": "ai",
+   "why": "",
+   "y": 0.0,
+   "yaw": 0.0
+  },
+  {
+   "at": [
+    26.0,
+    16.0
+   ],
+   "id": "pillar_view",
+   "locked": false,
+   "module": "pillar",
+   "scale": 1.0,
+   "source": "ai",
+   "why": "",
+   "y": 0.0,
+   "yaw": 0.0
+  }
+ ],
+ "locked": {},
+ "paths": [
+  {
+   "id": "entrance",
+   "points": [
+    [
+     20,
+     3
+    ],
+    [
+     20,
+     14
+    ],
+    [
+     34,
+     14
+    ]
+   ],
+   "width": 5
+  }
+ ],
+ "region": {
+  "d": 30,
+  "floor_y": 0,
+  "w": 40,
+  "x": 0,
+  "z": 0
+ },
+ "units": "studs"
+}

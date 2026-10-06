@@ -1,0 +1,15 @@
+{
+  "servers": {
+    "concept-art-ai": {
+      "type": "stdio",
+      "command": "python",
+      "args": [
+        "-m",
+        "conceptai.server"
+      ],
+      "env": {
+        "CONCEPTAI_ROOT": "/ABSOLUTE/PATH/TO/concept-art-ai"
+      }
+    }
+  }
+}

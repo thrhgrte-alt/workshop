@@ -1,0 +1,86 @@
+- id: kit-search-by-text
+  input: {op: kit_search, query: "round table"}
+  checks: [{type: equals, path: ids.0, value: table_round}]
+- id: kit-search-by-tag
+  input: {op: kit_search, tags: [seat], k: 10}
+  checks: [{type: list_contains, path: ids, items: [chair, bench, stool]}]
+- id: kit-search-by-socket-type
+  input: {op: kit_search, socket_type: surface, k: 10}
+  checks: [{type: list_contains, path: ids, items: [table_round, lantern, crate_small]}, {type: list_excludes, path: ids, items: [bench, pillar]}]
+- id: kit-search-by-size-class
+  input: {op: kit_search, size_class: small, k: 10}
+  checks: [{type: list_contains, path: ids, items: [lantern, crate_tiny]}, {type: list_excludes, path: ids, items: [fireplace, bar_counter]}]
+- id: kit-search-by-footprint-limit
+  input: {op: kit_search, max_footprint: [2, 2], k: 20}
+  checks: [{type: list_contains, path: ids, items: [chair, lantern, pillar]}, {type: list_excludes, path: ids, items: [bar_counter, rug, table_round]}]
+- id: kit-unknown-module-suggests-the-approved-one
+  title: "Never invent a replacement: an unknown id points to the nearest approved modules"
+  input: {op: kit_get, module: tabel_round}
+  checks: [{type: error_contains, text: Did you mean}, {type: error_contains, text: table_round}, {type: error_contains, text: search_kit}]
+- id: kit-example-is-valid
+  input: {op: kit}
+  checks: [{type: equals, path: errors, value: []}, {type: equals, path: unresolved, value: []}]
+- id: kit-reports-unresolved-metadata
+  input: {op: kit, mutations: [{op: unset, module: barrel, field: material}, {op: unset, module: barrel, field: color}]}
+  checks: [{type: list_contains, path: unresolved, items: [barrel]}]
+- id: kit-rejects-missing-footprint
+  input: {op: kit, mutations: [{op: unset, module: chair, field: footprint}]}
+  checks: [{type: list_contains, path: errors, items: [bad_footprint]}]
+- id: kit-rejects-missing-height
+  input: {op: kit, mutations: [{op: unset, module: chair, field: height}]}
+  checks: [{type: list_contains, path: errors, items: [bad_height]}]
+- id: kit-rejects-unknown-pivot
+  input: {op: kit, mutations: [{op: set, module: chair, field: pivot, value: top_left}]}
+  checks: [{type: list_contains, path: errors, items: [bad_pivot]}]
+- id: kit-rejects-duplicate-ids
+  input: {op: kit, mutations: [{op: add, value: {id: chair, footprint: [1, 1], height: 1, tags: [x]}}]}
+  checks: [{type: list_contains, path: errors, items: [duplicate_id]}]
+- id: kit-rejects-unsafe-ids
+  input: {op: kit, mutations: [{op: add, value: {id: "a b\"]=nil", footprint: [1, 1], height: 1, tags: [x]}}]}
+  checks: [{type: list_contains, path: errors, items: [bad_id]}]
+- id: kit-rejects-bad-colour
+  input: {op: kit, mutations: [{op: set, module: chair, field: color, value: red}]}
+  checks: [{type: list_contains, path: errors, items: [bad_color]}]
+- id: kit-rejects-bad-scale-range
+  input: {op: kit, mutations: [{op: set, module: chair, field: scale, value: {min: 2, max: 1}}]}
+  checks: [{type: list_contains, path: errors, items: [bad_scale]}]
+- id: kit-rejects-bad-priority
+  input: {op: kit, mutations: [{op: set, module: chair, field: priority, value: 9}]}
+  checks: [{type: list_contains, path: errors, items: [bad_priority]}]
+- id: kit-rejects-malformed-socket
+  input: {op: kit, mutations: [{op: set, module: chair, field: sockets, value: [{name: front, pos: [0, 0]}]}]}
+  checks: [{type: list_contains, path: errors, items: [bad_socket]}]
+- id: kit-warns-about-orphan-socket-types
+  input: {op: kit, mutations: [{op: set, module: chair, field: sockets, value: [{name: front, pos: [0, 0, 1], yaw: 0, type: seat, mates: [wormhole]}]}]}
+  checks: [{type: list_contains, path: codes, items: [orphan_socket_type]}]
+- id: kit-warns-about-untagged-modules
+  input: {op: kit, mutations: [{op: set, module: chair, field: tags, value: []}]}
+  checks: [{type: list_contains, path: codes, items: [no_tags]}]
+- id: geom-forward-vectors
+  input: {op: geom, kind: forward, yaw: 90}
+  checks: [{type: approx, path: x, value: 1}, {type: approx, path: z, value: 0}]
+- id: geom-forward-north
+  input: {op: geom, kind: forward, yaw: 0}
+  checks: [{type: approx, path: x, value: 0}, {type: approx, path: z, value: 1}]
+- id: geom-local-forward-point-rotates-with-yaw
+  input: {op: geom, kind: to_world, local: [0, 1], at: [10, 10], yaw: 90}
+  checks: [{type: approx, path: x, value: 11}, {type: approx, path: z, value: 10}]
+- id: geom-local-side-point-rotates-with-yaw
+  input: {op: geom, kind: to_world, local: [1, 0], at: [0, 0], yaw: 90}
+  checks: [{type: approx, path: x, value: 0}, {type: approx, path: z, value: -1}]
+- id: geom-scale-applies-to-local-points
+  input: {op: geom, kind: to_world, local: [0, 1], at: [0, 0], yaw: 0, scale: 2.5}
+  checks: [{type: approx, path: z, value: 2.5}]
+- id: geom-boxes-overlap
+  input: {op: geom, kind: overlap, a: {at: [0, 0], size: [4, 4]}, b: {at: [3.9, 0], size: [4, 4]}}
+  checks: [{type: approx, path: depth, value: 0.1}]
+- id: geom-touching-boxes-do-not-overlap
+  input: {op: geom, kind: overlap, a: {at: [0, 0], size: [4, 4]}, b: {at: [4, 0], size: [4, 4]}}
+  checks: [{type: equals, path: depth, value: 0}]
+- id: geom-rotated-box-overlap-uses-the-oriented-footprint
+  title: A thin plank rotated 90 degrees fits where the unrotated one would collide
+  input: {op: geom, kind: overlap, a: {at: [0, 0], size: [10, 1]}, b: {at: [0, 3], size: [10, 1], yaw: 90}}
+  checks: [{type: in_range, path: depth, min: 0.5}]
+- id: geom-snapping
+  input: {op: geom, kind: snap, value: 3.4, step: 1, yaw: 134, yaw_step: 90}
+  checks: [{type: equals, path: value, value: 3}, {type: equals, path: yaw, value: 90}]

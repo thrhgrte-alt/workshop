@@ -1,0 +1,15 @@
+{
+  "servers": {
+    "roblox-level-design-ai": {
+      "type": "stdio",
+      "command": "python",
+      "args": [
+        "-m",
+        "rbxlevel.server"
+      ],
+      "env": {
+        "RBXLEVEL_ROOT": "/ABSOLUTE/PATH/TO/roblox-level-design-ai"
+      }
+    }
+  }
+}

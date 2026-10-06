@@ -1,0 +1,44 @@
+id: stylized_stone_wall
+title: Stylized stone wall
+description: >
+  Chunky blocky stone wall with softened bevels, gentle surface variation and a two-tone
+  cool-grey palette. Good starting point for chunky, low-detail environments.
+material_type: stone
+resolution: 1024
+parameters:
+  brick_columns:    {type: int,   min: 2,   max: 32, default: 6,    description: Stones per row (fewer = chunkier)}
+  brick_rows:       {type: int,   min: 2,   max: 32, default: 10,   description: Rows of stones}
+  bevel_softness:   {type: float, min: 0.0, max: 8.0, default: 2.0, description: Blur applied to stone edges (higher = rounder bevels)}
+  height_contrast:  {type: float, min: 0.0, max: 1.0, default: 0.6, description: How hard the stone/gap separation is}
+  surface_variation: {type: float, min: 0.0, max: 1.0, default: 0.25, description: Strength of large-scale surface unevenness}
+  roughness_level:  {type: float, min: 0.3, max: 1.0, default: 0.8, description: Overall roughness}
+  stone_color_light: {type: color, default: [0.62, 0.66, 0.70, 1.0], description: Colour on raised stone}
+  stone_color_dark:  {type: color, default: [0.25, 0.28, 0.31, 1.0], description: Colour in gaps and crevices}
+nodes:
+  - {id: tiles,        node: tile_generator, params: {x_amount: {from: brick_columns}, y_amount: {from: brick_rows}}}
+  - {id: soften,       node: blur,           params: {intensity: {from: bevel_softness}}}
+  - {id: shape,        node: levels,         params: {level_in_low: {from: height_contrast, scale: 0.4}, level_in_high: {from: height_contrast, scale: -0.4, offset: 1.0}}}
+  - {id: clouds,       node: clouds_2,       params: {scale: 4}}
+  - {id: clouds_small, node: levels,         params: {level_out_high: {from: surface_variation}}}
+  - {id: height_mix,   node: blend,          params: {blendingmode: add, opacitymult: 1.0}}
+  - {id: normal_map,   node: normal,         params: {intensity: 1.0}}
+  - {id: col_dark,     node: uniform,        params: {outputcolor: {from: stone_color_dark}}}
+  - {id: col_light,    node: uniform,        params: {outputcolor: {from: stone_color_light}}}
+  - {id: color_mix,    node: blend,          params: {blendingmode: copy}}
+  - {id: rough,        node: levels,         params: {level_out_low: {from: roughness_level, scale: 0.8}, level_out_high: {from: roughness_level}}}
+connections:
+  - {from: tiles.output,        to: soften.input}
+  - {from: soften.output,       to: shape.input1}
+  - {from: clouds.output,       to: clouds_small.input1}
+  - {from: clouds_small.output, to: height_mix.source}
+  - {from: shape.output,        to: height_mix.destination}
+  - {from: height_mix.output,   to: normal_map.input1}
+  - {from: col_light.output,    to: color_mix.source}
+  - {from: col_dark.output,     to: color_mix.destination}
+  - {from: height_mix.output,   to: color_mix.opacity}
+  - {from: height_mix.output,   to: rough.input1}
+outputs:
+  - {usage: baseColor, from: color_mix.output}
+  - {usage: normal,    from: normal_map.output}
+  - {usage: roughness, from: rough.output}
+  - {usage: height,    from: height_mix.output}

@@ -1,0 +1,68 @@
+# Machine-readable style spec. Human-editable companion: STYLE.md.
+#
+# !! STARTER TEMPLATE for readable, fair multiplayer/co-op blockouts. It is NOT your design philosophy until you edit it.
+# !! Character numbers and thresholds are HEURISTIC defaults, not Roblox limits: set them to your game's actual values.
+version: 1
+name: Readable, fair blockouts (starter template)
+summary: >
+  Layouts that a new player can read: clear landmarks, short sightlines inside rooms, more than one way through
+  contested spaces, no dead ends without purpose, fair routes for every team, safe spawns, and a pace that alternates
+  encounters with rest. Blockouts are plain boxes you can walk through and judge at player height.
+traits:
+  readability: landmarks visible along the main routes; no long featureless stretches
+  flow: contested areas have two or more independent routes; dead ends hold loot, secrets or safety
+  fairness: teams reach objectives in similar walking distance
+  pacing: encounters spaced along the route, intensity rising toward the objective
+  geometry: rooms on a 4-stud grid, 2-stud walls, 16-stud ceilings, 8-stud doors
+defaults: {grid: 4, wall: 2, room_height: 16, door_width: 8, opening_width: 16, stairs_width: 8, ramp_width: 10, ramp_design_slope_deg: 25}
+player: {height: 5.0, eye: 4.5, width: 2.0, max_step: 1.5, jump_height: 7.2}
+limits:
+  min_room_size: 12
+  min_ceiling_factor: 2.4
+  min_door_width: 4
+  max_ramp_slope_deg: 40
+  stairs_step_height: 1.0
+  max_rise: 24
+  alt_route_ratio: 1.5
+  view_range: 80
+  max_sightline: 80
+  max_blind_stretch: 48
+  max_blockout_parts: 800
+build: {door_height: 10.0, floor_thickness: 2.0, step_height: 1.0, ceilings: false}
+ranges:
+  unreachable_rooms: {max: 0, severity: error, note: every room must be reachable from a spawn}
+  spawn_exposure_count: {max: 0, severity: error, note: spawns must not see enemy spawns within view range}
+  spawn_separation: {min: 60, severity: warning, note: heuristic minimum walking distance between enemy spawns}
+  landmark_visibility: {min: 0.5, severity: warning, note: share of the main route (sampled every 8 studs) with a landmark in view}
+  longest_sightline: {max: 80, severity: warning, note: longest unobstructed straight line inside any room}
+  dead_ends: {max: 0, severity: warning, note: empty dead-end rooms; tag them loot/secret/safe or connect them}
+  rest_stretch_max: {max: 120, severity: warning, note: longest walk without an encounter on the primary route}
+  first_encounter_distance: {min: 20, severity: warning, note: do not ambush players at the spawn}
+  fairness_ratio: {min: 0.9, severity: warning, note: shortest team route / longest team route}
+profiles:
+  arena:
+    description: contested space with several routes
+    ranges:
+      loops: {min: 1, severity: warning, note: arenas need at least one loop so players can flank}
+      alternates_min: {min: 2, severity: warning, note: at least two routes within 1.5x of the shortest}
+      independent_routes_min: {min: 2, severity: warning, note: at least two routes that share no room}
+      chokepoints_max: {max: 0, severity: warning, note: no single room that every route must cross}
+  hub:
+    description: hub with spokes; one route per team is fine
+    ranges: {}
+  linear:
+    description: single path with optional branches
+    ranges:
+      fairness_ratio: {min: 0.0, severity: info, note: single-team levels have no fairness requirement}
+constraints:
+  - {id: L1, severity: must,   rule: Never publish, save or overwrite a live project from generated code; replace only blockouts this tool created.}
+  - {id: L2, severity: must,   rule: Locked rooms, connections, bounds and placed items must not change between revisions.}
+  - {id: L3, severity: must,   rule: Every room is reachable on foot, in the built geometry as well as in the spec.}
+  - {id: L4, severity: should, rule: Judge a layout from player height along its routes, not from the plan view alone.}
+  - {id: L5, severity: should, rule: Report every assumption (character size, step height, door height) and every unresolved design question.}
+exclusions:
+  - long unbroken corridors that let one player see the whole level
+  - enemy spawns visible to each other
+  - dead-end rooms with nothing in them
+  - a single door that every route must pass
+correction_dimensions: [scale, routes, sightlines, landmarks, pacing, fairness, verticality, spawns, readability, density]

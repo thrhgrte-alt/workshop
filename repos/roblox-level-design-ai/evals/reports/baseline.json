@@ -1,0 +1,1342 @@
+{
+  "label": "baseline",
+  "mode": "solver",
+  "at": "2026-10-06T03:17:46+00:00",
+  "git_rev": "unknown",
+  "python": "3.11.15",
+  "meta": {},
+  "passed": 100,
+  "total": 100,
+  "tasks": [
+    {
+      "id": "analysis-hub-routes",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "graph.loops == 0 (got 0)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "graph.unreachable_rooms == 0 (got 0)"
+        },
+        {
+          "check": "in_range",
+          "passed": true,
+          "message": "graph.fairness_ratio in [0.95, None] (got 1.0)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "codes == [] (got [])"
+        }
+      ]
+    },
+    {
+      "id": "analysis-arena-has-loops-and-alternates",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "graph.loops == 4 (got 4)"
+        },
+        {
+          "check": "in_range",
+          "passed": true,
+          "message": "graph.alternates_min in [2, None] (got 2)"
+        },
+        {
+          "check": "in_range",
+          "passed": true,
+          "message": "graph.independent_routes_min in [2, None] (got 2)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "graph.chokepoints_max == 0 (got 0)"
+        }
+      ]
+    },
+    {
+      "id": "analysis-linear-reports-chokepoints",
+      "passed": true,
+      "checks": [
+        {
+          "check": "in_range",
+          "passed": true,
+          "message": "graph.chokepoints_max in [2, None] (got 2)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "graph.loops == 0 (got 0)"
+        }
+      ]
+    },
+    {
+      "id": "analysis-route-length-is-geometric",
+      "passed": true,
+      "checks": [
+        {
+          "check": "in_range",
+          "passed": true,
+          "message": "graph.route_length_min in [36, 40] (got 37.97)"
+        }
+      ]
+    },
+    {
+      "id": "analysis-ramp-adds-climb-to-the-route",
+      "passed": true,
+      "checks": [
+        {
+          "check": "in_range",
+          "passed": true,
+          "message": "graph.route_length_min in [108, 118] (got 108.29)"
+        }
+      ]
+    },
+    {
+      "id": "analysis-detects-disconnected-wing",
+      "passed": true,
+      "checks": [
+        {
+          "check": "list_contains",
+          "passed": true,
+          "message": "codes=['disconnected', 'unreachable_room']; expected to contain ['disconnected', 'unreachable_room']"
+        },
+        {
+          "check": "list_contains",
+          "passed": true,
+          "message": "unreachable=['north']; expected to contain ['north']"
+        }
+      ]
+    },
+    {
+      "id": "analysis-detects-empty-dead-ends",
+      "passed": true,
+      "checks": [
+        {
+          "check": "list_contains",
+          "passed": true,
+          "message": "codes=['dead_end']; expected to contain ['dead_end']"
+        },
+        {
+          "check": "list_contains",
+          "passed": true,
+          "message": "dead_ends=['north']; expected to contain ['north']"
+        }
+      ]
+    },
+    {
+      "id": "analysis-tagged-dead-ends-are-fine",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "dead_ends == [] (got [])"
+        }
+      ]
+    },
+    {
+      "id": "analysis-detects-spawns-that-see-each-other",
+      "passed": true,
+      "checks": [
+        {
+          "check": "list_contains",
+          "passed": true,
+          "message": "codes=['long_sightline', 'spawn_exposed']; expected to contain ['spawn_exposed']"
+        },
+        {
+          "check": "in_range",
+          "passed": true,
+          "message": "sight.spawn_exposure_count in [2, None] (got 2)"
+        }
+      ]
+    },
+    {
+      "id": "analysis-detects-long-sightlines",
+      "passed": true,
+      "checks": [
+        {
+          "check": "list_contains",
+          "passed": true,
+          "message": "codes=['long_sightline']; expected to contain ['long_sightline']"
+        }
+      ]
+    },
+    {
+      "id": "analysis-detects-missing-landmarks",
+      "passed": true,
+      "checks": [
+        {
+          "check": "list_contains",
+          "passed": true,
+          "message": "codes=['no_landmarks']; expected to contain ['no_landmarks']"
+        }
+      ]
+    },
+    {
+      "id": "analysis-landmark-visibility-is-a-fraction",
+      "passed": true,
+      "checks": [
+        {
+          "check": "in_range",
+          "passed": true,
+          "message": "sight.landmark_visibility in [0.4, 1.0] (got 0.556)"
+        }
+      ]
+    },
+    {
+      "id": "analysis-pacing-follows-the-route",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "pacing.encounters_on_route == 3 (got 3)"
+        },
+        {
+          "check": "in_range",
+          "passed": true,
+          "message": "pacing.peak_position_fraction in [0.8, None] (got 0.923)"
+        }
+      ]
+    },
+    {
+      "id": "analysis-no-encounters-no-pacing-metrics",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "pacing.encounters_on_route == 0 (got 0)"
+        }
+      ]
+    },
+    {
+      "id": "evaluate-hub-is-clean",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "codes == [] (got [])"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "failed_criteria == [] (got [])"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "complete == False (got False)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "passed == False (got False)"
+        }
+      ]
+    },
+    {
+      "id": "evaluate-arena-is-clean",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "codes == [] (got [])"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "failed_criteria == [] (got [])"
+        }
+      ]
+    },
+    {
+      "id": "evaluate-linear-is-clean",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "codes == [] (got [])"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "failed_criteria == [] (got [])"
+        }
+      ]
+    },
+    {
+      "id": "evaluate-manual-scores-complete-the-rubric",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "complete == True (got True)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "passed == True (got True)"
+        }
+      ]
+    },
+    {
+      "id": "evaluate-a-low-manual-score-on-a-required-criterion-fails-the-level",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "passed == False (got False)"
+        },
+        {
+          "check": "list_contains",
+          "passed": true,
+          "message": "failed_criteria=['fun_and_flow']; expected to contain ['fun_and_flow']"
+        }
+      ]
+    },
+    {
+      "id": "evaluate-flags-arena-without-loops",
+      "passed": true,
+      "checks": [
+        {
+          "check": "list_contains",
+          "passed": true,
+          "message": "failed_criteria=['all_rooms_reachable', 'route_choice', 'no_empty_dead_ends']; expected to contain ['route_choice']"
+        },
+        {
+          "check": "list_contains",
+          "passed": true,
+          "message": "codes=['dead_end', 'disconnected', 'range_alternates_min', 'range_chokepoints_max', 'range_dead_ends', 'range_independent_routes_min', 'range_loops', 'range_unreachable_rooms', 'room_unreachable_in_geometry', 'unreachable_room']; expected to contain ['range_loops']"
+        }
+      ]
+    },
+    {
+      "id": "evaluate-flags-unfair-routes",
+      "passed": true,
+      "checks": [
+        {
+          "check": "list_contains",
+          "passed": true,
+          "message": "failed_criteria=['fair_routes', 'spawns_safe']; expected to contain ['fair_routes']"
+        }
+      ]
+    },
+    {
+      "id": "evaluate-flags-unsafe-spawns",
+      "passed": true,
+      "checks": [
+        {
+          "check": "list_contains",
+          "passed": true,
+          "message": "failed_criteria=['spawns_safe', 'sightlines_ok']; expected to contain ['spawns_safe']"
+        }
+      ]
+    },
+    {
+      "id": "evaluate-flags-missing-landmarks",
+      "passed": true,
+      "checks": [
+        {
+          "check": "list_contains",
+          "passed": true,
+          "message": "failed_criteria=['landmarks_readable']; expected to contain ['landmarks_readable']"
+        }
+      ]
+    },
+    {
+      "id": "evaluate-flags-long-sightlines",
+      "passed": true,
+      "checks": [
+        {
+          "check": "list_contains",
+          "passed": true,
+          "message": "failed_criteria=['sightlines_ok']; expected to contain ['sightlines_ok']"
+        }
+      ]
+    },
+    {
+      "id": "evaluate-flags-ambush-at-spawn",
+      "passed": true,
+      "checks": [
+        {
+          "check": "list_contains",
+          "passed": true,
+          "message": "failed_criteria=['pacing_ok']; expected to contain ['pacing_ok']"
+        }
+      ]
+    },
+    {
+      "id": "evaluate-flags-empty-dead-ends",
+      "passed": true,
+      "checks": [
+        {
+          "check": "list_contains",
+          "passed": true,
+          "message": "failed_criteria=['no_empty_dead_ends']; expected to contain ['no_empty_dead_ends']"
+        }
+      ]
+    },
+    {
+      "id": "evaluate-invalid-spec-fails-fast",
+      "passed": true,
+      "checks": [
+        {
+          "check": "list_contains",
+          "passed": true,
+          "message": "failed_criteria=['valid_spec']; expected to contain ['valid_spec']"
+        }
+      ]
+    },
+    {
+      "id": "evaluate-part-budget-is-enforced",
+      "passed": true,
+      "checks": [
+        {
+          "check": "in_range",
+          "passed": true,
+          "message": "metrics.part_count in [90, 800] (got 104)"
+        }
+      ]
+    },
+    {
+      "id": "build-hub-is-walkable",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "walkable == True (got True)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "parts == 46 (got 46)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "unreachable_rooms == [] (got [])"
+        }
+      ]
+    },
+    {
+      "id": "build-arena-is-walkable",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "walkable == True (got True)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "parts == 104 (got 104)"
+        }
+      ]
+    },
+    {
+      "id": "build-ramp-level-is-walkable",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "walkable == True (got True)"
+        }
+      ]
+    },
+    {
+      "id": "build-detects-a-blocked-door",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "walkable == False (got False)"
+        },
+        {
+          "check": "list_contains",
+          "passed": true,
+          "message": "codes=['objective_unreachable_in_geometry']; expected to contain ['objective_unreachable_in_geometry']"
+        }
+      ]
+    },
+    {
+      "id": "build-detects-steps-too-tall-for-the-character",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "walkable == False (got False)"
+        }
+      ]
+    },
+    {
+      "id": "build-detects-a-blocked-side-room",
+      "passed": true,
+      "checks": [
+        {
+          "check": "list_contains",
+          "passed": true,
+          "message": "codes=['room_unreachable_in_geometry']; expected to contain ['room_unreachable_in_geometry']"
+        }
+      ]
+    },
+    {
+      "id": "luau-hub-lints-clean",
+      "passed": true,
+      "checks": [
+        {
+          "check": "lint_clean",
+          "passed": true,
+          "message": "lint problems: []"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "deterministic == True (got True)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "has_guard == True (got True)"
+        }
+      ]
+    },
+    {
+      "id": "luau-arena-lints-clean-with-a-nested-target",
+      "passed": true,
+      "checks": [
+        {
+          "check": "lint_clean",
+          "passed": true,
+          "message": "lint problems: []"
+        }
+      ]
+    },
+    {
+      "id": "lint-rejects-publishing",
+      "passed": true,
+      "checks": [
+        {
+          "check": "lint_mentions",
+          "passed": true,
+          "message": "lint [\"forbidden token 'AssetService'\"] should mention 'forbidden token'"
+        }
+      ]
+    },
+    {
+      "id": "lint-rejects-unguarded-destroy",
+      "passed": true,
+      "checks": [
+        {
+          "check": "lint_mentions",
+          "passed": true,
+          "message": "lint ['Destroy() is not directly guarded by the AIGeneratedBy check'] should mention 'not directly guarded'"
+        }
+      ]
+    },
+    {
+      "id": "lint-rejects-clear-all-children",
+      "passed": true,
+      "checks": [
+        {
+          "check": "lint_mentions",
+          "passed": true,
+          "message": "lint [\"forbidden token 'ClearAllChildren'\"] should mention 'forbidden token'"
+        }
+      ]
+    },
+    {
+      "id": "lint-accepts-guarded-destroy",
+      "passed": true,
+      "checks": [
+        {
+          "check": "lint_clean",
+          "passed": true,
+          "message": "lint problems: []"
+        }
+      ]
+    },
+    {
+      "id": "target-path-rejects-injection",
+      "passed": true,
+      "checks": [
+        {
+          "check": "error_contains",
+          "passed": true,
+          "message": "error should mention 'dotted path' (got \"target path 'workspace; os.exit()' must be a dotted path like workspace.Levels\")"
+        }
+      ]
+    },
+    {
+      "id": "target-path-rejects-quote-breakout",
+      "passed": true,
+      "checks": [
+        {
+          "check": "error_contains",
+          "passed": true,
+          "message": "error should mention 'dotted path' (got 'target path \\'workspace\"] = nil --\\' must be a dotted path like workspace.Levels')"
+        }
+      ]
+    },
+    {
+      "id": "simulate-hub-creates-every-part",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "ok == True (got True)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "status == 'ok' (got 'ok')"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "parts == 46 (got 46)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "expected_parts == 46 (got 46)"
+        }
+      ]
+    },
+    {
+      "id": "simulate-arena-nested-target",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "ok == True (got True)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "parts == 104 (got 104)"
+        }
+      ]
+    },
+    {
+      "id": "simulate-rerun-replaces-only-its-own-folder",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "roots == 1 (got 1)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "status == 'ok' (got 'ok')"
+        }
+      ]
+    },
+    {
+      "id": "simulate-refuses-a-foreign-folder-with-the-same-name",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "ok == False (got False)"
+        },
+        {
+          "check": "error_contains",
+          "passed": true,
+          "message": "error should mention 'refusing to replace' (got \"blockout:30: refusing to replace 'AI_Blockout_hub_and_spoke': it was not created by rbxlevel\")"
+        }
+      ]
+    },
+    {
+      "id": "simulate-reports-a-missing-target",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "ok == False (got False)"
+        },
+        {
+          "check": "error_contains",
+          "passed": true,
+          "message": "error should mention 'was not found' (got \"blockout:20: target path 'workspace.Nope' was not found\")"
+        }
+      ]
+    },
+    {
+      "id": "inspect-built-blockout-is-in-sync",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "in_sync == True (got True)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "found == 46 (got 46)"
+        }
+      ]
+    },
+    {
+      "id": "inspect-detects-a-moved-part",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "in_sync == False (got False)"
+        },
+        {
+          "check": "list_contains",
+          "passed": true,
+          "message": "moved=['Room_hub/floor']; expected to contain ['Room_hub/floor']"
+        }
+      ]
+    },
+    {
+      "id": "inspect-detects-a-deleted-part",
+      "passed": true,
+      "checks": [
+        {
+          "check": "list_contains",
+          "passed": true,
+          "message": "missing=['Room_hub/floor']; expected to contain ['Room_hub/floor']"
+        }
+      ]
+    },
+    {
+      "id": "inspect-detects-an-extra-part",
+      "passed": true,
+      "checks": [
+        {
+          "check": "list_contains",
+          "passed": true,
+          "message": "extra=['Room_hub/handmade']; expected to contain ['Room_hub/handmade']"
+        }
+      ]
+    },
+    {
+      "id": "locks-unchanged-spec-passes",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "ok == True (got True)"
+        }
+      ]
+    },
+    {
+      "id": "locks-detect-a-moved-locked-room",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "ok == False (got False)"
+        },
+        {
+          "check": "list_contains",
+          "passed": true,
+          "message": "codes=['locked_changed']; expected to contain ['locked_changed']"
+        }
+      ]
+    },
+    {
+      "id": "locks-detect-a-removed-locked-connection",
+      "passed": true,
+      "checks": [
+        {
+          "check": "list_contains",
+          "passed": true,
+          "message": "codes=['locked_removed']; expected to contain ['locked_removed']"
+        }
+      ]
+    },
+    {
+      "id": "locks-detect-changed-bounds",
+      "passed": true,
+      "checks": [
+        {
+          "check": "list_contains",
+          "passed": true,
+          "message": "codes=['locked_changed']; expected to contain ['locked_changed']"
+        }
+      ]
+    },
+    {
+      "id": "locks-detect-a-moved-locked-spawn",
+      "passed": true,
+      "checks": [
+        {
+          "check": "list_contains",
+          "passed": true,
+          "message": "codes=['locked_changed']; expected to contain ['locked_changed']"
+        }
+      ]
+    },
+    {
+      "id": "locks-allow-unlocked-changes",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "ok == True (got True)"
+        }
+      ]
+    },
+    {
+      "id": "diff-reports-changes",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "unchanged == False (got False)"
+        },
+        {
+          "check": "list_contains",
+          "passed": true,
+          "message": "connections_removed=['c_south']; expected to contain ['c_south']"
+        },
+        {
+          "check": "list_contains",
+          "passed": true,
+          "message": "rooms_changed=['north']; expected to contain ['north']"
+        }
+      ]
+    },
+    {
+      "id": "diff-identical-specs-are-unchanged",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "unchanged == True (got True)"
+        }
+      ]
+    },
+    {
+      "id": "views-cover-routes-landmarks-rooms-and-overview",
+      "passed": true,
+      "checks": [
+        {
+          "check": "list_contains",
+          "passed": true,
+          "message": "kinds=['landmark', 'overview', 'room', 'route']; expected to contain ['route', 'landmark', 'room', 'overview']"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "has_overview == True (got True)"
+        }
+      ]
+    },
+    {
+      "id": "views-respect-the-max",
+      "passed": true,
+      "checks": [
+        {
+          "check": "in_range",
+          "passed": true,
+          "message": "count in [None, 8] (got 8)"
+        }
+      ]
+    },
+    {
+      "id": "map-renders",
+      "passed": true,
+      "checks": [
+        {
+          "check": "in_range",
+          "passed": true,
+          "message": "width in [400, None] (got 504)"
+        }
+      ]
+    },
+    {
+      "id": "correction-is-recalled-for-similar-request",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "found_run == True (got True)"
+        }
+      ]
+    },
+    {
+      "id": "search-arena",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "retrieved.0 == 'arena-two-team-loops-001' (got 'arena-two-team-loops-001')"
+        },
+        {
+          "check": "retrieved_not",
+          "passed": true,
+          "message": "retrieved ['arena-two-team-loops-001', 'hub-two-team-001', 'linear-raised-finale-001']; must not include ['level-unreviewed-import', 'arena-without-loops']"
+        },
+        {
+          "check": "list_contains",
+          "passed": true,
+          "message": "avoid=['arena-without-loops', 'hub-empty-dead-ends', 'hub-spawns-see-each-other']; expected to contain ['arena-without-loops']"
+        }
+      ]
+    },
+    {
+      "id": "search-level-type-filter",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "retrieved.0 == 'linear-raised-finale-001' (got 'linear-raised-finale-001')"
+        },
+        {
+          "check": "retrieved_not",
+          "passed": true,
+          "message": "retrieved ['linear-raised-finale-001']; must not include ['arena-two-team-loops-001', 'hub-two-team-001']"
+        }
+      ]
+    },
+    {
+      "id": "search-hides-uncurated",
+      "passed": true,
+      "checks": [
+        {
+          "check": "retrieved_not",
+          "passed": true,
+          "message": "retrieved ['arena-two-team-loops-001', 'hub-two-team-001', 'linear-raised-finale-001']; must not include ['level-unreviewed-import']"
+        }
+      ]
+    },
+    {
+      "id": "search-hub-spawn-problem-is-an-avoid-example",
+      "passed": true,
+      "checks": [
+        {
+          "check": "list_contains",
+          "passed": true,
+          "message": "avoid=['hub-spawns-see-each-other', 'hub-empty-dead-ends']; expected to contain ['hub-spawns-see-each-other']"
+        }
+      ]
+    },
+    {
+      "id": "template-parameter-out-of-range",
+      "passed": true,
+      "checks": [
+        {
+          "check": "error_contains",
+          "passed": true,
+          "message": "error should mention 'above maximum' (got 'invalid template parameters: hub: 500 is above maximum 64')"
+        }
+      ]
+    },
+    {
+      "id": "template-unknown-parameter",
+      "passed": true,
+      "checks": [
+        {
+          "check": "error_contains",
+          "passed": true,
+          "message": "error should mention 'unknown parameter' (got \"invalid template parameters: unknown parameter 'sparkle'. Available: ['cell_d', 'cell_w', 'room_h']\")"
+        }
+      ]
+    },
+    {
+      "id": "template-parameter-wrong-type",
+      "passed": true,
+      "checks": [
+        {
+          "check": "error_contains",
+          "passed": true,
+          "message": "error should mention 'expected a number' (got \"invalid template parameters: cell_w: expected a number, got 'wide'\")"
+        }
+      ]
+    },
+    {
+      "id": "expr-arithmetic-ok",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "value == 11 (got 11)"
+        }
+      ]
+    },
+    {
+      "id": "expr-rejects-code-execution",
+      "passed": true,
+      "checks": [
+        {
+          "check": "error_contains",
+          "passed": true,
+          "message": "error should mention 'arithmetic' (got \"expression '__import__('os').system('echo hi')' uses something other than arithmetic\")"
+        }
+      ]
+    },
+    {
+      "id": "expr-rejects-attribute-access",
+      "passed": true,
+      "checks": [
+        {
+          "check": "error_contains",
+          "passed": true,
+          "message": "error should mention 'arithmetic' (got \"expression 'a.__class__' uses something other than arithmetic\")"
+        }
+      ]
+    },
+    {
+      "id": "expr-rejects-power-and-unknown-names",
+      "passed": true,
+      "checks": [
+        {
+          "check": "error_contains",
+          "passed": true,
+          "message": "error should mention 'arithmetic' (got \"expression '9**9**9' uses something other than arithmetic\")"
+        }
+      ]
+    },
+    {
+      "id": "expr-rejects-unknown-name",
+      "passed": true,
+      "checks": [
+        {
+          "check": "error_contains",
+          "passed": true,
+          "message": "error should mention 'unknown name' (got \"expression 'nope + 1' uses unknown name 'nope'\")"
+        }
+      ]
+    },
+    {
+      "id": "expr-division-by-zero-is-a-clean-error",
+      "passed": true,
+      "checks": [
+        {
+          "check": "error_contains",
+          "passed": true,
+          "message": "error should mention 'could not be evaluated' (got \"expression '1/0' could not be evaluated: division by zero\")"
+        }
+      ]
+    },
+    {
+      "id": "spec-hub-valid",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "valid == True (got True)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "codes == [] (got [])"
+        }
+      ]
+    },
+    {
+      "id": "spec-arena-valid",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "valid == True (got True)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "codes == [] (got [])"
+        }
+      ]
+    },
+    {
+      "id": "spec-linear-valid",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "valid == True (got True)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "codes == [] (got [])"
+        }
+      ]
+    },
+    {
+      "id": "spec-templates-valid-at-extreme-parameters-small",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "valid == True (got True)"
+        }
+      ]
+    },
+    {
+      "id": "spec-templates-valid-at-extreme-parameters-large",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "valid == True (got True)"
+        }
+      ]
+    },
+    {
+      "id": "spec-rejects-overlapping-rooms",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "valid == False (got False)"
+        },
+        {
+          "check": "list_contains",
+          "passed": true,
+          "message": "errors=['no_shared_wall', 'room_overlap']; expected to contain ['room_overlap']"
+        }
+      ]
+    },
+    {
+      "id": "spec-rejects-out-of-bounds",
+      "passed": true,
+      "checks": [
+        {
+          "check": "list_contains",
+          "passed": true,
+          "message": "errors=['no_shared_wall', 'out_of_bounds', 'spawn_outside']; expected to contain ['out_of_bounds']"
+        }
+      ]
+    },
+    {
+      "id": "spec-rejects-tiny-room",
+      "passed": true,
+      "checks": [
+        {
+          "check": "list_contains",
+          "passed": true,
+          "message": "errors=['door_outside_wall', 'room_too_small']; expected to contain ['room_too_small']"
+        }
+      ]
+    },
+    {
+      "id": "spec-rejects-low-ceiling",
+      "passed": true,
+      "checks": [
+        {
+          "check": "list_contains",
+          "passed": true,
+          "message": "errors=['ceiling_low']; expected to contain ['ceiling_low']"
+        }
+      ]
+    },
+    {
+      "id": "spec-rejects-connection-without-shared-wall",
+      "passed": true,
+      "checks": [
+        {
+          "check": "list_contains",
+          "passed": true,
+          "message": "errors=['no_shared_wall']; expected to contain ['no_shared_wall']"
+        }
+      ]
+    },
+    {
+      "id": "spec-rejects-door-outside-wall",
+      "passed": true,
+      "checks": [
+        {
+          "check": "list_contains",
+          "passed": true,
+          "message": "errors=['door_outside_wall']; expected to contain ['door_outside_wall']"
+        }
+      ]
+    },
+    {
+      "id": "spec-rejects-narrow-door",
+      "passed": true,
+      "checks": [
+        {
+          "check": "list_contains",
+          "passed": true,
+          "message": "errors=['door_too_narrow']; expected to contain ['door_too_narrow']"
+        }
+      ]
+    },
+    {
+      "id": "spec-rejects-door-between-floors",
+      "passed": true,
+      "checks": [
+        {
+          "check": "list_contains",
+          "passed": true,
+          "message": "errors=['floor_mismatch']; expected to contain ['floor_mismatch']"
+        }
+      ]
+    },
+    {
+      "id": "spec-rejects-ramp-too-steep",
+      "passed": true,
+      "checks": [
+        {
+          "check": "list_contains",
+          "passed": true,
+          "message": "errors=['ramp_too_steep']; expected to contain ['ramp_too_steep']"
+        }
+      ]
+    },
+    {
+      "id": "spec-rejects-ramp-that-does-not-fit",
+      "passed": true,
+      "checks": [
+        {
+          "check": "list_contains",
+          "passed": true,
+          "message": "errors=['run_does_not_fit']; expected to contain ['run_does_not_fit']"
+        }
+      ]
+    },
+    {
+      "id": "spec-rejects-stairs-with-tall-steps",
+      "passed": true,
+      "checks": [
+        {
+          "check": "list_contains",
+          "passed": true,
+          "message": "errors=['step_too_high']; expected to contain ['step_too_high']"
+        }
+      ]
+    },
+    {
+      "id": "spec-rejects-ramp-between-same-floor-rooms",
+      "passed": true,
+      "checks": [
+        {
+          "check": "list_contains",
+          "passed": true,
+          "message": "errors=['no_rise']; expected to contain ['no_rise']"
+        }
+      ]
+    },
+    {
+      "id": "spec-rejects-spawn-in-a-wall",
+      "passed": true,
+      "checks": [
+        {
+          "check": "list_contains",
+          "passed": true,
+          "message": "errors=['spawn_outside']; expected to contain ['spawn_outside']"
+        }
+      ]
+    },
+    {
+      "id": "spec-rejects-unknown-room-in-connection",
+      "passed": true,
+      "checks": [
+        {
+          "check": "list_contains",
+          "passed": true,
+          "message": "errors=['unknown_room']; expected to contain ['unknown_room']"
+        }
+      ]
+    },
+    {
+      "id": "spec-rejects-duplicate-ids",
+      "passed": true,
+      "checks": [
+        {
+          "check": "list_contains",
+          "passed": true,
+          "message": "errors=['duplicate_id', 'landmark_outside', 'no_shared_wall', 'objective_outside']; expected to contain ['duplicate_id']"
+        }
+      ]
+    },
+    {
+      "id": "spec-rejects-unsafe-ids",
+      "passed": true,
+      "checks": [
+        {
+          "check": "list_contains",
+          "passed": true,
+          "message": "errors=['bad_id', 'unknown_room']; expected to contain ['bad_id']"
+        }
+      ]
+    },
+    {
+      "id": "spec-rejects-unknown-locked-reference",
+      "passed": true,
+      "checks": [
+        {
+          "check": "list_contains",
+          "passed": true,
+          "message": "errors=['unknown_locked']; expected to contain ['unknown_locked']"
+        }
+      ]
+    },
+    {
+      "id": "spec-rejects-bad-encounter-intensity",
+      "passed": true,
+      "checks": [
+        {
+          "check": "list_contains",
+          "passed": true,
+          "message": "errors=['bad_intensity']; expected to contain ['bad_intensity']"
+        }
+      ]
+    },
+    {
+      "id": "spec-snaps-off-grid-rooms-with-a-note",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "valid == True (got True)"
+        },
+        {
+          "check": "list_contains",
+          "passed": true,
+          "message": "info_codes=['snapped_to_grid']; expected to contain ['snapped_to_grid']"
+        }
+      ]
+    }
+  ]
+}

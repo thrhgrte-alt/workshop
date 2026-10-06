@@ -1,0 +1,164 @@
+- id: adapter-dryrun-writes-nothing
+  title: The dryrun adapter returns no files
+  input:
+    op: adapter
+    adapter: dryrun
+  checks:
+  - type: equals
+    path: files
+    value: 0
+- id: adapter-placeholder-files
+  title: The placeholder adapter writes the requested number of distinct files with hashes
+  input:
+    op: adapter
+    adapter: placeholder
+    count: 3
+  checks:
+  - type: equals
+    path: files
+    value: 3
+  - type: equals
+    path: has_sha
+    value: true
+  - type: equals
+    path: distinct_files
+    value: true
+  - type: equals
+    path: names
+    value:
+    - t_00.png
+    - t_01.png
+    - t_02.png
+  - type: equals
+    path: seeds
+    value:
+    - 3
+    - 4
+    - 5
+- id: adapter-placeholder-deterministic
+  title: Same request, same bytes
+  input:
+    op: adapter
+    adapter: placeholder
+    check_deterministic: true
+  checks:
+  - type: equals
+    path: deterministic
+    value: true
+- id: adapter-command-not-configured
+  title: Without CONCEPTAI_IMAGE_COMMAND the command adapter refuses
+  input:
+    op: adapter
+    adapter: command
+    script: null
+  checks:
+  - type: error_contains
+    text: not configured
+- id: adapter-command-runs-configured-program
+  title: A configured program writes the files; they are recorded with hashes
+  input:
+    op: adapter
+    adapter: command
+    script: ok
+    count: 2
+  checks:
+  - type: equals
+    path: files
+    value: 2
+  - type: equals
+    path: has_sha
+    value: true
+  - type: equals
+    path: names
+    value:
+    - t_00.png
+    - t_01.png
+  - type: equals
+    path: seeds
+    value:
+    - 3
+    - 4
+- id: adapter-command-failure-reported
+  title: A failing program is reported with its exit code
+  input:
+    op: adapter
+    adapter: command
+    script: exit1
+  checks:
+  - type: error_contains
+    text: exit 3
+- id: adapter-command-must-write-out
+  title: A program that writes nothing is an error
+  input:
+    op: adapter
+    adapter: command
+    script: nofile
+  checks:
+  - type: error_contains
+    text: did not write
+- id: adapter-command-other-file-type-ignored
+  title: A program that writes some other file type instead of {out} is an error
+  input:
+    op: adapter
+    adapter: command
+    script: badext
+  checks:
+  - type: error_contains
+    text: did not write
+- id: adapter-unknown
+  title: An unknown adapter lists the available ones
+  input:
+    op: adapter
+    adapter: midjourney
+  checks:
+  - type: error_contains
+    text: unknown adapter
+- id: adapter-rejects-tiny-size
+  title: Sizes below 64 are rejected
+  input:
+    op: adapter
+    adapter: placeholder
+    request:
+      width: 8
+  checks:
+  - type: error_contains
+    text: width must be
+- id: adapter-rejects-huge-size
+  title: Sizes above 4096 are rejected
+  input:
+    op: adapter
+    adapter: placeholder
+    request:
+      height: 99999
+  checks:
+  - type: error_contains
+    text: height must be
+- id: adapter-rejects-big-count
+  title: More than 8 images per request is rejected
+  input:
+    op: adapter
+    adapter: placeholder
+    request:
+      count: 99
+  checks:
+  - type: error_contains
+    text: count must be
+- id: adapter-rejects-empty-prompt
+  title: An empty prompt is rejected
+  input:
+    op: adapter
+    adapter: placeholder
+    request:
+      prompt: '  '
+  checks:
+  - type: error_contains
+    text: needs a prompt
+- id: adapter-command-symlink-rejected
+  title: A program that leaves a link to a file elsewhere instead of an image is rejected
+  input:
+    op: adapter
+    adapter: command
+    script: symlink
+  checks:
+  - type: error_contains
+    text: unexpected file

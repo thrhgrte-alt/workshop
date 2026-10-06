@@ -1,0 +1,168 @@
+- id: flow-environment-end-to-end
+  title: Dry run writes nothing; the placeholder run records model, prompts, outputs and hashes; feedback is saved only when explicitly stored; fixtures are not promoted
+  input:
+    op: generate_and_rate
+    brief:
+      subject: a ruined lighthouse on a sea cliff
+      kind: environment
+    n: 3
+  checks:
+  - type: equals
+    path: dry_run_writes_nothing
+    value: true
+  - type: equals
+    path: dry_prompts
+    value: 3
+  - type: equals
+    path: dryrun_refused
+    value: true
+  - type: equals
+    path: outputs
+    value: 3
+  - type: equals
+    path: hashes_ok
+    value: true
+  - type: equals
+    path: prompts_recorded
+    value: true
+  - type: equals
+    path: declared_model
+    value: test-model-x
+  - type: equals
+    path: model_verified
+    value: false
+  - type: equals
+    path: status
+    value: concept_only
+  - type: list_contains
+    path: record_fields
+    items:
+    - brief
+    - adapter
+    - directions
+    - requests
+    - outputs
+    - reference_ids
+    - feedback
+  - type: equals
+    path: pairs
+    value: 3
+  - type: equals
+    path: unscored_has_manual
+    value: true
+  - type: equals
+    path: not_passed_without_judgment
+    value: true
+  - type: equals
+    path: revise_needs_reason
+    value: true
+  - type: equals
+    path: bad_dimension_rejected
+    value: true
+  - type: equals
+    path: rate_dry_run
+    value: true
+  - type: equals
+    path: feedback_saved
+    value: true
+  - type: equals
+    path: placeholder_not_promoted
+    value: true
+  - type: equals
+    path: listed
+    value: 1
+- id: flow-prop-end-to-end
+  title: The same flow works for a prop brief
+  input:
+    op: generate_and_rate
+    brief:
+      subject: a hanging iron lantern
+      kind: prop
+    n: 2
+  checks:
+  - type: equals
+    path: outputs
+    value: 2
+  - type: equals
+    path: hashes_ok
+    value: true
+  - type: equals
+    path: status
+    value: concept_only
+  - type: equals
+    path: pairs
+    value: 1
+  - type: equals
+    path: feedback_saved
+    value: true
+- id: library-env-search
+  title: Environment search finds the golden-hour fixture and returns its avoid-examples
+  input:
+    op: search_library
+    query: lighthouse golden hour
+    subject_kind: environment
+  checks:
+  - type: list_contains
+    path: retrieved
+    items:
+    - env-lighthouse-golden-001
+  - type: list_contains
+    path: avoid
+    items:
+    - env-near-duplicate-001
+    - env-off-palette-001
+- id: library-prop-search
+  title: Prop search stays inside props
+  input:
+    op: search_library
+    query: lantern silhouette
+    subject_kind: prop
+  checks:
+  - type: list_contains
+    path: retrieved
+    items:
+    - prop-lantern-round-001
+  - type: list_excludes
+    path: retrieved
+    items:
+    - env-lighthouse-golden-001
+- id: library-flat-negative
+  title: The flat low-contrast example is returned as something to avoid
+  input:
+    op: search_library
+    query: flat low contrast environment
+    subject_kind: environment
+  checks:
+  - type: list_contains
+    path: avoid
+    items:
+    - env-flat-low-contrast-001
+- id: library-negatives-never-positive
+  title: Negative examples are never returned as positives
+  input:
+    op: search_library
+    query: environment
+    subject_kind: environment
+    k: 10
+  checks:
+  - type: list_excludes
+    path: retrieved
+    items:
+    - env-flat-low-contrast-001
+    - env-off-palette-001
+    - env-near-duplicate-001
+- id: feedback-correction-recalled
+  title: A saved correction is recalled for a similar later request
+  input:
+    op: feedback
+    request: ruined lighthouse environment concept
+    reason: the palette is too cold
+    corrections:
+    - dimension: palette
+      direction: more
+      note: warmer palette
+    later_request: another lighthouse environment concept
+  checks:
+  - type: equals
+    path: found_run
+    value: true

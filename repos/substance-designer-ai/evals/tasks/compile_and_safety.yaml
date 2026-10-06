@@ -1,0 +1,49 @@
+- id: compile-stone-default
+  title: Default stone recipe compiles to a deterministic plan and a syntactically valid Designer script
+  input: {op: compile, recipe_id: stylized_stone_wall}
+  checks:
+    - {type: equals, path: deterministic, value: true}
+    - {type: equals, path: script_compiles, value: true}
+    - {type: list_contains, path: outputs, items: [baseColor, normal, roughness, height]}
+- id: compile-with-parameters
+  title: Parameter overrides flow into the plan
+  input: {op: compile, recipe_id: stylized_stone_wall, params: {brick_columns: 12, bevel_softness: 4.5}}
+  checks:
+    - {type: equals, path: parameters.brick_columns, value: 12}
+    - {type: equals, path: parameters.bevel_softness, value: 4.5}
+- id: compile-all-recipes-wood
+  input: {op: compile, recipe_id: hand_painted_wood_planks}
+  checks: [{type: equals, path: deterministic, value: true}]
+- id: compile-all-recipes-pebble
+  input: {op: compile, recipe_id: stylized_pebble_ground}
+  checks: [{type: equals, path: deterministic, value: true}]
+- id: param-out-of-range-rejected
+  input: {op: parameters, recipe_id: stylized_stone_wall, params: {bevel_softness: 50}}
+  checks: [{type: error_contains, text: above maximum}]
+- id: param-unknown-rejected
+  input: {op: parameters, recipe_id: stylized_stone_wall, params: {sparkle: 1}}
+  checks: [{type: error_contains, text: unknown parameter}]
+- id: param-wrong-type-rejected
+  input: {op: parameters, recipe_id: stylized_stone_wall, params: {brick_columns: 2.5}}
+  checks: [{type: error_contains, text: integer}]
+- id: write-outside-allowed-directory-rejected
+  title: Generating a script that saves outside the allowlist fails safely
+  input: {op: path_escape, target: /etc/not-allowed/wall.sbs}
+  checks: [{type: error_contains, text: outside the allowed}]
+- id: sbs-summary-reads-structure
+  input: {op: sbs_summary, file: mini.sbs}
+  checks:
+    - {type: equals, path: graph, value: mini_stone}
+    - {type: equals, path: node_count, value: 4}
+    - {type: equals, path: atomic_filters.blend, value: 2}
+    - {type: equals, path: library_instances.tile_generator, value: 1}
+- id: catalog-probe-clean
+  title: A probe that matches the catalog reports clean
+  input: {op: probe_diff}
+  checks: [{type: equals, path: clean, value: true}]
+- id: catalog-probe-detects-renamed-parameter
+  input: {op: probe_diff, mutate: {node: blur, kind: params, rename: [intensity, strength]}}
+  checks: [{type: equals, path: clean, value: false}, {type: list_contains, path: problem_nodes, items: [blur]}]
+- id: catalog-probe-detects-missing-library-node
+  input: {op: probe_diff, mutate: {node: tile_generator, remove_node: true}}
+  checks: [{type: equals, path: clean, value: false}, {type: list_contains, path: problem_nodes, items: [tile_generator]}]

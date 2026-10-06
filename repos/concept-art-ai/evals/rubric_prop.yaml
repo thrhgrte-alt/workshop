@@ -1,0 +1,12 @@
+# Prop concept rubric. 'auto' = computed from pixels. 'manual' = a person. 'hybrid' = needs both; the LOWER score counts (a human can veto a metric).
+# Subjective scores are judgments, never ground truth. 'required' criteria must pass. Partial scores are never final: unscored criteria are listed.
+pass_at: 0.7
+criteria:
+  - {id: not_degenerate,     method: auto,   weight: 3, required: true, description: "Not blank, not tiny, has real value and colour variation."}
+  - {id: locks_respected,    method: auto,   weight: 3, required: true, description: "A locked composition (focal box) holds. Scored 1.0 with a note when the brief locks nothing."}
+  - {id: style_cohesion,     method: hybrid, weight: 3, required: true, description: "Dominant colours follow the direction palette (auto: palette adherence) and it feels like one coherent style (manual)."}
+  - {id: readability,        method: hybrid, weight: 3, required: true, description: "Value structure and edges read at a glance (auto: heuristic score) and the focal point is clear (manual)."}
+  - {id: brief_adherence,    method: manual, weight: 3, required: true, description: "It shows what the brief asked for."}
+  - {id: novelty_vs_library, method: auto,   weight: 1, pass_at: 0.5, description: "Differs from the nearest curated library image. Unscored when the library is empty."}
+  - {id: usability_as_reference, method: manual, weight: 2, description: "A level artist / modeller could build from it: forms and scale are clear enough."}
+  - {id: silhouette_clear,   method: hybrid, weight: 2, description: "The silhouette reads in solid black at small size (auto: component count and fill; manual: a person agrees)."}

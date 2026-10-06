@@ -1,0 +1,9 @@
+# Example environment brief. 'locked' fields are held fixed in every direction.
+subject: a ruined lighthouse on a sea cliff with a winding stair
+kind: environment
+locked:
+  axes: {materials: weathered_stone}          # every direction keeps this
+  composition: {focal_box: [0.55, 0.2, 0.85, 0.65], min_focal_contrast: 0.06, centroid_tolerance: 0.45}
+avoid: [crowds, modern buildings]
+notes: stylised, chunky shapes that suit a Roblox build; a visible path from the shore to the door
+reference_ids: []

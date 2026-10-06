@@ -1,0 +1,56 @@
+# Machine-readable style spec. The human-editable companion is STYLE.md.
+#
+# !! STARTER TEMPLATE for polished, readable, stylized Roblox effects. It is NOT your style until you edit it.
+# !! Thresholds are HEURISTIC defaults, not Roblox limits: tune them against your own device profiling.
+version: 1
+name: Polished stylized Roblox VFX (starter template)
+summary: >
+  Effects read clearly at gameplay distance, have a clean attack and a full fade-out (no popping), use two or
+  three harmonious colours with additive glow only where it adds emphasis, and stay inside a budget that
+  low-end mobile devices can afford. They never hide the player, the cursor, or interactive objects.
+traits:
+  shape_language: [round soft flashes, short sharp sparks, clean beams]
+  timing: fast attack (visible within the first quarter of life), eased fade, one-shots under ~2.5 s
+  colour: two or three related colours; a bright core colour and a more saturated accent
+  glow: LightEmission high on cores and sparks, lower on smoke or haze
+  layering: a bright core, mid-size body, and small accents; at most 3 emitter layers for common effects
+  palette_hex: ["#8c5cff", "#33ccff", "#ff8c26", "#8c1f14", "#e6ffff", "#33b3ff"]
+  test_backgrounds_hex: ["#6b8f4e", "#8d8f94", "#2b2f3a", "#d9c79a", "#4a6b8a"]
+gameplay:
+  distance_studs: 30
+  fov_degrees: 70
+  aspect: 1.7778
+ranges:
+  apparent_height_fraction: {min: 0.008, severity: warning, note: the largest element should be at least ~0.8% of screen height at gameplay distance}
+  screen_coverage: {max: 0.15, severity: warning, note: estimated fraction of the screen covered at peak; higher can hide gameplay}
+  color_separation_min: {min: 30, severity: warning, note: worst-case perceptual colour difference (Lab) between the effect's best colour and the test backgrounds}
+  theme_distance: {max: 55, severity: warning, note: Lab distance of the main colour to the nearest palette colour}
+  attack_fraction: {max: 0.3, severity: warning, note: fraction of life before the effect is clearly visible}
+  duration_seconds: {min: 0.25, max: 2.5, severity: warning, note: one-shot length until fully faded}
+  abrupt_end_count: {max: 0, severity: warning, note: effects should fade or shrink out}
+platforms:
+  mobile:
+    ranges:
+      particles_peak: {max: 120, severity: warning, note: heuristic mobile budget, not a Roblox limit}
+      beam_segments_total: {max: 40, severity: warning, note: heuristic}
+      trails: {max: 4, severity: warning, note: heuristic}
+      lights: {max: 2, severity: warning, note: heuristic}
+  desktop:
+    ranges:
+      particles_peak: {max: 400, severity: warning, note: heuristic desktop budget}
+      beam_segments_total: {max: 120, severity: warning, note: heuristic}
+      trails: {max: 12, severity: warning, note: heuristic}
+      lights: {max: 6, severity: warning, note: heuristic}
+constraints:
+  - {id: V1, severity: must,   rule: Never publish, save, or overwrite a live project from generated code; replace only effects this tool created.}
+  - {id: V2, severity: must,   rule: Every effect fades or shrinks to nothing at the end of each particle's life.}
+  - {id: V3, severity: must,   rule: Stay within the platform budget in this file unless the user accepts the trade-off.}
+  - {id: V4, severity: should, rule: Keep a bright core, a body, and accents; avoid more than three emitter layers for common effects.}
+  - {id: V5, severity: should, rule: Use only colours from the style palette unless the brief asks otherwise.}
+  - {id: V6, severity: should, rule: Do not cover gameplay-critical areas (player, targets, UI); keep screen coverage low.}
+exclusions:
+  - long lingering smoke that hides the scene
+  - rainbow or neon palettes with no relation to the theme
+  - dozens of tiny identical particles instead of a few well-shaped ones
+  - effects that pop out of existence
+correction_dimensions: [timing, size, colour, glow, density, silhouette, performance, readability, layering]

@@ -1,0 +1,1979 @@
+{
+  "label": "baseline",
+  "mode": "solver",
+  "at": "2026-10-06T03:56:17+00:00",
+  "git_rev": "unknown",
+  "python": "3.11.15",
+  "meta": {},
+  "passed": 127,
+  "total": 127,
+  "tasks": [
+    {
+      "id": "adapter-dryrun-writes-nothing",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "files == 0 (got 0)"
+        }
+      ]
+    },
+    {
+      "id": "adapter-placeholder-files",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "files == 3 (got 3)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "has_sha == True (got True)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "distinct_files == True (got True)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "names == ['t_00.png', 't_01.png', 't_02.png'] (got ['t_00.png', 't_01.png', 't_02.png'])"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "seeds == [3, 4, 5] (got [3, 4, 5])"
+        }
+      ]
+    },
+    {
+      "id": "adapter-placeholder-deterministic",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "deterministic == True (got True)"
+        }
+      ]
+    },
+    {
+      "id": "adapter-command-not-configured",
+      "passed": true,
+      "checks": [
+        {
+          "check": "error_contains",
+          "passed": true,
+          "message": "error should mention 'not configured' (got 'command adapter not configured: set CONCEPTAI_IMAGE_COMMAND to a JSON argv list using {prompt_file} {out} {seed} {width} {height}')"
+        }
+      ]
+    },
+    {
+      "id": "adapter-command-runs-configured-program",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "files == 2 (got 2)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "has_sha == True (got True)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "names == ['t_00.png', 't_01.png'] (got ['t_00.png', 't_01.png'])"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "seeds == [3, 4] (got [3, 4])"
+        }
+      ]
+    },
+    {
+      "id": "adapter-command-failure-reported",
+      "passed": true,
+      "checks": [
+        {
+          "check": "error_contains",
+          "passed": true,
+          "message": "error should mention 'exit 3' (got 'image command failed (exit 3): ')"
+        }
+      ]
+    },
+    {
+      "id": "adapter-command-must-write-out",
+      "passed": true,
+      "checks": [
+        {
+          "check": "error_contains",
+          "passed": true,
+          "message": "error should mention 'did not write' (got 'image command did not write t_00.png; it must write the {out} path')"
+        }
+      ]
+    },
+    {
+      "id": "adapter-command-other-file-type-ignored",
+      "passed": true,
+      "checks": [
+        {
+          "check": "error_contains",
+          "passed": true,
+          "message": "error should mention 'did not write' (got 'image command did not write t_00.png; it must write the {out} path')"
+        }
+      ]
+    },
+    {
+      "id": "adapter-unknown",
+      "passed": true,
+      "checks": [
+        {
+          "check": "error_contains",
+          "passed": true,
+          "message": "error should mention 'unknown adapter' (got \"unknown adapter 'midjourney'. Available: ['command', 'dryrun', 'placeholder']\")"
+        }
+      ]
+    },
+    {
+      "id": "adapter-rejects-tiny-size",
+      "passed": true,
+      "checks": [
+        {
+          "check": "error_contains",
+          "passed": true,
+          "message": "error should mention 'width must be' (got 'width must be an integer between 64 and 4096')"
+        }
+      ]
+    },
+    {
+      "id": "adapter-rejects-huge-size",
+      "passed": true,
+      "checks": [
+        {
+          "check": "error_contains",
+          "passed": true,
+          "message": "error should mention 'height must be' (got 'height must be an integer between 64 and 4096')"
+        }
+      ]
+    },
+    {
+      "id": "adapter-rejects-big-count",
+      "passed": true,
+      "checks": [
+        {
+          "check": "error_contains",
+          "passed": true,
+          "message": "error should mention 'count must be' (got 'count must be between 1 and 8')"
+        }
+      ]
+    },
+    {
+      "id": "adapter-rejects-empty-prompt",
+      "passed": true,
+      "checks": [
+        {
+          "check": "error_contains",
+          "passed": true,
+          "message": "error should mention 'needs a prompt' (got 'request needs a prompt')"
+        }
+      ]
+    },
+    {
+      "id": "adapter-command-symlink-rejected",
+      "passed": true,
+      "checks": [
+        {
+          "check": "error_contains",
+          "passed": true,
+          "message": "error should mention 'unexpected file' (got 'image command wrote an unexpected file (the output must be a regular file inside the output folder, not a link)')"
+        }
+      ]
+    },
+    {
+      "id": "measure-flat-is-degenerate",
+      "passed": true,
+      "checks": [
+        {
+          "check": "approx",
+          "passed": true,
+          "message": "value_range=0.0; expected 0 +/- 0.01"
+        },
+        {
+          "check": "text_has",
+          "passed": true,
+          "message": "degenerate should contain 'single flat tone'"
+        },
+        {
+          "check": "at_most",
+          "passed": true,
+          "message": "readability=0.111; expected <= 0.7"
+        }
+      ]
+    },
+    {
+      "id": "measure-black-white-value-range",
+      "passed": true,
+      "checks": [
+        {
+          "check": "approx",
+          "passed": true,
+          "message": "value_range=1.0; expected 1.0 +/- 0.02"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "degenerate == [] (got [])"
+        }
+      ]
+    },
+    {
+      "id": "measure-noise-is-busy",
+      "passed": true,
+      "checks": [
+        {
+          "check": "at_least",
+          "passed": true,
+          "message": "edge_density=0.7879774305555556; expected >= 0.5"
+        }
+      ]
+    },
+    {
+      "id": "measure-smooth-has-no-edges",
+      "passed": true,
+      "checks": [
+        {
+          "check": "at_most",
+          "passed": true,
+          "message": "edge_density=0.0; expected <= 0.01"
+        }
+      ]
+    },
+    {
+      "id": "measure-saturation",
+      "passed": true,
+      "checks": [
+        {
+          "check": "approx",
+          "passed": true,
+          "message": "saturation=1.0; expected 1.0 +/- 0.02"
+        }
+      ]
+    },
+    {
+      "id": "measure-grey-unsaturated",
+      "passed": true,
+      "checks": [
+        {
+          "check": "approx",
+          "passed": true,
+          "message": "saturation=0.0; expected 0.0 +/- 0.01"
+        }
+      ]
+    },
+    {
+      "id": "measure-silhouette-box",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "silhouette_components == 1 (got 1)"
+        },
+        {
+          "check": "approx",
+          "passed": true,
+          "message": "silhouette_fill=0.2605251736111111; expected 0.25 +/- 0.05"
+        }
+      ]
+    },
+    {
+      "id": "measure-silhouette-fragmented",
+      "passed": true,
+      "checks": [
+        {
+          "check": "at_least",
+          "passed": true,
+          "message": "silhouette_components=19; expected >= 8"
+        }
+      ]
+    },
+    {
+      "id": "measure-focal-contrast-high",
+      "passed": true,
+      "checks": [
+        {
+          "check": "approx",
+          "passed": true,
+          "message": "focal_contrast=0.9859664440155029; expected 1.0 +/- 0.02"
+        }
+      ]
+    },
+    {
+      "id": "measure-focal-contrast-none",
+      "passed": true,
+      "checks": [
+        {
+          "check": "approx",
+          "passed": true,
+          "message": "focal_contrast=5.960464477539063e-08; expected 0.0 +/- 0.01"
+        }
+      ]
+    },
+    {
+      "id": "measure-edge-centroid",
+      "passed": true,
+      "checks": [
+        {
+          "check": "at_least",
+          "passed": true,
+          "message": "edge_density=0.03428819444444445; expected >= 0.0"
+        }
+      ]
+    },
+    {
+      "id": "palette-adherence-high",
+      "passed": true,
+      "checks": [
+        {
+          "check": "at_least",
+          "passed": true,
+          "message": "palette_adherence=0.9422642840867596; expected >= 0.9"
+        }
+      ]
+    },
+    {
+      "id": "palette-adherence-low",
+      "passed": true,
+      "checks": [
+        {
+          "check": "at_most",
+          "passed": true,
+          "message": "palette_adherence=0.0; expected <= 0.45"
+        }
+      ]
+    },
+    {
+      "id": "palette-dominant-colour-reported",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "first_palette == '#336699' (got '#336699')"
+        }
+      ]
+    },
+    {
+      "id": "similarity-identical",
+      "passed": true,
+      "checks": [
+        {
+          "check": "approx",
+          "passed": true,
+          "message": "similarity=1.0; expected 1.0 +/- 0.001"
+        }
+      ]
+    },
+    {
+      "id": "similarity-different-layout-and-colour",
+      "passed": true,
+      "checks": [
+        {
+          "check": "at_most",
+          "passed": true,
+          "message": "similarity=0.30982303619384766; expected <= 0.6"
+        }
+      ]
+    },
+    {
+      "id": "novelty-unknown-when-library-empty",
+      "passed": true,
+      "checks": [
+        {
+          "check": "is_none",
+          "passed": true,
+          "message": "novelty=None; expected null (unknown)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "compared == 0 (got 0)"
+        }
+      ]
+    },
+    {
+      "id": "novelty-identical-is-zero",
+      "passed": true,
+      "checks": [
+        {
+          "check": "approx",
+          "passed": true,
+          "message": "novelty=0.0; expected 0.0 +/- 0.01"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "nearest == 'lib0' (got 'lib0')"
+        }
+      ]
+    },
+    {
+      "id": "novelty-different-is-high",
+      "passed": true,
+      "checks": [
+        {
+          "check": "at_least",
+          "passed": true,
+          "message": "novelty=0.6902; expected >= 0.4"
+        }
+      ]
+    },
+    {
+      "id": "novelty-uses-nearest",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "nearest == 'lib1' (got 'lib1')"
+        },
+        {
+          "check": "at_most",
+          "passed": true,
+          "message": "novelty=0.0; expected <= 0.01"
+        }
+      ]
+    },
+    {
+      "id": "diversity-identical-pair",
+      "passed": true,
+      "checks": [
+        {
+          "check": "approx",
+          "passed": true,
+          "message": "min_dissimilarity=0.0; expected 0.0 +/- 0.01"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "pairs == 1 (got 1)"
+        }
+      ]
+    },
+    {
+      "id": "diversity-distinct-set",
+      "passed": true,
+      "checks": [
+        {
+          "check": "at_least",
+          "passed": true,
+          "message": "min_dissimilarity=0.6277; expected >= 0.3"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "pairs == 3 (got 3)"
+        }
+      ]
+    },
+    {
+      "id": "dir-env-four-differ-on-three-axes",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "count == 4 (got 4)"
+        },
+        {
+          "check": "at_least",
+          "passed": true,
+          "message": "min_axes_differing=6; expected >= 3"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "unique_ids == True (got True)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "deterministic == True (got True)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "incompatible == 0 (got 0)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "all_hex == True (got True)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "kinds == ['environment'] (got ['environment'])"
+        }
+      ]
+    },
+    {
+      "id": "dir-prop-five-differ",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "count == 5 (got 5)"
+        },
+        {
+          "check": "at_least",
+          "passed": true,
+          "message": "min_axes_differing=4; expected >= 3"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "unique_ids == True (got True)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "kinds == ['prop'] (got ['prop'])"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "incompatible == 0 (got 0)"
+        }
+      ]
+    },
+    {
+      "id": "dir-seed-changes-result",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "seed_changes_result == True (got True)"
+        }
+      ]
+    },
+    {
+      "id": "dir-axes-actually-vary",
+      "passed": true,
+      "checks": [
+        {
+          "check": "at_least",
+          "passed": true,
+          "message": "axes_used.palette_scheme=4; expected >= 3"
+        },
+        {
+          "check": "at_least",
+          "passed": true,
+          "message": "axes_used.lighting=4; expected >= 3"
+        },
+        {
+          "check": "at_least",
+          "passed": true,
+          "message": "axes_used.silhouette=4; expected >= 3"
+        }
+      ]
+    },
+    {
+      "id": "dir-locked-axis-held-env",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "locked_held == True (got True)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "axes_used.materials == 1 (got 1)"
+        },
+        {
+          "check": "list_excludes",
+          "passed": true,
+          "message": "free_axes=['composition', 'lighting', 'mood', 'palette_scheme', 'silhouette']; must not contain ['materials']"
+        },
+        {
+          "check": "at_least",
+          "passed": true,
+          "message": "min_axes_differing=4; expected >= 3"
+        }
+      ]
+    },
+    {
+      "id": "dir-locked-axis-held-prop",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "locked_held == True (got True)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "axes_used.view == 1 (got 1)"
+        }
+      ]
+    },
+    {
+      "id": "dir-many-locks-warn-when-too-similar",
+      "passed": true,
+      "checks": [
+        {
+          "check": "at_least",
+          "passed": true,
+          "message": "count=4; expected >= 1"
+        },
+        {
+          "check": "text_has",
+          "passed": true,
+          "message": "warnings should contain 'differ on at most 2 axes'"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "locked_held == True (got True)"
+        }
+      ]
+    },
+    {
+      "id": "dir-all-locked-single-direction",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "count == 1 (got 1)"
+        },
+        {
+          "check": "text_has",
+          "passed": true,
+          "message": "warnings should contain 'only 1 compatible'"
+        }
+      ]
+    },
+    {
+      "id": "dir-locked-palette",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "palette_locked == True (got True)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "first_palette == ['#aa5522', '#bb8844', '#33aa99', '#221108', '#f5e8d0'] (got ['#aa5522', '#bb8844', '#33aa99', '#221108', '#f5e8d0'])"
+        }
+      ]
+    },
+    {
+      "id": "dir-incompatible-never-chosen",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "incompatible == 0 (got 0)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "locked_held == True (got True)"
+        }
+      ]
+    },
+    {
+      "id": "dir-twelve",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "count == 12 (got 12)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "unique_ids == True (got True)"
+        }
+      ]
+    },
+    {
+      "id": "dir-rejects-empty-subject",
+      "passed": true,
+      "checks": [
+        {
+          "check": "error_contains",
+          "passed": true,
+          "message": "error should mention 'non-empty 'subject'' (got \"brief needs a non-empty 'subject' (e.g. 'a ruined lighthouse on a cliff')\")"
+        }
+      ]
+    },
+    {
+      "id": "dir-rejects-unknown-kind",
+      "passed": true,
+      "checks": [
+        {
+          "check": "error_contains",
+          "passed": true,
+          "message": "error should mention 'kind must be one of' (got \"kind must be one of ('environment', 'prop')\")"
+        }
+      ]
+    },
+    {
+      "id": "dir-rejects-unknown-axis",
+      "passed": true,
+      "checks": [
+        {
+          "check": "error_contains",
+          "passed": true,
+          "message": "error should mention 'not an axis' (got \"locked axis 'vibes' is not an axis of environment (axes: ['composition', 'lighting', 'materials', 'mood', 'palette_scheme', 'silhouette'])\")"
+        }
+      ]
+    },
+    {
+      "id": "dir-rejects-unknown-option",
+      "passed": true,
+      "checks": [
+        {
+          "check": "error_contains",
+          "passed": true,
+          "message": "error should mention 'has no option' (got \"locked axis 'lighting' has no option 'disco' (options: ['backlit_fog', 'golden_hour', 'high_noon', 'night_lit', 'overcast_soft'])\")"
+        }
+      ]
+    },
+    {
+      "id": "dir-rejects-bad-palette-hex",
+      "passed": true,
+      "checks": [
+        {
+          "check": "error_contains",
+          "passed": true,
+          "message": "error should mention '#rrggbb' (got \"a locked palette needs 3-8 colours as '#rrggbb' (the first five are used as dominant, secondary, accent, shadow, highlight)\")"
+        }
+      ]
+    },
+    {
+      "id": "dir-rejects-zero-directions",
+      "passed": true,
+      "checks": [
+        {
+          "check": "error_contains",
+          "passed": true,
+          "message": "error should mention 'between 1 and 12' (got 'n must be between 1 and 12')"
+        }
+      ]
+    },
+    {
+      "id": "dir-rejects-too-many-directions",
+      "passed": true,
+      "checks": [
+        {
+          "check": "error_contains",
+          "passed": true,
+          "message": "error should mention 'between 1 and 12' (got 'n must be between 1 and 12')"
+        }
+      ]
+    },
+    {
+      "id": "dir-rejects-subject-too-long",
+      "passed": true,
+      "checks": [
+        {
+          "check": "error_contains",
+          "passed": true,
+          "message": "error should mention 'too long' (got \"subject is too long (max 400 characters); put detail in 'notes'\")"
+        }
+      ]
+    },
+    {
+      "id": "dir-rejects-avoid-not-list",
+      "passed": true,
+      "checks": [
+        {
+          "check": "error_contains",
+          "passed": true,
+          "message": "error should mention 'list of strings' (got 'avoid must be a list of strings')"
+        }
+      ]
+    },
+    {
+      "id": "dir-rejects-prop-axis-on-env",
+      "passed": true,
+      "checks": [
+        {
+          "check": "error_contains",
+          "passed": true,
+          "message": "error should mention 'not an axis' (got \"locked axis 'view' is not an axis of environment (axes: ['composition', 'lighting', 'materials', 'mood', 'palette_scheme', 'silhouette'])\")"
+        }
+      ]
+    },
+    {
+      "id": "dir-rejects-two-colour-palette",
+      "passed": true,
+      "checks": [
+        {
+          "check": "error_contains",
+          "passed": true,
+          "message": "error should mention '3-8 colours' (got \"a locked palette needs 3-8 colours as '#rrggbb' (the first five are used as dominant, secondary, accent, shadow, highlight)\")"
+        }
+      ]
+    },
+    {
+      "id": "dir-eight-colour-palette-uses-first-five",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "first_palette == ['#111111', '#222222', '#333333', '#444444', '#555555'] (got ['#111111', '#222222', '#333333', '#444444', '#555555'])"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "palette_locked == True (got True)"
+        }
+      ]
+    },
+    {
+      "id": "lock-focal-holds",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "errors == [] (got [])"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "codes == [] (got [])"
+        }
+      ]
+    },
+    {
+      "id": "lock-flat-fails",
+      "passed": true,
+      "checks": [
+        {
+          "check": "list_contains",
+          "passed": true,
+          "message": "errors=['focal_contrast_low']; expected to contain ['focal_contrast_low']"
+        }
+      ]
+    },
+    {
+      "id": "lock-detail-elsewhere",
+      "passed": true,
+      "checks": [
+        {
+          "check": "list_contains",
+          "passed": true,
+          "message": "codes=['detail_far_from_focus', 'focal_contrast_low']; expected to contain ['focal_contrast_low', 'detail_far_from_focus']"
+        }
+      ]
+    },
+    {
+      "id": "lock-tolerance-configurable",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "errors == [] (got [])"
+        },
+        {
+          "check": "list_excludes",
+          "passed": true,
+          "message": "codes=[]; must not contain ['detail_far_from_focus']"
+        }
+      ]
+    },
+    {
+      "id": "lock-without-box-has-no-findings",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "codes == [] (got [])"
+        }
+      ]
+    },
+    {
+      "id": "lock-rejects-inverted-box",
+      "passed": true,
+      "checks": [
+        {
+          "check": "error_contains",
+          "passed": true,
+          "message": "error should mention 'focal_box must be' (got 'focal_box must be [x0, y0, x1, y1] in 0-1 image coordinates with x0<x1, y0<y1')"
+        }
+      ]
+    },
+    {
+      "id": "lock-rejects-out-of-range-box",
+      "passed": true,
+      "checks": [
+        {
+          "check": "error_contains",
+          "passed": true,
+          "message": "error should mention 'focal_box must be' (got 'focal_box must be [x0, y0, x1, y1] in 0-1 image coordinates with x0<x1, y0<y1')"
+        }
+      ]
+    },
+    {
+      "id": "lock-rejects-wrong-length-box",
+      "passed": true,
+      "checks": [
+        {
+          "check": "error_contains",
+          "passed": true,
+          "message": "error should mention 'focal_box must be' (got 'focal_box must be [x0, y0, x1, y1] in 0-1 image coordinates with x0<x1, y0<y1')"
+        }
+      ]
+    },
+    {
+      "id": "rubric-env-incomplete-without-judgment",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "complete == False (got False)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "passed == False (got False)"
+        },
+        {
+          "check": "list_contains",
+          "passed": true,
+          "message": "unscored=['style_cohesion', 'readability', 'brief_adherence', 'usability_as_reference']; expected to contain ['brief_adherence', 'usability_as_reference', 'style_cohesion', 'readability']"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "status == 'concept_only' (got 'concept_only')"
+        }
+      ]
+    },
+    {
+      "id": "rubric-judged-by-a-person-lists-manual",
+      "passed": true,
+      "checks": [
+        {
+          "check": "list_contains",
+          "passed": true,
+          "message": "judged_by_a_person=['style_cohesion', 'readability', 'brief_adherence', 'usability_as_reference']; expected to contain ['brief_adherence', 'usability_as_reference', 'style_cohesion', 'readability']"
+        }
+      ]
+    },
+    {
+      "id": "rubric-env-passes-with-judgment",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "complete == True (got True)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "passed == True (got True)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "required_failures == [] (got [])"
+        }
+      ]
+    },
+    {
+      "id": "rubric-human-veto-brief",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "passed == False (got False)"
+        },
+        {
+          "check": "list_contains",
+          "passed": true,
+          "message": "required_failures=['brief_adherence']; expected to contain ['brief_adherence']"
+        }
+      ]
+    },
+    {
+      "id": "rubric-hybrid-takes-the-lower",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "passed == False (got False)"
+        },
+        {
+          "check": "list_contains",
+          "passed": true,
+          "message": "required_failures=['style_cohesion']; expected to contain ['style_cohesion']"
+        },
+        {
+          "check": "approx",
+          "passed": true,
+          "message": "criteria.style_cohesion=0.2; expected 0.2 +/- 0.001"
+        }
+      ]
+    },
+    {
+      "id": "rubric-flat-image-fails-required",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "passed == False (got False)"
+        },
+        {
+          "check": "list_contains",
+          "passed": true,
+          "message": "required_failures=['not_degenerate', 'readability']; expected to contain ['not_degenerate']"
+        },
+        {
+          "check": "approx",
+          "passed": true,
+          "message": "criteria.not_degenerate=0.0; expected 0.0 +/- 0.001"
+        }
+      ]
+    },
+    {
+      "id": "rubric-lock-violation-fails",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "passed == False (got False)"
+        },
+        {
+          "check": "list_contains",
+          "passed": true,
+          "message": "required_failures=['not_degenerate', 'locks_respected', 'readability']; expected to contain ['locks_respected']"
+        }
+      ]
+    },
+    {
+      "id": "rubric-no-lock-scores-one",
+      "passed": true,
+      "checks": [
+        {
+          "check": "approx",
+          "passed": true,
+          "message": "criteria.locks_respected=1.0; expected 1.0 +/- 0.001"
+        }
+      ]
+    },
+    {
+      "id": "rubric-prop-has-silhouette-criterion",
+      "passed": true,
+      "checks": [
+        {
+          "check": "list_contains",
+          "passed": true,
+          "message": "unscored=['style_cohesion', 'readability', 'brief_adherence', 'usability_as_reference', 'silhouette_clear']; expected to contain ['silhouette_clear']"
+        },
+        {
+          "check": "text_has",
+          "passed": true,
+          "message": "criteria should contain 'silhouette_clear'"
+        }
+      ]
+    },
+    {
+      "id": "rubric-env-has-no-silhouette-criterion",
+      "passed": true,
+      "checks": [
+        {
+          "check": "text_lacks",
+          "passed": true,
+          "message": "criteria should not contain 'silhouette_clear'"
+        }
+      ]
+    },
+    {
+      "id": "rubric-passes-need-scores-in-range",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "passed == False (got False)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "complete == False (got False)"
+        }
+      ]
+    },
+    {
+      "id": "lora-valid-dataset",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "ok == True (got True)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "codes == [] (got [])"
+        }
+      ]
+    },
+    {
+      "id": "lora-too-few",
+      "passed": true,
+      "checks": [
+        {
+          "check": "list_contains",
+          "passed": true,
+          "message": "error_codes=['too_few_items']; expected to contain ['too_few_items']"
+        }
+      ]
+    },
+    {
+      "id": "lora-unlicensed",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "ok == False (got False)"
+        },
+        {
+          "check": "list_contains",
+          "passed": true,
+          "message": "error_codes=['license_not_allowed']; expected to contain ['license_not_allowed']"
+        }
+      ]
+    },
+    {
+      "id": "lora-unknown-license",
+      "passed": true,
+      "checks": [
+        {
+          "check": "list_contains",
+          "passed": true,
+          "message": "error_codes=['license_not_allowed']; expected to contain ['license_not_allowed']"
+        }
+      ]
+    },
+    {
+      "id": "lora-missing-owner",
+      "passed": true,
+      "checks": [
+        {
+          "check": "list_contains",
+          "passed": true,
+          "message": "error_codes=['owner_missing']; expected to contain ['owner_missing']"
+        }
+      ]
+    },
+    {
+      "id": "lora-missing-caption",
+      "passed": true,
+      "checks": [
+        {
+          "check": "list_contains",
+          "passed": true,
+          "message": "error_codes=['caption_missing']; expected to contain ['caption_missing']"
+        }
+      ]
+    },
+    {
+      "id": "lora-trigger-missing-warns",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "ok == True (got True)"
+        },
+        {
+          "check": "list_contains",
+          "passed": true,
+          "message": "codes=['trigger_missing']; expected to contain ['trigger_missing']"
+        }
+      ]
+    },
+    {
+      "id": "lora-attribution-required",
+      "passed": true,
+      "checks": [
+        {
+          "check": "list_contains",
+          "passed": true,
+          "message": "error_codes=['attribution_missing']; expected to contain ['attribution_missing']"
+        }
+      ]
+    },
+    {
+      "id": "lora-ai-needs-curation",
+      "passed": true,
+      "checks": [
+        {
+          "check": "list_contains",
+          "passed": true,
+          "message": "error_codes=['ai_not_curated']; expected to contain ['ai_not_curated']"
+        }
+      ]
+    },
+    {
+      "id": "lora-ai-share-capped",
+      "passed": true,
+      "checks": [
+        {
+          "check": "list_contains",
+          "passed": true,
+          "message": "error_codes=['too_much_ai']; expected to contain ['too_much_ai']"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "ai_generated == 4 (got 4)"
+        }
+      ]
+    },
+    {
+      "id": "lora-ai-small-share-ok",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "ok == True (got True)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "ai_generated == 1 (got 1)"
+        }
+      ]
+    },
+    {
+      "id": "lora-duplicate-file",
+      "passed": true,
+      "checks": [
+        {
+          "check": "list_contains",
+          "passed": true,
+          "message": "error_codes=['duplicate_file']; expected to contain ['duplicate_file']"
+        }
+      ]
+    },
+    {
+      "id": "lora-near-duplicate-warns",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "ok == True (got True)"
+        },
+        {
+          "check": "list_contains",
+          "passed": true,
+          "message": "codes=['near_duplicate']; expected to contain ['near_duplicate']"
+        }
+      ]
+    },
+    {
+      "id": "lora-path-traversal",
+      "passed": true,
+      "checks": [
+        {
+          "check": "list_contains",
+          "passed": true,
+          "message": "error_codes=['bad_path']; expected to contain ['bad_path']"
+        }
+      ]
+    },
+    {
+      "id": "lora-bad-extension",
+      "passed": true,
+      "checks": [
+        {
+          "check": "list_contains",
+          "passed": true,
+          "message": "error_codes=['bad_extension']; expected to contain ['bad_extension']"
+        }
+      ]
+    },
+    {
+      "id": "lora-missing-file",
+      "passed": true,
+      "checks": [
+        {
+          "check": "list_contains",
+          "passed": true,
+          "message": "error_codes=['missing_file']; expected to contain ['missing_file']"
+        }
+      ]
+    },
+    {
+      "id": "lora-low-resolution-warns",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "ok == True (got True)"
+        },
+        {
+          "check": "list_contains",
+          "passed": true,
+          "message": "codes=['low_resolution']; expected to contain ['low_resolution']"
+        }
+      ]
+    },
+    {
+      "id": "lora-bad-trigger",
+      "passed": true,
+      "checks": [
+        {
+          "check": "list_contains",
+          "passed": true,
+          "message": "error_codes=['bad_trigger']; expected to contain ['bad_trigger']"
+        }
+      ]
+    },
+    {
+      "id": "lora-config-from-valid-dataset",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "name == 'test_ds_lora' (got 'test_ds_lora')"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "rank == 16 (got 16)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "alpha == 16 (got 16)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "unverified == True (got True)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "command_is_template == True (got True)"
+        }
+      ]
+    },
+    {
+      "id": "lora-validation-plan",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "plan_images == 27 (got 27)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "held_out_all == True (got True)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "has_base_arm == True (got True)"
+        }
+      ]
+    },
+    {
+      "id": "lora-config-refuses-invalid-dataset",
+      "passed": true,
+      "checks": [
+        {
+          "check": "error_contains",
+          "passed": true,
+          "message": "error should mention 'dataset has' (got 'dataset has 1 error(s); fix them first (e.g. 6 items; at least 15 are needed for a style LoRA)')"
+        }
+      ]
+    },
+    {
+      "id": "lora-config-needs-base-model",
+      "passed": true,
+      "checks": [
+        {
+          "check": "error_contains",
+          "passed": true,
+          "message": "error should mention 'base_model is required' (got 'base_model is required: name or path of the model YOU are allowed to fine-tune (its licence may restrict fine-tuning)')"
+        }
+      ]
+    },
+    {
+      "id": "lora-config-rank-range",
+      "passed": true,
+      "checks": [
+        {
+          "check": "error_contains",
+          "passed": true,
+          "message": "error should mention 'rank must be' (got 'rank must be 1-256')"
+        }
+      ]
+    },
+    {
+      "id": "lora-config-lr-range",
+      "passed": true,
+      "checks": [
+        {
+          "check": "error_contains",
+          "passed": true,
+          "message": "error should mention 'learning_rate must be' (got 'learning_rate must be between 1e-6 and 1e-2')"
+        }
+      ]
+    },
+    {
+      "id": "lora-config-steps-range",
+      "passed": true,
+      "checks": [
+        {
+          "check": "error_contains",
+          "passed": true,
+          "message": "error should mention 'steps must be' (got 'steps must be 100-100000')"
+        }
+      ]
+    },
+    {
+      "id": "lora-config-output-name",
+      "passed": true,
+      "checks": [
+        {
+          "check": "error_contains",
+          "passed": true,
+          "message": "error should mention 'output_name must match' (got 'output_name must match [A-Za-z][A-Za-z0-9_-]*')"
+        }
+      ]
+    },
+    {
+      "id": "lora-config-alpha-override",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "rank == 32 (got 32)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "alpha == 32 (got 32)"
+        }
+      ]
+    },
+    {
+      "id": "prompt-env-structure",
+      "passed": true,
+      "checks": [
+        {
+          "check": "text_has",
+          "passed": true,
+          "message": "positive should contain 'Environment concept art of a ruined lighthouse'"
+        },
+        {
+          "check": "text_has",
+          "passed": true,
+          "message": "positive should contain 'foreground'"
+        },
+        {
+          "check": "text_has",
+          "passed": true,
+          "message": "positive should contain 'Lighting:'"
+        },
+        {
+          "check": "text_has",
+          "passed": true,
+          "message": "positive should contain 'Composition:'"
+        },
+        {
+          "check": "text_has",
+          "passed": true,
+          "message": "positive should contain 'scale cues'"
+        },
+        {
+          "check": "text_lacks",
+          "passed": true,
+          "message": "positive should not contain 'neutral grey background'"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "aspect_ratio == '16:9' (got '16:9')"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "width == 1344 (got 1344)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "status == 'concept_only' (got 'concept_only')"
+        }
+      ]
+    },
+    {
+      "id": "prompt-prop-structure",
+      "passed": true,
+      "checks": [
+        {
+          "check": "text_has",
+          "passed": true,
+          "message": "positive should contain 'Prop concept sheet of a hanging iron lantern'"
+        },
+        {
+          "check": "text_has",
+          "passed": true,
+          "message": "positive should contain 'neutral grey background'"
+        },
+        {
+          "check": "text_has",
+          "passed": true,
+          "message": "positive should contain 'solid black'"
+        },
+        {
+          "check": "text_has",
+          "passed": true,
+          "message": "positive should contain 'material zones'"
+        },
+        {
+          "check": "text_lacks",
+          "passed": true,
+          "message": "positive should not contain 'foreground, midground'"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "aspect_ratio == '1:1' (got '1:1')"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "width == 1024 (got 1024)"
+        }
+      ]
+    },
+    {
+      "id": "prompt-env-and-prop-sections-differ",
+      "passed": true,
+      "checks": [
+        {
+          "check": "list_contains",
+          "passed": true,
+          "message": "sections=['composition', 'lighting', 'materials', 'mood', 'palette', 'scale', 'subject']; expected to contain ['composition', 'lighting', 'scale']"
+        },
+        {
+          "check": "list_excludes",
+          "passed": true,
+          "message": "sections=['composition', 'lighting', 'materials', 'mood', 'palette', 'scale', 'subject']; must not contain ['view', 'silhouette', 'usage']"
+        }
+      ]
+    },
+    {
+      "id": "prompt-prop-sections",
+      "passed": true,
+      "checks": [
+        {
+          "check": "list_contains",
+          "passed": true,
+          "message": "sections=['detail', 'materials', 'palette', 'silhouette', 'subject', 'usage', 'view']; expected to contain ['silhouette', 'view', 'detail', 'usage']"
+        },
+        {
+          "check": "list_excludes",
+          "passed": true,
+          "message": "sections=['detail', 'materials', 'palette', 'silhouette', 'subject', 'usage', 'view']; must not contain ['composition', 'lighting']"
+        }
+      ]
+    },
+    {
+      "id": "prompt-negative-has-style-exclusions",
+      "passed": true,
+      "checks": [
+        {
+          "check": "text_has",
+          "passed": true,
+          "message": "negative should contain 'watermark'"
+        },
+        {
+          "check": "text_has",
+          "passed": true,
+          "message": "negative should contain 'crowds'"
+        },
+        {
+          "check": "text_has",
+          "passed": true,
+          "message": "negative should contain 'modern buildings'"
+        },
+        {
+          "check": "text_has",
+          "passed": true,
+          "message": "negative should contain 'near-duplicate variations'"
+        }
+      ]
+    },
+    {
+      "id": "prompt-prop-negative",
+      "passed": true,
+      "checks": [
+        {
+          "check": "text_has",
+          "passed": true,
+          "message": "negative should contain 'background scenery'"
+        },
+        {
+          "check": "text_has",
+          "passed": true,
+          "message": "negative should contain 'cropped subject'"
+        }
+      ]
+    },
+    {
+      "id": "prompt-includes-palette",
+      "passed": true,
+      "checks": [
+        {
+          "check": "text_has",
+          "passed": true,
+          "message": "positive should contain '#aa5522'"
+        },
+        {
+          "check": "text_has",
+          "passed": true,
+          "message": "positive should contain '#33aa99'"
+        }
+      ]
+    },
+    {
+      "id": "prompt-references-listed",
+      "passed": true,
+      "checks": [
+        {
+          "check": "text_has",
+          "passed": true,
+          "message": "positive should contain 'ref-a'"
+        },
+        {
+          "check": "text_has",
+          "passed": true,
+          "message": "positive should contain 'ref-b'"
+        }
+      ]
+    },
+    {
+      "id": "prompt-notes-included",
+      "passed": true,
+      "checks": [
+        {
+          "check": "text_has",
+          "passed": true,
+          "message": "positive should contain 'chunky shapes'"
+        }
+      ]
+    },
+    {
+      "id": "prompt-refuses-production-ready",
+      "passed": true,
+      "checks": [
+        {
+          "check": "error_contains",
+          "passed": true,
+          "message": "error should mention 'production readiness' (got \"prompt must not claim production readiness ('production-ready'); a generated image is concept art only\")"
+        }
+      ]
+    },
+    {
+      "id": "prompt-refuses-game-ready",
+      "passed": true,
+      "checks": [
+        {
+          "check": "error_contains",
+          "passed": true,
+          "message": "error should mention 'production readiness' (got \"prompt must not claim production readiness ('game-ready'); a generated image is concept art only\")"
+        }
+      ]
+    },
+    {
+      "id": "prompt-refuses-ready-to-import",
+      "passed": true,
+      "checks": [
+        {
+          "check": "error_contains",
+          "passed": true,
+          "message": "error should mention 'production readiness' (got \"prompt must not claim production readiness ('ready to import'); a generated image is concept art only\")"
+        }
+      ]
+    },
+    {
+      "id": "prompt-refuses-final-mesh",
+      "passed": true,
+      "checks": [
+        {
+          "check": "error_contains",
+          "passed": true,
+          "message": "error should mention 'production readiness' (got \"prompt must not claim production readiness ('final mesh'); a generated image is concept art only\")"
+        }
+      ]
+    },
+    {
+      "id": "prompt-too-long",
+      "passed": true,
+      "checks": [
+        {
+          "check": "error_contains",
+          "passed": true,
+          "message": "error should mention 'characters' (got 'prompt is 2608 characters (max 1800); shorten the subject or notes')"
+        }
+      ]
+    },
+    {
+      "id": "prompt-prop-notes-claim",
+      "passed": true,
+      "checks": [
+        {
+          "check": "error_contains",
+          "passed": true,
+          "message": "error should mention 'production readiness' (got \"prompt must not claim production readiness ('game-ready'); a generated image is concept art only\")"
+        }
+      ]
+    },
+    {
+      "id": "flow-environment-end-to-end",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "dry_run_writes_nothing == True (got True)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "dry_prompts == 3 (got 3)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "dryrun_refused == True (got True)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "outputs == 3 (got 3)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "hashes_ok == True (got True)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "prompts_recorded == True (got True)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "declared_model == 'test-model-x' (got 'test-model-x')"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "model_verified == False (got False)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "status == 'concept_only' (got 'concept_only')"
+        },
+        {
+          "check": "list_contains",
+          "passed": true,
+          "message": "record_fields=['adapter', 'brief', 'directions', 'feedback', 'outputs', 'reference_ids', 'requests']; expected to contain ['brief', 'adapter', 'directions', 'requests', 'outputs', 'reference_ids', 'feedback']"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "pairs == 3 (got 3)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "unscored_has_manual == True (got True)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "not_passed_without_judgment == True (got True)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "revise_needs_reason == True (got True)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "bad_dimension_rejected == True (got True)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "rate_dry_run == True (got True)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "feedback_saved == True (got True)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "placeholder_not_promoted == True (got True)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "listed == 1 (got 1)"
+        }
+      ]
+    },
+    {
+      "id": "flow-prop-end-to-end",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "outputs == 2 (got 2)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "hashes_ok == True (got True)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "status == 'concept_only' (got 'concept_only')"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "pairs == 1 (got 1)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "feedback_saved == True (got True)"
+        }
+      ]
+    },
+    {
+      "id": "library-env-search",
+      "passed": true,
+      "checks": [
+        {
+          "check": "list_contains",
+          "passed": true,
+          "message": "retrieved=['env-lighthouse-golden-001']; expected to contain ['env-lighthouse-golden-001']"
+        },
+        {
+          "check": "list_contains",
+          "passed": true,
+          "message": "avoid=['env-near-duplicate-001', 'env-off-palette-001']; expected to contain ['env-near-duplicate-001', 'env-off-palette-001']"
+        }
+      ]
+    },
+    {
+      "id": "library-prop-search",
+      "passed": true,
+      "checks": [
+        {
+          "check": "list_contains",
+          "passed": true,
+          "message": "retrieved=['prop-lantern-round-001']; expected to contain ['prop-lantern-round-001']"
+        },
+        {
+          "check": "list_excludes",
+          "passed": true,
+          "message": "retrieved=['prop-lantern-round-001']; must not contain ['env-lighthouse-golden-001']"
+        }
+      ]
+    },
+    {
+      "id": "library-flat-negative",
+      "passed": true,
+      "checks": [
+        {
+          "check": "list_contains",
+          "passed": true,
+          "message": "avoid=['env-flat-low-contrast-001', 'env-off-palette-001', 'env-near-duplicate-001']; expected to contain ['env-flat-low-contrast-001']"
+        }
+      ]
+    },
+    {
+      "id": "library-negatives-never-positive",
+      "passed": true,
+      "checks": [
+        {
+          "check": "list_excludes",
+          "passed": true,
+          "message": "retrieved=['env-lighthouse-golden-001']; must not contain ['env-flat-low-contrast-001', 'env-off-palette-001', 'env-near-duplicate-001']"
+        }
+      ]
+    },
+    {
+      "id": "feedback-correction-recalled",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "found_run == True (got True)"
+        }
+      ]
+    }
+  ]
+}

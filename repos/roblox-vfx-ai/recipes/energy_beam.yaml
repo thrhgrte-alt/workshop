@@ -1,0 +1,55 @@
+id: energy_beam
+title: Energy beam
+kind: beam
+mount: part
+description: >
+  A glowing beam between two points with a gentle curve and an impact sparkle at the far end. The far end is
+  placed `length` studs along the root's local Z axis; retarget it in your game by moving the second Attachment.
+parameters:
+  color_core: {type: color, default: [0.9, 1.0, 1.0], description: Colour at both ends and centre}
+  color_edge: {type: color, default: [0.2, 0.7, 1.0], description: Colour between core points}
+  width:      {type: float, min: 0.2, max: 3.0, default: 0.8, description: Beam width at the start in studs}
+  length:     {type: float, min: 4,   max: 60,  default: 20,  description: Distance to the end attachment in studs}
+  segments:   {type: int,   min: 4,   max: 30,  default: 12,  description: Beam segments (more = smoother curve, more cost)}
+  curve:      {type: float, min: 0,   max: 8,   default: 2,   description: Curve size at both ends}
+  glow:       {type: float, min: 0.0, max: 1.0, default: 0.9,  description: LightEmission}
+  texture:    {type: string, default: "", description: "Optional rbxassetid://<your texture>"}
+instances:
+  - id: start_point
+    class: Attachment
+    parent: root
+    properties: {Position: [0, 0, 0]}
+  - id: end_point
+    class: Attachment
+    parent: root
+    properties: {Position: [0, 0, {from: length}]}
+  - id: beam
+    class: Beam
+    parent: root
+    properties:
+      Attachment0: start_point
+      Attachment1: end_point
+      Width0: {from: width}
+      Width1: {from: width, scale: 0.6}
+      Segments: {from: segments}
+      CurveSize0: {from: curve}
+      CurveSize1: {from: curve, scale: -1}
+      Color: {gradient: [[0, {from: color_core}], [0.5, {from: color_edge}], [1, {from: color_core}]]}
+      Transparency: {sequence: [[0, 0.2], [0.5, 0.35], [1, 0.2]]}
+      LightEmission: {from: glow}
+      FaceCamera: true
+      Texture: {from: texture}
+  - id: impact
+    class: ParticleEmitter
+    parent: end_point
+    properties:
+      Enabled: true
+      Rate: 20
+      Lifetime: [0.2, 0.4]
+      Speed: [4, 10]
+      SpreadAngle: [60, 60]
+      Size: {sequence: [[0, 0.4], [1, 0]]}
+      Transparency: {sequence: [[0, 0.2], [1, 1]]}
+      Color: {from: color_edge}
+      LightEmission: 1
+      Texture: {from: texture}

@@ -1,0 +1,15 @@
+{
+  "servers": {
+    "substance-designer-ai": {
+      "type": "stdio",
+      "command": "python",
+      "args": [
+        "-m",
+        "sdai.server"
+      ],
+      "env": {
+        "SDAI_ROOT": "/ABSOLUTE/PATH/TO/substance-designer-ai"
+      }
+    }
+  }
+}

@@ -1,0 +1,169 @@
+- id: evaluate-hub-is-clean
+  title: Shipped templates have no findings and no failed automatic criteria; subjective criteria stay unscored
+  input: {op: evaluate, template: hub_and_spoke}
+  checks: [{type: equals, path: codes, value: []}, {type: equals, path: failed_criteria, value: []}, {type: equals, path: complete, value: false}, {type: equals, path: passed, value: false}]
+- id: evaluate-arena-is-clean
+  input: {op: evaluate, template: loop_arena}
+  checks: [{type: equals, path: codes, value: []}, {type: equals, path: failed_criteria, value: []}]
+- id: evaluate-linear-is-clean
+  input: {op: evaluate, template: linear_with_branches}
+  checks: [{type: equals, path: codes, value: []}, {type: equals, path: failed_criteria, value: []}]
+- id: evaluate-manual-scores-complete-the-rubric
+  input: {op: evaluate, template: hub_and_spoke, manual: {fun_and_flow: 0.8, matches_brief: 0.9, readable_at_player_height: 0.7}}
+  checks: [{type: equals, path: complete, value: true}, {type: equals, path: passed, value: true}]
+- id: evaluate-a-low-manual-score-on-a-required-criterion-fails-the-level
+  input: {op: evaluate, template: hub_and_spoke, manual: {fun_and_flow: 0.2, matches_brief: 0.9, readable_at_player_height: 0.9}}
+  checks: [{type: equals, path: passed, value: false}, {type: list_contains, path: failed_criteria, items: [fun_and_flow]}]
+- id: evaluate-flags-arena-without-loops
+  input:
+    op: evaluate
+    template: loop_arena
+    mutations: [{op: remove, target: connection, id: ring_02}, {op: remove, target: connection, id: ring_03}, {op: remove, target: connection, id: ring_04}, {op: remove, target: connection, id: ring_06}, {op: remove, target: connection, id: ring_07}, {op: remove, target: connection, id: ring_08}]
+  checks: [{type: list_contains, path: failed_criteria, items: [route_choice]}, {type: list_contains, path: codes, items: [range_loops]}]
+- id: evaluate-flags-unfair-routes
+  input: {op: evaluate, template: hub_and_spoke, mutations: [{op: set, target: spawn, id: spawn_b, field: at, value: [60, 52]}]}
+  checks: [{type: list_contains, path: failed_criteria, items: [fair_routes]}]
+- id: evaluate-flags-unsafe-spawns
+  input: {op: evaluate, template: hub_and_spoke, mutations: [{op: unset, target: connection, id: c_west, field: at}, {op: unset, target: connection, id: c_east, field: at}]}
+  checks: [{type: list_contains, path: failed_criteria, items: [spawns_safe]}]
+- id: evaluate-flags-missing-landmarks
+  input: {op: evaluate, template: hub_and_spoke, mutations: [{op: remove, target: landmark, id: tower}]}
+  checks: [{type: list_contains, path: failed_criteria, items: [landmarks_readable]}]
+- id: evaluate-flags-long-sightlines
+  input: {op: evaluate, template: loop_arena, params: {cell_w: 24, cell_d: 48}}
+  checks: [{type: list_contains, path: failed_criteria, items: [sightlines_ok]}]
+- id: evaluate-flags-ambush-at-spawn
+  input: {op: evaluate, template: hub_and_spoke, mutations: [{op: add, target: encounter, value: {id: ambush, room: west, intensity: 3}}]}
+  checks: [{type: list_contains, path: failed_criteria, items: [pacing_ok]}]
+- id: evaluate-flags-empty-dead-ends
+  input: {op: evaluate, template: hub_and_spoke, mutations: [{op: set, target: room, id: south, field: tags, value: []}]}
+  checks: [{type: list_contains, path: failed_criteria, items: [no_empty_dead_ends]}]
+- id: evaluate-invalid-spec-fails-fast
+  input: {op: evaluate, template: hub_and_spoke, mutations: [{op: set, target: room, id: hub, field: height, value: 8}]}
+  checks: [{type: list_contains, path: failed_criteria, items: [valid_spec]}]
+- id: evaluate-part-budget-is-enforced
+  input: {op: evaluate, template: loop_arena, params: {cell_w: 48, cell_d: 48}}
+  checks: [{type: in_range, path: metrics.part_count, min: 90, max: 800}]
+- id: build-hub-is-walkable
+  input: {op: build, template: hub_and_spoke}
+  checks: [{type: equals, path: walkable, value: true}, {type: equals, path: parts, value: 46}, {type: equals, path: unreachable_rooms, value: []}]
+- id: build-arena-is-walkable
+  input: {op: build, template: loop_arena}
+  checks: [{type: equals, path: walkable, value: true}, {type: equals, path: parts, value: 104}]
+- id: build-ramp-level-is-walkable
+  title: A character can climb the 8-stud ramp in the BUILT geometry
+  input: {op: build, template: linear_with_branches}
+  checks: [{type: equals, path: walkable, value: true}]
+- id: build-detects-a-blocked-door
+  title: A builder bug (wall across the spawn door) is caught by the independent geometry check
+  input: {op: sabotage, template: hub_and_spoke, connection: c_west}
+  checks: [{type: equals, path: walkable, value: false}, {type: list_contains, path: codes, items: [objective_unreachable_in_geometry]}]
+- id: build-detects-steps-too-tall-for-the-character
+  input: {op: build, template: linear_with_branches, build_style: {step_height: 3.0}}
+  checks: [{type: equals, path: walkable, value: false}]
+- id: build-detects-a-blocked-side-room
+  input: {op: sabotage, template: hub_and_spoke, connection: c_north}
+  checks: [{type: list_contains, path: codes, items: [room_unreachable_in_geometry]}]
+- id: luau-hub-lints-clean
+  input: {op: luau, template: hub_and_spoke}
+  checks: [{type: lint_clean}, {type: equals, path: deterministic, value: true}, {type: equals, path: has_guard, value: true}]
+- id: luau-arena-lints-clean-with-a-nested-target
+  input: {op: luau, template: loop_arena, target_path: workspace.Levels}
+  checks: [{type: lint_clean}]
+- id: lint-rejects-publishing
+  input: {op: lint_text, code: "game:GetService('AssetService'):CreatePlaceAsync('x', 1)"}
+  checks: [{type: lint_mentions, text: forbidden token}]
+- id: lint-rejects-unguarded-destroy
+  input: {op: lint_text, code: "workspace:FindFirstChild('x'):Destroy()"}
+  checks: [{type: lint_mentions, text: not directly guarded}]
+- id: lint-rejects-clear-all-children
+  input: {op: lint_text, code: "workspace:ClearAllChildren()"}
+  checks: [{type: lint_mentions, text: forbidden token}]
+- id: lint-accepts-guarded-destroy
+  input: {op: lint_text, code: "if x:GetAttribute(\"AIGeneratedBy\") == \"rbxlevel\" then\n x:Destroy()\nend"}
+  checks: [{type: lint_clean}]
+- id: target-path-rejects-injection
+  input: {op: bad_target, template: hub_and_spoke, target_path: "workspace; os.exit()"}
+  checks: [{type: error_contains, text: dotted path}]
+- id: target-path-rejects-quote-breakout
+  input: {op: bad_target, template: hub_and_spoke, target_path: "workspace\"] = nil --"}
+  checks: [{type: error_contains, text: dotted path}]
+- id: simulate-hub-creates-every-part
+  title: The generated Luau runs on the mock and creates exactly the parts the spec calls for
+  input: {op: simulate, template: hub_and_spoke}
+  checks: [{type: equals, path: ok, value: true}, {type: equals, path: status, value: ok}, {type: equals, path: parts, value: 46}, {type: equals, path: expected_parts, value: 46}]
+- id: simulate-arena-nested-target
+  input: {op: simulate, template: loop_arena, target_path: workspace.Levels}
+  checks: [{type: equals, path: ok, value: true}, {type: equals, path: parts, value: 104}]
+- id: simulate-rerun-replaces-only-its-own-folder
+  input: {op: simulate, template: hub_and_spoke, rerun: true}
+  checks: [{type: equals, path: roots, value: 1}, {type: equals, path: status, value: ok}]
+- id: simulate-refuses-a-foreign-folder-with-the-same-name
+  input: {op: simulate, template: hub_and_spoke, foreign_name: AI_Blockout_hub_and_spoke}
+  checks: [{type: equals, path: ok, value: false}, {type: error_contains, text: refusing to replace}]
+- id: simulate-reports-a-missing-target
+  input: {op: simulate, template: hub_and_spoke, target_path: workspace.Nope, no_target: true}
+  checks: [{type: equals, path: ok, value: false}, {type: error_contains, text: was not found}]
+- id: inspect-built-blockout-is-in-sync
+  input: {op: inspect, template: hub_and_spoke}
+  checks: [{type: equals, path: in_sync, value: true}, {type: equals, path: found, value: 46}]
+- id: inspect-detects-a-moved-part
+  input: {op: inspect, template: hub_and_spoke, tamper: "workspace:FindFirstChild('AI_Blockout_hub_and_spoke'):FindFirstChild('Room_hub'):FindFirstChild('floor').Position = Vector3.new(0, 0, 0)"}
+  checks: [{type: equals, path: in_sync, value: false}, {type: list_contains, path: moved, items: [Room_hub/floor]}]
+- id: inspect-detects-a-deleted-part
+  input: {op: inspect, template: hub_and_spoke, tamper: "workspace:FindFirstChild('AI_Blockout_hub_and_spoke'):FindFirstChild('Room_hub'):FindFirstChild('floor'):Destroy()"}
+  checks: [{type: list_contains, path: missing, items: [Room_hub/floor]}]
+- id: inspect-detects-an-extra-part
+  input: {op: inspect, template: hub_and_spoke, tamper: "local p = Instance.new('Part'); p.Name = 'handmade'; p.Parent = workspace:FindFirstChild('AI_Blockout_hub_and_spoke'):FindFirstChild('Room_hub')"}
+  checks: [{type: list_contains, path: extra, items: [Room_hub/handmade]}]
+- id: locks-unchanged-spec-passes
+  input: {op: locks, template: hub_and_spoke, lock: {rooms: [hub, west], connections: [c_west], bounds: true, spawns: [spawn_a]}}
+  checks: [{type: equals, path: ok, value: true}]
+- id: locks-detect-a-moved-locked-room
+  input:
+    op: locks
+    template: hub_and_spoke
+    lock: {rooms: [hub]}
+    mutations: [{op: set, target: room, id: hub, field: rect, value: [36, 36, 40, 40]}]
+  checks: [{type: equals, path: ok, value: false}, {type: list_contains, path: codes, items: [locked_changed]}]
+- id: locks-detect-a-removed-locked-connection
+  input: {op: locks, template: hub_and_spoke, lock: {connections: [c_west]}, mutations: [{op: remove, target: connection, id: c_west}]}
+  checks: [{type: list_contains, path: codes, items: [locked_removed]}]
+- id: locks-detect-changed-bounds
+  input:
+    op: locks
+    template: hub_and_spoke
+    lock: {bounds: true}
+    mutations: [{op: set_top, field: bounds, value: {width: 200, depth: 200, ceiling: 16}}]
+  checks: [{type: list_contains, path: codes, items: [locked_changed]}]
+- id: locks-detect-a-moved-locked-spawn
+  input: {op: locks, template: hub_and_spoke, lock: {spawns: [spawn_a]}, mutations: [{op: set, target: spawn, id: spawn_a, field: at, value: [10, 50]}]}
+  checks: [{type: list_contains, path: codes, items: [locked_changed]}]
+- id: locks-allow-unlocked-changes
+  input: {op: locks, template: hub_and_spoke, lock: {rooms: [hub]}, mutations: [{op: set, target: encounter, id: guard_north, field: intensity, value: 3}]}
+  checks: [{type: equals, path: ok, value: true}]
+- id: diff-reports-changes
+  input: {op: diff, template: hub_and_spoke, mutations: [{op: remove, target: connection, id: c_south}, {op: set, target: room, id: north, field: height, value: 20}]}
+  checks: [{type: equals, path: unchanged, value: false}, {type: list_contains, path: connections_removed, items: [c_south]}, {type: list_contains, path: rooms_changed, items: [north]}]
+- id: diff-identical-specs-are-unchanged
+  input: {op: diff, template: loop_arena}
+  checks: [{type: equals, path: unchanged, value: true}]
+- id: views-cover-routes-landmarks-rooms-and-overview
+  input: {op: views, template: loop_arena}
+  checks: [{type: list_contains, path: kinds, items: [route, landmark, room, overview]}, {type: equals, path: has_overview, value: true}]
+- id: views-respect-the-max
+  input: {op: views, template: loop_arena, max_views: 8}
+  checks: [{type: in_range, path: count, max: 8}]
+- id: map-renders
+  input: {op: map, template: loop_arena}
+  checks: [{type: in_range, path: width, min: 400}]
+- id: correction-is-recalled-for-similar-request
+  input:
+    op: feedback
+    request: "two-team arena for the ruins, with a central objective"
+    reason: "spawns felt exposed and routes were too long"
+    corrections:
+      - {dimension: spawns, note: "keep enemy spawns out of each other's sight"}
+      - {dimension: routes, note: "shorter routes to the central objective"}
+    later_request: "another arena with a central objective"
+  checks: [{type: equals, path: found_run, value: true}]

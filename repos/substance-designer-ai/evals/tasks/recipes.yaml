@@ -1,0 +1,41 @@
+- id: recipe-stone-valid
+  title: Shipped stone recipe has no errors
+  input: {op: validate_recipe, recipe_id: stylized_stone_wall}
+  checks: [{type: equals, path: valid, value: true}, {type: no_findings, severities: [error]}]
+- id: recipe-wood-valid
+  input: {op: validate_recipe, recipe_id: hand_painted_wood_planks}
+  checks: [{type: equals, path: valid, value: true}, {type: no_findings, severities: [error]}]
+- id: recipe-pebble-valid
+  input: {op: validate_recipe, recipe_id: stylized_pebble_ground}
+  checks: [{type: equals, path: valid, value: true}, {type: no_findings, severities: [error]}]
+- id: recipe-reports-unverified-nodes
+  title: Draft catalog entries must be reported, not hidden
+  input: {op: validate_recipe, recipe_id: stylized_stone_wall}
+  checks: [{type: has_finding, code_or_text: unverified_node}]
+- id: invalid-cycle
+  input: {op: validate_file, file: cycle.yaml}
+  checks: [{type: equals, path: valid, value: false}, {type: has_finding, code_or_text: '"code": "cycle"'}]
+- id: invalid-unknown-node
+  input: {op: validate_file, file: unknown_node.yaml}
+  checks: [{type: equals, path: valid, value: false}, {type: has_finding, code_or_text: unknown_node}]
+- id: invalid-type-mismatch
+  input: {op: validate_file, file: type_mismatch.yaml}
+  checks: [{type: equals, path: valid, value: false}, {type: has_finding, code_or_text: type_mismatch}, {type: has_finding, code_or_text: grayscale_conversion}]
+- id: invalid-missing-required-output
+  input: {op: validate_file, file: missing_output.yaml, required_outputs: [baseColor, normal]}
+  checks: [{type: equals, path: valid, value: false}, {type: has_finding, code_or_text: missing_output}]
+- id: invalid-duplicate-input
+  input: {op: validate_file, file: duplicate_input.yaml}
+  checks: [{type: has_finding, code_or_text: duplicate_input}]
+- id: invalid-param-out-of-range
+  input: {op: validate_file, file: param_range.yaml}
+  checks: [{type: has_finding, code_or_text: param_range}]
+- id: invalid-undeclared-param-reference
+  input: {op: validate_file, file: bad_param_ref.yaml}
+  checks: [{type: has_finding, code_or_text: unknown_param_ref}]
+- id: invalid-missing-required-input
+  input: {op: validate_file, file: missing_input.yaml}
+  checks: [{type: has_finding, code_or_text: missing_input}]
+- id: dangling-node-is-only-a-warning
+  input: {op: validate_file, file: dangling.yaml}
+  checks: [{type: equals, path: valid, value: true}, {type: has_finding, code_or_text: dangling_node}]

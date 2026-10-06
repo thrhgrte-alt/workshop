@@ -1,0 +1,73 @@
+- id: spec-hub-valid
+  input: {op: spec, template: hub_and_spoke}
+  checks: [{type: equals, path: valid, value: true}, {type: equals, path: codes, value: []}]
+- id: spec-arena-valid
+  input: {op: spec, template: loop_arena}
+  checks: [{type: equals, path: valid, value: true}, {type: equals, path: codes, value: []}]
+- id: spec-linear-valid
+  input: {op: spec, template: linear_with_branches}
+  checks: [{type: equals, path: valid, value: true}, {type: equals, path: codes, value: []}]
+- id: spec-templates-valid-at-extreme-parameters-small
+  input: {op: spec, template: hub_and_spoke, params: {hub: 24, spoke_w: 24, spoke_d: 16, room_h: 12}}
+  checks: [{type: equals, path: valid, value: true}]
+- id: spec-templates-valid-at-extreme-parameters-large
+  input: {op: spec, template: loop_arena, params: {cell_w: 48, cell_d: 48, room_h: 40}}
+  checks: [{type: equals, path: valid, value: true}]
+- id: spec-rejects-overlapping-rooms
+  input: {op: spec, template: hub_and_spoke, mutations: [{op: set, target: room, id: north, field: rect, value: [40, 16, 24, 32]}]}
+  checks: [{type: equals, path: valid, value: false}, {type: list_contains, path: errors, items: [room_overlap]}]
+- id: spec-rejects-out-of-bounds
+  input: {op: spec, template: hub_and_spoke, mutations: [{op: set, target: room, id: east, field: rect, value: [90, 40, 32, 24]}]}
+  checks: [{type: list_contains, path: errors, items: [out_of_bounds]}]
+- id: spec-rejects-tiny-room
+  input: {op: spec, template: hub_and_spoke, mutations: [{op: set, target: room, id: north, field: rect, value: [40, 0, 8, 32]}]}
+  checks: [{type: list_contains, path: errors, items: [room_too_small]}]
+- id: spec-rejects-low-ceiling
+  input: {op: spec, template: hub_and_spoke, mutations: [{op: set, target: room, id: hub, field: height, value: 8}]}
+  checks: [{type: list_contains, path: errors, items: [ceiling_low]}]
+- id: spec-rejects-connection-without-shared-wall
+  input: {op: spec, template: hub_and_spoke, mutations: [{op: add, target: connection, value: {id: bad, from: north, to: south}}]}
+  checks: [{type: list_contains, path: errors, items: [no_shared_wall]}]
+- id: spec-rejects-door-outside-wall
+  input: {op: spec, template: hub_and_spoke, mutations: [{op: set, target: connection, id: c_north, field: at, value: 41}]}
+  checks: [{type: list_contains, path: errors, items: [door_outside_wall]}]
+- id: spec-rejects-narrow-door
+  input: {op: spec, template: hub_and_spoke, mutations: [{op: set, target: connection, id: c_north, field: width, value: 2}]}
+  checks: [{type: list_contains, path: errors, items: [door_too_narrow]}]
+- id: spec-rejects-door-between-floors
+  input: {op: spec, template: hub_and_spoke, mutations: [{op: set, target: room, id: north, field: floor, value: 6}]}
+  checks: [{type: list_contains, path: errors, items: [floor_mismatch]}]
+- id: spec-rejects-ramp-too-steep
+  input: {op: spec, template: linear_with_branches, mutations: [{op: set, target: connection, id: c_mid2_final, field: run, value: 4}]}
+  checks: [{type: list_contains, path: errors, items: [ramp_too_steep]}]
+- id: spec-rejects-ramp-that-does-not-fit
+  input: {op: spec, template: linear_with_branches, mutations: [{op: set, target: connection, id: c_mid2_final, field: run, value: 40}]}
+  checks: [{type: list_contains, path: errors, items: [run_does_not_fit]}]
+- id: spec-rejects-stairs-with-tall-steps
+  input: {op: spec, template: linear_with_branches, mutations: [{op: set, target: connection, id: c_mid2_final, field: kind, value: stairs}, {op: set, target: connection, id: c_mid2_final, field: step_height, value: 3}]}
+  checks: [{type: list_contains, path: errors, items: [step_too_high]}]
+- id: spec-rejects-ramp-between-same-floor-rooms
+  input: {op: spec, template: linear_with_branches, mutations: [{op: set, target: connection, id: c_start_mid1, field: kind, value: ramp}]}
+  checks: [{type: list_contains, path: errors, items: [no_rise]}]
+- id: spec-rejects-spawn-in-a-wall
+  input: {op: spec, template: hub_and_spoke, mutations: [{op: set, target: spawn, id: spawn_a, field: at, value: [0.5, 0.5]}]}
+  checks: [{type: list_contains, path: errors, items: [spawn_outside]}]
+- id: spec-rejects-unknown-room-in-connection
+  input: {op: spec, template: hub_and_spoke, mutations: [{op: add, target: connection, value: {id: ghost, from: hub, to: nowhere}}]}
+  checks: [{type: list_contains, path: errors, items: [unknown_room]}]
+- id: spec-rejects-duplicate-ids
+  input: {op: spec, template: hub_and_spoke, mutations: [{op: add, target: room, value: {id: hub, rect: [0, 0, 16, 16]}}]}
+  checks: [{type: list_contains, path: errors, items: [duplicate_id]}]
+- id: spec-rejects-unsafe-ids
+  title: Ids end up inside generated code, so they are restricted to letters, digits and underscore
+  input: {op: spec, template: hub_and_spoke, mutations: [{op: set, target: room, id: north, field: id, value: "north\"]=nil--"}]}
+  checks: [{type: list_contains, path: errors, items: [bad_id]}]
+- id: spec-rejects-unknown-locked-reference
+  input: {op: spec, template: hub_and_spoke, mutations: [{op: set_top, field: locked, value: {rooms: [ghost]}}]}
+  checks: [{type: list_contains, path: errors, items: [unknown_locked]}]
+- id: spec-rejects-bad-encounter-intensity
+  input: {op: spec, template: hub_and_spoke, mutations: [{op: set, target: encounter, id: fight_hub, field: intensity, value: 9}]}
+  checks: [{type: list_contains, path: errors, items: [bad_intensity]}]
+- id: spec-snaps-off-grid-rooms-with-a-note
+  input: {op: spec, template: hub_and_spoke, mutations: [{op: set, target: room, id: hub, field: rect, value: [33, 33, 41, 41]}]}
+  checks: [{type: equals, path: valid, value: true}, {type: list_contains, path: info_codes, items: [snapped_to_grid]}]

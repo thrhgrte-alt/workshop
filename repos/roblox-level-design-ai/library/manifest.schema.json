@@ -1,0 +1,263 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Reference asset manifest entry",
+  "type": "object",
+  "required": [
+    "id",
+    "kind",
+    "title",
+    "path",
+    "license",
+    "status"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9._-]{2,63}$"
+    },
+    "kind": {
+      "enum": [
+        "level",
+        "reference_image",
+        "reference_map"
+      ]
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1
+    },
+    "description": {
+      "type": "string"
+    },
+    "path": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Local path (absolute, or relative to <PREFIX>_ASSET_ROOT / repo) or remote URI."
+    },
+    "preview": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "source_file": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Related scene, graph, script or project file."
+    },
+    "application": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "version": {
+          "type": "string"
+        }
+      }
+    },
+    "project": {
+      "type": "string"
+    },
+    "license": {
+      "type": "object",
+      "required": [
+        "owner"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "owner": {
+          "enum": [
+            "user",
+            "user-approved",
+            "third-party",
+            "unknown"
+          ]
+        },
+        "spdx": {
+          "type": "string"
+        },
+        "notes": {
+          "type": "string"
+        }
+      }
+    },
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "creator": {
+          "type": "string"
+        },
+        "source_url": {
+          "type": "string"
+        },
+        "added_at": {
+          "type": "string"
+        },
+        "origin": {
+          "enum": [
+            "user-made",
+            "user-supplied",
+            "ai-generated",
+            "third-party",
+            "synthetic-example"
+          ]
+        },
+        "run_id": {
+          "type": "string"
+        }
+      }
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
+    },
+    "style": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "traits": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "palette": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^#[0-9a-fA-F]{6}$"
+          }
+        },
+        "shape_language": {
+          "type": "string"
+        },
+        "detail_density": {
+          "enum": [
+            "low",
+            "medium",
+            "high"
+          ]
+        },
+        "composition": {
+          "type": "string"
+        },
+        "intended_use": {
+          "type": "string"
+        }
+      }
+    },
+    "rating": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "minimum": 0,
+      "maximum": 5
+    },
+    "status": {
+      "enum": [
+        "candidate",
+        "curated",
+        "rejected"
+      ]
+    },
+    "polarity": {
+      "enum": [
+        "positive",
+        "negative"
+      ],
+      "default": "positive"
+    },
+    "correction_notes": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "related": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "embedding": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "provider": {
+          "type": "string"
+        },
+        "model": {
+          "type": "string"
+        }
+      }
+    },
+    "domain": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "level_type": {
+          "enum": [
+            "arena",
+            "hub",
+            "linear",
+            "maze",
+            "open",
+            "vertical",
+            "mixed"
+          ]
+        },
+        "template": {
+          "type": "string",
+          "description": "Template id in recipes/ this level was built from, if any"
+        },
+        "spec_file": {
+          "type": "string",
+          "description": "Path to the level spec (JSON/YAML) kept outside or inside the repo"
+        },
+        "rooms": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "loops": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "teams": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "players": {
+          "type": "string",
+          "description": "e.g. '2-4' or '1'"
+        },
+        "footprint_studs": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          },
+          "minItems": 2,
+          "maxItems": 2
+        },
+        "measurements": {
+          "type": "object"
+        },
+        "themes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}

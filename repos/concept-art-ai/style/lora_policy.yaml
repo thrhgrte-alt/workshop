@@ -1,0 +1,9 @@
+# Gate for the optional LoRA/PEFT workflow. Edit to match your own rights situation. This file is a policy, not legal advice.
+allowed_licenses: [own-work, licensed-for-training, cc0, cc-by-4.0]
+needs_attribution: [cc-by-4.0]
+min_items: 15
+max_items: 400
+min_side: 512
+caption_chars: [8, 400]
+max_ai_generated_share: 0.2
+near_duplicate_similarity: 0.97

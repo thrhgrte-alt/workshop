@@ -1,0 +1,15 @@
+# Effect rubric. 'auto' criteria are computed from the plan (heuristic estimates). 'manual' criteria need a
+# person (or a clearly labelled model judgment after actually viewing the preview/playtest). Subjective scores are
+# judgments, never ground truth. 'required' criteria must pass for the effect to pass.
+pass_at: 0.7
+criteria:
+  - {id: valid_tree,                 method: auto,   weight: 3, required: true, description: All classes, properties, types and enums are valid.}
+  - {id: within_budget,              method: auto,   weight: 3, required: true, description: Estimated cost fits the platform budget.}
+  - {id: readable_at_distance,       method: auto,   weight: 2, description: Largest element is big enough on screen at gameplay distance.}
+  - {id: separates_from_background,  method: auto,   weight: 2, description: Colours stay distinguishable on the test backgrounds.}
+  - {id: does_not_obscure_gameplay,  method: auto,   weight: 2, required: true, description: Estimated screen coverage stays low.}
+  - {id: clean_timing,               method: auto,   weight: 2, description: Fast attack, bounded duration, no abrupt ending.}
+  - {id: on_theme,                   method: auto,   weight: 1, description: Main colour is near the style palette.}
+  - {id: reads_in_motion,            method: manual, weight: 3, required: true, description: Looks right when played in Studio (timing and feel).}
+  - {id: matches_style,              method: manual, weight: 3, required: true, description: Matches the user's visual direction and polish.}
+  - {id: silhouette,                 method: manual, weight: 1, description: Has a clear, pleasing shape and layering.}

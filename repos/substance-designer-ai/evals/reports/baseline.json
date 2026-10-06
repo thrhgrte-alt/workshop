@@ -1,0 +1,529 @@
+{
+  "label": "baseline",
+  "mode": "solver",
+  "at": "2026-10-06T02:47:51+00:00",
+  "git_rev": "unknown",
+  "python": "3.11.15",
+  "meta": {},
+  "passed": 37,
+  "total": 37,
+  "tasks": [
+    {
+      "id": "compile-stone-default",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "deterministic == True (got True)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "script_compiles == True (got True)"
+        },
+        {
+          "check": "list_contains",
+          "passed": true,
+          "message": "outputs=['baseColor', 'height', 'normal', 'roughness']; expected to contain ['baseColor', 'normal', 'roughness', 'height']"
+        }
+      ]
+    },
+    {
+      "id": "compile-with-parameters",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "parameters.brick_columns == 12 (got 12)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "parameters.bevel_softness == 4.5 (got 4.5)"
+        }
+      ]
+    },
+    {
+      "id": "compile-all-recipes-wood",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "deterministic == True (got True)"
+        }
+      ]
+    },
+    {
+      "id": "compile-all-recipes-pebble",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "deterministic == True (got True)"
+        }
+      ]
+    },
+    {
+      "id": "param-out-of-range-rejected",
+      "passed": true,
+      "checks": [
+        {
+          "check": "error_contains",
+          "passed": true,
+          "message": "error should mention 'above maximum' (got 'invalid parameters: bevel_softness: 50 is above maximum 8.0')"
+        }
+      ]
+    },
+    {
+      "id": "param-unknown-rejected",
+      "passed": true,
+      "checks": [
+        {
+          "check": "error_contains",
+          "passed": true,
+          "message": "error should mention 'unknown parameter' (got \"invalid parameters: unknown parameter 'sparkle'. Available: ['bevel_softness', 'brick_columns', 'brick_rows', 'height_co\")"
+        }
+      ]
+    },
+    {
+      "id": "param-wrong-type-rejected",
+      "passed": true,
+      "checks": [
+        {
+          "check": "error_contains",
+          "passed": true,
+          "message": "error should mention 'integer' (got 'invalid parameters: brick_columns: expected an integer, got 2.5')"
+        }
+      ]
+    },
+    {
+      "id": "write-outside-allowed-directory-rejected",
+      "passed": true,
+      "checks": [
+        {
+          "check": "error_contains",
+          "passed": true,
+          "message": "error should mention 'outside the allowed' (got \"'/etc/not-allowed/wall.sbs' is outside the allowed directories (/tmp/tmpm62jy754). Set <PREFIX>_ALLOWED_PATHS to widen t\")"
+        }
+      ]
+    },
+    {
+      "id": "sbs-summary-reads-structure",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "graph == 'mini_stone' (got 'mini_stone')"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "node_count == 4 (got 4)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "atomic_filters.blend == 2 (got 2)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "library_instances.tile_generator == 1 (got 1)"
+        }
+      ]
+    },
+    {
+      "id": "catalog-probe-clean",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "clean == True (got True)"
+        }
+      ]
+    },
+    {
+      "id": "catalog-probe-detects-renamed-parameter",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "clean == False (got False)"
+        },
+        {
+          "check": "list_contains",
+          "passed": true,
+          "message": "problem_nodes=['blur']; expected to contain ['blur']"
+        }
+      ]
+    },
+    {
+      "id": "catalog-probe-detects-missing-library-node",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "clean == False (got False)"
+        },
+        {
+          "check": "list_contains",
+          "passed": true,
+          "message": "problem_nodes=['tile_generator']; expected to contain ['tile_generator']"
+        }
+      ]
+    },
+    {
+      "id": "correction-is-recalled-for-similar-future-request",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "found_run == True (got True)"
+        }
+      ]
+    },
+    {
+      "id": "recipe-stone-valid",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "valid == True (got True)"
+        },
+        {
+          "check": "no_findings",
+          "passed": true,
+          "message": "0 finding(s) with severity ['error']"
+        }
+      ]
+    },
+    {
+      "id": "recipe-wood-valid",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "valid == True (got True)"
+        },
+        {
+          "check": "no_findings",
+          "passed": true,
+          "message": "0 finding(s) with severity ['error']"
+        }
+      ]
+    },
+    {
+      "id": "recipe-pebble-valid",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "valid == True (got True)"
+        },
+        {
+          "check": "no_findings",
+          "passed": true,
+          "message": "0 finding(s) with severity ['error']"
+        }
+      ]
+    },
+    {
+      "id": "recipe-reports-unverified-nodes",
+      "passed": true,
+      "checks": [
+        {
+          "check": "has_finding",
+          "passed": true,
+          "message": "expected a finding mentioning 'unverified_node'"
+        }
+      ]
+    },
+    {
+      "id": "invalid-cycle",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "valid == False (got False)"
+        },
+        {
+          "check": "has_finding",
+          "passed": true,
+          "message": "expected a finding mentioning '\"code\": \"cycle\"'"
+        }
+      ]
+    },
+    {
+      "id": "invalid-unknown-node",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "valid == False (got False)"
+        },
+        {
+          "check": "has_finding",
+          "passed": true,
+          "message": "expected a finding mentioning 'unknown_node'"
+        }
+      ]
+    },
+    {
+      "id": "invalid-type-mismatch",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "valid == False (got False)"
+        },
+        {
+          "check": "has_finding",
+          "passed": true,
+          "message": "expected a finding mentioning 'type_mismatch'"
+        },
+        {
+          "check": "has_finding",
+          "passed": true,
+          "message": "expected a finding mentioning 'grayscale_conversion'"
+        }
+      ]
+    },
+    {
+      "id": "invalid-missing-required-output",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "valid == False (got False)"
+        },
+        {
+          "check": "has_finding",
+          "passed": true,
+          "message": "expected a finding mentioning 'missing_output'"
+        }
+      ]
+    },
+    {
+      "id": "invalid-duplicate-input",
+      "passed": true,
+      "checks": [
+        {
+          "check": "has_finding",
+          "passed": true,
+          "message": "expected a finding mentioning 'duplicate_input'"
+        }
+      ]
+    },
+    {
+      "id": "invalid-param-out-of-range",
+      "passed": true,
+      "checks": [
+        {
+          "check": "has_finding",
+          "passed": true,
+          "message": "expected a finding mentioning 'param_range'"
+        }
+      ]
+    },
+    {
+      "id": "invalid-undeclared-param-reference",
+      "passed": true,
+      "checks": [
+        {
+          "check": "has_finding",
+          "passed": true,
+          "message": "expected a finding mentioning 'unknown_param_ref'"
+        }
+      ]
+    },
+    {
+      "id": "invalid-missing-required-input",
+      "passed": true,
+      "checks": [
+        {
+          "check": "has_finding",
+          "passed": true,
+          "message": "expected a finding mentioning 'missing_input'"
+        }
+      ]
+    },
+    {
+      "id": "dangling-node-is-only-a-warning",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "valid == True (got True)"
+        },
+        {
+          "check": "has_finding",
+          "passed": true,
+          "message": "expected a finding mentioning 'dangling_node'"
+        }
+      ]
+    },
+    {
+      "id": "rubric-good-material-has-no-auto-failures",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "failed_criteria == [] (got [])"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "rubric.complete == False (got False)"
+        }
+      ]
+    },
+    {
+      "id": "rubric-catches-visible-seam",
+      "passed": true,
+      "checks": [
+        {
+          "check": "failed_criteria_include",
+          "passed": true,
+          "message": "failed criteria ['tileable']; expected to include ['tileable']"
+        }
+      ]
+    },
+    {
+      "id": "rubric-catches-wrong-palette",
+      "passed": true,
+      "checks": [
+        {
+          "check": "failed_criteria_include",
+          "passed": true,
+          "message": "failed criteria ['palette_match']; expected to include ['palette_match']"
+        },
+        {
+          "check": "failed_criteria_exclude",
+          "passed": true,
+          "message": "failed criteria ['palette_match']; must not include ['tileable']"
+        }
+      ]
+    },
+    {
+      "id": "rubric-catches-noise",
+      "passed": true,
+      "checks": [
+        {
+          "check": "failed_criteria_include",
+          "passed": true,
+          "message": "failed criteria ['detail_level']; expected to include ['detail_level']"
+        }
+      ]
+    },
+    {
+      "id": "rubric-catches-broken-normal-map",
+      "passed": true,
+      "checks": [
+        {
+          "check": "failed_criteria_include",
+          "passed": true,
+          "message": "failed criteria ['normal_valid']; expected to include ['normal_valid']"
+        }
+      ]
+    },
+    {
+      "id": "rubric-catches-missing-map",
+      "passed": true,
+      "checks": [
+        {
+          "check": "failed_criteria_include",
+          "passed": true,
+          "message": "failed criteria ['maps_present']; expected to include ['maps_present']"
+        }
+      ]
+    },
+    {
+      "id": "search-chunky-stone",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "retrieved.0 == 'stone-wall-chunky-001' (got 'stone-wall-chunky-001')"
+        },
+        {
+          "check": "retrieved_not",
+          "passed": true,
+          "message": "retrieved ['stone-wall-chunky-001']; must not include ['stone-unreviewed-import', 'stone-wall-too-noisy']"
+        },
+        {
+          "check": "list_contains",
+          "passed": true,
+          "message": "avoid=['stone-wall-too-noisy', 'stone-wall-neon-palette', 'stone-wall-visible-seam']; expected to contain ['stone-wall-too-noisy']"
+        }
+      ]
+    },
+    {
+      "id": "search-wood-by-palette",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "retrieved.0 == 'wood-planks-warm-001' (got 'wood-planks-warm-001')"
+        }
+      ]
+    },
+    {
+      "id": "search-ground",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "retrieved.0 == 'pebble-ground-soft-001' (got 'pebble-ground-soft-001')"
+        }
+      ]
+    },
+    {
+      "id": "search-hides-uncurated",
+      "passed": true,
+      "checks": [
+        {
+          "check": "retrieved_not",
+          "passed": true,
+          "message": "retrieved ['stone-wall-chunky-001']; must not include ['stone-unreviewed-import']"
+        }
+      ]
+    },
+    {
+      "id": "search-material-type-filter",
+      "passed": true,
+      "checks": [
+        {
+          "check": "retrieved_any",
+          "passed": true,
+          "message": "retrieved ['wood-planks-warm-001']; wanted any of ['wood-planks-warm-001']"
+        },
+        {
+          "check": "retrieved_not",
+          "passed": true,
+          "message": "retrieved ['wood-planks-warm-001']; must not include ['stone-wall-chunky-001', 'pebble-ground-soft-001']"
+        }
+      ]
+    }
+  ]
+}

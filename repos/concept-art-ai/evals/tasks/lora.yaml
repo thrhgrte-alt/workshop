@@ -1,0 +1,362 @@
+- id: lora-valid-dataset
+  title: A dataset with 15 licensed, captioned, distinct images passes
+  input:
+    op: lora
+  checks:
+  - type: equals
+    path: ok
+    value: true
+  - type: equals
+    path: codes
+    value: []
+- id: lora-too-few
+  title: Fewer than 15 items fails
+  input:
+    op: lora
+    items: 6
+  checks:
+  - type: list_contains
+    path: error_codes
+    items:
+    - too_few_items
+- id: lora-unlicensed
+  title: An all-rights-reserved image blocks training
+  input:
+    op: lora
+    patches:
+    - index: 2
+      set:
+        license: all-rights-reserved
+  checks:
+  - type: equals
+    path: ok
+    value: false
+  - type: list_contains
+    path: error_codes
+    items:
+    - license_not_allowed
+- id: lora-unknown-license
+  title: A missing licence blocks training
+  input:
+    op: lora
+    patches:
+    - index: 1
+      delete_keys:
+      - license
+  checks:
+  - type: list_contains
+    path: error_codes
+    items:
+    - license_not_allowed
+- id: lora-missing-owner
+  title: Every item needs an owner
+  input:
+    op: lora
+    patches:
+    - index: 3
+      delete_keys:
+      - owner
+  checks:
+  - type: list_contains
+    path: error_codes
+    items:
+    - owner_missing
+- id: lora-missing-caption
+  title: An empty caption is an error
+  input:
+    op: lora
+    patches:
+    - index: 4
+      set:
+        caption: ''
+  checks:
+  - type: list_contains
+    path: error_codes
+    items:
+    - caption_missing
+- id: lora-trigger-missing-warns
+  title: A caption without the trigger word is a warning, not an error
+  input:
+    op: lora
+    patches:
+    - index: 5
+      set:
+        caption: stylised ruins without the word
+  checks:
+  - type: equals
+    path: ok
+    value: true
+  - type: list_contains
+    path: codes
+    items:
+    - trigger_missing
+- id: lora-attribution-required
+  title: cc-by needs a source
+  input:
+    op: lora
+    patches:
+    - index: 0
+      set:
+        license: cc-by-4.0
+      delete_keys:
+      - source
+  checks:
+  - type: list_contains
+    path: error_codes
+    items:
+    - attribution_missing
+- id: lora-ai-needs-curation
+  title: An AI-generated image must have been curated by a person
+  input:
+    op: lora
+    patches:
+    - index: 0
+      set:
+        ai_generated: true
+  checks:
+  - type: list_contains
+    path: error_codes
+    items:
+    - ai_not_curated
+- id: lora-ai-share-capped
+  title: Too many curated AI images still fails (a style trained on its own outputs drifts)
+  input:
+    op: lora
+    patches:
+    - index: 0
+      set:
+        ai_generated: true
+        curated: true
+    - index: 1
+      set:
+        ai_generated: true
+        curated: true
+    - index: 2
+      set:
+        ai_generated: true
+        curated: true
+    - index: 3
+      set:
+        ai_generated: true
+        curated: true
+  checks:
+  - type: list_contains
+    path: error_codes
+    items:
+    - too_much_ai
+  - type: equals
+    path: ai_generated
+    value: 4
+- id: lora-ai-small-share-ok
+  title: A small curated AI share is allowed
+  input:
+    op: lora
+    patches:
+    - index: 0
+      set:
+        ai_generated: true
+        curated: true
+  checks:
+  - type: equals
+    path: ok
+    value: true
+  - type: equals
+    path: ai_generated
+    value: 1
+- id: lora-duplicate-file
+  title: A byte-identical file is an error
+  input:
+    op: lora
+    copy_item0_to: img/copy.png
+  checks:
+  - type: list_contains
+    path: error_codes
+    items:
+    - duplicate_file
+- id: lora-near-duplicate-warns
+  title: A re-saved, resized copy is a warning
+  input:
+    op: lora
+    near_duplicate_of_first_at: 7
+  checks:
+  - type: equals
+    path: ok
+    value: true
+  - type: list_contains
+    path: codes
+    items:
+    - near_duplicate
+- id: lora-path-traversal
+  title: A file outside the dataset folder is refused
+  input:
+    op: lora
+    patches:
+    - index: 0
+      set:
+        file: ../outside.png
+  checks:
+  - type: list_contains
+    path: error_codes
+    items:
+    - bad_path
+- id: lora-bad-extension
+  title: Only image files are accepted
+  input:
+    op: lora
+    patches:
+    - index: 0
+      set:
+        file: img/000.exe
+  checks:
+  - type: list_contains
+    path: error_codes
+    items:
+    - bad_extension
+- id: lora-missing-file
+  title: A listed file that does not exist is an error
+  input:
+    op: lora
+    patches:
+    - index: 0
+      set:
+        file: img/nope.png
+  checks:
+  - type: list_contains
+    path: error_codes
+    items:
+    - missing_file
+- id: lora-low-resolution-warns
+  title: Small images warn
+  input:
+    op: lora
+    size:
+    - 256
+    - 256
+  checks:
+  - type: equals
+    path: ok
+    value: true
+  - type: list_contains
+    path: codes
+    items:
+    - low_resolution
+- id: lora-bad-trigger
+  title: A trigger word must be a simple token
+  input:
+    op: lora
+    meta:
+      trigger_word: 1 bad
+    trigger: x
+  checks:
+  - type: list_contains
+    path: error_codes
+    items:
+    - bad_trigger
+- id: lora-config-from-valid-dataset
+  title: 'A config is produced for a valid dataset: trainer-agnostic, command is a placeholder, nothing is run'
+  input:
+    op: lora
+    action: config
+  checks:
+  - type: equals
+    path: name
+    value: test_ds_lora
+  - type: equals
+    path: rank
+    value: 16
+  - type: equals
+    path: alpha
+    value: 16
+  - type: equals
+    path: unverified
+    value: true
+  - type: equals
+    path: command_is_template
+    value: true
+- id: lora-validation-plan
+  title: The validation plan compares against the base model on held-out prompts
+  input:
+    op: lora
+    action: config
+  checks:
+  - type: equals
+    path: plan_images
+    value: 27
+  - type: equals
+    path: held_out_all
+    value: true
+  - type: equals
+    path: has_base_arm
+    value: true
+- id: lora-config-refuses-invalid-dataset
+  title: No config for a dataset with errors
+  input:
+    op: lora
+    action: config
+    items: 6
+  checks:
+  - type: error_contains
+    text: dataset has
+- id: lora-config-needs-base-model
+  title: A base model is required
+  input:
+    op: lora
+    action: config
+    base_model: '  '
+  checks:
+  - type: error_contains
+    text: base_model is required
+- id: lora-config-rank-range
+  title: Rank is bounded
+  input:
+    op: lora
+    action: config
+    params:
+      rank: 0
+  checks:
+  - type: error_contains
+    text: rank must be
+- id: lora-config-lr-range
+  title: Learning rate is bounded
+  input:
+    op: lora
+    action: config
+    params:
+      learning_rate: 5
+  checks:
+  - type: error_contains
+    text: learning_rate must be
+- id: lora-config-steps-range
+  title: Steps are bounded
+  input:
+    op: lora
+    action: config
+    params:
+      steps: 10
+  checks:
+  - type: error_contains
+    text: steps must be
+- id: lora-config-output-name
+  title: Output name is restricted
+  input:
+    op: lora
+    action: config
+    params:
+      output_name: ../../etc
+  checks:
+  - type: error_contains
+    text: output_name must match
+- id: lora-config-alpha-override
+  title: Alpha follows rank unless set
+  input:
+    op: lora
+    action: config
+    params:
+      rank: 32
+  checks:
+  - type: equals
+    path: rank
+    value: 32
+  - type: equals
+    path: alpha
+    value: 32

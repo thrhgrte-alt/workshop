@@ -1,0 +1,87 @@
+- id: luau-arcane-burst-lints-clean
+  input: {op: luau, recipe_id: arcane_burst}
+  checks: [{type: lint_clean}, {type: equals, path: deterministic, value: true}, {type: equals, path: has_guard, value: true}]
+- id: luau-ember-aura-lints-clean
+  input: {op: luau, recipe_id: ember_aura, target_path: workspace.Effects}
+  checks: [{type: lint_clean}, {type: equals, path: deterministic, value: true}]
+- id: luau-beam-lints-clean
+  input: {op: luau, recipe_id: energy_beam}
+  checks: [{type: lint_clean}]
+- id: luau-trail-lints-clean
+  input: {op: luau, recipe_id: sprint_trail}
+  checks: [{type: lint_clean}]
+- id: lint-rejects-publishing
+  input: {op: lint_text, code: "game:GetService('AssetService'):CreatePlaceAsync('x', 1)"}
+  checks: [{type: lint_mentions, text: forbidden token}]
+- id: lint-rejects-unguarded-destroy
+  input: {op: lint_text, code: "workspace:FindFirstChild('x'):Destroy()"}
+  checks: [{type: lint_mentions, text: not directly guarded}]
+- id: lint-rejects-http-requests
+  input: {op: lint_text, code: "game:GetService('HttpService'):RequestAsync({Url = 'https://example.com'})"}
+  checks: [{type: lint_mentions, text: forbidden token}]
+- id: lint-rejects-loadstring
+  input: {op: lint_text, code: "loadstring('print(1)')()"}
+  checks: [{type: lint_mentions, text: forbidden token}]
+- id: lint-accepts-guarded-destroy
+  input: {op: lint_text, code: "if x:GetAttribute(\"AIGeneratedBy\") == \"rbxvfx\" then\n x:Destroy()\nend"}
+  checks: [{type: lint_clean}]
+- id: target-path-rejects-injection
+  input: {op: bad_target, recipe_id: arcane_burst, target_path: "workspace; os.exit()"}
+  checks: [{type: error_contains, text: dotted path}]
+- id: target-path-rejects-quote-breakout
+  input: {op: bad_target, recipe_id: arcane_burst, target_path: "workspace\"] = nil --"}
+  checks: [{type: error_contains, text: dotted path}]
+- id: simulate-burst-creates-and-emits
+  title: The generated Luau runs on the mock DataModel and fires the burst counts
+  input: {op: simulate, recipe_id: arcane_burst}
+  checks:
+    - {type: equals, path: ok, value: true}
+    - {type: equals, path: status, value: ok}
+    - {type: list_contains, path: created, items: [sparks, flash]}
+    - {type: equals, path: emits.sparks, value: 24}
+    - {type: equals, path: emits.flash, value: 2}
+- id: simulate-rerun-replaces-own-root
+  input: {op: simulate, recipe_id: arcane_burst, rerun: true}
+  checks: [{type: equals, path: status, value: ok}]
+- id: simulate-refuses-foreign-instance-with-same-name
+  title: It will not delete something it did not create
+  input: {op: simulate, recipe_id: arcane_burst, foreign_name: AIEffect_arcane_burst}
+  checks: [{type: equals, path: ok, value: false}, {type: error_contains, text: refusing to replace}]
+- id: simulate-reports-missing-target
+  input: {op: simulate, recipe_id: arcane_burst, target_path: workspace.Nope, no_target: true}
+  checks: [{type: equals, path: ok, value: false}, {type: error_contains, text: was not found}]
+- id: simulate-beam-attachments-wired
+  input: {op: simulate, recipe_id: energy_beam}
+  checks: [{type: equals, path: status, value: ok}, {type: list_contains, path: created, items: [start_point, end_point, beam, impact]}]
+- id: roundtrip-arcane
+  title: Build, run on the mock, inspect, validate - the effect that exists passes the same validator
+  input: {op: roundtrip, recipe_id: arcane_burst}
+  checks: [{type: equals, path: errors, value: []}, {type: list_contains, path: instances, items: [sparks, flash]}]
+- id: roundtrip-ember
+  input: {op: roundtrip, recipe_id: ember_aura}
+  checks: [{type: equals, path: errors, value: []}, {type: list_contains, path: instances, items: [embers, haze, warm_light]}]
+- id: roundtrip-beam
+  input: {op: roundtrip, recipe_id: energy_beam}
+  checks: [{type: equals, path: errors, value: []}]
+- id: roundtrip-trail
+  input: {op: roundtrip, recipe_id: sprint_trail}
+  checks: [{type: equals, path: errors, value: []}]
+- id: timeline-sheet-renders
+  input: {op: timeline, recipe_id: arcane_burst}
+  checks: [{type: in_range, path: width, min: 900, max: 1000}, {type: in_range, path: height, min: 200}]
+- id: studio-report-tolerates-log-noise
+  input: {op: report_parse, text: "[Studio] Running...\n{\"status\":\"ok\",\"root\":\"Workspace.x\"}\n[Studio] done"}
+  checks: [{type: equals, path: status, value: ok}]
+- id: studio-report-rejects-garbage
+  input: {op: report_parse, text: "no json here"}
+  checks: [{type: error_contains, text: no JSON report}]
+- id: correction-is-recalled-for-similar-request
+  input:
+    op: feedback
+    request: "purple arcane burst for the wizard's spell"
+    reason: "flash too big and covers the target"
+    corrections:
+      - {dimension: size, note: "make the central flash smaller on arcane bursts"}
+      - {dimension: readability, note: "do not cover the target"}
+    later_request: "another arcane burst, green this time"
+  checks: [{type: equals, path: found_run, value: true}]

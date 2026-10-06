@@ -1,0 +1,407 @@
+- id: dir-env-four-differ-on-three-axes
+  title: Four environment directions differ pairwise on at least 3 of 6 axes
+  input:
+    op: directions
+    brief: &id001
+      subject: a ruined lighthouse on a sea cliff
+      kind: environment
+    n: 4
+    seed: 1
+    check_deterministic: true
+  checks:
+  - type: equals
+    path: count
+    value: 4
+  - type: at_least
+    path: min_axes_differing
+    value: 3
+  - type: equals
+    path: unique_ids
+    value: true
+  - type: equals
+    path: deterministic
+    value: true
+  - type: equals
+    path: incompatible
+    value: 0
+  - type: equals
+    path: all_hex
+    value: true
+  - type: equals
+    path: kinds
+    value:
+    - environment
+- id: dir-prop-five-differ
+  title: Five prop directions differ on at least 3 axes
+  input:
+    op: directions
+    brief:
+      subject: a hanging iron lantern
+      kind: prop
+    n: 5
+    seed: 2
+  checks:
+  - type: equals
+    path: count
+    value: 5
+  - type: at_least
+    path: min_axes_differing
+    value: 3
+  - type: equals
+    path: unique_ids
+    value: true
+  - type: equals
+    path: kinds
+    value:
+    - prop
+  - type: equals
+    path: incompatible
+    value: 0
+- id: dir-seed-changes-result
+  title: A different seed gives a different set (not a fixed list)
+  input:
+    op: directions
+    brief: *id001
+    n: 4
+    seed: 1
+    other_seed: 99
+  checks:
+  - type: equals
+    path: seed_changes_result
+    value: true
+- id: dir-axes-actually-vary
+  title: With 4 directions several axes take several values (no single-axis variation)
+  input:
+    op: directions
+    brief: *id001
+    n: 4
+    seed: 3
+  checks:
+  - type: at_least
+    path: axes_used.palette_scheme
+    value: 3
+  - type: at_least
+    path: axes_used.lighting
+    value: 3
+  - type: at_least
+    path: axes_used.silhouette
+    value: 3
+- id: dir-locked-axis-held-env
+  title: A locked axis keeps the same option in every direction
+  input:
+    op: directions
+    brief:
+      subject: a ruined lighthouse on a sea cliff
+      kind: environment
+      locked:
+        axes:
+          materials: weathered_stone
+    n: 5
+    seed: 4
+  checks:
+  - type: equals
+    path: locked_held
+    value: true
+  - type: equals
+    path: axes_used.materials
+    value: 1
+  - type: list_excludes
+    path: free_axes
+    items:
+    - materials
+  - type: at_least
+    path: min_axes_differing
+    value: 3
+- id: dir-locked-axis-held-prop
+  title: Locked view on a prop is held
+  input:
+    op: directions
+    brief:
+      subject: a hanging iron lantern
+      kind: prop
+      locked:
+        axes:
+          view: three_quarter
+    n: 4
+    seed: 4
+  checks:
+  - type: equals
+    path: locked_held
+    value: true
+  - type: equals
+    path: axes_used.view
+    value: 1
+- id: dir-many-locks-warn-when-too-similar
+  title: With most axes locked, directions can differ on at most the free axes, and the tool says so
+  input:
+    op: directions
+    brief:
+      subject: a ruined lighthouse on a sea cliff
+      kind: environment
+      locked:
+        axes:
+          silhouette: central_mass
+          lighting: golden_hour
+          composition: thirds_left
+          materials: aged_wood
+    n: 4
+    seed: 1
+  checks:
+  - type: at_least
+    path: count
+    value: 1
+  - type: text_has
+    path: warnings
+    text: differ on at most 2 axes
+  - type: equals
+    path: locked_held
+    value: true
+- id: dir-all-locked-single-direction
+  title: If every axis is locked only one direction exists, with a warning
+  input:
+    op: directions
+    brief:
+      subject: a ruined lighthouse on a sea cliff
+      kind: environment
+      locked:
+        axes:
+          silhouette: central_mass
+          palette_scheme: complementary
+          lighting: golden_hour
+          composition: thirds_left
+          materials: aged_wood
+          mood: grand
+    n: 3
+    seed: 1
+  checks:
+  - type: equals
+    path: count
+    value: 1
+  - type: text_has
+    path: warnings
+    text: only 1 compatible
+- id: dir-locked-palette
+  title: A locked palette is used verbatim by every direction
+  input:
+    op: directions
+    brief:
+      subject: a ruined lighthouse on a sea cliff
+      kind: environment
+      locked:
+        palette:
+        - '#aa5522'
+        - '#bb8844'
+        - '#33aa99'
+        - '#221108'
+        - '#f5e8d0'
+    n: 3
+    seed: 1
+  checks:
+  - type: equals
+    path: palette_locked
+    value: true
+  - type: equals
+    path: first_palette
+    value:
+    - '#aa5522'
+    - '#bb8844'
+    - '#33aa99'
+    - '#221108'
+    - '#f5e8d0'
+- id: dir-incompatible-never-chosen
+  title: Contradictory combinations (night lighting with a serene warm look) are never produced across many seeds
+  input:
+    op: directions
+    brief:
+      subject: a ruined lighthouse on a sea cliff
+      kind: environment
+      locked:
+        axes:
+          lighting: night_lit
+    n: 8
+    seed: 5
+  checks:
+  - type: equals
+    path: incompatible
+    value: 0
+  - type: equals
+    path: locked_held
+    value: true
+- id: dir-twelve
+  title: Twelve directions are available and unique
+  input:
+    op: directions
+    brief: *id001
+    n: 12
+    seed: 1
+  checks:
+  - type: equals
+    path: count
+    value: 12
+  - type: equals
+    path: unique_ids
+    value: true
+- id: dir-rejects-empty-subject
+  title: 'Rejected with a clear message: empty-subject'
+  input:
+    op: directions
+    brief:
+      subject: '  '
+      kind: environment
+    n: 3
+  checks:
+  - type: error_contains
+    text: non-empty 'subject'
+- id: dir-rejects-unknown-kind
+  title: 'Rejected with a clear message: unknown-kind'
+  input:
+    op: directions
+    brief:
+      subject: x
+      kind: character
+    n: 3
+  checks:
+  - type: error_contains
+    text: kind must be one of
+- id: dir-rejects-unknown-axis
+  title: 'Rejected with a clear message: unknown-axis'
+  input:
+    op: directions
+    brief:
+      subject: a ruined lighthouse on a sea cliff
+      kind: environment
+      locked:
+        axes:
+          vibes: good
+    n: 3
+  checks:
+  - type: error_contains
+    text: not an axis
+- id: dir-rejects-unknown-option
+  title: 'Rejected with a clear message: unknown-option'
+  input:
+    op: directions
+    brief:
+      subject: a ruined lighthouse on a sea cliff
+      kind: environment
+      locked:
+        axes:
+          lighting: disco
+    n: 3
+  checks:
+  - type: error_contains
+    text: has no option
+- id: dir-rejects-bad-palette-hex
+  title: 'Rejected with a clear message: bad-palette-hex'
+  input:
+    op: directions
+    brief:
+      subject: a ruined lighthouse on a sea cliff
+      kind: environment
+      locked:
+        palette:
+        - red
+    n: 3
+  checks:
+  - type: error_contains
+    text: '#rrggbb'
+- id: dir-rejects-zero-directions
+  title: 'Rejected with a clear message: zero-directions'
+  input:
+    op: directions
+    brief: *id001
+    n: 0
+  checks:
+  - type: error_contains
+    text: between 1 and 12
+- id: dir-rejects-too-many-directions
+  title: 'Rejected with a clear message: too-many-directions'
+  input:
+    op: directions
+    brief: *id001
+    n: 13
+  checks:
+  - type: error_contains
+    text: between 1 and 12
+- id: dir-rejects-subject-too-long
+  title: 'Rejected with a clear message: subject-too-long'
+  input:
+    op: directions
+    brief:
+      subject: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+      kind: environment
+    n: 3
+  checks:
+  - type: error_contains
+    text: too long
+- id: dir-rejects-avoid-not-list
+  title: 'Rejected with a clear message: avoid-not-list'
+  input:
+    op: directions
+    brief:
+      subject: a ruined lighthouse on a sea cliff
+      kind: environment
+      avoid: people
+    n: 3
+  checks:
+  - type: error_contains
+    text: list of strings
+- id: dir-rejects-prop-axis-on-env
+  title: 'Rejected with a clear message: prop-axis-on-env'
+  input:
+    op: directions
+    brief:
+      subject: a ruined lighthouse on a sea cliff
+      kind: environment
+      locked:
+        axes:
+          view: top_down
+    n: 3
+  checks:
+  - type: error_contains
+    text: not an axis
+- id: dir-rejects-two-colour-palette
+  title: A locked palette with fewer than 3 colours is an error, not silently ignored
+  input:
+    op: directions
+    brief:
+      subject: a ruined lighthouse on a sea cliff
+      kind: environment
+      locked:
+        palette:
+        - '#aa5522'
+        - '#bb8844'
+    n: 3
+  checks:
+  - type: error_contains
+    text: 3-8 colours
+- id: dir-eight-colour-palette-uses-first-five
+  title: A longer locked palette is accepted and its first five colours become the roles
+  input:
+    op: directions
+    brief:
+      subject: a ruined lighthouse on a sea cliff
+      kind: environment
+      locked:
+        palette:
+        - '#111111'
+        - '#222222'
+        - '#333333'
+        - '#444444'
+        - '#555555'
+        - '#666666'
+        - '#777777'
+        - '#888888'
+    n: 2
+  checks:
+  - type: equals
+    path: first_palette
+    value:
+    - '#111111'
+    - '#222222'
+    - '#333333'
+    - '#444444'
+    - '#555555'
+  - type: equals
+    path: palette_locked
+    value: true

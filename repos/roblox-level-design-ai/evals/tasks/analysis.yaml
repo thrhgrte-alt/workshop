@@ -1,0 +1,43 @@
+- id: analysis-hub-routes
+  input: {op: analysis, template: hub_and_spoke}
+  checks: [{type: equals, path: graph.loops, value: 0}, {type: equals, path: graph.unreachable_rooms, value: 0}, {type: in_range, path: graph.fairness_ratio, min: 0.95}, {type: equals, path: codes, value: []}]
+- id: analysis-arena-has-loops-and-alternates
+  input: {op: analysis, template: loop_arena}
+  checks: [{type: equals, path: graph.loops, value: 4}, {type: in_range, path: graph.alternates_min, min: 2}, {type: in_range, path: graph.independent_routes_min, min: 2}, {type: equals, path: graph.chokepoints_max, value: 0}]
+- id: analysis-linear-reports-chokepoints
+  input: {op: analysis, template: linear_with_branches}
+  checks: [{type: in_range, path: graph.chokepoints_max, min: 2}, {type: equals, path: graph.loops, value: 0}]
+- id: analysis-route-length-is-geometric
+  title: spawn_a (16,52) -> staggered west door -> core (52,52) is about 38 studs
+  input: {op: analysis, template: hub_and_spoke}
+  checks: [{type: in_range, path: graph.route_length_min, min: 36, max: 40}]
+- id: analysis-ramp-adds-climb-to-the-route
+  input: {op: analysis, template: linear_with_branches}
+  checks: [{type: in_range, path: graph.route_length_min, min: 108, max: 118}]
+- id: analysis-detects-disconnected-wing
+  input: {op: analysis, template: hub_and_spoke, mutations: [{op: remove, target: connection, id: c_north}]}
+  checks: [{type: list_contains, path: codes, items: [disconnected, unreachable_room]}, {type: list_contains, path: unreachable, items: [north]}]
+- id: analysis-detects-empty-dead-ends
+  input: {op: analysis, template: hub_and_spoke, mutations: [{op: set, target: room, id: north, field: tags, value: []}]}
+  checks: [{type: list_contains, path: codes, items: [dead_end]}, {type: list_contains, path: dead_ends, items: [north]}]
+- id: analysis-tagged-dead-ends-are-fine
+  input: {op: analysis, template: hub_and_spoke}
+  checks: [{type: equals, path: dead_ends, value: []}]
+- id: analysis-detects-spawns-that-see-each-other
+  input: {op: analysis, template: hub_and_spoke, mutations: [{op: unset, target: connection, id: c_west, field: at}, {op: unset, target: connection, id: c_east, field: at}]}
+  checks: [{type: list_contains, path: codes, items: [spawn_exposed]}, {type: in_range, path: sight.spawn_exposure_count, min: 2}]
+- id: analysis-detects-long-sightlines
+  input: {op: analysis, template: loop_arena, params: {cell_w: 24, cell_d: 48}}
+  checks: [{type: list_contains, path: codes, items: [long_sightline]}]
+- id: analysis-detects-missing-landmarks
+  input: {op: analysis, template: hub_and_spoke, mutations: [{op: remove, target: landmark, id: tower}]}
+  checks: [{type: list_contains, path: codes, items: [no_landmarks]}]
+- id: analysis-landmark-visibility-is-a-fraction
+  input: {op: analysis, template: loop_arena}
+  checks: [{type: in_range, path: sight.landmark_visibility, min: 0.4, max: 1.0}]
+- id: analysis-pacing-follows-the-route
+  input: {op: analysis, template: linear_with_branches}
+  checks: [{type: equals, path: pacing.encounters_on_route, value: 3}, {type: in_range, path: pacing.peak_position_fraction, min: 0.8}]
+- id: analysis-no-encounters-no-pacing-metrics
+  input: {op: analysis, template: hub_and_spoke, mutations: [{op: remove, target: encounter, id: fight_hub}, {op: remove, target: encounter, id: guard_north}, {op: remove, target: encounter, id: guard_south}]}
+  checks: [{type: equals, path: pacing.encounters_on_route, value: 0}]

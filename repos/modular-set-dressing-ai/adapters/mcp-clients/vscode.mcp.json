@@ -1,0 +1,15 @@
+{
+  "servers": {
+    "modular-set-dressing-ai": {
+      "type": "stdio",
+      "command": "python",
+      "args": [
+        "-m",
+        "setdress.server"
+      ],
+      "env": {
+        "SETDRESS_ROOT": "/ABSOLUTE/PATH/TO/modular-set-dressing-ai"
+      }
+    }
+  }
+}

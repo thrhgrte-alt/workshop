@@ -1,0 +1,50 @@
+id: arcane_burst
+title: Arcane burst
+kind: burst
+mount: part
+description: >
+  One-shot magical burst: a ring of fast sparks plus a soft central flash. Reads clearly at mid distance and
+  fades fully before it ends (no popping).
+parameters:
+  color_primary:   {type: color, default: [0.55, 0.35, 1.0], description: Main colour (flash and spark start/end)}
+  color_secondary: {type: color, default: [0.2, 0.8, 1.0],  description: Accent colour mid-life}
+  size:      {type: float, min: 0.3,  max: 3.0,  default: 1.0, description: Peak spark size in studs}
+  intensity: {type: float, min: 0.25, max: 3.0,  default: 1.0, description: Scales the number of sparks emitted}
+  spread:    {type: float, min: 30,   max: 180,  default: 180, description: Emission cone angle in degrees (180 = all directions)}
+  speed:     {type: float, min: 2,    max: 40,   default: 14,  description: Maximum spark speed in studs/second}
+  glow:      {type: float, min: 0.0,  max: 1.0,  default: 0.8, description: LightEmission (0 = normal blending, 1 = additive glow)}
+  texture:   {type: string, default: "", description: "Optional rbxassetid://<your texture>; empty uses Roblox's default particle"}
+instances:
+  - id: sparks
+    class: ParticleEmitter
+    parent: root
+    properties:
+      Enabled: false
+      Rate: 0
+      Lifetime: [0.35, 0.7]
+      Speed: [{from: speed, scale: 0.5}, {from: speed}]
+      SpreadAngle: [{from: spread}, {from: spread}]
+      Size: {sequence: [[0, 0], [0.15, {from: size}], [1, 0]]}
+      Transparency: {sequence: [[0, 1], [0.1, 0.1], [0.7, 0.4], [1, 1]]}
+      Color: {gradient: [[0, {from: color_primary}], [0.5, {from: color_secondary}], [1, {from: color_primary}]]}
+      LightEmission: {from: glow}
+      Drag: 3
+      Rotation: [0, 360]
+      RotSpeed: [-120, 120]
+      Texture: {from: texture}
+  - id: flash
+    class: ParticleEmitter
+    parent: root
+    properties:
+      Enabled: false
+      Rate: 0
+      Lifetime: [0.3, 0.45]
+      Speed: [0, 0]
+      Size: {sequence: [[0, 0], [0.2, {from: size, scale: 3}], [1, {from: size, scale: 3.6}]]}
+      Transparency: {sequence: [[0, 1], [0.15, 0.5], [1, 1]]}
+      Color: {from: color_primary}
+      LightEmission: 1
+      Texture: {from: texture}
+emit:
+  sparks: {from: intensity, scale: 24}
+  flash: 2

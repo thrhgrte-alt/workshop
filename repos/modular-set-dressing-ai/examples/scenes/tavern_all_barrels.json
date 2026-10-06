@@ -1,0 +1,277 @@
+{
+ "corridors": [
+  {
+   "eye_height": 4.5,
+   "from": [
+    20,
+    28
+   ],
+   "id": "bar_view",
+   "to": [
+    31,
+    5
+   ],
+   "width": 2.5
+  }
+ ],
+ "exclusions": [
+  [
+   17,
+   0,
+   6,
+   3
+  ]
+ ],
+ "focal": [
+  {
+   "at": [
+    2,
+    15
+   ],
+   "id": "hearth",
+   "min_priority": 4,
+   "radius": 10
+  },
+  {
+   "at": [
+    30,
+    3
+   ],
+   "id": "bar",
+   "min_priority": 4,
+   "radius": 9
+  }
+ ],
+ "grid": {
+  "step": 1.0,
+  "yaw_step": 90.0
+ },
+ "id": "tavern_all_barrels",
+ "instances": [
+  {
+   "at": [
+    2.0,
+    15.0
+   ],
+   "id": "hearth_001",
+   "locked": true,
+   "module": "fireplace",
+   "scale": 1.0,
+   "source": "user",
+   "why": "locked hero piece",
+   "y": 0,
+   "yaw": 90.0
+  },
+  {
+   "at": [
+    30.0,
+    3.0
+   ],
+   "id": "bar_001",
+   "locked": true,
+   "module": "bar_counter",
+   "scale": 1.0,
+   "source": "user",
+   "why": "locked hero piece",
+   "y": 0,
+   "yaw": 0.0
+  },
+  {
+   "at": [
+    8.0,
+    8.0
+   ],
+   "id": "barrel_000",
+   "locked": false,
+   "module": "barrel",
+   "scale": 1.0,
+   "source": "ai",
+   "why": "",
+   "y": 0.0,
+   "yaw": 0.0
+  },
+  {
+   "at": [
+    12.0,
+    8.0
+   ],
+   "id": "barrel_001",
+   "locked": false,
+   "module": "barrel",
+   "scale": 1.0,
+   "source": "ai",
+   "why": "",
+   "y": 0.0,
+   "yaw": 0.0
+  },
+  {
+   "at": [
+    8.0,
+    12.0
+   ],
+   "id": "barrel_002",
+   "locked": false,
+   "module": "barrel",
+   "scale": 1.0,
+   "source": "ai",
+   "why": "",
+   "y": 0.0,
+   "yaw": 0.0
+  },
+  {
+   "at": [
+    12.0,
+    12.0
+   ],
+   "id": "barrel_003",
+   "locked": false,
+   "module": "barrel",
+   "scale": 1.0,
+   "source": "ai",
+   "why": "",
+   "y": 0.0,
+   "yaw": 0.0
+  },
+  {
+   "at": [
+    8.0,
+    22.0
+   ],
+   "id": "barrel_004",
+   "locked": false,
+   "module": "barrel",
+   "scale": 1.0,
+   "source": "ai",
+   "why": "",
+   "y": 0.0,
+   "yaw": 0.0
+  },
+  {
+   "at": [
+    12.0,
+    24.0
+   ],
+   "id": "barrel_005",
+   "locked": false,
+   "module": "barrel",
+   "scale": 1.0,
+   "source": "ai",
+   "why": "",
+   "y": 0.0,
+   "yaw": 0.0
+  },
+  {
+   "at": [
+    26.0,
+    22.0
+   ],
+   "id": "barrel_006",
+   "locked": false,
+   "module": "barrel",
+   "scale": 1.0,
+   "source": "ai",
+   "why": "",
+   "y": 0.0,
+   "yaw": 0.0
+  },
+  {
+   "at": [
+    30.0,
+    24.0
+   ],
+   "id": "barrel_007",
+   "locked": false,
+   "module": "barrel",
+   "scale": 1.0,
+   "source": "ai",
+   "why": "",
+   "y": 0.0,
+   "yaw": 0.0
+  },
+  {
+   "at": [
+    34.0,
+    22.0
+   ],
+   "id": "barrel_008",
+   "locked": false,
+   "module": "barrel",
+   "scale": 1.0,
+   "source": "ai",
+   "why": "",
+   "y": 0.0,
+   "yaw": 0.0
+  },
+  {
+   "at": [
+    26.0,
+    26.0
+   ],
+   "id": "barrel_009",
+   "locked": false,
+   "module": "barrel",
+   "scale": 1.0,
+   "source": "ai",
+   "why": "",
+   "y": 0.0,
+   "yaw": 0.0
+  },
+  {
+   "at": [
+    34.0,
+    26.0
+   ],
+   "id": "barrel_010",
+   "locked": false,
+   "module": "barrel",
+   "scale": 1.0,
+   "source": "ai",
+   "why": "",
+   "y": 0.0,
+   "yaw": 0.0
+  },
+  {
+   "at": [
+    30.0,
+    20.0
+   ],
+   "id": "barrel_011",
+   "locked": false,
+   "module": "barrel",
+   "scale": 1.0,
+   "source": "ai",
+   "why": "",
+   "y": 0.0,
+   "yaw": 0.0
+  }
+ ],
+ "locked": {},
+ "paths": [
+  {
+   "id": "entrance",
+   "points": [
+    [
+     20,
+     3
+    ],
+    [
+     20,
+     14
+    ],
+    [
+     34,
+     14
+    ]
+   ],
+   "width": 5
+  }
+ ],
+ "region": {
+  "d": 30,
+  "floor_y": 0,
+  "w": 40,
+  "x": 0,
+  "z": 0
+ },
+ "units": "studs"
+}

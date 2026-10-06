@@ -1,0 +1,12 @@
+- id: correction-is-recalled-for-similar-future-request
+  title: A stored edge-wear correction is retrieved for a later stone request, and not for an unrelated one
+  input:
+    op: feedback
+    request: "stylized stone wall for a ruined castle"
+    reason: "bevels too sharp and too much wear on top edges"
+    corrections:
+      - {dimension: bevel_roundness, note: "round the bevels more on stone walls"}
+      - {dimension: edge_wear, note: "less wear on the top edges of the stones"}
+    later_request: "make another stone wall variation"
+  checks:
+    - {type: equals, path: found_run, value: true}

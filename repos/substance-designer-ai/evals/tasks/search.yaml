@@ -1,0 +1,28 @@
+- id: search-chunky-stone
+  title: Retrieval finds the chunky stone reference and surfaces the matching 'avoid' examples
+  input: {op: search, query: "chunky stone wall rounded bevels", material_type: stone, k: 3}
+  checks:
+    - {type: equals, path: retrieved.0, value: stone-wall-chunky-001}
+    - {type: retrieved_not, ids: [stone-unreviewed-import, stone-wall-too-noisy]}
+    - {type: list_contains, path: avoid, items: [stone-wall-too-noisy]}
+- id: search-wood-by-palette
+  title: A warm palette query retrieves wood, not stone
+  input: {op: search, query: "", palette: ["#c68642", "#4a2f17"], k: 3}
+  checks:
+    - {type: equals, path: retrieved.0, value: wood-planks-warm-001}
+- id: search-ground
+  title: Text query for pebbles retrieves the ground material
+  input: {op: search, query: "soft pebble dirt path", k: 2}
+  checks:
+    - {type: equals, path: retrieved.0, value: pebble-ground-soft-001}
+- id: search-hides-uncurated
+  title: Uncurated candidates are never returned by default
+  input: {op: search, query: "unreviewed stone import", k: 10}
+  checks:
+    - {type: retrieved_not, ids: [stone-unreviewed-import]}
+- id: search-material-type-filter
+  title: The material_type filter excludes other materials
+  input: {op: search, query: "stylized tileable", material_type: wood, k: 10}
+  checks:
+    - {type: retrieved_any, ids: [wood-planks-warm-001]}
+    - {type: retrieved_not, ids: [stone-wall-chunky-001, pebble-ground-soft-001]}

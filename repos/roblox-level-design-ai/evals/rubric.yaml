@@ -1,0 +1,19 @@
+# Level rubric. 'auto' criteria are computed from the spec and the built geometry. 'manual' criteria need a person
+# (or a clearly labelled model judgment after walking the player-height review views). Subjective scores are
+# judgments, never ground truth. 'required' criteria must pass for the level to pass.
+pass_at: 0.7
+criteria:
+  - {id: valid_spec,            method: auto,   weight: 3, required: true, description: "Spec passes structure and geometry validation."}
+  - {id: all_rooms_reachable,   method: auto,   weight: 3, required: true, description: "Every room can be reached from a spawn (spec and built geometry)."}
+  - {id: locks_respected,       method: auto,   weight: 3, required: true, description: "Locked geometry matches the baseline revision."}
+  - {id: route_choice,          method: auto,   weight: 2, description: "The profile's route-choice requirements (loops, alternates, independent routes) hold."}
+  - {id: fair_routes,           method: auto,   weight: 2, description: "Teams have similar walking distance to the objective."}
+  - {id: spawns_safe,           method: auto,   weight: 2, required: true, description: "Enemy spawns cannot see each other and are far apart."}
+  - {id: landmarks_readable,    method: auto,   weight: 2, description: "A landmark is in view along most of the main route."}
+  - {id: sightlines_ok,         method: auto,   weight: 1, description: "No overly long straight sightlines."}
+  - {id: pacing_ok,             method: auto,   weight: 1, description: "Encounters are spaced along the route."}
+  - {id: no_empty_dead_ends,    method: auto,   weight: 1, description: "Dead ends have a purpose."}
+  - {id: within_part_budget,    method: auto,   weight: 1, description: "Blockout stays under the part budget."}
+  - {id: fun_and_flow,          method: manual, weight: 3, required: true, description: "It plays well: a person walked it and the pace and choices feel right."}
+  - {id: matches_brief,         method: manual, weight: 3, required: true, description: "It delivers what the design brief asked for."}
+  - {id: readable_at_player_height, method: manual, weight: 2, description: "From player height along the routes, a newcomer can tell where to go."}

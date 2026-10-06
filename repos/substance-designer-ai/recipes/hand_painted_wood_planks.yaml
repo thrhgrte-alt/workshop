@@ -1,0 +1,41 @@
+id: hand_painted_wood_planks
+title: Hand-painted wood planks
+description: >
+  Warm, hand-painted wooden planks with soft warped grain, rounded plank edges and a two-tone
+  brown palette. Reads clearly at distance; avoids photoreal micro detail.
+material_type: wood
+resolution: 1024
+parameters:
+  plank_count:    {type: int,   min: 2,   max: 16, default: 6,   description: Planks across the tile}
+  grain_warp:     {type: float, min: 0.0, max: 8.0, default: 2.0, description: How strongly the grain wobbles}
+  edge_softness:  {type: float, min: 0.0, max: 8.0, default: 1.5, description: Rounding of plank edges}
+  gap_depth:      {type: float, min: 0.0, max: 1.0, default: 0.5, description: Contrast between plank face and gap}
+  roughness_level: {type: float, min: 0.3, max: 1.0, default: 0.7, description: Overall roughness}
+  wood_color_light: {type: color, default: [0.78, 0.52, 0.26, 1.0], description: Plank face colour}
+  wood_color_dark:  {type: color, default: [0.29, 0.18, 0.09, 1.0], description: Gap and grain colour}
+nodes:
+  - {id: planks,    node: tile_generator, params: {x_amount: {from: plank_count}, y_amount: 1}}
+  - {id: grain,     node: clouds_2,       params: {scale: 8}}
+  - {id: warped,    node: warp,           params: {intensity: {from: grain_warp}}}
+  - {id: soften,    node: blur,           params: {intensity: {from: edge_softness}}}
+  - {id: shape,     node: levels,         params: {level_in_low: {from: gap_depth, scale: 0.4}, level_in_high: {from: gap_depth, scale: -0.4, offset: 1.0}}}
+  - {id: normal_map, node: normal,        params: {intensity: 0.8}}
+  - {id: col_dark,  node: uniform,        params: {outputcolor: {from: wood_color_dark}}}
+  - {id: col_light, node: uniform,        params: {outputcolor: {from: wood_color_light}}}
+  - {id: color_mix, node: blend,          params: {blendingmode: copy}}
+  - {id: rough,     node: levels,         params: {level_out_low: {from: roughness_level, scale: 0.8}, level_out_high: {from: roughness_level}}}
+connections:
+  - {from: planks.output,   to: warped.input}
+  - {from: grain.output,    to: warped.inputgradient}
+  - {from: warped.output,   to: soften.input}
+  - {from: soften.output,   to: shape.input1}
+  - {from: shape.output,    to: normal_map.input1}
+  - {from: col_light.output, to: color_mix.source}
+  - {from: col_dark.output, to: color_mix.destination}
+  - {from: shape.output,    to: color_mix.opacity}
+  - {from: shape.output,    to: rough.input1}
+outputs:
+  - {usage: baseColor, from: color_mix.output}
+  - {usage: normal,    from: normal_map.output}
+  - {usage: roughness, from: rough.output}
+  - {usage: height,    from: shape.output}

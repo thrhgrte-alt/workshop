@@ -1,0 +1,8 @@
+# Example prop brief. Props are single isolated objects, so the prompt structure and rubric differ from environments.
+subject: a hanging iron lantern with a glass chimney
+kind: prop
+locked:
+  axes: {view: three_quarter}
+avoid: [candles burning, chains longer than the lantern]
+notes: chunky forms, readable at small size; one accent colour for the glass
+reference_ids: []

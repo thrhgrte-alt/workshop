@@ -1,0 +1,19 @@
+# Scene rubric. 'auto' criteria are computed from the scene and kit metadata. 'manual' criteria need a person (or a clearly labelled
+# model judgment after viewing the scene in Studio). Subjective scores are judgments, never ground truth. 'required' criteria must pass.
+pass_at: 0.7
+criteria:
+  - {id: valid_scene,         method: auto,   weight: 3, required: true, description: "Scene structure is valid and every module is in the approved kit."}
+  - {id: no_collisions,       method: auto,   weight: 3, required: true, description: "No overlapping solid modules, nothing outside the region."}
+  - {id: paths_clear,         method: auto,   weight: 3, required: true, description: "Functional paths stay clear."}
+  - {id: sightlines_clear,    method: auto,   weight: 2, required: true, description: "Eye-height sightlines stay open."}
+  - {id: locks_respected,     method: auto,   weight: 3, required: true, description: "Locked instances are unchanged from the baseline."}
+  - {id: density_ok,          method: auto,   weight: 1, description: "Coverage is inside the style range."}
+  - {id: variety_ok,          method: auto,   weight: 2, description: "No module dominates and neighbours differ."}
+  - {id: color_ok,            method: auto,   weight: 1, description: "Colour spread is not monotone."}
+  - {id: negative_space_ok,   method: auto,   weight: 1, description: "There is a usable open area."}
+  - {id: focal_ok,            method: auto,   weight: 2, description: "Every focal point has a hero module."}
+  - {id: hierarchy_ok,        method: auto,   weight: 1, description: "More than one size class is present."}
+  - {id: metadata_resolved,   method: auto,   weight: 1, description: "Every module used is fully specified in the kit."}
+  - {id: reads_as_lived_in,   method: manual, weight: 3, required: true, description: "It looks like a believable, lived-in place."}
+  - {id: matches_style,       method: manual, weight: 3, required: true, description: "It matches the user's art direction."}
+  - {id: supports_gameplay,   method: manual, weight: 2, description: "The arrangement supports how the space is played."}

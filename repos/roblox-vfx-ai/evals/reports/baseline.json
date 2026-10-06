@@ -1,0 +1,882 @@
+{
+  "label": "baseline",
+  "mode": "solver",
+  "at": "2026-10-06T03:01:41+00:00",
+  "git_rev": "unknown",
+  "python": "3.11.15",
+  "meta": {},
+  "passed": 70,
+  "total": 70,
+  "tasks": [
+    {
+      "id": "analyze-shipped-burst-is-clean",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "flagged == [] (got [])"
+        }
+      ]
+    },
+    {
+      "id": "analyze-shipped-aura-is-clean",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "flagged == [] (got [])"
+        }
+      ]
+    },
+    {
+      "id": "analyze-shipped-beam-is-clean",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "flagged == [] (got [])"
+        }
+      ]
+    },
+    {
+      "id": "analyze-shipped-trail-is-clean",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "flagged == [] (got [])"
+        }
+      ]
+    },
+    {
+      "id": "analyze-flags-mobile-over-budget",
+      "passed": true,
+      "checks": [
+        {
+          "check": "flagged_include",
+          "passed": true,
+          "message": "flagged ['particles_peak']; expected to include ['particles_peak']"
+        }
+      ]
+    },
+    {
+      "id": "analyze-budget-differs-by-platform",
+      "passed": true,
+      "checks": [
+        {
+          "check": "flagged_exclude",
+          "passed": true,
+          "message": "flagged []; must not include ['particles_peak']"
+        }
+      ]
+    },
+    {
+      "id": "analyze-flags-mobile-200-sparks",
+      "passed": true,
+      "checks": [
+        {
+          "check": "flagged_include",
+          "passed": true,
+          "message": "flagged ['particles_peak']; expected to include ['particles_peak']"
+        }
+      ]
+    },
+    {
+      "id": "analyze-flags-unreadably-small",
+      "passed": true,
+      "checks": [
+        {
+          "check": "flagged_include",
+          "passed": true,
+          "message": "flagged ['apparent_height_fraction']; expected to include ['apparent_height_fraction']"
+        }
+      ]
+    },
+    {
+      "id": "analyze-flags-abrupt-end",
+      "passed": true,
+      "checks": [
+        {
+          "check": "flagged_include",
+          "passed": true,
+          "message": "flagged ['abrupt_end', 'abrupt_end_count']; expected to include ['abrupt_end']"
+        }
+      ]
+    },
+    {
+      "id": "analyze-flags-slow-attack",
+      "passed": true,
+      "checks": [
+        {
+          "check": "flagged_include",
+          "passed": true,
+          "message": "flagged ['attack_fraction']; expected to include ['attack_fraction']"
+        }
+      ]
+    },
+    {
+      "id": "analyze-flags-low-colour-separation",
+      "passed": true,
+      "checks": [
+        {
+          "check": "flagged_include",
+          "passed": true,
+          "message": "flagged ['color_separation_min']; expected to include ['color_separation_min']"
+        }
+      ]
+    },
+    {
+      "id": "analyze-flags-off-theme-colour",
+      "passed": true,
+      "checks": [
+        {
+          "check": "flagged_include",
+          "passed": true,
+          "message": "flagged ['theme_distance']; expected to include ['theme_distance']"
+        }
+      ]
+    },
+    {
+      "id": "analyze-flags-screen-coverage",
+      "passed": true,
+      "checks": [
+        {
+          "check": "flagged_include",
+          "passed": true,
+          "message": "flagged ['screen_coverage']; expected to include ['screen_coverage']"
+        }
+      ]
+    },
+    {
+      "id": "analyze-nearer-camera-changes-apparent-size",
+      "passed": true,
+      "checks": [
+        {
+          "check": "in_range",
+          "passed": true,
+          "message": "metrics.apparent_height_fraction in [0.3, None] (got 0.3213)"
+        }
+      ]
+    },
+    {
+      "id": "analyze-reports-assumed-defaults",
+      "passed": true,
+      "checks": [
+        {
+          "check": "list_not_empty",
+          "passed": true,
+          "message": "assumptions should not be empty (got [\"sparks: 'Size' not set; assumed 1.0\"])"
+        }
+      ]
+    },
+    {
+      "id": "luau-arcane-burst-lints-clean",
+      "passed": true,
+      "checks": [
+        {
+          "check": "lint_clean",
+          "passed": true,
+          "message": "lint problems: []"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "deterministic == True (got True)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "has_guard == True (got True)"
+        }
+      ]
+    },
+    {
+      "id": "luau-ember-aura-lints-clean",
+      "passed": true,
+      "checks": [
+        {
+          "check": "lint_clean",
+          "passed": true,
+          "message": "lint problems: []"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "deterministic == True (got True)"
+        }
+      ]
+    },
+    {
+      "id": "luau-beam-lints-clean",
+      "passed": true,
+      "checks": [
+        {
+          "check": "lint_clean",
+          "passed": true,
+          "message": "lint problems: []"
+        }
+      ]
+    },
+    {
+      "id": "luau-trail-lints-clean",
+      "passed": true,
+      "checks": [
+        {
+          "check": "lint_clean",
+          "passed": true,
+          "message": "lint problems: []"
+        }
+      ]
+    },
+    {
+      "id": "lint-rejects-publishing",
+      "passed": true,
+      "checks": [
+        {
+          "check": "lint_mentions",
+          "passed": true,
+          "message": "lint [\"forbidden token 'AssetService'\"] should mention 'forbidden token'"
+        }
+      ]
+    },
+    {
+      "id": "lint-rejects-unguarded-destroy",
+      "passed": true,
+      "checks": [
+        {
+          "check": "lint_mentions",
+          "passed": true,
+          "message": "lint ['Destroy() is not directly guarded by the AIGeneratedBy check'] should mention 'not directly guarded'"
+        }
+      ]
+    },
+    {
+      "id": "lint-rejects-http-requests",
+      "passed": true,
+      "checks": [
+        {
+          "check": "lint_mentions",
+          "passed": true,
+          "message": "lint [\"forbidden token 'RequestAsync'\", 'HttpService may only be used for JSONEncode'] should mention 'forbidden token'"
+        }
+      ]
+    },
+    {
+      "id": "lint-rejects-loadstring",
+      "passed": true,
+      "checks": [
+        {
+          "check": "lint_mentions",
+          "passed": true,
+          "message": "lint [\"forbidden token 'loadstring'\"] should mention 'forbidden token'"
+        }
+      ]
+    },
+    {
+      "id": "lint-accepts-guarded-destroy",
+      "passed": true,
+      "checks": [
+        {
+          "check": "lint_clean",
+          "passed": true,
+          "message": "lint problems: []"
+        }
+      ]
+    },
+    {
+      "id": "target-path-rejects-injection",
+      "passed": true,
+      "checks": [
+        {
+          "check": "error_contains",
+          "passed": true,
+          "message": "error should mention 'dotted path' (got \"target path 'workspace; os.exit()' must be a dotted path like workspace.Effects\")"
+        }
+      ]
+    },
+    {
+      "id": "target-path-rejects-quote-breakout",
+      "passed": true,
+      "checks": [
+        {
+          "check": "error_contains",
+          "passed": true,
+          "message": "error should mention 'dotted path' (got 'target path \\'workspace\"] = nil --\\' must be a dotted path like workspace.Effects')"
+        }
+      ]
+    },
+    {
+      "id": "simulate-burst-creates-and-emits",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "ok == True (got True)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "status == 'ok' (got 'ok')"
+        },
+        {
+          "check": "list_contains",
+          "passed": true,
+          "message": "created=['sparks', 'flash']; expected to contain ['sparks', 'flash']"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "emits.sparks == 24 (got 24)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "emits.flash == 2 (got 2)"
+        }
+      ]
+    },
+    {
+      "id": "simulate-rerun-replaces-own-root",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "status == 'ok' (got 'ok')"
+        }
+      ]
+    },
+    {
+      "id": "simulate-refuses-foreign-instance-with-same-name",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "ok == False (got False)"
+        },
+        {
+          "check": "error_contains",
+          "passed": true,
+          "message": "error should mention 'refusing to replace' (got \"effect:33: refusing to replace 'AIEffect_arcane_burst': it was not created by rbxvfx\")"
+        }
+      ]
+    },
+    {
+      "id": "simulate-reports-missing-target",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "ok == False (got False)"
+        },
+        {
+          "check": "error_contains",
+          "passed": true,
+          "message": "error should mention 'was not found' (got \"effect:23: target path 'workspace.Nope' was not found\")"
+        }
+      ]
+    },
+    {
+      "id": "simulate-beam-attachments-wired",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "status == 'ok' (got 'ok')"
+        },
+        {
+          "check": "list_contains",
+          "passed": true,
+          "message": "created=['start_point', 'end_point', 'impact', 'beam']; expected to contain ['start_point', 'end_point', 'beam', 'impact']"
+        }
+      ]
+    },
+    {
+      "id": "roundtrip-arcane",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "errors == [] (got [])"
+        },
+        {
+          "check": "list_contains",
+          "passed": true,
+          "message": "instances=['flash', 'sparks']; expected to contain ['sparks', 'flash']"
+        }
+      ]
+    },
+    {
+      "id": "roundtrip-ember",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "errors == [] (got [])"
+        },
+        {
+          "check": "list_contains",
+          "passed": true,
+          "message": "instances=['embers', 'haze', 'warm_light']; expected to contain ['embers', 'haze', 'warm_light']"
+        }
+      ]
+    },
+    {
+      "id": "roundtrip-beam",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "errors == [] (got [])"
+        }
+      ]
+    },
+    {
+      "id": "roundtrip-trail",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "errors == [] (got [])"
+        }
+      ]
+    },
+    {
+      "id": "timeline-sheet-renders",
+      "passed": true,
+      "checks": [
+        {
+          "check": "in_range",
+          "passed": true,
+          "message": "width in [900, 1000] (got 960)"
+        },
+        {
+          "check": "in_range",
+          "passed": true,
+          "message": "height in [200, None] (got 278)"
+        }
+      ]
+    },
+    {
+      "id": "studio-report-tolerates-log-noise",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "status == 'ok' (got 'ok')"
+        }
+      ]
+    },
+    {
+      "id": "studio-report-rejects-garbage",
+      "passed": true,
+      "checks": [
+        {
+          "check": "error_contains",
+          "passed": true,
+          "message": "error should mention 'no JSON report' (got 'no JSON report found in the Studio output. Paste the execute_luau result (or the console output) as-is.')"
+        }
+      ]
+    },
+    {
+      "id": "correction-is-recalled-for-similar-request",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "found_run == True (got True)"
+        }
+      ]
+    },
+    {
+      "id": "search-purple-magic-burst",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "retrieved.0 == 'arcane-burst-purple-001' (got 'arcane-burst-purple-001')"
+        },
+        {
+          "check": "retrieved_not",
+          "passed": true,
+          "message": "retrieved ['arcane-burst-purple-001']; must not include ['burst-unreviewed-import', 'burst-too-heavy']"
+        },
+        {
+          "check": "list_contains",
+          "passed": true,
+          "message": "avoid=['burst-too-small', 'burst-too-heavy']; expected to contain ['burst-too-heavy']"
+        }
+      ]
+    },
+    {
+      "id": "search-kind-filter-beam",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "retrieved.0 == 'energy-beam-cyan-001' (got 'energy-beam-cyan-001')"
+        },
+        {
+          "check": "retrieved_not",
+          "passed": true,
+          "message": "retrieved ['energy-beam-cyan-001']; must not include ['arcane-burst-purple-001', 'ember-aura-warm-001']"
+        }
+      ]
+    },
+    {
+      "id": "search-warm-palette",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "retrieved.0 == 'ember-aura-warm-001' (got 'ember-aura-warm-001')"
+        }
+      ]
+    },
+    {
+      "id": "search-trail",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "retrieved.0 == 'sprint-trail-blue-001' (got 'sprint-trail-blue-001')"
+        }
+      ]
+    },
+    {
+      "id": "search-hides-uncurated",
+      "passed": true,
+      "checks": [
+        {
+          "check": "retrieved_not",
+          "passed": true,
+          "message": "retrieved ['arcane-burst-purple-001']; must not include ['burst-unreviewed-import']"
+        }
+      ]
+    },
+    {
+      "id": "build-all-defaults-arcane",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "built == True (got True)"
+        },
+        {
+          "check": "list_contains",
+          "passed": true,
+          "message": "instances=['sparks', 'flash']; expected to contain ['sparks', 'flash']"
+        }
+      ]
+    },
+    {
+      "id": "build-all-defaults-ember",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "built == True (got True)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "kind == 'aura' (got 'aura')"
+        }
+      ]
+    },
+    {
+      "id": "build-all-defaults-beam",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "built == True (got True)"
+        }
+      ]
+    },
+    {
+      "id": "build-all-defaults-trail",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "built == True (got True)"
+        }
+      ]
+    },
+    {
+      "id": "reject-unknown-property",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "built == False (got False)"
+        },
+        {
+          "check": "error_contains",
+          "passed": true,
+          "message": "error should mention 'no property 'Glowiness'' (got \"effect recipe could not be built: sparks.Glowiness: 'ParticleEmitter' has no property 'Glowiness' in the API snapshot\")"
+        }
+      ]
+    },
+    {
+      "id": "reject-wrong-value-type",
+      "passed": true,
+      "checks": [
+        {
+          "check": "error_contains",
+          "passed": true,
+          "message": "error should mention 'expected a number' (got \"effect recipe could not be built: sparks.Drag: expected a number, got 'fast'\")"
+        }
+      ]
+    },
+    {
+      "id": "reject-bad-enum-member",
+      "passed": true,
+      "checks": [
+        {
+          "check": "error_contains",
+          "passed": true,
+          "message": "error should mention 'not a member of Enum.ParticleEmitterShape' (got \"effect plan is invalid: [type_mismatch] embers.Shape: 'Triangle' is not a member of Enum.ParticleEmitterShape (['Box', 'Sphere', 'Cylinder',\")"
+        }
+      ]
+    },
+    {
+      "id": "accept-good-enum-member",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "built == True (got True)"
+        }
+      ]
+    },
+    {
+      "id": "reject-sequence-not-starting-at-zero",
+      "passed": true,
+      "checks": [
+        {
+          "check": "error_contains",
+          "passed": true,
+          "message": "error should mention 'sequence_bounds' (got 'effect plan is invalid: [sequence_bounds] sparks.Transparency: first keypoint must be at time 0 and last at time 1 (got 0.1..1.0)')"
+        }
+      ]
+    },
+    {
+      "id": "reject-sequence-out-of-order",
+      "passed": true,
+      "checks": [
+        {
+          "check": "error_contains",
+          "passed": true,
+          "message": "error should mention 'sequence_order' (got 'effect plan is invalid: [sequence_order] sparks.Transparency: keypoint times must be strictly increasing')"
+        }
+      ]
+    },
+    {
+      "id": "reject-transparency-above-one",
+      "passed": true,
+      "checks": [
+        {
+          "check": "error_contains",
+          "passed": true,
+          "message": "error should mention 'out_of_range' (got 'effect plan is invalid: [out_of_range] sparks.Transparency: 1.5 is above the maximum 1')"
+        }
+      ]
+    },
+    {
+      "id": "reject-range-min-above-max",
+      "passed": true,
+      "checks": [
+        {
+          "check": "error_contains",
+          "passed": true,
+          "message": "error should mention 'range_order' (got 'effect plan is invalid: [range_order] sparks.Lifetime: min 2.0 is greater than max 1.0')"
+        }
+      ]
+    },
+    {
+      "id": "reject-untrusted-texture-url",
+      "passed": true,
+      "checks": [
+        {
+          "check": "error_contains",
+          "passed": true,
+          "message": "error should mention 'bad_texture' (got \"effect plan is invalid: [bad_texture] sparks.Texture: 'http://evil.example/x.png' is not an rbxassetid://, rbxasset:// or roblox.com/asset U\")"
+        }
+      ]
+    },
+    {
+      "id": "accept-rbxassetid-texture",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "built == True (got True)"
+        }
+      ]
+    },
+    {
+      "id": "reject-class-not-allowed",
+      "passed": true,
+      "checks": [
+        {
+          "check": "error_contains",
+          "passed": true,
+          "message": "error should mention 'class_not_allowed' (got \"effect plan is invalid: [class_not_allowed] class 'Script' is not allowed; use one of ('Attachment', 'ParticleEmitter', 'Beam', 'Trail', 'Po\")"
+        }
+      ]
+    },
+    {
+      "id": "reject-unknown-parent",
+      "passed": true,
+      "checks": [
+        {
+          "check": "error_contains",
+          "passed": true,
+          "message": "error should mention 'unknown_parent' (got \"effect plan is invalid: [unknown_parent] 'flash' has unknown parent 'nowhere'\")"
+        }
+      ]
+    },
+    {
+      "id": "reject-duplicate-sibling-names",
+      "passed": true,
+      "checks": [
+        {
+          "check": "error_contains",
+          "passed": true,
+          "message": "error should mention 'duplicate_name' (got \"effect plan is invalid: [duplicate_name] siblings under 'root' share a name\")"
+        }
+      ]
+    },
+    {
+      "id": "reject-beam-without-second-attachment",
+      "passed": true,
+      "checks": [
+        {
+          "check": "error_contains",
+          "passed": true,
+          "message": "error should mention 'missing_attachment' (got \"effect plan is invalid: [missing_attachment] Beam 'beam' needs Attachment1\")"
+        }
+      ]
+    },
+    {
+      "id": "reject-beam-same-attachment",
+      "passed": true,
+      "checks": [
+        {
+          "check": "error_contains",
+          "passed": true,
+          "message": "error should mention 'same_attachment' (got 'effect plan is invalid: [same_attachment] beam: Attachment0 and Attachment1 must differ')"
+        }
+      ]
+    },
+    {
+      "id": "reject-emit-on-non-emitter",
+      "passed": true,
+      "checks": [
+        {
+          "check": "error_contains",
+          "passed": true,
+          "message": "error should mention 'bad_emit' (got \"effect plan is invalid: [bad_emit] emit target 'beam' is not a ParticleEmitter\")"
+        }
+      ]
+    },
+    {
+      "id": "reject-attachments-without-part-mount",
+      "passed": true,
+      "checks": [
+        {
+          "check": "error_contains",
+          "passed": true,
+          "message": "error should mention 'attachment_mount' (got 'effect plan is invalid: [attachment_mount] Attachment instances need mount: part (attachments must live in a BasePart); [attachment_mount] A')"
+        }
+      ]
+    },
+    {
+      "id": "reject-bad-effect-name",
+      "passed": true,
+      "checks": [
+        {
+          "check": "error_contains",
+          "passed": true,
+          "message": "error should mention 'bad_name' (got \"effect plan is invalid: [bad_name] effect name 'Bad Name' must match ^[a-z][a-z0-9_]{2,40}$\")"
+        }
+      ]
+    },
+    {
+      "id": "reject-parameter-out-of-range",
+      "passed": true,
+      "checks": [
+        {
+          "check": "error_contains",
+          "passed": true,
+          "message": "error should mention 'above maximum' (got 'invalid parameters: size: 99 is above maximum 3.0')"
+        }
+      ]
+    },
+    {
+      "id": "reject-unknown-parameter",
+      "passed": true,
+      "checks": [
+        {
+          "check": "error_contains",
+          "passed": true,
+          "message": "error should mention 'unknown parameter' (got \"invalid parameters: unknown parameter 'sparkle'. Available: ['color_primary', 'color_secondary', 'glow', 'intensity', 'size', 'speed', 'spre\")"
+        }
+      ]
+    },
+    {
+      "id": "reject-effect-with-nothing-visible",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "built == False (got False)"
+        },
+        {
+          "check": "error_contains",
+          "passed": true,
+          "message": "error should mention 'nothing_visible' (got 'effect plan is invalid: [nothing_visible] effect has no ParticleEmitter, Beam or Trail')"
+        }
+      ]
+    },
+    {
+      "id": "reject-spread-angle-out-of-range",
+      "passed": true,
+      "checks": [
+        {
+          "check": "error_contains",
+          "passed": true,
+          "message": "error should mention 'out_of_range' (got 'effect plan is invalid: [out_of_range] sparks.SpreadAngle: 200.0 is above the maximum 180')"
+        }
+      ]
+    }
+  ]
+}

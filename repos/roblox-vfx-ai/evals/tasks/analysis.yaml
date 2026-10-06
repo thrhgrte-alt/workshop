@@ -1,0 +1,78 @@
+- id: analyze-shipped-burst-is-clean
+  input: {op: analyze, recipe_id: arcane_burst, platform: mobile}
+  checks: [{type: equals, path: flagged, value: []}]
+- id: analyze-shipped-aura-is-clean
+  input: {op: analyze, recipe_id: ember_aura, platform: mobile}
+  checks: [{type: equals, path: flagged, value: []}]
+- id: analyze-shipped-beam-is-clean
+  input: {op: analyze, recipe_id: energy_beam, platform: mobile}
+  checks: [{type: equals, path: flagged, value: []}]
+- id: analyze-shipped-trail-is-clean
+  input: {op: analyze, recipe_id: sprint_trail, platform: mobile}
+  checks: [{type: equals, path: flagged, value: []}]
+- id: analyze-flags-mobile-over-budget
+  input: {op: analyze, recipe_id: arcane_burst, platform: mobile, mutations: [{op: set_emit, instance: sparks, value: 400}]}
+  checks: [{type: flagged_include, metrics: [particles_peak]}]
+- id: analyze-budget-differs-by-platform
+  title: 200 sparks is over the mobile budget but fine on desktop
+  input: {op: analyze, recipe_id: arcane_burst, platform: desktop, mutations: [{op: set_emit, instance: sparks, value: 200}]}
+  checks: [{type: flagged_exclude, metrics: [particles_peak]}]
+- id: analyze-flags-mobile-200-sparks
+  input: {op: analyze, recipe_id: arcane_burst, platform: mobile, mutations: [{op: set_emit, instance: sparks, value: 200}]}
+  checks: [{type: flagged_include, metrics: [particles_peak]}]
+- id: analyze-flags-unreadably-small
+  input:
+    op: analyze
+    recipe_id: arcane_burst
+    mutations:
+      - {op: set_property, instance: sparks, property: Size, value: {sequence: [[0, 0], [0.5, 0.08], [1, 0]]}}
+      - {op: set_property, instance: flash, property: Size, value: {sequence: [[0, 0], [0.5, 0.15], [1, 0]]}}
+  checks: [{type: flagged_include, metrics: [apparent_height_fraction]}]
+- id: analyze-flags-abrupt-end
+  input:
+    op: analyze
+    recipe_id: ember_aura
+    mutations:
+      - {op: set_property, instance: embers, property: Transparency, value: {sequence: [[0, 1], [0.2, 0.1], [1, 0.1]]}}
+      - {op: set_property, instance: embers, property: Size, value: {sequence: [[0, 0.3], [1, 0.3]]}}
+  checks: [{type: flagged_include, metrics: [abrupt_end]}]
+- id: analyze-flags-slow-attack
+  input:
+    op: analyze
+    recipe_id: arcane_burst
+    mutations:
+      - {op: set_property, instance: sparks, property: Transparency, value: {sequence: [[0, 1], [0.5, 1], [0.6, 0.2], [1, 1]]}}
+      - {op: set_property, instance: flash, property: Transparency, value: {sequence: [[0, 1], [0.5, 1], [0.6, 0.2], [1, 1]]}}
+  checks: [{type: flagged_include, metrics: [attack_fraction]}]
+- id: analyze-flags-low-colour-separation
+  title: Grey, non-glowing particles disappear against grey ground
+  input:
+    op: analyze
+    recipe_id: arcane_burst
+    mutations:
+      - {op: set_property, instance: sparks, property: Color, value: [0.55, 0.56, 0.58]}
+      - {op: set_property, instance: sparks, property: LightEmission, value: 0}
+      - {op: set_property, instance: flash, property: Color, value: [0.55, 0.56, 0.58]}
+      - {op: set_property, instance: flash, property: LightEmission, value: 0}
+  checks: [{type: flagged_include, metrics: [color_separation_min]}]
+- id: analyze-flags-off-theme-colour
+  input: {op: analyze, recipe_id: arcane_burst, params: {color_primary: [0.1, 0.9, 0.1], color_secondary: [0.2, 0.9, 0.2]}}
+  checks: [{type: flagged_include, metrics: [theme_distance]}]
+- id: analyze-flags-screen-coverage
+  title: Huge, dense, opaque particles hide the scene
+  input:
+    op: analyze
+    recipe_id: ember_aura
+    platform: desktop
+    params: {rate: 40}
+    mutations:
+      - {op: set_property, instance: embers, property: Size, value: {sequence: [[0, 6], [0.5, 8], [1, 0]]}}
+      - {op: set_property, instance: embers, property: Transparency, value: {sequence: [[0, 1], [0.1, 0], [0.9, 0], [1, 1]]}}
+  checks: [{type: flagged_include, metrics: [screen_coverage]}]
+- id: analyze-nearer-camera-changes-apparent-size
+  input: {op: analyze, recipe_id: arcane_burst, distance: 8}
+  checks: [{type: in_range, path: metrics.apparent_height_fraction, min: 0.3}]
+- id: analyze-reports-assumed-defaults
+  title: Properties the recipe does not set are assumed visibly, never silently
+  input: {op: analyze, recipe_id: arcane_burst, mutations: [{op: remove_property, instance: sparks, property: Size}]}
+  checks: [{type: list_not_empty, path: assumptions}]

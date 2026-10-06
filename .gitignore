@@ -1,3 +1,6 @@
-repos/
 __pycache__/
 *.pyc
+workspace/
+.pytest_cache/
+*.egg-info/
+.venv/

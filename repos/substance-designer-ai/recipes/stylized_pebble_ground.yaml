@@ -1,0 +1,47 @@
+id: stylized_pebble_ground
+title: Stylized pebble ground
+description: >
+  Soft pebbly dirt ground built from cell shapes with highlighted rims. Large readable shapes,
+  low micro-detail.
+material_type: ground
+resolution: 1024
+parameters:
+  pebble_density: {type: int,   min: 2,   max: 64, default: 10,  description: Number of pebbles across the tile}
+  pebble_size:    {type: float, min: 0.1, max: 0.9, default: 0.55, description: Histogram position (larger = bigger pebbles)}
+  grain_strength: {type: float, min: 0.0, max: 1.0, default: 0.3,  description: Strength of fine surface grain}
+  rim_width:      {type: float, min: 0.05, max: 0.6, default: 0.15, description: Width of the pebble highlight rim}
+  roughness_level: {type: float, min: 0.3, max: 1.0, default: 0.85, description: Overall roughness}
+  ground_color_a: {type: color, default: [0.40, 0.31, 0.22, 1.0], description: Main soil colour}
+  ground_color_b: {type: color, default: [0.22, 0.17, 0.12, 1.0], description: Gap colour}
+  rim_color:      {type: color, default: [0.62, 0.52, 0.40, 1.0], description: Pebble rim highlight colour}
+nodes:
+  - {id: cells,      node: cells_1,        params: {scale: {from: pebble_density}}}
+  - {id: shape,      node: histogram_scan, params: {position: {from: pebble_size}, contrast: 0.35}}
+  - {id: grain,      node: clouds_2,       params: {scale: 6}}
+  - {id: height_mix, node: blend,          params: {blendingmode: add, opacitymult: {from: grain_strength}}}
+  - {id: edges,      node: edge_detect,    params: {edge_width: {from: rim_width}}}
+  - {id: normal_map, node: normal,         params: {intensity: 1.0}}
+  - {id: col_b,      node: uniform,        params: {outputcolor: {from: ground_color_b}}}
+  - {id: col_a,      node: uniform,        params: {outputcolor: {from: ground_color_a}}}
+  - {id: col_rim,    node: uniform,        params: {outputcolor: {from: rim_color}}}
+  - {id: color_mix,  node: blend,          params: {blendingmode: copy}}
+  - {id: color_rim,  node: blend,          params: {blendingmode: copy}}
+  - {id: rough,      node: levels,         params: {level_out_low: {from: roughness_level, scale: 0.8}, level_out_high: {from: roughness_level}}}
+connections:
+  - {from: cells.output,      to: shape.input1}
+  - {from: grain.output,      to: height_mix.source}
+  - {from: shape.output,      to: height_mix.destination}
+  - {from: shape.output,      to: edges.input}
+  - {from: height_mix.output, to: normal_map.input1}
+  - {from: col_a.output,      to: color_mix.source}
+  - {from: col_b.output,      to: color_mix.destination}
+  - {from: height_mix.output, to: color_mix.opacity}
+  - {from: col_rim.output,    to: color_rim.source}
+  - {from: color_mix.output,  to: color_rim.destination}
+  - {from: edges.output,      to: color_rim.opacity}
+  - {from: height_mix.output, to: rough.input1}
+outputs:
+  - {usage: baseColor, from: color_rim.output}
+  - {usage: normal,    from: normal_map.output}
+  - {usage: roughness, from: rough.output}
+  - {usage: height,    from: height_mix.output}

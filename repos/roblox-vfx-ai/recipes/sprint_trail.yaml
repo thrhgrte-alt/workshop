@@ -1,0 +1,37 @@
+id: sprint_trail
+title: Sprint trail
+kind: trail
+mount: part
+description: >
+  A ribbon trail that fades and narrows behind a moving part. Needs motion to show: attach the two Attachments
+  to the character's part, or preview by moving the root part.
+parameters:
+  color_a:  {type: color, default: [0.3, 0.9, 1.0], description: Colour at the head of the trail}
+  color_b:  {type: color, default: [0.2, 0.35, 1.0], description: Colour at the tail}
+  lifetime: {type: float, min: 0.2, max: 2.0, default: 0.6, description: Seconds a trail segment lives}
+  width:    {type: float, min: 0.2, max: 4.0, default: 1.2, description: Distance between the two attachments (ribbon width)}
+  glow:     {type: float, min: 0.0, max: 1.0, default: 0.8, description: LightEmission}
+  texture:  {type: string, default: "", description: "Optional rbxassetid://<your texture>"}
+instances:
+  - id: top
+    class: Attachment
+    parent: root
+    properties: {Position: [0, {from: width, scale: 0.5}, 0]}
+  - id: bottom
+    class: Attachment
+    parent: root
+    properties: {Position: [0, {from: width, scale: -0.5}, 0]}
+  - id: trail
+    class: Trail
+    parent: root
+    properties:
+      Attachment0: top
+      Attachment1: bottom
+      Lifetime: {from: lifetime}
+      MinLength: 0.1
+      Color: {gradient: [[0, {from: color_a}], [1, {from: color_b}]]}
+      Transparency: {sequence: [[0, 0.1], [0.6, 0.5], [1, 1]]}
+      WidthScale: {sequence: [[0, 1], [1, 0]]}
+      LightEmission: {from: glow}
+      FaceCamera: true
+      Texture: {from: texture}

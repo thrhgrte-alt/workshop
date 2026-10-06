@@ -1,0 +1,4 @@
+[mcp_servers.roblox-level-design-ai]
+command = "python"
+args = ["-m", "rbxlevel.server"]
+env = { RBXLEVEL_ROOT = "/ABSOLUTE/PATH/TO/roblox-level-design-ai" }

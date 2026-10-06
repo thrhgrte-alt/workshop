@@ -36,7 +36,7 @@ suite/scaffold.py  stamps the common skeleton into a repository and vendors the 
 suite/*.sh         restore_repos.sh (from bundles), publish.sh (private GitHub repos; you run it)
 PUBLISH.md  CAPABILITY_MATRIX.md
 ```
-`repos/` (the working copies) is git-ignored here because each is its own repository.
+`repos/` holds the source of all five, browsable here (file copies; each repository's own history is in `bundles/`).
 
 ```bash
 sh suite/restore_repos.sh            # recreate repos/<name> from bundles/

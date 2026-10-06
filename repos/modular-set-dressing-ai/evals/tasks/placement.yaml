@@ -1,0 +1,87 @@
+- id: snap-chair-to-table-front
+  title: "A chair snapped to the table's front seat faces the table (hand-computed: at (20, 18.5), yaw 180)"
+  input: {op: snap_socket, scene: tavern_bare, mutations: [{op: set_top, field: paths, value: []}, {op: set_top, field: corridors, value: []}, {op: add, value: {id: t1, module: table_round, at: [20, 15]}}], target: t1, target_socket: seat_front, module: chair, module_socket: front}
+  checks: [{type: approx, path: at.0, value: 20}, {type: approx, path: at.1, value: 18.5}, {type: approx, path: yaw, value: 180}, {type: equals, path: errors, value: []}]
+- id: snap-chair-to-table-back
+  input: {op: snap_socket, scene: tavern_bare, mutations: [{op: set_top, field: paths, value: []}, {op: set_top, field: corridors, value: []}, {op: add, value: {id: t1, module: table_round, at: [20, 15]}}], target: t1, target_socket: seat_back, module: chair, module_socket: front}
+  checks: [{type: approx, path: at.1, value: 11.5}, {type: approx, path: yaw, value: 0}]
+- id: snap-follows-the-targets-rotation
+  title: "Rotating the table 90 degrees moves the chair around it (at (23.5, 15) facing -90: toward the table)"
+  input: {op: snap_socket, scene: tavern_bare, mutations: [{op: set_top, field: paths, value: []}, {op: set_top, field: corridors, value: []}, {op: add, value: {id: t1, module: table_round, at: [20, 15], yaw: 90}}], target: t1, target_socket: seat_front, module: chair, module_socket: front}
+  checks: [{type: approx, path: at.0, value: 23.5}, {type: approx, path: yaw, value: -90}]
+- id: snap-lantern-onto-the-tabletop
+  input: {op: snap_socket, scene: tavern_bare, mutations: [{op: set_top, field: paths, value: []}, {op: set_top, field: corridors, value: []}, {op: add, value: {id: t1, module: table_round, at: [20, 15]}}], target: t1, target_socket: top, module: lantern, module_socket: base}
+  checks: [{type: approx, path: y, value: 3}, {type: approx, path: at.0, value: 20}, {type: approx, path: at.1, value: 15}, {type: equals, path: errors, value: []}]
+- id: snap-wall-segments-end-to-end
+  input: {op: snap_socket, scene: tavern_bare, mutations: [{op: set_top, field: paths, value: []}, {op: set_top, field: corridors, value: []}, {op: add, value: {id: w1, module: wall_straight, at: [10, 10]}}], target: w1, target_socket: end_b, module: wall_straight, module_socket: end_a}
+  checks: [{type: approx, path: at.0, value: 18}, {type: approx, path: at.1, value: 10}, {type: approx, path: yaw, value: 0}]
+- id: snap-wall-segments-around-a-turn
+  input: {op: snap_socket, scene: tavern_bare, mutations: [{op: set_top, field: paths, value: []}, {op: set_top, field: corridors, value: []}, {op: add, value: {id: w1, module: wall_straight, at: [10, 10], yaw: 90}}], target: w1, target_socket: end_b, module: wall_straight, module_socket: end_a}
+  checks: [{type: approx, path: at.0, value: 10}, {type: approx, path: at.1, value: 2}, {type: approx, path: yaw, value: 90}]
+- id: snap-rejects-incompatible-sockets
+  input: {op: snap_socket, scene: tavern_bare, mutations: [{op: add, value: {id: t1, module: table_round, at: [20, 15]}}], target: t1, target_socket: top, module: chair, module_socket: front}
+  checks: [{type: error_contains, text: incompatible}]
+- id: snap-rejects-unknown-socket
+  input: {op: snap_socket, scene: tavern_bare, mutations: [{op: add, value: {id: t1, module: table_round, at: [20, 15]}}], target: t1, target_socket: nope, module: chair, module_socket: front}
+  checks: [{type: error_contains, text: has no socket}]
+- id: snap-rejects-unknown-target
+  input: {op: snap_socket, scene: tavern_bare, target: ghost, target_socket: top, module: lantern, module_socket: base}
+  checks: [{type: error_contains, text: unknown target}]
+- id: place-clean-table
+  input: {op: place, scene: tavern_bare, module: table_round, at: [10, 24]}
+  checks: [{type: equals, path: codes, value: []}]
+- id: place-snaps-to-the-grid-and-yaw-step
+  input: {op: place, scene: tavern_bare, module: crate_small, at: [10.4, 24.6], yaw: 100}
+  checks: [{type: equals, path: at, value: [10, 25]}, {type: equals, path: yaw, value: 90}]
+- id: place-rejects-outside-the-region
+  input: {op: place, scene: tavern_bare, module: crate_small, at: [39, 29]}
+  checks: [{type: list_contains, path: codes, items: [outside_region]}]
+- id: place-rejects-the-door-exclusion
+  input: {op: place, scene: tavern_bare, module: crate_small, at: [20, 2.5], snap: false}
+  checks: [{type: list_contains, path: codes, items: [in_exclusion]}]
+- id: place-rejects-collision-with-a-locked-hero-piece
+  input: {op: place, scene: tavern_bare, module: crate_small, at: [30, 3]}
+  checks: [{type: list_contains, path: codes, items: [collision]}]
+- id: place-rejects-blocking-a-path
+  input: {op: place, scene: tavern_bare, module: crate_small, at: [20, 8]}
+  checks: [{type: list_contains, path: codes, items: [blocks_path]}]
+- id: place-rejects-blocking-a-sightline
+  input: {op: place, scene: tavern_bare, module: pillar, at: [26, 16]}
+  checks: [{type: list_contains, path: codes, items: [blocks_sightline]}]
+- id: place-decor-without-collision-never-blocks
+  input: {op: place, scene: tavern_bare, module: rug, at: [26, 16]}
+  checks: [{type: equals, path: codes, value: []}]
+- id: place-stacking-on-a-surface-is-allowed
+  title: "Height ranges decide collisions: a crate resting on the tabletop does not collide with the table"
+  input: {op: place, scene: tavern_bare, mutations: [{op: add, value: {id: t1, module: table_round, at: [10, 24]}}], module: crate_tiny, at: [10, 24], y: 3}
+  checks: [{type: equals, path: codes, value: []}]
+- id: place-same-height-collides
+  input: {op: place, scene: tavern_bare, mutations: [{op: add, value: {id: t1, module: table_round, at: [10, 24]}}], module: crate_tiny, at: [10, 24]}
+  checks: [{type: list_contains, path: codes, items: [collision]}]
+- id: place-spacing-adds-a-required-gap
+  input: {op: place, scene: tavern_bare, mutations: [{op: add, value: {id: c1, module: crate_small, at: [10, 24]}}], module: crate_small, at: [13.5, 24], snap: false, spacing: 1.0}
+  checks: [{type: list_contains, path: codes, items: [collision]}]
+- id: place-without-spacing-the-same-spot-is-fine
+  input: {op: place, scene: tavern_bare, mutations: [{op: add, value: {id: c1, module: crate_small, at: [10, 24]}}], module: crate_small, at: [13.5, 24], snap: false, spacing: 0}
+  checks: [{type: equals, path: codes, value: []}]
+- id: place-rejects-scale-outside-the-modules-range
+  input: {op: place, scene: tavern_bare, module: crate_small, at: [10, 24], scale: 2.0}
+  checks: [{type: list_contains, path: codes, items: [scale_out_of_range]}]
+- id: place-rejects-modules-outside-the-kit
+  input: {op: place, scene: tavern_bare, module: dragon_statue, at: [10, 24]}
+  checks: [{type: error_contains, text: not in the approved kit}]
+- id: validate-hero-only-scene-is-clean
+  input: {op: validate, scene: tavern_bare}
+  checks: [{type: equals, path: errors, value: []}]
+- id: validate-dressed-scene-is-clean
+  input: {op: validate, scene: tavern_corner}
+  checks: [{type: equals, path: errors, value: []}]
+- id: validate-blocked-scene-reports-each-problem
+  input: {op: validate, scene: tavern_blocked_path}
+  checks: [{type: list_contains, path: errors, items: [blocks_path, blocks_sightline, collision]}]
+- id: validate-unknown-module-in-a-scene
+  input: {op: validate, scene: tavern_bare, mutations: [{op: add, value: {id: ghost, module: dragon_statue, at: [10, 24]}}]}
+  checks: [{type: list_contains, path: errors, items: [unknown_module]}]
+- id: validate-duplicate-instance-ids
+  input: {op: validate, scene: tavern_bare, mutations: [{op: add, value: {id: bar_001, module: crate_small, at: [10, 24]}}]}
+  checks: [{type: list_contains, path: errors, items: [duplicate_id]}]

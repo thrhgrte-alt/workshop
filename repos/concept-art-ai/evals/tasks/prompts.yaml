@@ -1,0 +1,260 @@
+- id: prompt-env-structure
+  title: An environment prompt describes depth layers, lighting, composition and scale
+  input:
+    op: prompt
+    brief: &id001
+      subject: a ruined lighthouse on a sea cliff
+      kind: environment
+    seed: 1
+  checks:
+  - type: text_has
+    path: positive
+    text: Environment concept art of a ruined lighthouse
+  - type: text_has
+    path: positive
+    text: foreground
+  - type: text_has
+    path: positive
+    text: 'Lighting:'
+  - type: text_has
+    path: positive
+    text: 'Composition:'
+  - type: text_has
+    path: positive
+    text: scale cues
+  - type: text_lacks
+    path: positive
+    text: neutral grey background
+  - type: equals
+    path: aspect_ratio
+    value: '16:9'
+  - type: equals
+    path: width
+    value: 1344
+  - type: equals
+    path: status
+    value: concept_only
+- id: prompt-prop-structure
+  title: A prop prompt describes one isolated object, its silhouette and material zones
+  input:
+    op: prompt
+    brief: &id002
+      subject: a hanging iron lantern
+      kind: prop
+    seed: 1
+  checks:
+  - type: text_has
+    path: positive
+    text: Prop concept sheet of a hanging iron lantern
+  - type: text_has
+    path: positive
+    text: neutral grey background
+  - type: text_has
+    path: positive
+    text: solid black
+  - type: text_has
+    path: positive
+    text: material zones
+  - type: text_lacks
+    path: positive
+    text: foreground, midground
+  - type: equals
+    path: aspect_ratio
+    value: '1:1'
+  - type: equals
+    path: width
+    value: 1024
+- id: prompt-env-and-prop-sections-differ
+  title: Environment and prop prompts use different sections
+  input:
+    op: prompt
+    brief: *id001
+  checks:
+  - type: list_contains
+    path: sections
+    items:
+    - composition
+    - lighting
+    - scale
+  - type: list_excludes
+    path: sections
+    items:
+    - view
+    - silhouette
+    - usage
+- id: prompt-prop-sections
+  title: Prop prompt sections
+  input:
+    op: prompt
+    brief: *id002
+  checks:
+  - type: list_contains
+    path: sections
+    items:
+    - silhouette
+    - view
+    - detail
+    - usage
+  - type: list_excludes
+    path: sections
+    items:
+    - composition
+    - lighting
+- id: prompt-negative-has-style-exclusions
+  title: The negative prompt carries the style spec's exclusions and the brief's avoid list
+  input:
+    op: prompt
+    brief:
+      subject: a ruined lighthouse on a sea cliff
+      kind: environment
+      avoid:
+      - crowds
+      - modern buildings
+  checks:
+  - type: text_has
+    path: negative
+    text: watermark
+  - type: text_has
+    path: negative
+    text: crowds
+  - type: text_has
+    path: negative
+    text: modern buildings
+  - type: text_has
+    path: negative
+    text: near-duplicate variations
+- id: prompt-prop-negative
+  title: A prop negative prompt rejects scenery and cropping
+  input:
+    op: prompt
+    brief: *id002
+  checks:
+  - type: text_has
+    path: negative
+    text: background scenery
+  - type: text_has
+    path: negative
+    text: cropped subject
+- id: prompt-includes-palette
+  title: The direction's palette hexes are in the prompt
+  input:
+    op: prompt
+    brief: *id001
+    palette:
+    - '#aa5522'
+    - '#bb8844'
+    - '#33aa99'
+    - '#221108'
+    - '#f5e8d0'
+  checks:
+  - type: text_has
+    path: positive
+    text: '#aa5522'
+  - type: text_has
+    path: positive
+    text: '#33aa99'
+- id: prompt-references-listed
+  title: Reference ids appear in the prompt
+  input:
+    op: prompt
+    brief:
+      subject: a ruined lighthouse on a sea cliff
+      kind: environment
+      reference_ids:
+      - ref-a
+      - ref-b
+  checks:
+  - type: text_has
+    path: positive
+    text: ref-a
+  - type: text_has
+    path: positive
+    text: ref-b
+- id: prompt-notes-included
+  title: Notes are included
+  input:
+    op: prompt
+    brief:
+      subject: a ruined lighthouse on a sea cliff
+      kind: environment
+      notes: chunky shapes, a visible path
+  checks:
+  - type: text_has
+    path: positive
+    text: chunky shapes
+- id: prompt-refuses-production-ready
+  title: 'A prompt claiming ''make it production-ready'' is refused: an image is concept art only'
+  input:
+    op: prompt
+    brief:
+      subject: a ruined lighthouse on a sea cliff
+      kind: environment
+      notes: make it production-ready
+  checks:
+  - type: error_contains
+    text: production readiness
+- id: prompt-refuses-game-ready
+  title: 'A prompt claiming ''a game-ready asset'' is refused: an image is concept art only'
+  input:
+    op: prompt
+    brief:
+      subject: a ruined lighthouse on a sea cliff
+      kind: environment
+      notes: a game-ready asset
+  checks:
+  - type: error_contains
+    text: production readiness
+- id: prompt-refuses-ready-to-import
+  title: 'A prompt claiming ''ready to import into Studio'' is refused: an image is concept art only'
+  input:
+    op: prompt
+    brief:
+      subject: a ruined lighthouse on a sea cliff
+      kind: environment
+      notes: ready to import into Studio
+  checks:
+  - type: error_contains
+    text: production readiness
+- id: prompt-refuses-final-mesh
+  title: 'A prompt claiming ''the final mesh'' is refused: an image is concept art only'
+  input:
+    op: prompt
+    brief:
+      subject: a ruined lighthouse on a sea cliff
+      kind: environment
+      notes: the final mesh
+  checks:
+  - type: error_contains
+    text: production readiness
+- id: prompt-too-long
+  title: An over-long prompt is refused
+  input:
+    op: prompt
+    brief:
+      subject: a ruined lighthouse on a sea cliff
+      kind: environment
+      notes: 'word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word
+        word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word
+        word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word
+        word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word
+        word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word
+        word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word
+        word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word
+        word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word
+        word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word
+        word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word word
+        word word word word word word word word word word word '
+  checks:
+  - type: error_contains
+    text: characters
+- id: prompt-prop-notes-claim
+  title: The claim check applies to props too
+  input:
+    op: prompt
+    brief:
+      subject: a hanging iron lantern
+      kind: prop
+      notes: game-ready
+  checks:
+  - type: error_contains
+    text: production readiness

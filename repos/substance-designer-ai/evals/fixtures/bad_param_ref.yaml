@@ -1,0 +1,5 @@
+id: fx_bad_param_ref
+parameters: {}
+nodes: [{id: c, node: uniform}, {id: m, node: blur, params: {intensity: {from: nope}}}]
+connections: [{from: c.output, to: m.input}]
+outputs: [{usage: baseColor, from: m.output}]

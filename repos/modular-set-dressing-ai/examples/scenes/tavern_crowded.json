@@ -1,0 +1,1509 @@
+{
+ "corridors": [
+  {
+   "eye_height": 4.5,
+   "from": [
+    20,
+    28
+   ],
+   "id": "bar_view",
+   "to": [
+    31,
+    5
+   ],
+   "width": 2.5
+  }
+ ],
+ "exclusions": [
+  [
+   17,
+   0,
+   6,
+   3
+  ]
+ ],
+ "focal": [
+  {
+   "at": [
+    2,
+    15
+   ],
+   "id": "hearth",
+   "min_priority": 4,
+   "radius": 10
+  },
+  {
+   "at": [
+    30,
+    3
+   ],
+   "id": "bar",
+   "min_priority": 4,
+   "radius": 9
+  }
+ ],
+ "grid": {
+  "step": 1.0,
+  "yaw_step": 90.0
+ },
+ "id": "tavern_crowded",
+ "instances": [
+  {
+   "at": [
+    2.0,
+    15.0
+   ],
+   "id": "hearth_001",
+   "locked": true,
+   "module": "fireplace",
+   "scale": 1.0,
+   "source": "user",
+   "why": "locked hero piece",
+   "y": 0,
+   "yaw": 90.0
+  },
+  {
+   "at": [
+    30.0,
+    3.0
+   ],
+   "id": "bar_001",
+   "locked": true,
+   "module": "bar_counter",
+   "scale": 1.0,
+   "source": "user",
+   "why": "locked hero piece",
+   "y": 0,
+   "yaw": 0.0
+  },
+  {
+   "at": [
+    12.0,
+    20.0
+   ],
+   "id": "table_001",
+   "locked": false,
+   "module": "table_round",
+   "scale": 1.0,
+   "source": "ai",
+   "why": "table group anchor",
+   "y": 0,
+   "yaw": 0.0
+  },
+  {
+   "at": [
+    12.0,
+    23.5
+   ],
+   "id": "chair_front",
+   "locked": false,
+   "module": "chair",
+   "scale": 1.0,
+   "source": "ai",
+   "why": "snapped chair.front to table_001.seat_front",
+   "y": 0.0,
+   "yaw": 180.0
+  },
+  {
+   "at": [
+    12.0,
+    16.5
+   ],
+   "id": "chair_back",
+   "locked": false,
+   "module": "chair",
+   "scale": 1.0,
+   "source": "ai",
+   "why": "snapped chair.front to table_001.seat_back",
+   "y": 0.0,
+   "yaw": 0.0
+  },
+  {
+   "at": [
+    12.0,
+    20.0
+   ],
+   "id": "lantern_001",
+   "locked": false,
+   "module": "lantern",
+   "scale": 1.0,
+   "source": "ai",
+   "why": "snapped lantern.base to table_001.top",
+   "y": 3.0,
+   "yaw": 0.0
+  },
+  {
+   "at": [
+    12.0,
+    20.0
+   ],
+   "id": "rug_001",
+   "locked": false,
+   "module": "rug",
+   "scale": 1.0,
+   "source": "ai",
+   "why": "under the table group",
+   "y": 0,
+   "yaw": 0.0
+  },
+  {
+   "at": [
+    30.0,
+    24.0
+   ],
+   "id": "crate_tiny_001",
+   "locked": false,
+   "module": "crate_tiny",
+   "scale": 1.0,
+   "source": "ai",
+   "why": "scatter (face_wall)",
+   "y": 0,
+   "yaw": 0.0
+  },
+  {
+   "at": [
+    31.0,
+    7.0
+   ],
+   "id": "stool_001",
+   "locked": false,
+   "module": "stool",
+   "scale": 1.0,
+   "source": "ai",
+   "why": "scatter (face_wall)",
+   "y": 0,
+   "yaw": 0.0
+  },
+  {
+   "at": [
+    5.0,
+    14.0
+   ],
+   "id": "stool_002",
+   "locked": false,
+   "module": "stool",
+   "scale": 1.0,
+   "source": "ai",
+   "why": "scatter (face_wall)",
+   "y": 0,
+   "yaw": 90.0
+  },
+  {
+   "at": [
+    16.0,
+    5.0
+   ],
+   "id": "barrel_001",
+   "locked": false,
+   "module": "barrel",
+   "scale": 1.0,
+   "source": "ai",
+   "why": "scatter (face_wall)",
+   "y": 0,
+   "yaw": 0.0
+  },
+  {
+   "at": [
+    16.0,
+    23.0
+   ],
+   "id": "stool_003",
+   "locked": false,
+   "module": "stool",
+   "scale": 1.0,
+   "source": "ai",
+   "why": "scatter (face_wall)",
+   "y": 0,
+   "yaw": 0.0
+  },
+  {
+   "at": [
+    35.0,
+    6.0
+   ],
+   "id": "pillar_001",
+   "locked": false,
+   "module": "pillar",
+   "scale": 1.0,
+   "source": "ai",
+   "why": "scatter (face_wall)",
+   "y": 0,
+   "yaw": -90.0
+  },
+  {
+   "at": [
+    39.0,
+    26.0
+   ],
+   "id": "shelf_wall_001",
+   "locked": false,
+   "module": "shelf_wall",
+   "scale": 1.0,
+   "source": "ai",
+   "why": "scatter (face_wall)",
+   "y": 0,
+   "yaw": -90.0
+  },
+  {
+   "at": [
+    8.0,
+    28.0
+   ],
+   "id": "crate_tiny_002",
+   "locked": false,
+   "module": "crate_tiny",
+   "scale": 1.0,
+   "source": "ai",
+   "why": "scatter (face_wall)",
+   "y": 0,
+   "yaw": 180.0
+  },
+  {
+   "at": [
+    20.0,
+    27.0
+   ],
+   "id": "bench_001",
+   "locked": false,
+   "module": "bench",
+   "scale": 1.0,
+   "source": "ai",
+   "why": "scatter (face_wall)",
+   "y": 0,
+   "yaw": 180.0
+  },
+  {
+   "at": [
+    1.0,
+    28.0
+   ],
+   "id": "stool_004",
+   "locked": false,
+   "module": "stool",
+   "scale": 1.0,
+   "source": "ai",
+   "why": "scatter (face_wall)",
+   "y": 0,
+   "yaw": 90.0
+  },
+  {
+   "at": [
+    6.0,
+    21.0
+   ],
+   "id": "fireplace_001",
+   "locked": false,
+   "module": "fireplace",
+   "scale": 1.0,
+   "source": "ai",
+   "why": "scatter (face_wall)",
+   "y": 0,
+   "yaw": 90.0
+  },
+  {
+   "at": [
+    6.0,
+    1.0
+   ],
+   "id": "banner_001",
+   "locked": false,
+   "module": "banner",
+   "scale": 1.0,
+   "source": "ai",
+   "why": "scatter (face_wall)",
+   "y": 0,
+   "yaw": 0.0
+  },
+  {
+   "at": [
+    14.0,
+    8.0
+   ],
+   "id": "barrel_002",
+   "locked": false,
+   "module": "barrel",
+   "scale": 1.0,
+   "source": "ai",
+   "why": "scatter (face_wall)",
+   "y": 0,
+   "yaw": -90.0
+  },
+  {
+   "at": [
+    39.0,
+    14.0
+   ],
+   "id": "plant_pot_001",
+   "locked": false,
+   "module": "plant_pot",
+   "scale": 1.0,
+   "source": "ai",
+   "why": "scatter (face_wall)",
+   "y": 0,
+   "yaw": -90.0
+  },
+  {
+   "at": [
+    36.0,
+    3.0
+   ],
+   "id": "chair_001",
+   "locked": false,
+   "module": "chair",
+   "scale": 1.0,
+   "source": "ai",
+   "why": "scatter (face_wall)",
+   "y": 0,
+   "yaw": 0.0
+  },
+  {
+   "at": [
+    11.0,
+    29.0
+   ],
+   "id": "plant_pot_002",
+   "locked": false,
+   "module": "plant_pot",
+   "scale": 1.0,
+   "source": "ai",
+   "why": "scatter (face_wall)",
+   "y": 0,
+   "yaw": 180.0
+  },
+  {
+   "at": [
+    38.0,
+    10.0
+   ],
+   "id": "crate_tiny_003",
+   "locked": false,
+   "module": "crate_tiny",
+   "scale": 1.0,
+   "source": "ai",
+   "why": "scatter (face_wall)",
+   "y": 0,
+   "yaw": -90.0
+  },
+  {
+   "at": [
+    26.0,
+    24.0
+   ],
+   "id": "barrel_003",
+   "locked": false,
+   "module": "barrel",
+   "scale": 1.0,
+   "source": "ai",
+   "why": "scatter (face_wall)",
+   "y": 0,
+   "yaw": 180.0
+  },
+  {
+   "at": [
+    1.0,
+    5.0
+   ],
+   "id": "crate_tiny_004",
+   "locked": false,
+   "module": "crate_tiny",
+   "scale": 1.0,
+   "source": "ai",
+   "why": "scatter (face_wall)",
+   "y": 0,
+   "yaw": 90.0
+  },
+  {
+   "at": [
+    26.0,
+    7.0
+   ],
+   "id": "chair_002",
+   "locked": false,
+   "module": "chair",
+   "scale": 1.0,
+   "source": "ai",
+   "why": "scatter (face_wall)",
+   "y": 0,
+   "yaw": 90.0
+  },
+  {
+   "at": [
+    7.0,
+    6.0
+   ],
+   "id": "table_round_001",
+   "locked": false,
+   "module": "table_round",
+   "scale": 1.0,
+   "source": "ai",
+   "why": "scatter (face_wall)",
+   "y": 0,
+   "yaw": 0.0
+  },
+  {
+   "at": [
+    12.0,
+    11.0
+   ],
+   "id": "banner_002",
+   "locked": false,
+   "module": "banner",
+   "scale": 1.0,
+   "source": "ai",
+   "why": "scatter (face_wall)",
+   "y": 0,
+   "yaw": 90.0
+  },
+  {
+   "at": [
+    33.0,
+    19.0
+   ],
+   "id": "chair_003",
+   "locked": false,
+   "module": "chair",
+   "scale": 1.0,
+   "source": "ai",
+   "why": "scatter (face_wall)",
+   "y": 0,
+   "yaw": 180.0
+  },
+  {
+   "at": [
+    39.0,
+    18.0
+   ],
+   "id": "banner_003",
+   "locked": false,
+   "module": "banner",
+   "scale": 1.0,
+   "source": "ai",
+   "why": "scatter (face_wall)",
+   "y": 0,
+   "yaw": -90.0
+  },
+  {
+   "at": [
+    11.0,
+    14.0
+   ],
+   "id": "bench_002",
+   "locked": false,
+   "module": "bench",
+   "scale": 1.0,
+   "source": "ai",
+   "why": "scatter (face_wall)",
+   "y": 0,
+   "yaw": 0.0
+  },
+  {
+   "at": [
+    38.0,
+    7.0
+   ],
+   "id": "crate_small_001",
+   "locked": false,
+   "module": "crate_small",
+   "scale": 1.0,
+   "source": "ai",
+   "why": "scatter (face_wall)",
+   "y": 0,
+   "yaw": -90.0
+  },
+  {
+   "at": [
+    5.0,
+    12.0
+   ],
+   "id": "pillar_002",
+   "locked": false,
+   "module": "pillar",
+   "scale": 1.0,
+   "source": "ai",
+   "why": "scatter (face_wall)",
+   "y": 0,
+   "yaw": 90.0
+  },
+  {
+   "at": [
+    35.0,
+    26.0
+   ],
+   "id": "chair_004",
+   "locked": false,
+   "module": "chair",
+   "scale": 1.0,
+   "source": "ai",
+   "why": "scatter (face_wall)",
+   "y": 0,
+   "yaw": 180.0
+  },
+  {
+   "at": [
+    19.0,
+    23.0
+   ],
+   "id": "stool_005",
+   "locked": false,
+   "module": "stool",
+   "scale": 1.0,
+   "source": "ai",
+   "why": "scatter (face_wall)",
+   "y": 0,
+   "yaw": 180.0
+  },
+  {
+   "at": [
+    2.0,
+    25.0
+   ],
+   "id": "crate_tiny_005",
+   "locked": false,
+   "module": "crate_tiny",
+   "scale": 1.0,
+   "source": "ai",
+   "why": "scatter (face_wall)",
+   "y": 0,
+   "yaw": 90.0
+  },
+  {
+   "at": [
+    22.0,
+    19.0
+   ],
+   "id": "stool_006",
+   "locked": false,
+   "module": "stool",
+   "scale": 1.0,
+   "source": "ai",
+   "why": "scatter (face_wall)",
+   "y": 0,
+   "yaw": 180.0
+  },
+  {
+   "at": [
+    10.0,
+    26.0
+   ],
+   "id": "bench_003",
+   "locked": false,
+   "module": "bench",
+   "scale": 1.0,
+   "source": "ai",
+   "why": "scatter (face_wall)",
+   "y": 0,
+   "yaw": 180.0
+  },
+  {
+   "at": [
+    15.0,
+    25.0
+   ],
+   "id": "chair_005",
+   "locked": false,
+   "module": "chair",
+   "scale": 1.0,
+   "source": "ai",
+   "why": "scatter (face_wall)",
+   "y": 0,
+   "yaw": 180.0
+  },
+  {
+   "at": [
+    36.0,
+    10.0
+   ],
+   "id": "pillar_003",
+   "locked": false,
+   "module": "pillar",
+   "scale": 1.0,
+   "source": "ai",
+   "why": "scatter (face_wall)",
+   "y": 0,
+   "yaw": -90.0
+  },
+  {
+   "at": [
+    13.0,
+    2.0
+   ],
+   "id": "crate_tiny_006",
+   "locked": false,
+   "module": "crate_tiny",
+   "scale": 1.0,
+   "source": "ai",
+   "why": "scatter (face_wall)",
+   "y": 0,
+   "yaw": 0.0
+  },
+  {
+   "at": [
+    18.0,
+    25.0
+   ],
+   "id": "pillar_004",
+   "locked": false,
+   "module": "pillar",
+   "scale": 1.0,
+   "source": "ai",
+   "why": "scatter (face_wall)",
+   "y": 0,
+   "yaw": 180.0
+  },
+  {
+   "at": [
+    2.0,
+    23.0
+   ],
+   "id": "pillar_005",
+   "locked": false,
+   "module": "pillar",
+   "scale": 1.0,
+   "source": "ai",
+   "why": "scatter (face_wall)",
+   "y": 0,
+   "yaw": 90.0
+  },
+  {
+   "at": [
+    9.0,
+    24.0
+   ],
+   "id": "crate_tiny_007",
+   "locked": false,
+   "module": "crate_tiny",
+   "scale": 1.0,
+   "source": "ai",
+   "why": "scatter (face_wall)",
+   "y": 0,
+   "yaw": 180.0
+  },
+  {
+   "at": [
+    18.0,
+    19.0
+   ],
+   "id": "plant_pot_003",
+   "locked": false,
+   "module": "plant_pot",
+   "scale": 1.0,
+   "source": "ai",
+   "why": "scatter (face_wall)",
+   "y": 0,
+   "yaw": 0.0
+  },
+  {
+   "at": [
+    8.0,
+    21.0
+   ],
+   "id": "banner_004",
+   "locked": false,
+   "module": "banner",
+   "scale": 1.0,
+   "source": "ai",
+   "why": "scatter (face_wall)",
+   "y": 0,
+   "yaw": -90.0
+  },
+  {
+   "at": [
+    28.0,
+    8.0
+   ],
+   "id": "crate_tiny_008",
+   "locked": false,
+   "module": "crate_tiny",
+   "scale": 1.0,
+   "source": "ai",
+   "why": "scatter (face_wall)",
+   "y": 0,
+   "yaw": -90.0
+  },
+  {
+   "at": [
+    27.0,
+    27.0
+   ],
+   "id": "barrel_004",
+   "locked": false,
+   "module": "barrel",
+   "scale": 1.0,
+   "source": "ai",
+   "why": "scatter (face_wall)",
+   "y": 0,
+   "yaw": 180.0
+  },
+  {
+   "at": [
+    15.0,
+    14.0
+   ],
+   "id": "shelf_wall_002",
+   "locked": false,
+   "module": "shelf_wall",
+   "scale": 1.0,
+   "source": "ai",
+   "why": "scatter (face_wall)",
+   "y": 0,
+   "yaw": -90.0
+  },
+  {
+   "at": [
+    34.0,
+    22.0
+   ],
+   "id": "crate_small_002",
+   "locked": false,
+   "module": "crate_small",
+   "scale": 1.0,
+   "source": "ai",
+   "why": "scatter (face_wall)",
+   "y": 0,
+   "yaw": 90.0
+  },
+  {
+   "at": [
+    10.0,
+    3.0
+   ],
+   "id": "banner_005",
+   "locked": false,
+   "module": "banner",
+   "scale": 1.0,
+   "source": "ai",
+   "why": "scatter (face_wall)",
+   "y": 0,
+   "yaw": 0.0
+  },
+  {
+   "at": [
+    24.0,
+    6.0
+   ],
+   "id": "chair_006",
+   "locked": false,
+   "module": "chair",
+   "scale": 1.0,
+   "source": "ai",
+   "why": "scatter (face_wall)",
+   "y": 0,
+   "yaw": 0.0
+  },
+  {
+   "at": [
+    8.0,
+    10.0
+   ],
+   "id": "crate_tiny_009",
+   "locked": false,
+   "module": "crate_tiny",
+   "scale": 1.0,
+   "source": "ai",
+   "why": "scatter (face_wall)",
+   "y": 0,
+   "yaw": 90.0
+  },
+  {
+   "at": [
+    3.0,
+    29.0
+   ],
+   "id": "plant_pot_004",
+   "locked": false,
+   "module": "plant_pot",
+   "scale": 1.0,
+   "source": "ai",
+   "why": "scatter (face_wall)",
+   "y": 0,
+   "yaw": 180.0
+  },
+  {
+   "at": [
+    17.0,
+    29.0
+   ],
+   "id": "crate_tiny_010",
+   "locked": false,
+   "module": "crate_tiny",
+   "scale": 1.0,
+   "source": "ai",
+   "why": "scatter (face_wall)",
+   "y": 0,
+   "yaw": 180.0
+  },
+  {
+   "at": [
+    12.0,
+    5.0
+   ],
+   "id": "banner_006",
+   "locked": false,
+   "module": "banner",
+   "scale": 1.0,
+   "source": "ai",
+   "why": "scatter (face_wall)",
+   "y": 0,
+   "yaw": 0.0
+  },
+  {
+   "at": [
+    25.0,
+    21.0
+   ],
+   "id": "barrel_005",
+   "locked": false,
+   "module": "barrel",
+   "scale": 1.0,
+   "source": "ai",
+   "why": "scatter (face_wall)",
+   "y": 0,
+   "yaw": 90.0
+  },
+  {
+   "at": [
+    35.0,
+    28.0
+   ],
+   "id": "crate_tiny_011",
+   "locked": false,
+   "module": "crate_tiny",
+   "scale": 1.0,
+   "source": "ai",
+   "why": "scatter (face_wall)",
+   "y": 0,
+   "yaw": 180.0
+  },
+  {
+   "at": [
+    33.0,
+    10.0
+   ],
+   "id": "stool_007",
+   "locked": false,
+   "module": "stool",
+   "scale": 1.0,
+   "source": "ai",
+   "why": "scatter (face_wall)",
+   "y": 0,
+   "yaw": 0.0
+  },
+  {
+   "at": [
+    31.0,
+    9.0
+   ],
+   "id": "stool_008",
+   "locked": false,
+   "module": "stool",
+   "scale": 1.0,
+   "source": "ai",
+   "why": "scatter (face_wall)",
+   "y": 0,
+   "yaw": 180.0
+  },
+  {
+   "at": [
+    30.0,
+    28.0
+   ],
+   "id": "banner_007",
+   "locked": false,
+   "module": "banner",
+   "scale": 1.0,
+   "source": "ai",
+   "why": "scatter (face_wall)",
+   "y": 0,
+   "yaw": 180.0
+  },
+  {
+   "at": [
+    30.0,
+    18.0
+   ],
+   "id": "barrel_006",
+   "locked": false,
+   "module": "barrel",
+   "scale": 1.0,
+   "source": "ai",
+   "why": "scatter (face_wall)",
+   "y": 0,
+   "yaw": 180.0
+  },
+  {
+   "at": [
+    7.0,
+    16.0
+   ],
+   "id": "stool_009",
+   "locked": false,
+   "module": "stool",
+   "scale": 1.0,
+   "source": "ai",
+   "why": "scatter (face_wall)",
+   "y": 0,
+   "yaw": 90.0
+  },
+  {
+   "at": [
+    28.0,
+    21.0
+   ],
+   "id": "stool_010",
+   "locked": false,
+   "module": "stool",
+   "scale": 1.0,
+   "source": "ai",
+   "why": "scatter (face_wall)",
+   "y": 0,
+   "yaw": 90.0
+  },
+  {
+   "at": [
+    37.0,
+    19.0
+   ],
+   "id": "crate_tiny_012",
+   "locked": false,
+   "module": "crate_tiny",
+   "scale": 1.0,
+   "source": "ai",
+   "why": "scatter (face_wall)",
+   "y": 0,
+   "yaw": -90.0
+  },
+  {
+   "at": [
+    6.0,
+    26.0
+   ],
+   "id": "pillar_006",
+   "locked": false,
+   "module": "pillar",
+   "scale": 1.0,
+   "source": "ai",
+   "why": "scatter (face_wall)",
+   "y": 0,
+   "yaw": 180.0
+  },
+  {
+   "at": [
+    38.0,
+    21.0
+   ],
+   "id": "plant_pot_005",
+   "locked": false,
+   "module": "plant_pot",
+   "scale": 1.0,
+   "source": "ai",
+   "why": "scatter (face_wall)",
+   "y": 0,
+   "yaw": -90.0
+  },
+  {
+   "at": [
+    2.0,
+    2.0
+   ],
+   "id": "stool_011",
+   "locked": false,
+   "module": "stool",
+   "scale": 1.0,
+   "source": "ai",
+   "why": "scatter (face_wall)",
+   "y": 0,
+   "yaw": 90.0
+  },
+  {
+   "at": [
+    5.0,
+    29.0
+   ],
+   "id": "plant_pot_006",
+   "locked": false,
+   "module": "plant_pot",
+   "scale": 1.0,
+   "source": "ai",
+   "why": "scatter (face_wall)",
+   "y": 0,
+   "yaw": 180.0
+  },
+  {
+   "at": [
+    31.0,
+    21.0
+   ],
+   "id": "banner_008",
+   "locked": false,
+   "module": "banner",
+   "scale": 1.0,
+   "source": "ai",
+   "why": "scatter (face_wall)",
+   "y": 0,
+   "yaw": -90.0
+  },
+  {
+   "at": [
+    9.0,
+    1.0
+   ],
+   "id": "plant_pot_007",
+   "locked": false,
+   "module": "plant_pot",
+   "scale": 1.0,
+   "source": "ai",
+   "why": "scatter (face_wall)",
+   "y": 0,
+   "yaw": 0.0
+  },
+  {
+   "at": [
+    18.0,
+    21.0
+   ],
+   "id": "crate_tiny_013",
+   "locked": false,
+   "module": "crate_tiny",
+   "scale": 1.0,
+   "source": "ai",
+   "why": "scatter (face_wall)",
+   "y": 0,
+   "yaw": 90.0
+  },
+  {
+   "at": [
+    5.0,
+    10.0
+   ],
+   "id": "chair_007",
+   "locked": false,
+   "module": "chair",
+   "scale": 1.0,
+   "source": "ai",
+   "why": "scatter (face_wall)",
+   "y": 0,
+   "yaw": 90.0
+  },
+  {
+   "at": [
+    27.0,
+    18.0
+   ],
+   "id": "crate_small_003",
+   "locked": false,
+   "module": "crate_small",
+   "scale": 1.0,
+   "source": "ai",
+   "why": "scatter (face_wall)",
+   "y": 0,
+   "yaw": 0.0
+  },
+  {
+   "at": [
+    16.0,
+    2.0
+   ],
+   "id": "stool_012",
+   "locked": false,
+   "module": "stool",
+   "scale": 1.0,
+   "source": "ai",
+   "why": "scatter (face_wall)",
+   "y": 0,
+   "yaw": 0.0
+  },
+  {
+   "at": [
+    37.0,
+    26.0
+   ],
+   "id": "crate_tiny_014",
+   "locked": false,
+   "module": "crate_tiny",
+   "scale": 1.0,
+   "source": "ai",
+   "why": "scatter (face_wall)",
+   "y": 0,
+   "yaw": -90.0
+  },
+  {
+   "at": [
+    15.0,
+    19.0
+   ],
+   "id": "banner_009",
+   "locked": false,
+   "module": "banner",
+   "scale": 1.0,
+   "source": "ai",
+   "why": "scatter (face_wall)",
+   "y": 0,
+   "yaw": -90.0
+  },
+  {
+   "at": [
+    10.0,
+    12.0
+   ],
+   "id": "crate_tiny_015",
+   "locked": false,
+   "module": "crate_tiny",
+   "scale": 1.0,
+   "source": "ai",
+   "why": "scatter (face_wall)",
+   "y": 0,
+   "yaw": 0.0
+  },
+  {
+   "at": [
+    24.0,
+    2.0
+   ],
+   "id": "plant_pot_008",
+   "locked": false,
+   "module": "plant_pot",
+   "scale": 1.0,
+   "source": "ai",
+   "why": "scatter (face_wall)",
+   "y": 0,
+   "yaw": 0.0
+  },
+  {
+   "at": [
+    21.0,
+    29.0
+   ],
+   "id": "crate_tiny_016",
+   "locked": false,
+   "module": "crate_tiny",
+   "scale": 1.0,
+   "source": "ai",
+   "why": "scatter (face_wall)",
+   "y": 0,
+   "yaw": 180.0
+  },
+  {
+   "at": [
+    3.0,
+    6.0
+   ],
+   "id": "bench_004",
+   "locked": false,
+   "module": "bench",
+   "scale": 1.0,
+   "source": "ai",
+   "why": "scatter (face_wall)",
+   "y": 0,
+   "yaw": 90.0
+  },
+  {
+   "at": [
+    4.0,
+    26.0
+   ],
+   "id": "plant_pot_009",
+   "locked": false,
+   "module": "plant_pot",
+   "scale": 1.0,
+   "source": "ai",
+   "why": "scatter (face_wall)",
+   "y": 0,
+   "yaw": 90.0
+  },
+  {
+   "at": [
+    31.0,
+    26.0
+   ],
+   "id": "banner_010",
+   "locked": false,
+   "module": "banner",
+   "scale": 1.0,
+   "source": "ai",
+   "why": "scatter (face_wall)",
+   "y": 0,
+   "yaw": 180.0
+  },
+  {
+   "at": [
+    31.0,
+    29.0
+   ],
+   "id": "banner_011",
+   "locked": false,
+   "module": "banner",
+   "scale": 1.0,
+   "source": "ai",
+   "why": "scatter (face_wall)",
+   "y": 0,
+   "yaw": 180.0
+  },
+  {
+   "at": [
+    28.0,
+    6.0
+   ],
+   "id": "plant_pot_010",
+   "locked": false,
+   "module": "plant_pot",
+   "scale": 1.0,
+   "source": "ai",
+   "why": "scatter (face_wall)",
+   "y": 0,
+   "yaw": 90.0
+  },
+  {
+   "at": [
+    22.0,
+    24.0
+   ],
+   "id": "chair_008",
+   "locked": false,
+   "module": "chair",
+   "scale": 1.0,
+   "source": "ai",
+   "why": "scatter (face_wall)",
+   "y": 0,
+   "yaw": -90.0
+  },
+  {
+   "at": [
+    24.0,
+    27.0
+   ],
+   "id": "plant_pot_011",
+   "locked": false,
+   "module": "plant_pot",
+   "scale": 1.0,
+   "source": "ai",
+   "why": "scatter (face_wall)",
+   "y": 0,
+   "yaw": 180.0
+  },
+  {
+   "at": [
+    37.0,
+    29.0
+   ],
+   "id": "chair_009",
+   "locked": false,
+   "module": "chair",
+   "scale": 1.0,
+   "source": "ai",
+   "why": "scatter (face_wall)",
+   "y": 0,
+   "yaw": 180.0
+  },
+  {
+   "at": [
+    26.0,
+    10.0
+   ],
+   "id": "bench_005",
+   "locked": false,
+   "module": "bench",
+   "scale": 1.0,
+   "source": "ai",
+   "why": "scatter (face_wall)",
+   "y": 0,
+   "yaw": 180.0
+  },
+  {
+   "at": [
+    10.0,
+    7.0
+   ],
+   "id": "banner_012",
+   "locked": false,
+   "module": "banner",
+   "scale": 1.0,
+   "source": "ai",
+   "why": "scatter (face_wall)",
+   "y": 0,
+   "yaw": 90.0
+  },
+  {
+   "at": [
+    33.0,
+    6.0
+   ],
+   "id": "stool_013",
+   "locked": false,
+   "module": "stool",
+   "scale": 1.0,
+   "source": "ai",
+   "why": "scatter (face_wall)",
+   "y": 0,
+   "yaw": 0.0
+  },
+  {
+   "at": [
+    19.0,
+    29.0
+   ],
+   "id": "chair_010",
+   "locked": false,
+   "module": "chair",
+   "scale": 1.0,
+   "source": "ai",
+   "why": "scatter (face_wall)",
+   "y": 0,
+   "yaw": 180.0
+  },
+  {
+   "at": [
+    39.0,
+    1.0
+   ],
+   "id": "crate_tiny_017",
+   "locked": false,
+   "module": "crate_tiny",
+   "scale": 1.0,
+   "source": "ai",
+   "why": "scatter (face_wall)",
+   "y": 0,
+   "yaw": -90.0
+  },
+  {
+   "at": [
+    16.0,
+    27.0
+   ],
+   "id": "plant_pot_012",
+   "locked": false,
+   "module": "plant_pot",
+   "scale": 1.0,
+   "source": "ai",
+   "why": "scatter (face_wall)",
+   "y": 0,
+   "yaw": 180.0
+  },
+  {
+   "at": [
+    35.0,
+    19.0
+   ],
+   "id": "crate_tiny_018",
+   "locked": false,
+   "module": "crate_tiny",
+   "scale": 1.0,
+   "source": "ai",
+   "why": "scatter (face_wall)",
+   "y": 0,
+   "yaw": -90.0
+  },
+  {
+   "at": [
+    34.0,
+    1.0
+   ],
+   "id": "banner_013",
+   "locked": false,
+   "module": "banner",
+   "scale": 1.0,
+   "source": "ai",
+   "why": "scatter (face_wall)",
+   "y": 0,
+   "yaw": 0.0
+  },
+  {
+   "at": [
+    1.0,
+    7.0
+   ],
+   "id": "pillar_007",
+   "locked": false,
+   "module": "pillar",
+   "scale": 1.0,
+   "source": "ai",
+   "why": "scatter (face_wall)",
+   "y": 0,
+   "yaw": 90.0
+  },
+  {
+   "at": [
+    14.0,
+    27.0
+   ],
+   "id": "crate_tiny_019",
+   "locked": false,
+   "module": "crate_tiny",
+   "scale": 1.0,
+   "source": "ai",
+   "why": "scatter (face_wall)",
+   "y": 0,
+   "yaw": 180.0
+  },
+  {
+   "at": [
+    15.0,
+    29.0
+   ],
+   "id": "chair_011",
+   "locked": false,
+   "module": "chair",
+   "scale": 1.0,
+   "source": "ai",
+   "why": "scatter (face_wall)",
+   "y": 0,
+   "yaw": 180.0
+  },
+  {
+   "at": [
+    21.0,
+    22.0
+   ],
+   "id": "crate_tiny_020",
+   "locked": false,
+   "module": "crate_tiny",
+   "scale": 1.0,
+   "source": "ai",
+   "why": "scatter (face_wall)",
+   "y": 0,
+   "yaw": 0.0
+  },
+  {
+   "at": [
+    33.0,
+    8.0
+   ],
+   "id": "stool_014",
+   "locked": false,
+   "module": "stool",
+   "scale": 1.0,
+   "source": "ai",
+   "why": "scatter (face_wall)",
+   "y": 0,
+   "yaw": 0.0
+  }
+ ],
+ "locked": {},
+ "paths": [
+  {
+   "id": "entrance",
+   "points": [
+    [
+     20,
+     3
+    ],
+    [
+     20,
+     14
+    ],
+    [
+     34,
+     14
+    ]
+   ],
+   "width": 5
+  }
+ ],
+ "region": {
+  "d": 30,
+  "floor_y": 0,
+  "w": 40,
+  "x": 0,
+  "z": 0
+ },
+ "units": "studs"
+}

@@ -1,0 +1,448 @@
+- id: measure-flat-is-degenerate
+  title: A flat grey image is flagged as degenerate
+  input:
+    op: measure
+    image:
+      kind: solid
+      color: '#808080'
+  checks:
+  - type: approx
+    path: value_range
+    value: 0
+    tol: 0.01
+  - type: text_has
+    path: degenerate
+    text: single flat tone
+  - type: at_most
+    path: readability
+    value: 0.7
+- id: measure-black-white-value-range
+  title: Black and white halves have a full value range
+  input:
+    op: measure
+    image:
+      kind: split
+      left: '#000000'
+      right: '#ffffff'
+  checks:
+  - type: approx
+    path: value_range
+    value: 1.0
+    tol: 0.02
+  - type: equals
+    path: degenerate
+    value: []
+- id: measure-noise-is-busy
+  title: Random noise has very high edge density
+  input:
+    op: measure
+    image:
+      kind: noise
+      seed: 1
+      size:
+      - 96
+      - 96
+  checks:
+  - type: at_least
+    path: edge_density
+    value: 0.5
+- id: measure-smooth-has-no-edges
+  title: Two close greys have almost no edges
+  input:
+    op: measure
+    image:
+      kind: split
+      left: '#707070'
+      right: '#757575'
+  checks:
+  - type: at_most
+    path: edge_density
+    value: 0.01
+- id: measure-saturation
+  title: A pure red image is fully saturated; grey is not
+  input:
+    op: measure
+    image:
+      kind: solid
+      color: '#ff0000'
+  checks:
+  - type: approx
+    path: saturation
+    value: 1.0
+    tol: 0.02
+- id: measure-grey-unsaturated
+  title: Grey has no saturation
+  input:
+    op: measure
+    image:
+      kind: solid
+      color: '#808080'
+  checks:
+  - type: approx
+    path: saturation
+    value: 0.0
+    tol: 0.01
+- id: measure-silhouette-box
+  title: A black box on white covering a quarter of the frame is one component with a quarter fill
+  input:
+    op: measure
+    image:
+      kind: box
+      bg: '#ffffff'
+      fg: '#000000'
+      box:
+      - 0.25
+      - 0.25
+      - 0.75
+      - 0.75
+  checks:
+  - type: equals
+    path: silhouette_components
+    value: 1
+  - type: approx
+    path: silhouette_fill
+    value: 0.25
+    tol: 0.05
+- id: measure-silhouette-fragmented
+  title: Noise fragments the silhouette into many pieces
+  input:
+    op: measure
+    image:
+      kind: noise
+      seed: 2
+      size:
+      - 128
+      - 128
+  checks:
+  - type: at_least
+    path: silhouette_components
+    value: 8
+- id: measure-focal-contrast-high
+  title: A white box on black measured with the same box has contrast 1
+  input:
+    op: measure
+    image:
+      kind: box
+      bg: '#000000'
+      fg: '#ffffff'
+      box:
+      - 0.25
+      - 0.25
+      - 0.75
+      - 0.75
+    focal_box:
+    - 0.25
+    - 0.25
+    - 0.75
+    - 0.75
+  checks:
+  - type: approx
+    path: focal_contrast
+    value: 1.0
+    tol: 0.02
+- id: measure-focal-contrast-none
+  title: A flat image has no focal contrast
+  input:
+    op: measure
+    image:
+      kind: solid
+      color: '#808080'
+    focal_box:
+    - 0.4
+    - 0.4
+    - 0.6
+    - 0.6
+  checks:
+  - type: approx
+    path: focal_contrast
+    value: 0.0
+    tol: 0.01
+- id: measure-edge-centroid
+  title: Edge energy of a centred box centres in the image
+  input:
+    op: measure
+    image:
+      kind: box
+      bg: '#000000'
+      fg: '#ffffff'
+      box:
+      - 0.3
+      - 0.3
+      - 0.7
+      - 0.7
+  checks:
+  - type: at_least
+    path: edge_density
+    value: 0.0
+- id: palette-adherence-high
+  title: A solid colour near the target palette adheres
+  input:
+    op: palette
+    image:
+      kind: solid
+      color: '#c06020'
+    palette:
+    - '#c06020'
+    - '#d08040'
+  checks:
+  - type: at_least
+    path: palette_adherence
+    value: 0.9
+- id: palette-adherence-low
+  title: A solid colour far from the target palette does not
+  input:
+    op: palette
+    image:
+      kind: solid
+      color: '#2060c0'
+    palette:
+    - '#c06020'
+    - '#d08040'
+  checks:
+  - type: at_most
+    path: palette_adherence
+    value: 0.45
+- id: palette-dominant-colour-reported
+  title: The dominant colour is recovered from pixels
+  input:
+    op: palette
+    image:
+      kind: solid
+      color: '#336699'
+  checks:
+  - type: equals
+    path: first_palette
+    value: '#336699'
+- id: similarity-identical
+  title: An image is identical to itself
+  input:
+    op: similarity
+    images:
+      a:
+        kind: box
+        bg: '#204060'
+        fg: '#f0c040'
+        box:
+        - 0.2
+        - 0.2
+        - 0.6
+        - 0.6
+      b:
+        kind: box
+        bg: '#204060'
+        fg: '#f0c040'
+        box:
+        - 0.2
+        - 0.2
+        - 0.6
+        - 0.6
+    pair:
+    - a
+    - b
+  checks:
+  - type: approx
+    path: similarity
+    value: 1.0
+    tol: 0.001
+- id: similarity-different-layout-and-colour
+  title: A different layout and palette is clearly less similar
+  input:
+    op: similarity
+    images:
+      a:
+        kind: box
+        bg: '#204060'
+        fg: '#f0c040'
+        box:
+        - 0.1
+        - 0.1
+        - 0.4
+        - 0.4
+      b:
+        kind: box
+        bg: '#c04020'
+        fg: '#20c0a0'
+        box:
+        - 0.6
+        - 0.6
+        - 0.9
+        - 0.9
+    pair:
+    - a
+    - b
+  checks:
+  - type: at_most
+    path: similarity
+    value: 0.6
+- id: novelty-unknown-when-library-empty
+  title: With an empty library novelty is unknown, never 1.0
+  input:
+    op: novelty
+    image:
+      kind: solid
+      color: '#336699'
+    library: []
+  checks:
+  - type: is_none
+    path: novelty
+  - type: equals
+    path: compared
+    value: 0
+- id: novelty-identical-is-zero
+  title: A copy of a library image has no novelty
+  input:
+    op: novelty
+    image:
+      kind: box
+      bg: '#204060'
+      fg: '#f0c040'
+      box:
+      - 0.2
+      - 0.2
+      - 0.6
+      - 0.6
+    library:
+    - kind: box
+      bg: '#204060'
+      fg: '#f0c040'
+      box:
+      - 0.2
+      - 0.2
+      - 0.6
+      - 0.6
+  checks:
+  - type: approx
+    path: novelty
+    value: 0.0
+    tol: 0.01
+  - type: equals
+    path: nearest
+    value: lib0
+- id: novelty-different-is-high
+  title: A very different image is novel
+  input:
+    op: novelty
+    image:
+      kind: box
+      bg: '#204060'
+      fg: '#f0c040'
+      box:
+      - 0.1
+      - 0.1
+      - 0.4
+      - 0.4
+    library:
+    - kind: box
+      bg: '#c04020'
+      fg: '#20c0a0'
+      box:
+      - 0.6
+      - 0.6
+      - 0.9
+      - 0.9
+  checks:
+  - type: at_least
+    path: novelty
+    value: 0.4
+- id: novelty-uses-nearest
+  title: Novelty is measured against the nearest of several
+  input:
+    op: novelty
+    image:
+      kind: box
+      bg: '#204060'
+      fg: '#f0c040'
+      box:
+      - 0.1
+      - 0.1
+      - 0.4
+      - 0.4
+    library:
+    - kind: box
+      bg: '#c04020'
+      fg: '#20c0a0'
+      box:
+      - 0.6
+      - 0.6
+      - 0.9
+      - 0.9
+    - kind: box
+      bg: '#204060'
+      fg: '#f0c040'
+      box:
+      - 0.1
+      - 0.1
+      - 0.4
+      - 0.4
+  checks:
+  - type: equals
+    path: nearest
+    value: lib1
+  - type: at_most
+    path: novelty
+    value: 0.01
+- id: diversity-identical-pair
+  title: Two identical images have zero dissimilarity
+  input:
+    op: diversity
+    images:
+      a:
+        kind: solid
+        color: '#336699'
+      b:
+        kind: solid
+        color: '#336699'
+    order:
+    - a
+    - b
+  checks:
+  - type: approx
+    path: min_dissimilarity
+    value: 0.0
+    tol: 0.01
+  - type: equals
+    path: pairs
+    value: 1
+- id: diversity-distinct-set
+  title: Three different images are all well separated
+  input:
+    op: diversity
+    images:
+      a:
+        kind: box
+        bg: '#204060'
+        fg: '#f0c040'
+        box:
+        - 0.1
+        - 0.1
+        - 0.4
+        - 0.4
+      b:
+        kind: box
+        bg: '#c04020'
+        fg: '#20c0a0'
+        box:
+        - 0.6
+        - 0.6
+        - 0.9
+        - 0.9
+      c:
+        kind: box
+        bg: '#30a030'
+        fg: '#a030a0'
+        box:
+        - 0.1
+        - 0.6
+        - 0.4
+        - 0.9
+    order:
+    - a
+    - b
+    - c
+  checks:
+  - type: at_least
+    path: min_dissimilarity
+    value: 0.3
+  - type: equals
+    path: pairs
+    value: 3

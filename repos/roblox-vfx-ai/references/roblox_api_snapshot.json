@@ -1,0 +1,659 @@
+{
+ "classes": {
+  "Attachment": {
+   "inherits": [
+    "Instance"
+   ],
+   "methods": [
+    "GetAxis",
+    "GetConstraints",
+    "GetSecondaryAxis",
+    "SetAxis",
+    "SetSecondaryAxis"
+   ],
+   "properties": {
+    "Axis": {
+     "deprecated": false,
+     "summary": "Direction of the **X** axis of the attachment, represented as a unit `Datatype.Vector3`.",
+     "type": "Vector3"
+    },
+    "CFrame": {
+     "deprecated": false,
+     "summary": "`Datatype.CFrame` offset of the attachment.",
+     "type": "CFrame"
+    },
+    "Orientation": {
+     "deprecated": false,
+     "summary": "Orientation of the attachment relative to the orientation of its parent.",
+     "type": "Vector3"
+    },
+    "Position": {
+     "deprecated": false,
+     "summary": "Positional offset of the attachment, relative to the position and orientation of its parent.",
+     "type": "Vector3"
+    },
+    "Rotation": {
+     "deprecated": true,
+     "summary": "Rotation of the attachment relative to the rotation of its parent.",
+     "type": "Vector3"
+    },
+    "SecondaryAxis": {
+     "deprecated": false,
+     "summary": "Direction of the **Y** axis of the attachment, represented as a unit `Datatype.Vector3`.",
+     "type": "Vector3"
+    },
+    "Visible": {
+     "deprecated": false,
+     "summary": "Toggles the in-experience visibility of the attachment.",
+     "type": "boolean"
+    },
+    "WorldAxis": {
+     "deprecated": false,
+     "summary": "Direction of the **X** axis of the attachment relative to the world, represented as a unit `Datatype.Vector3` with a length of 1.",
+     "type": "Vector3"
+    },
+    "WorldCFrame": {
+     "deprecated": false,
+     "summary": "The exact `Datatype.CFrame` of the attachment in world space coordinates.",
+     "type": "CFrame"
+    },
+    "WorldOrientation": {
+     "deprecated": false,
+     "summary": "Orientation of the attachment relative to the world rather than its own parent.",
+     "type": "Vector3"
+    },
+    "WorldPosition": {
+     "deprecated": false,
+     "summary": "Position of the attachment relative to the world rather than its own parent.",
+     "type": "Vector3"
+    },
+    "WorldRotation": {
+     "deprecated": true,
+     "summary": "Rotation of the attachment relative to the world rather than its own parent.",
+     "type": "Vector3"
+    },
+    "WorldSecondaryAxis": {
+     "deprecated": false,
+     "summary": "Direction of the **Y** axis of the attachment relative to the world, represented as a unit `Datatype.Vector3` with a length of 1.",
+     "type": "Vector3"
+    }
+   }
+  },
+  "Beam": {
+   "inherits": [
+    "Instance"
+   ],
+   "methods": [
+    "SetTextureOffset"
+   ],
+   "properties": {
+    "Attachment0": {
+     "deprecated": false,
+     "summary": "The `Class.Attachment` the beam originates from.",
+     "type": "Attachment"
+    },
+    "Attachment1": {
+     "deprecated": false,
+     "summary": "The `Class.Attachment` the beam ends at.",
+     "type": "Attachment"
+    },
+    "Brightness": {
+     "deprecated": false,
+     "summary": "Scales the light emitted from the beam when `Class.Beam.LightInfluence|LightInfluence` is less than 1.",
+     "type": "float"
+    },
+    "Color": {
+     "deprecated": false,
+     "summary": "Determines the color of the beam across its `Class.Beam.Segments|Segments`.",
+     "type": "ColorSequence"
+    },
+    "CurveSize0": {
+     "deprecated": false,
+     "summary": "Determines, along with `Class.Beam.Attachment0|Attachment0`, the position of the second control point in the beam's B\u00e9zier curve.",
+     "type": "float"
+    },
+    "CurveSize1": {
+     "deprecated": false,
+     "summary": "Determines, along with `Class.Beam.Attachment1|Attachment1`, the position of the third control point in the beam's B\u00e9zier curve.",
+     "type": "float"
+    },
+    "Enabled": {
+     "deprecated": false,
+     "summary": "Determines whether the beam is visible or not.",
+     "type": "boolean"
+    },
+    "FaceCamera": {
+     "deprecated": false,
+     "summary": "Determines whether the `Class.Beam.Segments|Segments` of the beam will always face the camera, regardless of its orientation.",
+     "type": "boolean"
+    },
+    "LightEmission": {
+     "deprecated": false,
+     "summary": "Determines to what degree the colors of the beam are blended with the colors behind it.",
+     "type": "float"
+    },
+    "LightInfluence": {
+     "deprecated": false,
+     "summary": "Determines the degree to which the beam is influenced by the environment's lighting.",
+     "type": "float"
+    },
+    "LocalTransparencyModifier": {
+     "deprecated": false,
+     "summary": "Determines a multiplier for `Class.Beam.Transparency` that is only visible to the local client.",
+     "type": "float"
+    },
+    "Segments": {
+     "deprecated": false,
+     "summary": "Sets how many straight segments the beam is made up of.",
+     "type": "int"
+    },
+    "Texture": {
+     "deprecated": false,
+     "summary": "The content ID of the texture to be displayed on the beam.",
+     "type": "ContentId"
+    },
+    "TextureContent": {
+     "deprecated": false,
+     "summary": "The texture displayed on the beam. Supports [asset URIs](../../../projects/assets/index.md#asset-uris).",
+     "type": "Content"
+    },
+    "TextureLength": {
+     "deprecated": false,
+     "summary": "Sets the length of the beam's texture, dependent on `Class.Beam.TextureMode|TextureMode`.",
+     "type": "float"
+    },
+    "TextureMode": {
+     "deprecated": false,
+     "summary": "Determines the manner in which the `Class.Beam.Texture|Texture` scales and repeats.",
+     "type": "TextureMode"
+    },
+    "TextureSpeed": {
+     "deprecated": false,
+     "summary": "Determines the speed at which the `Class.Beam.Texture|Texture` image moves along the beam.",
+     "type": "float"
+    },
+    "Transparency": {
+     "deprecated": false,
+     "summary": "Determines the transparency of the beam across its segments.",
+     "type": "NumberSequence"
+    },
+    "Width0": {
+     "deprecated": false,
+     "summary": "The width of the beam at its origin (`Class.Beam.Attachment0|Attachment0`), in studs.",
+     "type": "float"
+    },
+    "Width1": {
+     "deprecated": false,
+     "summary": "The width of the beam at its end (`Class.Beam.Attachment1|Attachment1`), in studs.",
+     "type": "float"
+    },
+    "ZOffset": {
+     "deprecated": false,
+     "summary": "The distance, in studs, the beam display is offset relative to the `Class.Workspace.CurrentCamera|CurrentCamera`.",
+     "type": "float"
+    }
+   }
+  },
+  "Instance": {
+   "inherits": [
+    "Object"
+   ],
+   "methods": [
+    "AddTag",
+    "children",
+    "ClearAllChildren",
+    "Clone",
+    "clone",
+    "Destroy",
+    "destroy",
+    "FindFirstAncestor",
+    "FindFirstAncestorOfClass",
+    "FindFirstAncestorWhichIsA",
+    "FindFirstChild",
+    "findFirstChild",
+    "FindFirstChildOfClass",
+    "FindFirstChildWhichIsA",
+    "FindFirstDescendant",
+    "GetActor",
+    "GetAttribute",
+    "GetAttributeChangedSignal",
+    "GetAttributes",
+    "GetChildren",
+    "getChildren",
+    "GetDebugId",
+    "GetDescendants",
+    "GetFullName",
+    "GetStyled",
+    "GetStyledPropertyChangedSignal",
+    "GetTags",
+    "HasTag",
+    "IsAncestorOf",
+    "IsDescendantOf",
+    "isDescendantOf",
+    "IsPropertyModified",
+    "QueryDescendants",
+    "Remove",
+    "remove",
+    "RemoveTag",
+    "ResetPropertyToDefault",
+    "SetAttribute",
+    "WaitForChild"
+   ],
+   "properties": {
+    "Archivable": {
+     "deprecated": false,
+     "summary": "Determines if an `Class.Instance` and its descendants can be cloned using `Class.Instance:Clone()`, and can be saved/published.",
+     "type": "boolean"
+    },
+    "Name": {
+     "deprecated": false,
+     "summary": "A non-unique identifier of the `Class.Instance`.",
+     "type": "string"
+    },
+    "Parent": {
+     "deprecated": false,
+     "summary": "Determines the hierarchical parent of the `Class.Instance`.",
+     "type": "Instance"
+    }
+   }
+  },
+  "Light": {
+   "inherits": [
+    "Instance"
+   ],
+   "methods": [],
+   "properties": {
+    "Brightness": {
+     "deprecated": false,
+     "summary": "Sets how bright the emitted light is, defaults to 1.",
+     "type": "float"
+    },
+    "Color": {
+     "deprecated": false,
+     "summary": "The color of the emitted light.",
+     "type": "Color3"
+    },
+    "Enabled": {
+     "deprecated": false,
+     "summary": "If set to true, light will be emitted from the source object.",
+     "type": "boolean"
+    },
+    "Shadows": {
+     "deprecated": false,
+     "summary": "If set to true, will project shadows if light is blocked by an obstacle.",
+     "type": "boolean"
+    }
+   }
+  },
+  "ParticleEmitter": {
+   "inherits": [
+    "Instance"
+   ],
+   "methods": [
+    "Clear",
+    "Emit"
+   ],
+   "properties": {
+    "Acceleration": {
+     "deprecated": false,
+     "summary": "Determines the global-axis acceleration of all active particles, measured in studs per second squared.",
+     "type": "Vector3"
+    },
+    "Brightness": {
+     "deprecated": false,
+     "summary": "Scales the light emitted from the emitter when `Class.ParticleEmitter.LightInfluence` is 0.",
+     "type": "float"
+    },
+    "Color": {
+     "deprecated": false,
+     "summary": "Determines the color of all active particles over their individual lifetimes.",
+     "type": "ColorSequence"
+    },
+    "Drag": {
+     "deprecated": false,
+     "summary": "Determines the rate at which particles will lose half their speed through exponential decay.",
+     "type": "float"
+    },
+    "EmissionDirection": {
+     "deprecated": false,
+     "summary": "Determines the face of the object that particles emit from.",
+     "type": "NormalId"
+    },
+    "Enabled": {
+     "deprecated": false,
+     "summary": "Determines if particles emit from the emitter.",
+     "type": "boolean"
+    },
+    "FlipbookBlendFrames": {
+     "deprecated": false,
+     "summary": "Determines whether the flipbook frames are blended between.",
+     "type": "boolean"
+    },
+    "FlipbookFramerate": {
+     "deprecated": false,
+     "summary": "Determines how fast the flipbook texture animates in frames per second.",
+     "type": "NumberRange"
+    },
+    "FlipbookIncompatible": {
+     "deprecated": false,
+     "summary": "The error message to display if the `Class.ParticleEmitter.Texture|Texture` is incompatible for a flipbook.",
+     "type": "string"
+    },
+    "FlipbookLayout": {
+     "deprecated": false,
+     "summary": "Determines the layout of the flipbook texture. Must be None, Grid2x2, Grid4x4, Grid8x8 or Custom.",
+     "type": "ParticleFlipbookLayout"
+    },
+    "FlipbookMode": {
+     "deprecated": false,
+     "summary": "Determines the type of the flipbook animation. Must be Loop, OneShot, PingPong, or Random.",
+     "type": "ParticleFlipbookMode"
+    },
+    "FlipbookSizeX": {
+     "deprecated": false,
+     "summary": "Defines the number of horizontal frames in a custom flipbook layout.",
+     "type": "int"
+    },
+    "FlipbookSizeY": {
+     "deprecated": false,
+     "summary": "Defines the number of vertical frames in a custom flipbook layout.",
+     "type": "int"
+    },
+    "FlipbookStartRandom": {
+     "deprecated": false,
+     "summary": "Determines whether the animation starts at a random frame chosen per particle instead of always starting at frame zero.",
+     "type": "boolean"
+    },
+    "Lifetime": {
+     "deprecated": false,
+     "summary": "Defines a random range of ages for newly emitted particles.",
+     "type": "NumberRange"
+    },
+    "LightEmission": {
+     "deprecated": false,
+     "summary": "Determines how much particles' colors are blended with the colors behind them.",
+     "type": "float"
+    },
+    "LightInfluence": {
+     "deprecated": false,
+     "summary": "Determines how much particles are influenced by the environmental light.",
+     "type": "float"
+    },
+    "LocalTransparencyModifier": {
+     "deprecated": false,
+     "summary": "Determines a multiplier for `Class.ParticleEmitter.Transparency` that is only visible to the local client.",
+     "type": "float"
+    },
+    "LockedToPart": {
+     "deprecated": false,
+     "summary": "Determines whether the particles rigidly move with the part they're being emitted from.",
+     "type": "boolean"
+    },
+    "Orientation": {
+     "deprecated": false,
+     "summary": "Specifies how to orient particles.",
+     "type": "ParticleOrientation"
+    },
+    "Rate": {
+     "deprecated": false,
+     "summary": "Determines the number of particles emitted per second.",
+     "type": "float"
+    },
+    "RotSpeed": {
+     "deprecated": false,
+     "summary": "Determines the range of angular speeds of emitted particles, measured in degrees per second.",
+     "type": "NumberRange"
+    },
+    "Rotation": {
+     "deprecated": false,
+     "summary": "Determines the range of rotations in degrees for newly emitted particles.",
+     "type": "NumberRange"
+    },
+    "Shape": {
+     "deprecated": false,
+     "summary": "Sets the shape of the emitter to either a box, sphere, cylinder, or disc.",
+     "type": "ParticleEmitterShape"
+    },
+    "ShapeInOut": {
+     "deprecated": false,
+     "summary": "Sets whether particles emit outward only, inward only, or in both directions.",
+     "type": "ParticleEmitterShapeInOut"
+    },
+    "ShapePartial": {
+     "deprecated": false,
+     "summary": "Influences particle emission from cylinder, disc, sphere, and box shapes.",
+     "type": "float"
+    },
+    "ShapeStyle": {
+     "deprecated": false,
+     "summary": "Sets particle emission to either volumetric or surface-only emission.",
+     "type": "ParticleEmitterShapeStyle"
+    },
+    "Size": {
+     "deprecated": false,
+     "summary": "Determines the world size over individual particles' lifetimes.",
+     "type": "NumberSequence"
+    },
+    "Speed": {
+     "deprecated": false,
+     "summary": "Determines a random range of velocities (minimum to maximum) at which new particles will emit, measured in studs per second.",
+     "type": "NumberRange"
+    },
+    "SpreadAngle": {
+     "deprecated": false,
+     "summary": "Determines the angles at which particles may be randomly emit, measured in degrees.",
+     "type": "Vector2"
+    },
+    "Squash": {
+     "deprecated": false,
+     "summary": "Allows for non-uniform scaling of particles, curve-controlled over their lifetime.",
+     "type": "NumberSequence"
+    },
+    "Texture": {
+     "deprecated": false,
+     "summary": "Determines the image rendered on particles.",
+     "type": "ContentId"
+    },
+    "TextureContent": {
+     "deprecated": false,
+     "summary": "The image rendered on particles. Supports [asset URIs](../../../projects/assets/index.md#asset-uris).",
+     "type": "Content"
+    },
+    "TimeScale": {
+     "deprecated": false,
+     "summary": "Value between 0 and 1 that controls the speed of the particle effect.",
+     "type": "float"
+    },
+    "Transparency": {
+     "deprecated": false,
+     "summary": "Determines the transparency of particles over their individual lifetimes.",
+     "type": "NumberSequence"
+    },
+    "VelocityInheritance": {
+     "deprecated": false,
+     "summary": "Determines how much of the parent's velocity is inherited by particles when emitted.",
+     "type": "float"
+    },
+    "VelocitySpread": {
+     "deprecated": true,
+     "summary": "Determines how offset a particle can be fired from the local emitter direction of its parent.",
+     "type": "float"
+    },
+    "WindAffectsDrag": {
+     "deprecated": false,
+     "summary": "Whether emitted particles follow the `Class.Workspace.GlobalWind` vector.",
+     "type": "boolean"
+    },
+    "ZOffset": {
+     "deprecated": false,
+     "summary": "Determines the forward-backward render position of particles; used to control what particles render on top/bottom.",
+     "type": "float"
+    }
+   }
+  },
+  "PointLight": {
+   "inherits": [
+    "Light"
+   ],
+   "methods": [],
+   "properties": {
+    "Range": {
+     "deprecated": false,
+     "summary": "The size of the area that the PointLight will illuminate.",
+     "type": "float"
+    }
+   }
+  },
+  "Trail": {
+   "inherits": [
+    "Instance"
+   ],
+   "methods": [
+    "Clear"
+   ],
+   "properties": {
+    "Attachment0": {
+     "deprecated": false,
+     "summary": "Along with `Class.Trail.Attachment1|Attachment1`, determines where the trail will start drawing its segments.",
+     "type": "Attachment"
+    },
+    "Attachment1": {
+     "deprecated": false,
+     "summary": "Along with `Class.Trail.Attachment0|Attachment0`, determines where the trail will start drawing its segments.",
+     "type": "Attachment"
+    },
+    "Brightness": {
+     "deprecated": false,
+     "summary": "Scales the light emitted from the trail when `Class.Trail.LightInfluence|LightInfluence` is less than 1.",
+     "type": "float"
+    },
+    "Color": {
+     "deprecated": false,
+     "summary": "The color of the trail throughout its lifetime.",
+     "type": "ColorSequence"
+    },
+    "Enabled": {
+     "deprecated": false,
+     "summary": "Determines whether the trail will be drawn or not.",
+     "type": "boolean"
+    },
+    "FaceCamera": {
+     "deprecated": false,
+     "summary": "Determines whether the trail will always face the camera, regardless of its orientation.",
+     "type": "boolean"
+    },
+    "Lifetime": {
+     "deprecated": false,
+     "summary": "Determines how long each segment in a trail will last, in seconds.",
+     "type": "float"
+    },
+    "LightEmission": {
+     "deprecated": false,
+     "summary": "Determines to what degree the colors of the trail are blended with the colors behind it.",
+     "type": "float"
+    },
+    "LightInfluence": {
+     "deprecated": false,
+     "summary": "Determines the degree to which the trail is influenced by the environment's lighting.",
+     "type": "float"
+    },
+    "LocalTransparencyModifier": {
+     "deprecated": false,
+     "summary": "Determines a multiplier for `Class.Trail.Transparency` that is only visible to the local client.",
+     "type": "float"
+    },
+    "MaxLength": {
+     "deprecated": false,
+     "summary": "Sets the maximum length of the trail.",
+     "type": "float"
+    },
+    "MinLength": {
+     "deprecated": false,
+     "summary": "Sets the minimum length of the trail.",
+     "type": "float"
+    },
+    "Texture": {
+     "deprecated": false,
+     "summary": "The content ID of the texture to be displayed on the trail.",
+     "type": "ContentId"
+    },
+    "TextureContent": {
+     "deprecated": false,
+     "summary": "The texture displayed on the trail. Supports [asset URIs](../../../projects/assets/index.md#asset-uris).",
+     "type": "Content"
+    },
+    "TextureLength": {
+     "deprecated": false,
+     "summary": "Sets the length of the trail's texture, dependent on `Class.Trail.TextureMode|TextureMode`.",
+     "type": "float"
+    },
+    "TextureMode": {
+     "deprecated": false,
+     "summary": "Determines the manner in which the `Class.Trail.Texture|Texture` scales, repeats, and moves along with the trail's attachments.",
+     "type": "TextureMode"
+    },
+    "Transparency": {
+     "deprecated": false,
+     "summary": "Sets the transparency of the trail's segments over its `Class.Trail.Lifetime|Lifetime`.",
+     "type": "NumberSequence"
+    },
+    "WidthScale": {
+     "deprecated": false,
+     "summary": "Scales the width of the trail over the course of its lifetime.",
+     "type": "NumberSequence"
+    }
+   }
+  }
+ },
+ "enums": {
+  "NormalId": [
+   "Right",
+   "Top",
+   "Back",
+   "Left",
+   "Bottom",
+   "Front"
+  ],
+  "ParticleEmitterShape": [
+   "Box",
+   "Sphere",
+   "Cylinder",
+   "Disc"
+  ],
+  "ParticleEmitterShapeInOut": [
+   "Outward",
+   "Inward",
+   "InAndOut"
+  ],
+  "ParticleEmitterShapeStyle": [
+   "Volume",
+   "Surface"
+  ],
+  "ParticleFlipbookLayout": [
+   "None",
+   "Grid2x2",
+   "Grid4x4",
+   "Grid8x8",
+   "Custom"
+  ],
+  "ParticleFlipbookMode": [
+   "Loop",
+   "OneShot",
+   "PingPong",
+   "Random"
+  ],
+  "ParticleOrientation": [
+   "FacingCamera",
+   "FacingCameraWorldUp",
+   "VelocityParallel",
+   "VelocityPerpendicular"
+  ],
+  "TextureMode": [
+   "Stretch",
+   "Wrap",
+   "Static"
+  ]
+ },
+ "generated_at": "2026-10-06T02:49:53+00:00",
+ "source": "https://github.com/Roblox/creator-docs (content/en-us/reference/engine, branch main)"
+}

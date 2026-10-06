@@ -1,0 +1,82 @@
+- id: build-all-defaults-arcane
+  input: {op: build, recipe_id: arcane_burst}
+  checks: [{type: equals, path: built, value: true}, {type: list_contains, path: instances, items: [sparks, flash]}]
+- id: build-all-defaults-ember
+  input: {op: build, recipe_id: ember_aura}
+  checks: [{type: equals, path: built, value: true}, {type: equals, path: kind, value: aura}]
+- id: build-all-defaults-beam
+  input: {op: build, recipe_id: energy_beam}
+  checks: [{type: equals, path: built, value: true}]
+- id: build-all-defaults-trail
+  input: {op: build, recipe_id: sprint_trail}
+  checks: [{type: equals, path: built, value: true}]
+- id: reject-unknown-property
+  title: A hallucinated property name never reaches Studio
+  input: {op: build, recipe_id: arcane_burst, mutations: [{op: set_property, instance: sparks, property: Glowiness, value: 1}]}
+  checks: [{type: equals, path: built, value: false}, {type: error_contains, text: "no property 'Glowiness'"}]
+- id: reject-wrong-value-type
+  input: {op: build, recipe_id: arcane_burst, mutations: [{op: set_property, instance: sparks, property: Drag, value: fast}]}
+  checks: [{type: error_contains, text: expected a number}]
+- id: reject-bad-enum-member
+  input: {op: build, recipe_id: ember_aura, mutations: [{op: set_property, instance: embers, property: Shape, value: Triangle}]}
+  checks: [{type: error_contains, text: not a member of Enum.ParticleEmitterShape}]
+- id: accept-good-enum-member
+  input: {op: build, recipe_id: ember_aura, mutations: [{op: set_property, instance: embers, property: Shape, value: Sphere}]}
+  checks: [{type: equals, path: built, value: true}]
+- id: reject-sequence-not-starting-at-zero
+  input: {op: build, recipe_id: arcane_burst, mutations: [{op: set_property, instance: sparks, property: Transparency, value: {sequence: [[0.1, 1], [1, 1]]}}]}
+  checks: [{type: error_contains, text: sequence_bounds}]
+- id: reject-sequence-out-of-order
+  input: {op: build, recipe_id: arcane_burst, mutations: [{op: set_property, instance: sparks, property: Transparency, value: {sequence: [[0, 1], [0.6, 0.5], [0.4, 0.2], [1, 1]]}}]}
+  checks: [{type: error_contains, text: sequence_order}]
+- id: reject-transparency-above-one
+  input: {op: build, recipe_id: arcane_burst, mutations: [{op: set_property, instance: sparks, property: Transparency, value: {sequence: [[0, 1], [1, 1.5]]}}]}
+  checks: [{type: error_contains, text: out_of_range}]
+- id: reject-range-min-above-max
+  input: {op: build, recipe_id: arcane_burst, mutations: [{op: set_property, instance: sparks, property: Lifetime, value: [2, 1]}]}
+  checks: [{type: error_contains, text: range_order}]
+- id: reject-untrusted-texture-url
+  input: {op: build, recipe_id: arcane_burst, params: {texture: "http://evil.example/x.png"}}
+  checks: [{type: error_contains, text: bad_texture}]
+- id: accept-rbxassetid-texture
+  input: {op: build, recipe_id: arcane_burst, params: {texture: "rbxassetid://1234567"}}
+  checks: [{type: equals, path: built, value: true}]
+- id: reject-class-not-allowed
+  title: Only effect classes may be created
+  input: {op: build, recipe_id: arcane_burst, mutations: [{op: add_instance, instance: {id: danger, class: Script, parent: root, properties: {}}}]}
+  checks: [{type: error_contains, text: class_not_allowed}]
+- id: reject-unknown-parent
+  input: {op: build, recipe_id: arcane_burst, mutations: [{op: set_field, instance: flash, field: parent, value: nowhere}]}
+  checks: [{type: error_contains, text: unknown_parent}]
+- id: reject-duplicate-sibling-names
+  input: {op: build, recipe_id: arcane_burst, mutations: [{op: set_field, instance: flash, field: name, value: sparks}]}
+  checks: [{type: error_contains, text: duplicate_name}]
+- id: reject-beam-without-second-attachment
+  input: {op: build, recipe_id: energy_beam, mutations: [{op: remove_property, instance: beam, property: Attachment1}]}
+  checks: [{type: error_contains, text: missing_attachment}]
+- id: reject-beam-same-attachment
+  input: {op: build, recipe_id: energy_beam, mutations: [{op: set_property, instance: beam, property: Attachment1, value: start_point}]}
+  checks: [{type: error_contains, text: same_attachment}]
+- id: reject-emit-on-non-emitter
+  input: {op: build, recipe_id: energy_beam, mutations: [{op: set_emit, instance: beam, value: 5}]}
+  checks: [{type: error_contains, text: bad_emit}]
+- id: reject-attachments-without-part-mount
+  input: {op: build, recipe_id: energy_beam, mutations: [{op: set_top, field: mount, value: attachment}]}
+  checks: [{type: error_contains, text: attachment_mount}]
+- id: reject-bad-effect-name
+  input: {op: build, recipe_id: arcane_burst, name: "Bad Name"}
+  checks: [{type: error_contains, text: bad_name}]
+- id: reject-parameter-out-of-range
+  input: {op: build, recipe_id: arcane_burst, params: {size: 99}}
+  checks: [{type: error_contains, text: above maximum}]
+- id: reject-unknown-parameter
+  input: {op: build, recipe_id: arcane_burst, params: {sparkle: 1}}
+  checks: [{type: error_contains, text: unknown parameter}]
+- id: reject-effect-with-nothing-visible
+  title: An effect must contain a ParticleEmitter, Beam or Trail
+  input: {op: build, recipe_id: ember_aura, mutations: [{op: remove_instance, instance: embers}, {op: remove_instance, instance: haze}]}
+  checks: [{type: equals, path: built, value: false}, {type: error_contains, text: nothing_visible}]
+- id: reject-spread-angle-out-of-range
+  title: Vector2 properties are range-checked too (SpreadAngle is 0-180)
+  input: {op: build, recipe_id: arcane_burst, mutations: [{op: set_property, instance: sparks, property: SpreadAngle, value: [200, 10]}]}
+  checks: [{type: error_contains, text: out_of_range}]

@@ -1,0 +1,20 @@
+- id: rubric-good-material-has-no-auto-failures
+  input: {op: rubric, variant: good}
+  checks:
+    - {type: equals, path: failed_criteria, value: []}
+    - {type: equals, path: rubric.complete, value: false}   # subjective criteria stay unscored until someone looks
+- id: rubric-catches-visible-seam
+  input: {op: rubric, variant: seam}
+  checks: [{type: failed_criteria_include, ids: [tileable]}]
+- id: rubric-catches-wrong-palette
+  input: {op: rubric, variant: wrong_palette}
+  checks: [{type: failed_criteria_include, ids: [palette_match]}, {type: failed_criteria_exclude, ids: [tileable]}]
+- id: rubric-catches-noise
+  input: {op: rubric, variant: noisy}
+  checks: [{type: failed_criteria_include, ids: [detail_level]}]
+- id: rubric-catches-broken-normal-map
+  input: {op: rubric, variant: bad_normal}
+  checks: [{type: failed_criteria_include, ids: [normal_valid]}]
+- id: rubric-catches-missing-map
+  input: {op: rubric, variant: missing_normal}
+  checks: [{type: failed_criteria_include, ids: [maps_present]}]

@@ -1,0 +1,14 @@
+{
+  "mcpServers": {
+    "concept-art-ai": {
+      "command": "python",
+      "args": [
+        "-m",
+        "conceptai.server"
+      ],
+      "env": {
+        "CONCEPTAI_ROOT": "/ABSOLUTE/PATH/TO/concept-art-ai"
+      }
+    }
+  }
+}

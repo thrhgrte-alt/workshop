@@ -1,0 +1,5 @@
+id: fx_type_mismatch
+parameters: {}
+nodes: [{id: col, node: uniform}, {id: nrm, node: normal}]
+connections: [{from: col.output, to: nrm.input1}]
+outputs: [{usage: normal, from: nrm.output}]

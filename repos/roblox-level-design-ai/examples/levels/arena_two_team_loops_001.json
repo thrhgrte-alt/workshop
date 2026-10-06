@@ -1,0 +1,290 @@
+{
+ "bounds": {
+  "ceiling": 16,
+  "depth": 96,
+  "width": 96
+ },
+ "connections": [
+  {
+   "at": 8.0,
+   "from": "r00",
+   "id": "ring_01",
+   "to": "r01"
+  },
+  {
+   "at": 24.0,
+   "from": "r01",
+   "id": "ring_02",
+   "to": "r02"
+  },
+  {
+   "at": 72.0,
+   "from": "r02",
+   "id": "ring_03",
+   "to": "r12"
+  },
+  {
+   "at": 88.0,
+   "from": "r12",
+   "id": "ring_04",
+   "to": "r22"
+  },
+  {
+   "at": 88.0,
+   "from": "r22",
+   "id": "ring_05",
+   "to": "r21"
+  },
+  {
+   "at": 72.0,
+   "from": "r21",
+   "id": "ring_06",
+   "to": "r20"
+  },
+  {
+   "at": 24.0,
+   "from": "r20",
+   "id": "ring_07",
+   "to": "r10"
+  },
+  {
+   "at": 8.0,
+   "from": "r10",
+   "id": "ring_08",
+   "to": "r00"
+  },
+  {
+   "at": 40.0,
+   "from": "r11",
+   "id": "spoke_n",
+   "to": "r01"
+  },
+  {
+   "at": 40.0,
+   "from": "r11",
+   "id": "spoke_e",
+   "to": "r12"
+  },
+  {
+   "at": 56.0,
+   "from": "r11",
+   "id": "spoke_s",
+   "to": "r21"
+  },
+  {
+   "at": 56.0,
+   "from": "r11",
+   "id": "spoke_w",
+   "to": "r10"
+  }
+ ],
+ "encounters": [
+  {
+   "id": "centre",
+   "intensity": 5,
+   "room": "r11"
+  },
+  {
+   "id": "flank_n",
+   "intensity": 3,
+   "room": "r01"
+  },
+  {
+   "id": "flank_s",
+   "intensity": 3,
+   "room": "r21"
+  },
+  {
+   "id": "flank_e",
+   "intensity": 3,
+   "room": "r12"
+  },
+  {
+   "id": "flank_w",
+   "intensity": 3,
+   "room": "r10"
+  }
+ ],
+ "id": "arena_two_team_loops_001",
+ "landmarks": [
+  {
+   "at": [
+    48.0,
+    54.0
+   ],
+   "height": 40,
+   "id": "beacon",
+   "tags": [
+    "central"
+   ]
+  },
+  {
+   "at": [
+    80.0,
+    16.0
+   ],
+   "height": 28,
+   "id": "obelisk_a",
+   "tags": [
+    "corner"
+   ]
+  },
+  {
+   "at": [
+    16.0,
+    80.0
+   ],
+   "height": 28,
+   "id": "obelisk_b",
+   "tags": [
+    "corner"
+   ]
+  }
+ ],
+ "objectives": [
+  {
+   "at": [
+    48.0,
+    48.0
+   ],
+   "id": "core",
+   "kind": "capture"
+  }
+ ],
+ "profile": "arena",
+ "purpose": "Two-team arena with a ring route and central objective",
+ "rooms": [
+  {
+   "height": 16,
+   "id": "r00",
+   "rect": [
+    0,
+    0,
+    32,
+    32
+   ],
+   "tags": [
+    "spawn"
+   ]
+  },
+  {
+   "height": 16,
+   "id": "r01",
+   "rect": [
+    32,
+    0,
+    32,
+    32
+   ]
+  },
+  {
+   "height": 16,
+   "id": "r02",
+   "rect": [
+    64,
+    0,
+    32,
+    32
+   ],
+   "tags": [
+    "loot"
+   ]
+  },
+  {
+   "height": 16,
+   "id": "r10",
+   "rect": [
+    0,
+    32,
+    32,
+    32
+   ]
+  },
+  {
+   "height": 16,
+   "id": "r11",
+   "rect": [
+    32,
+    32,
+    32,
+    32
+   ],
+   "tags": [
+    "objective"
+   ]
+  },
+  {
+   "height": 16,
+   "id": "r12",
+   "rect": [
+    64,
+    32,
+    32,
+    32
+   ]
+  },
+  {
+   "height": 16,
+   "id": "r20",
+   "rect": [
+    0,
+    64,
+    32,
+    32
+   ],
+   "tags": [
+    "loot"
+   ]
+  },
+  {
+   "height": 16,
+   "id": "r21",
+   "rect": [
+    32,
+    64,
+    32,
+    32
+   ]
+  },
+  {
+   "height": 16,
+   "id": "r22",
+   "rect": [
+    64,
+    64,
+    32,
+    32
+   ],
+   "tags": [
+    "spawn"
+   ]
+  }
+ ],
+ "spawns": [
+  {
+   "at": [
+    16.0,
+    16.0
+   ],
+   "id": "spawn_a",
+   "team": "a"
+  },
+  {
+   "at": [
+    80.0,
+    80.0
+   ],
+   "id": "spawn_b",
+   "team": "b"
+  }
+ ],
+ "template": {
+  "id": "loop_arena",
+  "parameters": {
+   "cell_d": 32,
+   "cell_w": 32,
+   "room_h": 16
+  }
+ },
+ "title": "Loop arena"
+}

@@ -1,0 +1,255 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Reference asset manifest entry",
+  "type": "object",
+  "required": [
+    "id",
+    "kind",
+    "title",
+    "path",
+    "license",
+    "status"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9._-]{2,63}$"
+    },
+    "kind": {
+      "enum": [
+        "material",
+        "graph_recipe",
+        "reference_image"
+      ]
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1
+    },
+    "description": {
+      "type": "string"
+    },
+    "path": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Local path (absolute, or relative to <PREFIX>_ASSET_ROOT / repo) or remote URI."
+    },
+    "preview": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "source_file": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "description": "Related scene, graph, script or project file."
+    },
+    "application": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "version": {
+          "type": "string"
+        }
+      }
+    },
+    "project": {
+      "type": "string"
+    },
+    "license": {
+      "type": "object",
+      "required": [
+        "owner"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "owner": {
+          "enum": [
+            "user",
+            "user-approved",
+            "third-party",
+            "unknown"
+          ]
+        },
+        "spdx": {
+          "type": "string"
+        },
+        "notes": {
+          "type": "string"
+        }
+      }
+    },
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "creator": {
+          "type": "string"
+        },
+        "source_url": {
+          "type": "string"
+        },
+        "added_at": {
+          "type": "string"
+        },
+        "origin": {
+          "enum": [
+            "user-made",
+            "user-supplied",
+            "ai-generated",
+            "third-party",
+            "synthetic-example"
+          ]
+        },
+        "run_id": {
+          "type": "string"
+        }
+      }
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
+    },
+    "style": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "traits": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "palette": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^#[0-9a-fA-F]{6}$"
+          }
+        },
+        "shape_language": {
+          "type": "string"
+        },
+        "detail_density": {
+          "enum": [
+            "low",
+            "medium",
+            "high"
+          ]
+        },
+        "composition": {
+          "type": "string"
+        },
+        "intended_use": {
+          "type": "string"
+        }
+      }
+    },
+    "rating": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "minimum": 0,
+      "maximum": 5
+    },
+    "status": {
+      "enum": [
+        "candidate",
+        "curated",
+        "rejected"
+      ]
+    },
+    "polarity": {
+      "enum": [
+        "positive",
+        "negative"
+      ],
+      "default": "positive"
+    },
+    "correction_notes": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "related": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "embedding": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "provider": {
+          "type": "string"
+        },
+        "model": {
+          "type": "string"
+        }
+      }
+    },
+    "domain": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "material_type": {
+          "type": "string",
+          "description": "e.g. stone, wood, ground, metal, fabric"
+        },
+        "recipe": {
+          "type": "string",
+          "description": "Recipe id in recipes/ that builds this, if any"
+        },
+        "graph_summary": {
+          "type": "object",
+          "description": "Filled from sbsinfo.summarize_sbs(): node count, atomic filters and library instances used"
+        },
+        "outputs": {
+          "type": "array",
+          "items": {
+            "enum": [
+              "baseColor",
+              "normal",
+              "roughness",
+              "metallic",
+              "height",
+              "ambientOcclusion",
+              "opacity",
+              "emissive"
+            ]
+          }
+        },
+        "tileable": {
+          "type": "boolean"
+        },
+        "resolution": {
+          "type": "integer",
+          "minimum": 16
+        },
+        "exposed_parameters": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "measurements": {
+          "type": "object",
+          "description": "Optional image metrics from compare_material_to_rubric"
+        }
+      }
+    }
+  }
+}
