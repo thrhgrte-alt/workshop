@@ -6,7 +6,7 @@ Structured decisions are stored **locally** in `workspace/feedback/` (git-ignore
   used, output paths, preview.
 - `decisions.jsonl` - the user's verdict (`accept`/`reject`/`revise`), reason, and structured corrections.
 
-`schema.json` documents both record shapes. The implementation is `econbal/core/feedback.py`.
+`schema.json` documents both record shapes. The implementation is `guide_core/feedback.py` in the `guide-core` library (rows now also carry `"schema": 1`; a derived `index.sqlite` sits next to the JSONL files once there is feedback).
 
 Nothing is learned automatically. Feedback changes future behaviour in three explicit ways:
 

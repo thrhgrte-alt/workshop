@@ -189,7 +189,7 @@ def validate(raw: Any) -> list[dict]:
         for i, item in enumerate(s[sec]):
             iid = item.get("id")
             where = f"{sec}.{iid if isinstance(iid, str) else i}"
-            if not isinstance(iid, str) or not ID_RE.match(iid):
+            if not isinstance(iid, str) or not ID_RE.fullmatch(iid):
                 out.append(_f("error", "bad_id", f"{sec}.{i}", f"id {iid!r} must match {ID_RE.pattern} (letters, digits, underscore)"))
                 continue
             if (sec, iid) in seen:
@@ -197,7 +197,7 @@ def validate(raw: Any) -> list[dict]:
             seen[(sec, iid)] = where
     for sec in MAP_SECTIONS:
         for iid in s[sec]:
-            if not (isinstance(iid, str) and ID_RE.match(iid)):
+            if not (isinstance(iid, str) and ID_RE.fullmatch(iid)):
                 out.append(_f("error", "bad_id", f"{sec}.{iid}", f"id {iid!r} must match {ID_RE.pattern}"))
     if any(f["severity"] == "error" for f in out):
         return out
@@ -282,7 +282,7 @@ def validate(raw: Any) -> list[dict]:
     for up in s["upgrades"]:
         w = f"upgrades.{up['id']}"
         keys_check("upgrades", w, up)
-        if not (isinstance(up.get("track"), str) and ID_RE.match(up["track"])):
+        if not (isinstance(up.get("track"), str) and ID_RE.fullmatch(up["track"])):
             out.append(_f("error", "bad_id", f"{w}.track", f"track {up.get('track')!r} must match {ID_RE.pattern}"))
         if num(f"{w}.tier", up.get("tier"), lo=1, integer=True) and isinstance(up.get("track"), str):
             tracks.setdefault(up["track"], {}).setdefault(int(up["tier"]), []).append(up["id"])

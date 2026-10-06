@@ -1,64 +1,57 @@
 """The ONE module through which this package reaches shared machinery (a test greps the package to enforce it).
 
-``guide-core`` was not available when this repository was built, so this adapter re-exports the equivalents from the vendored ``econbal.core``
-(a copy of the suite kit) under the interface names the build instructions list. Swapping in the real ``guide-core`` means editing THIS FILE only.
+Shared machinery comes from the installed ``guide-core`` library (``pip install -e /path/to/guide-core`` first; this package depends on it). This adapter exposes it under the
+interface names the build instructions list, so a guide-core change touches THIS FILE only.
 
-    dryrun       Plan, Versioner                        (dry-run plan objects and copy-on-write versions)
-    feedback     runs, decisions, corrections, promotion
-    retrieval    hybrid search and BM25
-    evals        task loading, runner, compare
-    mock         the Luau DataModel mock (lupa)         (no equivalent in the vendored core: domain/mock_luau.py)
-    luau_safety  lint for generated Luau                (no equivalent in the vendored core: domain/luau.py)
-    mcpkit       ToolSpec, build_server, call_local, serve
+    dryrun       guide_core.dryrun      Plan, Versioner, run_plan (dry-run plan objects, copy-on-write versions, explicit apply)
+    feedback     guide_core.feedback    runs, decisions, corrections, promotion
+    retrieval    guide_core.retrieval   hybrid search and BM25
+    evals        guide_core.evals       task loading, runner, compare
+    mock         the Luau DataModel mock (lupa)         (domain/mock_luau.py: this repository's own copy; guide_core.mock is the shared one)
+    luau_safety  lint for generated Luau                (domain/luau.py: this repository's own copy; guide_core.luau_safety is the shared one)
+    mcpkit       guide_core.mcpkit      ToolSpec, build_server, call_local, serve, filter_groups
     config       style loading and range checks, rubric
-    scope        path allow-list, safe names, Project, and per-place scoping (``scoped_project``)
+    scope        guide_core.scope       path allow-list, safe names, Project, and per-place scoping (``scoped_project``)
+    params, promote, skillgen           the learning layer (see econbal/learning_params.py)
 
-Two things the vendored core does not do, handled here so ``core/`` stays untouched:
+Two things are handled here on top of guide-core:
 
-* scoping: ``scoped_project`` returns a Project whose private workspace (feedback, versions, output, library) lives under
+* tool list: ``all_tools`` lets a domain tool replace a common tool of the same name (the scoped feedback tools), drops the unscoped ``search_library``, and honours
+  ``ECONBAL_DISABLE_GROUPS=rare`` (via ``guide_core.mcpkit.filter_groups``) to leave out tools whose description starts with ``[rare]``. It is installed into ``cli`` at import so
+  ``serve`` and ``call`` use it.
+* per-place workspaces: ``scope.scoped_project`` (guide-core) returns a Project whose private workspace (feedback, versions, output, library) lives under
   ``workspace/projects/<project_id>/<place_id>/``; the pseudo place ``_global/_global`` holds records the user marks ``global``.
-* tool list: ``all_tools`` lets a domain tool replace a common tool of the same name (the scoped feedback tools), drops the unscoped
-  ``search_library``, and honours ``ECONBAL_DISABLE_GROUPS=rare`` to leave out tools whose description starts with ``[rare]``.
-  It is installed into ``core.cli`` at import so ``serve`` and ``call`` use it.
+
+Not yet shared: this repository still carries its own Luau lint (``domain/luau.py``) and mock DataModel (``domain/mock_luau.py``); ``guide_core.luau_safety`` and
+``guide_core.mock`` are supersets extracted from them. Replacing the local copies is a follow-up that touches ``domain/``, outside this migration.
 """
 
 from __future__ import annotations
 
-import dataclasses
 import importlib
 from types import SimpleNamespace
 from typing import Any
 
-from .core import agentfiles, cli, commontools, evals, feedback, manifest, mcpkit, retrieval, rubric, safety, style as _style
-from .core.cli import DomainHooks, emit
-from .core.mcpkit import ToolSpec, call_local
-from .core.project import Project
+from guide_core import agentfiles, cli, commontools, evals, feedback, manifest, mcpkit, retrieval, rubric
+from guide_core import dryrun as dryrun  # noqa: F401
+from guide_core import params as params  # noqa: F401
+from guide_core import promote as promote  # noqa: F401
+from guide_core import scope as _scope
+from guide_core import skillgen as skillgen  # noqa: F401
+from guide_core import style as _style
+from guide_core.cli import DomainHooks, emit
+from guide_core.mcpkit import ToolSpec, call_local
+from guide_core.project import Project
 
-GLOBAL = "_global"
+GLOBAL = _scope.GLOBAL
 UNSCOPED_COMMON = {"search_library"}
 
-dryrun = SimpleNamespace(Plan=safety.Plan, Versioner=safety.Versioner)
 config = SimpleNamespace(load_style=_style.load_style, style_brief=_style.style_brief, check_ranges=_style.check_ranges, validate_style=_style.validate_style,
                          load_rubric=rubric.load_rubric, score_rubric=rubric.score_rubric)
 
-
-class ScopedProject(Project):
-    """A Project whose private workspace is one place's folder."""
-
-    @property
-    def workspace(self):
-        return Project.workspace.fget(self) / "projects" / self.scope_project / self.scope_place
-
-
-def scoped_project(project: Project, project_id: str, place_id: str) -> Project:
-    sp = ScopedProject(**{f.name: getattr(project, f.name) for f in dataclasses.fields(Project)})
-    keep = lambda v: v if v == GLOBAL else safety.safe_name(v)  # '_global' starts with an underscore that safe_name would strip, and a user project may be called 'global'
-    object.__setattr__(sp, "scope_project", keep(project_id))
-    object.__setattr__(sp, "scope_place", keep(place_id))
-    return sp
-
-
-scope = SimpleNamespace(resolve_inside=safety.resolve_inside, safe_name=safety.safe_name, Project=Project, scoped_project=scoped_project, GLOBAL=GLOBAL)
+scoped_project = _scope.scoped_project
+scope = SimpleNamespace(resolve_inside=_scope.resolve_inside, safe_name=_scope.safe_name, Project=Project, scoped_project=scoped_project, GLOBAL=GLOBAL,
+                        Scope=_scope.Scope, ScopeError=_scope.ScopeError)
 
 
 def __getattr__(name: str) -> Any:  # lazy, so importing the adapter never imports domain modules that import the adapter
@@ -74,11 +67,7 @@ def all_tools(project: Project, hooks: DomainHooks) -> list[ToolSpec]:
     domain = hooks.tools(project)
     names = {t.name for t in domain}
     common = [t for t in commontools.common_tools(project, dims) if t.name not in names and t.name not in UNSCOPED_COMMON]
-    tools = common + domain
-    disabled = {g.strip() for g in (project.env("DISABLE_GROUPS") or "").split(",") if g.strip()}
-    if disabled:
-        tools = [t for t in tools if not any(t.description.startswith(f"[{g}]") for g in disabled)]
-    return tools
+    return mcpkit.filter_groups(project, common + domain)
 
 
-cli.all_tools = all_tools  # core.cli.run() looks this name up at call time
+cli.all_tools = all_tools  # guide_core.cli.run() looks this name up at call time

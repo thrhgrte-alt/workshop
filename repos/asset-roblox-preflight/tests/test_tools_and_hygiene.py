@@ -14,7 +14,7 @@ from mcp.shared.memory import create_connected_server_and_client_session
 
 from preflight import hooks as hooks_mod
 from preflight.guide_adapter import LibraryStore, all_tools, base_schema, build_server, call_local, config, evals, run
-from preflight.core import agentfiles
+from guide_core import agentfiles
 
 ROOT = Path(__file__).resolve().parents[1]
 SB = "synthetic-sandbox"
@@ -250,7 +250,7 @@ def test_shared_machinery_is_imported_only_through_guide_adapter():
                 mods = [("." * node.level) + (node.module or "")] + [("." * node.level) + (node.module or "") + "." + a.name for a in node.names]
             elif isinstance(node, ast.Import):
                 mods = [a.name for a in node.names]
-            if any(re.search(r"(^|\.)core(\.|$)", m) for m in mods):
+            if any(re.search(r"(^|\.)core(\.|$)", m) or m.split(".")[0] == "guide_core" for m in mods):
                 offenders.append(f"{p.relative_to(ROOT)}: {mods}")
     assert not offenders, offenders
     assert "guide_adapter" in (ROOT / "README.md").read_text() and "guide-core was not available" in (ROOT / "README.md").read_text()
@@ -264,14 +264,6 @@ def test_adapter_exposes_the_guide_core_names():
     assert ga.dryrun.Plan and ga.dryrun.Versioner and ga.scope.resolve_inside and ga.config.load_style
     with pytest.raises(NotImplementedError):
         ga.mock.unavailable()
-
-
-def test_vendored_core_matches_the_suite_kit():
-    kit = ROOT.parent.parent / "suite" / "kit" / "core"
-    if not kit.is_dir():
-        pytest.skip("suite kit not available")
-    r = subprocess.run(["diff", "-r", "-q", "-x", "__pycache__", str(kit), str(ROOT / "preflight" / "core")], capture_output=True, text=True)
-    assert r.returncode == 0, r.stdout
 
 
 def test_package_never_reaches_a_network_or_runs_programs():

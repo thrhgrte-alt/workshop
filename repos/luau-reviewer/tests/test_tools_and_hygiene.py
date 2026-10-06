@@ -13,10 +13,10 @@ from mcp.shared.memory import create_connected_server_and_client_session
 
 from luaurev import hooks as hooks_mod
 from luaurev import server as server_mod
-from luaurev.core import agentfiles, evals
-from luaurev.core.cli import all_tools, run
-from luaurev.core.mcpkit import build_server, call_local
-from luaurev.core.style import load_style, validate_style
+from guide_core import agentfiles, evals
+from guide_core.cli import all_tools, run
+from guide_core.mcpkit import build_server, call_local
+from guide_core.style import load_style, validate_style
 from luaurev.domain import detectors
 from luaurev.domain.review import get_rules
 from luaurev.tools import RARE_TOOLS
@@ -407,7 +407,7 @@ def test_cli_review_and_exit_codes(project, capsys):
 # ---------------------------------------------------------------- hygiene
 def test_shared_machinery_is_imported_only_through_the_guide_adapter():
     offenders = []
-    pat = re.compile(r"^\s*(from\s+\.+(?:luaurev\.)?core\b|import\s+luaurev\.core|from\s+luaurev\.core|from\s+\.+\s+import\s+core\b)", re.M)
+    pat = re.compile(r"^\s*(from\s+\.+(?:luaurev\.)?core\b|import\s+luaurev\.core|from\s+luaurev\.core|from\s+\.+\s+import\s+core\b|from\s+guide_core\b|import\s+guide_core\b)", re.M)
     for f in (ROOT / "luaurev").rglob("*.py"):
         rel = f.relative_to(ROOT / "luaurev")
         if rel.parts[0] == "core" or rel.name == "guide_adapter.py":
@@ -419,12 +419,12 @@ def test_shared_machinery_is_imported_only_through_the_guide_adapter():
 
     for name in ("dryrun", "feedback", "retrieval", "evals", "mock", "luau_safety", "mcpkit", "config", "scope"):
         assert hasattr(g, name), name
-    assert g.mock is None and g.luau_safety is None  # the vendored core has neither; documented in the adapter and README
+    assert g.mock is None and g.luau_safety is None  # this repo needs neither; documented in the adapter and README
 
 
 def test_library_style_skills_schema(project):
     from luaurev import KINDS
-    from luaurev.core.manifest import LibraryStore, base_schema
+    from guide_core.manifest import LibraryStore, base_schema
     from luaurev.domain.schema import DOMAIN_SCHEMA
 
     assert LibraryStore(project).validate_all(check_files=True)["ok"]

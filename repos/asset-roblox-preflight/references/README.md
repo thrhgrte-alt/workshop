@@ -7,7 +7,7 @@
 | Source | Used for |
 |---|---|
 | The task brief (`roblox-repo-build-instructions.md`, repo 1 and the shared rules) | Scope, tool names, checks, output format, the spin setup |
-| The sibling repositories in this workshop (`concept-art-ai`, `modular-set-dressing-ai`) and the vendored `preflight/core` | The repository pattern, shared CLI/MCP/eval machinery |
+| The sibling repositories in this workshop (`concept-art-ai`, `modular-set-dressing-ai`) and the shared kit (then vendored in `preflight/core`, now the installed `guide-core` library) | The repository pattern, shared CLI/MCP/eval machinery |
 
 ## Formats implemented from memory, not from a re-read of the specification
 

@@ -8,7 +8,7 @@ build instructions and general knowledge and are **unverified**. Do not invent U
 | Source | Used for |
 |---|---|
 | `roblox-repo-build-instructions.md` (the user's build brief, both versions) | requirements, tool names, shared rules 1-13, per-place scoping, token discipline |
-| `suite/kit/core` and `suite/kit/tests` (vendored into `econbal/core`, `tests/core_suite`) | feedback store, versioning, eval runner, MCP kit, style loading, path scope |
+| `suite/kit/core` and `suite/kit/tests` (was vendored into `econbal/core` and `tests/core_suite`; now the installed `guide-core` library) | feedback store, versioning, eval runner, MCP kit, style loading, path scope |
 | `repos/modular-set-dressing-ai`, `repos/concept-art-ai` (earlier repos of the suite) | the pattern to follow (hooks, tools, evals, docs) |
 
 ## Verification log

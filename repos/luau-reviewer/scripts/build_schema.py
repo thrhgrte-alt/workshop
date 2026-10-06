@@ -7,7 +7,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from luaurev import KINDS, project
-from luaurev.core.manifest import base_schema
+from guide_core.manifest import base_schema
 from luaurev.domain.schema import DOMAIN_SCHEMA
 
 target = project().schema_file

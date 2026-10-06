@@ -8,7 +8,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from preflight.core.cli import run
+from guide_core.cli import run
 from preflight import project
 from preflight.hooks import HOOKS
 

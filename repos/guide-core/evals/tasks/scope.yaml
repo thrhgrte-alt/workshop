@@ -1,0 +1,48 @@
+# Scope: tools refuse instead of guessing; the open Studio place must be the named one.
+- id: scope-refuses-missing-project
+  tags: [scope, refusal]
+  input: {op: check, place_id: main, code: "local x = 1"}
+  checks:
+    - {type: refused, text: "project_id is required"}
+- id: scope-refuses-unknown-project
+  tags: [scope, refusal]
+  input: {op: check, project_id: demo-z, place_id: main, code: "local x = 1"}
+  checks:
+    - {type: refused, text: "unknown project_id 'demo-z'"}
+- id: scope-refuses-place-of-another-project
+  tags: [scope, refusal]
+  input: {op: check, project_id: demo-b, place_id: alt, code: "local x = 1"}
+  checks:
+    - {type: refused, text: "does not belong to project 'demo-b'"}
+- id: scope-resolves-by-roblox-place-id
+  tags: [scope]
+  input: {op: check, project_id: demo-a, place_id: "555", code: "local x = 1"}
+  checks:
+    - {type: equals, path: scope.place_id, value: alt}
+- id: studio-matches-by-name-when-unpublished
+  tags: [scope, studio]
+  input: {op: studio, project_id: demo-a, place_id: main, studios: [{name: "Demo A Main", place_id: 0, studio_id: s1}]}
+  checks:
+    - {type: equals, path: matched_by, value: name}
+    - {type: equals, path: studio_id, value: s1}
+- id: studio-matches-by-place-id
+  tags: [scope, studio]
+  input: {op: studio, project_id: demo-a, place_id: alt, studios: [{name: "Renamed in Studio", placeId: 555, id: s2}]}
+  checks:
+    - {type: equals, path: matched_by, value: place_id}
+    - {type: equals, path: studio_id, value: s2}
+- id: studio-refuses-when-another-place-is-open
+  tags: [scope, studio, refusal]
+  input: {op: studio, project_id: demo-a, place_id: main, studios: [{name: "Demo B Main", place_id: 0, studio_id: s3}]}
+  checks:
+    - {type: refused, text: "are not place 'demo-a/main'"}
+- id: studio-refuses-when-nothing-is-open
+  tags: [scope, studio, refusal]
+  input: {op: studio, project_id: demo-a, place_id: main, studios: []}
+  checks:
+    - {type: refused, text: "cannot confirm the open Studio place"}
+- id: studio-refuses-ambiguous-match
+  tags: [scope, studio, refusal]
+  input: {op: studio, project_id: demo-a, place_id: main, studios: [{name: "Demo A Main", studio_id: s4}, {name: "demo a  main", studio_id: s5}]}
+  checks:
+    - {type: refused, text: "2 open Studio instances match"}

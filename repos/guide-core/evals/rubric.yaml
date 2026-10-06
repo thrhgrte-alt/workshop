@@ -1,0 +1,12 @@
+# Rubric for judging a guide-core release candidate (or a repository built on it). Automated criteria are fed by the eval suites and the test run;
+# the manual ones need a person. A partial score is never a verdict: score_rubric lists what is still unscored.
+version: 1
+name: guide-core release rubric
+pass_at: 0.7
+criteria:
+  - {id: toy_evals_pass, method: auto, weight: 2, required: true, note: "all self-written toy-tool tasks pass on the healthy toy"}
+  - {id: mutants_are_caught, method: auto, weight: 2, required: true, note: "every deliberately broken toy fails the tasks that guard that behaviour"}
+  - {id: no_regression_vs_baseline, method: auto, weight: 2, required: true, note: "evals compare against the saved baseline lists no regressions"}
+  - {id: real_examples_pass, method: auto, weight: 2, note: "evals/real/ results; UNSCORED while the folder is empty"}
+  - {id: api_is_small_and_documented, method: manual, weight: 1, note: "a person reads docs/api.md and agrees it is small and stable enough to build on"}
+  - {id: learning_gates_feel_right, method: manual, weight: 1, note: "a person tries the propose, gate, approve flow on a real repository's data"}

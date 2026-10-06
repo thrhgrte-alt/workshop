@@ -13,14 +13,21 @@ publishes. A ready asset is handed to `roblox_upload_plan` through the hub. Mode
 > exports, a live Blender, Roblox Studio, or a real upload.** **Every numeric limit is a DEFAULT chosen by this tool's author, not an official Roblox limit** (each is marked
 > `verify_against_current_docs`). `ready_to_upload` means "no errors on those defaults", never "Roblox will accept it".
 
-## guide-core was not available: the adapter
+## Shared machinery: the installed `guide-core` library and the adapter
 
-The build instructions call for a shared `guide-core` library (dryrun, feedback, retrieval, evals, mock, luau_safety, mcpkit, config, scope). **It does not exist yet and
-its spec was not provided.** Instead the repo uses its vendored `preflight/core` behind **one thin module, `preflight/guide_adapter.py`**, which re-exports the
-equivalents under those names (`dryrun`: Plan and Versioner; `feedback`; `retrieval`; `evals`; `mcpkit`; `config`: style and rubric; `scope`: path policy and `resolve_inside`;
-`mock` and `luau_safety` are explicit placeholders because nothing here touches Luau). All other modules import shared machinery only through that file (a test enforces it), so
-**swapping in the real guide-core means editing `preflight/guide_adapter.py` only.** The adapter also contains one documented workaround for the vendored core: it filters the
-core's unscoped `record_run`/`get_style_brief`/... tools so the project-scoped versions of the same names can replace them.
+Shared machinery (dry-run `Plan`/`Versioner`, the feedback store, retrieval, the eval runner and compare, MCP kit, style/rubric loading, path policy, and the learning layer) comes from the installed **`guide-core`** library. **Install guide-core first** (`pip install -e /path/to/guide-core`; it is a local repository, not on PyPI; this package declares it as a dependency).
+History: guide-core was not available when this repository was first built, so it shipped a vendored `preflight/core` copy of the shared kit; that copy and its tests (`tests/core_suite`, plus the test that compared it with the suite kit) were removed, and the shared tests now live in guide-core.
+Everything is reached through **one thin module, `preflight/guide_adapter.py`**, which maps the spec's names onto guide-core (`dryrun`: Plan and Versioner; `feedback`; `retrieval`; `evals`; `mcpkit`; `config`: style and rubric; `scope`: path policy and `resolve_inside`;
+`mock` and `luau_safety` are explicit placeholders because nothing here touches Luau). All other modules import shared machinery only through that file (a test enforces it). The adapter also keeps one documented workaround: it filters guide-core's unscoped `record_run`/`get_style_brief`/... tools
+so the project-scoped versions of the same names can replace them (a process-wide patch of `guide_core.cli`, fine for one server per process).
+
+## Tunable limits and skill export (guide-core learning layer)
+
+Every numeric limit that a profile resolves for a rule is registered as a named parameter in guide-core's `params` module (`preflight/learning_params.py`): `limit.<profile>.<RULE_ID>.<limit_key>`, for example `limit.prop.MESH_TRI_BUDGET.max_triangles` (138 in all: each profile's applicable, enabled rules). **They are derived from `rules/*.yaml` and `rules/profiles/*.yaml`, so each default is the number the profile already gives**; with nothing learned the very same config object is used and every report is unchanged (the evals and a test check it). Still DEFAULTS chosen by this tool, not official Roblox limits; the Roblox-sourced ones keep their `verify_against_current_docs` flag.
+Precedence for a limit, strongest first: a value passed in the call (`limit_overrides`), a saved override you recorded (`record_override`), the project's own `projects/<id>/profiles.yaml` (explicit configuration: a learned value never replaces a number that file sets), the learned value for the project, the shipped default. A learned value has a version history, a range and a bounded step, is per project, and changes only through guide-core's propose, gate (all evals, `evals/real/`, past corrections) and an approval by a named person; a rollback restores the previous version exactly. Severities, enable switches and `safe` flags are not parameters.
+**Not wired yet:** this repository's own `suggest_profile_promotions` (which proposes profile edits when an override repeats) is unchanged and does not feed the shared proposal loop; nothing proposes changes by itself, and real values need real runs and a person approving. The model's weights never change.
+
+`python -m preflight export-skill [--scope global|<project_id>] [--out DIR] [--write]` generates a short skill folder (`SKILL.md` + `references/`) with the tools, workflow, verified and unverified limits, the scope's current corrections, the learned limit values with versions and the knowledge version/date. Dry run unless `--write`; it refuses an unregistered project. There is no MCP tool for it (a maintenance command; a tool would add to every client's context and to the 21-tool count).
 
 ## Capability matrix
 
@@ -48,6 +55,7 @@ core's unscoped `record_run`/`get_style_brief`/... tools so the project-scoped v
 
 ```bash
 python -m venv .venv && . .venv/bin/activate        # Windows: .venv\Scripts\activate
+pip install -e /path/to/guide-core                  # FIRST: the shared library (a local repository, not on PyPI)
 pip install -e ".[dev]"                             # Python 3.10+
 python scripts/make_examples.py                     # (re)build the synthetic examples
 python -m preflight projects                        # the registered (synthetic) projects
@@ -55,6 +63,7 @@ python -m preflight report examples/assets/bad_too_many_tris.glb --project synth
 python -m preflight inspect examples/assets/good_tool_drill.glb --project synthetic-sandbox
 python -m preflight fix-script examples/assets/bad_spin_bone_name.glb --project synthetic-sandbox --profile tool
 python -m preflight eval run --label mine && python -m preflight eval compare baseline mine
+python -m preflight export-skill --scope synthetic-sandbox   # agent skill from the learned limits and corrections (dry run; --write to write it)
 python -m pytest
 ```
 
@@ -190,6 +199,6 @@ Claude Desktop, Cursor, Gemini CLI, VS Code and Codex are in `adapters/mcp-clien
 
 ## Repository map
 
-`preflight/` (`guide_adapter.py` the only shared-machinery import; `core/` vendored; `domain/`: readers, measure, engine, checks, report, fixes, overrides, synth, fixtures; `projects.py`; `tools.py`; `hooks.py`) |
+`preflight/` (`guide_adapter.py` the only shared-machinery import (the installed `guide-core`); `learning_params.py`; `domain/`: readers, measure, engine, checks, report, fixes, overrides, synth, fixtures; `projects.py`; `tools.py`; `hooks.py`) |
 `rules/` + `rules/profiles/` | `projects.yaml` + `projects/` | `style/` | `library/` schema | `examples/` synthetic assets and library | `evals/` | `feedback/` | `skills/` | `adapters/mcp-clients/` |
 `references/` | `tests/` | `scripts/`. Licence: MIT for code and docs; see `ASSET_LICENSING.md`.

@@ -1,0 +1,140 @@
+# Lint rejection: the ONE Luau lint (guide_core.luau_safety) behind the toy tool's check_script.
+# Expectations were written by hand from the lint's documented deny-list, not copied from output.
+- id: lint-clean-script
+  tags: [lint, known-good]
+  input: {op: check, project_id: demo-a, place_id: main, code: "local x = 1\nreturn x"}
+  checks:
+    - {type: not_blocked}
+    - {type: equals, path: total_findings, value: 0}
+    - {type: contains, path: verdict, text: "OK: nothing found"}
+- id: lint-blocks-httpget
+  tags: [lint, known-bad, network]
+  input: {op: check, project_id: demo-a, place_id: main, code: "local s = game:HttpGet(\"http://example.com\")"}
+  checks:
+    - {type: equals, path: blocked, value: true}
+    - {type: has_finding, code_or_text: HttpGet}
+- id: lint-blocks-requestasync
+  tags: [lint, known-bad, network]
+  input: {op: check, project_id: demo-a, place_id: main, code: "game:GetService(\"HttpService\"):RequestAsync({Url = \"x\"})"}
+  checks:
+    - {type: equals, path: blocked, value: true}
+    - {type: has_finding, code_or_text: RequestAsync}
+- id: lint-blocks-websocket
+  tags: [lint, known-bad, network]
+  input: {op: check, project_id: demo-a, place_id: main, code: "local ws = WebSocket.connect(\"ws://x\")"}
+  checks:
+    - {type: equals, path: blocked, value: true}
+    - {type: has_finding, code_or_text: WebSocket}
+- id: lint-blocks-loadstring
+  tags: [lint, known-bad, injection]
+  input: {op: check, project_id: demo-a, place_id: main, code: "loadstring(\"print(1)\")()"}
+  checks:
+    - {type: equals, path: blocked, value: true}
+    - {type: has_finding, code_or_text: loadstring}
+- id: lint-blocks-require
+  tags: [lint, known-bad, injection]
+  input: {op: check, project_id: demo-a, place_id: main, code: "local m = require(game.ServerScriptService.Mod)"}
+  checks:
+    - {type: equals, path: blocked, value: true}
+    - {type: has_finding, code_or_text: "require("}
+- id: lint-blocks-destroy
+  tags: [lint, known-bad, destructive]
+  input: {op: check, project_id: demo-a, place_id: main, code: "workspace.Part:Destroy()"}
+  checks:
+    - {type: equals, path: blocked, value: true}
+    - {type: has_finding, code_or_text: ":Destroy("}
+- id: lint-blocks-publish
+  tags: [lint, known-bad, publish]
+  input: {op: check, project_id: demo-a, place_id: main, code: "AssetService:Publish()"}
+  checks:
+    - {type: equals, path: blocked, value: true}
+    - {type: has_finding, code_or_text: Publish}
+- id: lint-blocks-datastore
+  tags: [lint, known-bad]
+  input: {op: check, project_id: demo-a, place_id: main, code: "local ds = game:GetService(\"DataStoreService\")"}
+  checks:
+    - {type: equals, path: blocked, value: true}
+    - {type: has_finding, code_or_text: DataStoreService}
+- id: lint-allows-jsonencode-only
+  tags: [lint, known-good]
+  input: {op: check, project_id: demo-a, place_id: main, code: "local j = game:GetService(\"HttpService\"):JSONEncode({a = 1})"}
+  checks:
+    - {type: not_blocked}
+    - {type: equals, path: total_findings, value: 0}
+- id: lint-blocks-other-httpservice-use
+  tags: [lint, known-bad, network]
+  input: {op: check, project_id: demo-a, place_id: main, code: "local h = game:GetService(\"HttpService\")\nh:UrlEncode(\"x\")"}
+  checks:
+    - {type: equals, path: blocked, value: true}
+    - {type: has_finding, code_or_text: JSONEncode}
+- id: lint-todo-is-info-not-block
+  tags: [lint, toy-rule]
+  input: {op: check, project_id: demo-a, place_id: main, code: "-- TODO a\n-- TODO b\n-- TODO c\nlocal x = 1"}
+  checks:
+    - {type: not_blocked}
+    - {type: equals, path: total_findings, value: 1}
+    - {type: equals, path: findings.0.rule, value: TODO}
+    - {type: contains, path: verdict, text: "OK with 1 note(s)"}
+- id: lint-length-boundary-ok
+  tags: [lint, toy-rule, boundary]
+  input: {op: check, project_id: demo-a, place_id: main, code_lines: 40}
+  checks:
+    - {type: equals, path: total_findings, value: 0}
+- id: lint-length-over-limit-warns
+  tags: [lint, toy-rule, boundary]
+  input: {op: check, project_id: demo-a, place_id: main, code_lines: 45}
+  checks:
+    - {type: not_blocked}
+    - {type: equals, path: findings.0.rule, value: LEN}
+    - {type: equals, path: findings.0.severity, value: warn}
+- id: lint-output-capped-at-ten
+  tags: [lint, token-discipline]
+  input:
+    op: check
+    project_id: demo-a
+    place_id: main
+    code: "Publish SavePlace SaveInstance MarketplaceService AssetService TeleportService DataStoreService MessagingService InsertService LoadAsset loadstring getfenv"
+  checks:
+    - {type: equals, path: total_findings, value: 12}
+    - {type: count, path: findings, value: 10}
+    - {type: equals, path: truncated, value: true}
+    - {type: contains, path: verdict, text: "BLOCKED: 12 error(s)"}
+# Injection-safe generation (validators and quoting in guide_core.luau_safety)
+- id: gen-valid-path-and-attribute
+  tags: [lint, generation, known-good]
+  input: {op: gen_attr, path: Workspace.Door, attribute: Open, value: true}
+  checks:
+    - {type: contains, path: script, text: "SetAttribute(\"Open\", true)"}
+    - {type: equals, path: lint, value: []}
+- id: gen-rejects-empty-path-segment
+  tags: [lint, generation, known-bad, injection]
+  input: {op: gen_attr, path: "Workspace..Door", attribute: Open, value: true}
+  checks:
+    - {type: refused, text: "dotted path"}
+- id: gen-rejects-slash-path
+  tags: [lint, generation, known-bad, injection]
+  input: {op: gen_attr, path: "Workspace/Door", attribute: Open, value: true}
+  checks:
+    - {type: refused, text: "dotted path"}
+- id: gen-rejects-injection-in-attribute-name
+  tags: [lint, generation, known-bad, injection]
+  input: {op: gen_attr, path: Workspace.Door, attribute: "x\"); loadstring(\"", value: 1}
+  checks:
+    - {type: refused, text: "must match"}
+- id: gen-escapes-quotes-in-string-values
+  tags: [lint, generation, injection]
+  input: {op: gen_attr, path: Workspace.Door, attribute: Label, value: "say \"hi\""}
+  checks:
+    - {type: contains, path: script, text: 'SetAttribute("Label", "say \"hi\"")'}
+    - {type: equals, path: lint, value: []}
+- id: gen-rejects-newline-in-string-values
+  tags: [lint, generation, known-bad, injection]
+  input: {op: gen_attr, path: Workspace.Door, attribute: Label, value: "a\nb"}
+  checks:
+    - {type: refused, text: "control characters"}
+- id: gen-runs-on-the-mock-datamodel
+  tags: [lint, generation, mock]
+  input: {op: gen_attr, path: ReplicatedStorage.Cfg, attribute: Open, value: 5, mock: true}
+  checks:
+    - {type: one_of, path: mock_status, values: [ok, skipped]}
+    - {type: mock_attr, value: 5}

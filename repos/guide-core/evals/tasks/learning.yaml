@@ -1,0 +1,149 @@
+# Learning layer: params (bounded, locked, rollback), promotion rules, telemetry, skill export, redaction.
+- id: params-default-when-nothing-set
+  tags: [params]
+  input: {op: params, param: lint.max_lines, steps: []}
+  checks:
+    - {type: equals, path: value, value: 40}
+    - {type: equals, path: source, value: default}
+- id: params-update-is-a-versioned-project-value
+  tags: [params]
+  input: {op: params, param: lint.max_lines, steps: [{do: update, param: lint.max_lines, value: 50}]}
+  checks:
+    - {type: equals, path: value, value: 50}
+    - {type: equals, path: source, value: project}
+    - {type: equals, path: version, value: 1}
+- id: params-refuses-a-step-larger-than-allowed
+  tags: [params, refusal]
+  input: {op: params, param: lint.max_lines, steps: [{do: update, param: lint.max_lines, value: 100}]}
+  checks:
+    - {type: refused, text: "allowed step"}
+- id: params-refuses-a-value-outside-its-range
+  tags: [params, refusal]
+  input: {op: params, param: lint.max_lines, steps: [{do: update, param: lint.max_lines, value: 500}]}
+  checks:
+    - {type: refused, text: "outside the range"}
+- id: params-refuses-to-change-a-locked-parameter
+  tags: [params, refusal, locked]
+  input: {op: params, param: lint.safety_weight, steps: [{do: update, param: lint.safety_weight, value: 1.25}]}
+  checks:
+    - {type: refused, text: "locked"}
+- id: params-locked-parameter-ignores-an-explicit-label
+  tags: [params, locked]
+  input: {op: params, param: lint.safety_weight, explicit: 2.0, steps: []}
+  checks:
+    - {type: equals, path: value, value: 1.0}
+    - {type: equals, path: locked, value: true}
+    - {type: equals, path: source, value: default}
+- id: params-explicit-user-label-beats-the-project-value
+  tags: [params]
+  input: {op: params, param: lint.max_lines, explicit: 60, steps: [{do: update, param: lint.max_lines, value: 50}]}
+  checks:
+    - {type: equals, path: value, value: 60}
+    - {type: equals, path: source, value: user_label}
+    - {type: contains, path: explain, text: "over: project=50"}
+- id: params-rollback-restores-exactly-the-previous-version
+  tags: [params, rollback]
+  input:
+    op: params
+    param: lint.max_lines
+    steps: [{do: update, param: lint.max_lines, value: 50}, {do: update, param: lint.max_lines, value: 60}, {do: rollback, param: lint.max_lines}]
+  checks:
+    - {type: equals, path: value, value: 50}
+    - {type: equals, path: version, value: 1}
+    - {type: equals, path: source, value: project}
+- id: params-rollback-of-the-first-change-returns-to-the-default
+  tags: [params, rollback]
+  input: {op: params, param: lint.max_lines, steps: [{do: update, param: lint.max_lines, value: 50}, {do: rollback, param: lint.max_lines}]}
+  checks:
+    - {type: equals, path: value, value: 40}
+    - {type: equals, path: source, value: default}
+- id: params-refuses-automatic-approval
+  tags: [params, refusal]
+  input: {op: params, param: lint.max_lines, steps: [{do: update, param: lint.max_lines, value: 50, by: auto}]}
+  checks:
+    - {type: refused, text: "approved_by"}
+- id: params-choice-moves-one-position-at-a-time
+  tags: [params, refusal]
+  input: {op: params, param: lint.confidence, steps: [{do: update, param: lint.confidence, value: low}]}
+  checks:
+    - {type: refused, text: "allowed step"}
+- id: promote-two-projects-is-not-offered
+  tags: [promote, generalisation]
+  input: {op: knowledge, learned_in: [demo-a, demo-b]}
+  checks:
+    - {type: equals, path: candidates, value: []}
+    - {type: contains, path: blocked_by.0, text: "confirmed in 2 distinct project(s), needs 3"}
+- id: promote-three-projects-is-offered
+  tags: [promote, generalisation]
+  input: {op: knowledge, learned_in: [demo-a, demo-b, demo-c]}
+  checks:
+    - {type: equals, path: candidates, value: ["has_interaction+purchase_remote"]}
+- id: promote-contradiction-blocks-a-candidate
+  tags: [promote, generalisation]
+  input: {op: knowledge, learned_in: [demo-a, demo-b, demo-c], contradicted_in: [demo-c]}
+  checks:
+    - {type: equals, path: candidates, value: []}
+    - {type: contains, path: blocked_by.0, text: "contradicting evidence"}
+- id: promote-non-transferable-pattern-is-never-offered
+  tags: [promote, generalisation]
+  input: {op: knowledge, learned_in: [demo-a, demo-b, demo-c], non_transferable: true}
+  checks:
+    - {type: equals, path: candidates, value: []}
+    - {type: contains, path: blocked_by.0, text: "non-transferable"}
+- id: promote-needs-a-named-person
+  tags: [promote, refusal]
+  input: {op: knowledge, learned_in: [demo-a, demo-b, demo-c], promote_by: auto}
+  checks:
+    - {type: equals, path: promoted, value: false}
+    - {type: contains, path: error, text: "approved_by"}
+- id: promote-needs-an-explicit-confirm
+  tags: [promote, refusal]
+  input: {op: knowledge, learned_in: [demo-a, demo-b, demo-c], promote_by: alice, confirm: false}
+  checks:
+    - {type: equals, path: promoted, value: false}
+    - {type: contains, path: error, text: "confirm=True"}
+- id: promote-global-with-approval-works
+  tags: [promote]
+  input: {op: knowledge, learned_in: [demo-a, demo-b, demo-c], promote_by: alice, confirm: true}
+  checks:
+    - {type: equals, path: promoted, value: true}
+- id: promote-two-projects-is-refused-even-with-approval
+  tags: [promote, refusal]
+  input: {op: knowledge, learned_in: [demo-a, demo-b], promote_by: alice, confirm: true}
+  checks:
+    - {type: equals, path: promoted, value: false}
+    - {type: contains, path: error, text: "cannot be promoted"}
+- id: telemetry-reports-output-size-per-tool
+  tags: [telemetry, token-discipline]
+  input: {op: telemetry}
+  checks:
+    - {type: equals, path: calls, value: 3}
+    - {type: less_than, path: chars_median, value: 400}
+    - {type: equals, path: budget_exceeded, value: []}
+- id: skill-export-is-valid-and-short
+  tags: [skill]
+  input: {op: skill}
+  checks:
+    - {type: equals, path: problems, value: []}
+    - {type: less_than, path: skill_lines, value: 71}
+    - {type: contains, path: skill_md, text: "Knowledge version 0"}
+    - {type: contains, path: skill_md, text: "Nothing learned yet"}
+- id: skill-export-labels-write-tools
+  tags: [skill]
+  input: {op: skill}
+  checks:
+    - {type: contains, path: skill_md, text: "`rename_part` [write]"}
+    - {type: contains, path: skill_md, text: "`explain_rule` [read-only, rare]"}
+- id: skill-export-states-a-tuned-parameter
+  tags: [skill, params]
+  input: {op: skill, tune: true}
+  checks:
+    - {type: contains, path: skill_md, text: "lint.max_lines=50"}
+    - {type: contains, path: parameters_md, text: "| lint.max_lines | 50 | project | 1 |"}
+- id: observe-redacts-paths-and-keys
+  tags: [observe, redaction]
+  input: {op: observe, request: "fix /home/alice/game/x.luau with api_key=abc123secretvalue"}
+  checks:
+    - {type: excludes, path: stored, text: alice}
+    - {type: excludes, path: stored, text: abc123secretvalue}
+    - {type: contains, path: stored, text: "<path>"}

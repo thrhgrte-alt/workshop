@@ -7,7 +7,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from preflight import KINDS, project
-from preflight.core.manifest import base_schema
+from guide_core.manifest import base_schema
 from preflight.domain.schema import DOMAIN_SCHEMA
 
 target = project().schema_file

@@ -1,0 +1,53 @@
+# Dry run: the plan is the default, apply is explicit, what changed is recorded.
+- id: dryrun-default-writes-nothing
+  tags: [dryrun]
+  input: {op: rename, project_id: demo-a, place_id: main, old: Door, new: Gate}
+  checks:
+    - {type: equals, path: dry_run, value: true}
+    - {type: count, path: steps, value: 1}
+    - {type: equals, path: parts_after, value: [Door, Lamp]}
+    - {type: equals, path: journal_lines, value: 0}
+    - {type: equals, path: versions_saved, value: 0}
+- id: dryrun-apply-writes-journals-and-versions
+  tags: [dryrun]
+  input: {op: rename, project_id: demo-a, place_id: main, old: Door, new: Gate, apply: true}
+  checks:
+    - {type: equals, path: dry_run, value: false}
+    - {type: equals, path: parts_after, value: [Gate, Lamp]}
+    - {type: equals, path: journal_lines, value: 1}
+    - {type: equals, path: versions_saved, value: 1}
+    - {type: equals, path: changed, value: [Door]}
+- id: dryrun-apply-refuses-a-plan-that-changed
+  tags: [dryrun, refusal]
+  input: {op: rename, project_id: demo-a, place_id: main, old: Door, new: Gate, apply: true, expect: deadbeef0000}
+  checks:
+    - {type: refused, text: "plan changed since it was reviewed"}
+    - {type: equals, path: parts_after, value: [Door, Lamp]}
+- id: dryrun-warns-about-a-missing-part
+  tags: [dryrun]
+  input: {op: rename, project_id: demo-a, place_id: main, old: Missing, new: X}
+  checks:
+    - {type: count, path: steps, value: 0}
+    - {type: contains, path: warnings.0, text: "does not exist"}
+- id: dryrun-warns-about-a-name-clash
+  tags: [dryrun]
+  input: {op: rename, project_id: demo-a, place_id: main, old: Door, new: Lamp}
+  checks:
+    - {type: count, path: steps, value: 0}
+    - {type: contains, path: warnings.0, text: "already exists"}
+- id: dryrun-refuses-to-apply-a-plan-with-warnings
+  tags: [dryrun, refusal]
+  input: {op: rename, project_id: demo-a, place_id: main, old: Missing, new: X, apply: true}
+  checks:
+    - {type: refused, text: "refusing to apply a plan with warnings"}
+    - {type: equals, path: journal_lines, value: 0}
+- id: dryrun-plan-carries-a-fingerprint
+  tags: [dryrun]
+  input: {op: rename, project_id: demo-a, place_id: main, old: Door, new: Gate}
+  checks:
+    - {type: count, path: fingerprint, value: 12}
+- id: dryrun-needs-a-place
+  tags: [dryrun, scope, refusal]
+  input: {op: rename, project_id: demo-a, old: Door, new: Gate}
+  checks:
+    - {type: refused, text: "place_id"}

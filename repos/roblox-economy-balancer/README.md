@@ -10,7 +10,7 @@ The model chooses targets and explains trade-offs; the simulator does all the ar
 
 > **Honest status.** Built without Roblox Studio and without your game. Tested only on hand-built toy economies and hand-computed expectations. **Never run against a real game, real values or live Studio.**
 > The simulator is only as good as the archetype assumptions. It predicts **relative pacing**, not real **retention** or **revenue**. The target pacing in `style/style.yaml` is a **placeholder** (you have not supplied yours).
-> `guide-core` was **not available**: shared machinery comes from the vendored `econbal/core` through one adapter file, `econbal/guide_adapter.py` (see below).
+> Shared machinery comes from the installed `guide-core` library through one adapter file, `econbal/guide_adapter.py` (see below). **Install guide-core first.** History: `guide-core` was **not available** when this repository was built, so it shipped a vendored copy of the shared kit; that copy is gone.
 
 ## What you still need to supply
 This repository cannot work without these, and ships only synthetic stand-ins:
@@ -43,6 +43,7 @@ This repository cannot work without these, and ships only synthetic stand-ins:
 ```bash
 git clone <this repo> && cd roblox-economy-balancer
 python -m venv .venv && . .venv/bin/activate          # Windows: .venv\Scripts\activate
+pip install -e /path/to/guide-core                     # FIRST: the shared library (a local repository, not on PyPI)
 pip install -e ".[dev]"                                # Python 3.10+; Pillow, lupa, pytest
 python -m econbal doctor
 python -m econbal places                               # demo_mine/main, demo_mine/hardcore, demo_tycoon/main (SYNTHETIC)
@@ -51,6 +52,7 @@ python -m econbal check --project-id demo_tycoon --place-id main      # FAIL: ru
 python -m econbal table --project-id demo_mine --place-id main
 python -m econbal plot --project-id demo_mine --place-id main --out /tmp/curves.png
 python -m econbal eval run --label mine && python -m econbal eval compare baseline mine
+python -m econbal export-skill --scope demo_mine --place main   # agent skill from the learned parameters and corrections (dry run; --write)
 python -m pytest
 ```
 
@@ -153,10 +155,22 @@ None tested against live clients. Add Roblox Studio's own MCP server to the same
 
 ## Shared machinery and `guide-core`
 
-`guide-core` was **not available** (its spec file was not provided). All shared machinery (dry-run `Plan`/`Versioner`, feedback store, retrieval, eval runner and compare, MCP kit, style and rubric loading, path scope) comes from the vendored copy of the suite kit in `econbal/core/`
-(not edited). **All code in `econbal/` imports it only through `econbal/guide_adapter.py`**, which re-exports it under the interface names `dryrun`, `feedback`, `retrieval`, `evals`, `mock`, `luau_safety`, `mcpkit`, `config`, `scope`
-(a test greps the package to enforce this). **Swapping in the real guide-core means editing that one file.** The vendored core has no scoping, so the adapter adds `scoped_project` (per-place workspace) and its own `all_tools` (scoped tools replace the common ones; the
-unscoped `search_library` is dropped; `ECONBAL_DISABLE_GROUPS` is honoured). The mock DataModel and the Luau lint have no equivalent in the vendored core and live in `econbal/domain/` (`mock_luau.py`, `luau.py`).
+All shared machinery (dry-run `Plan`/`Versioner`, feedback store, retrieval, eval runner and compare, MCP kit, style and rubric loading, path scope, per-place workspaces, tool groups, and the learning layer) comes from the installed **`guide-core`** library.
+**Install guide-core first** (`pip install -e /path/to/guide-core`; it is a local repository, not on PyPI; this package declares it as a dependency). The vendored `econbal/core/` and its tests (`tests/core_suite`, plus the test that compared the copy with the suite kit) were removed; the shared tests now live in guide-core.
+**All code in `econbal/` imports it only through `econbal/guide_adapter.py`**, which exposes it under the interface names `dryrun`, `feedback`, `retrieval`, `evals`, `mock`, `luau_safety`, `mcpkit`, `config`, `scope`
+(a test greps the package to enforce this). The adapter adds its own `all_tools` (scoped tools replace the common ones; the unscoped `search_library` is dropped; `ECONBAL_DISABLE_GROUPS` is honoured through guide-core's `filter_groups`) and takes `scoped_project` (per-place workspace) from guide-core.
+**Still local, to be replaced later:** the Luau lint and the mock DataModel remain in `econbal/domain/` (`luau.py`, `mock_luau.py`); `guide_core.luau_safety` and `guide_core.mock` are supersets extracted from them (the shared lint also rejects a trailing newline in generated paths and names, which these copies accept). Swapping them in touches `domain/`, which this migration did not.
+
+## Tunable parameters and skill export (guide-core learning layer)
+
+The numbers that decide findings are registered as 20 named parameters in guide-core's `params` module (`econbal/learning_params.py`), **derived from `style/style.yaml` so the defaults are the values already there** (with nothing learned the same style object is used, so results are unchanged: the evals and a test check it):
+the target pacing bands (`band.<id>.min_minutes` / `.max_minutes`, 6), the check thresholds in `style.ranges` (`threshold.<name>.max|min`, 11) and the band-suggestion settings (`learning.min_votes`, `shrink`, `grow`). All are PLACEHOLDERS, like the file they come from.
+A value can differ per project/place (the analyses for `demo_mine/main` see its value, other places do not), carries a version history, a range and a bounded step, and changes only through guide-core's propose, gate (all evals, `evals/real/`, past corrections) and an approval by a named person; a rollback restores the previous version exactly.
+A learned value that would make a band's minimum exceed its maximum is refused loudly. Not parameters: finding severities (`rules/findings.yaml`), the economy spec's own numbers and `locked` flags (your game's data; learning never touches them) and constants inside the simulator.
+**Not wired yet:** nothing here proposes changes by itself; real values need real runs and a person approving, and the model's weights never change.
+
+`python -m econbal export-skill [--scope global|<project_id>] [--place ID] [--out DIR] [--write]` generates a short skill folder (`SKILL.md` + `references/`) with the tools, workflow, verified and unverified limits, the scope's current corrections (read from that place's feedback folder), the parameter values with versions and the knowledge version/date.
+Dry run unless `--write`; it refuses an unregistered project or place. There is no MCP tool for it (a maintenance command; a tool would add to every client's context).
 
 ## Troubleshooting
 
@@ -172,7 +186,7 @@ unscoped `search_library` is dropped; `ECONBAL_DISABLE_GROUPS` is honoured). The
 
 ## Repository map
 
-`econbal/` (`core/` vendored; `guide_adapter.py`; `domain/`: `spec`, `sim`, `analysis`, `rebalance`, `luau`, `importer`, `mock_luau`, `places`, `plot`, `learning`, `schema`) | `rules/findings.yaml` finding catalogue | `style/` bands and thresholds (placeholders) |
+`econbal/` (`guide_adapter.py` the only door to the installed `guide-core`; `learning_params.py`; `domain/`: `spec`, `sim`, `analysis`, `rebalance`, `luau`, `importer`, `mock_luau`, `places`, `plot`, `learning`, `schema`) | `rules/findings.yaml` finding catalogue | `style/` bands and thresholds (placeholders) |
 `projects.yaml` + `projects/` per-place specs and bands (synthetic) | `library/` schema | `examples/` toy economies, import dump, plots | `evals/` tasks, rubric, baseline | `feedback/` | `skills/` | `adapters/` | `references/` | `tests/` | `scripts/`.
 
 Licence: MIT for code and docs; see `ASSET_LICENSING.md` for your data.

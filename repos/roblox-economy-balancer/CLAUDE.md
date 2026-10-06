@@ -12,6 +12,7 @@ python -m venv .venv && . .venv/bin/activate
 pip install -e ".[dev]"                  # Pillow, lupa (Luau mock), pytest
 python -m econbal doctor                 # what works on this machine right now
 python -m econbal places                 # the registry (projects.yaml)
+python -m econbal export-skill --scope demo_mine --place main    # agent skill from learned parameters/corrections (dry run; --write)
 python -m econbal check --project-id demo_mine --place-id main     # verdict + findings for one place
 python -m econbal table --project-id demo_mine --place-id main
 python -m econbal plot  --project-id demo_mine --place-id main --out /tmp/c.png
@@ -39,8 +40,9 @@ python scripts/sync_agent_files.py       # regenerate CLAUDE.md, GEMINI.md, copi
 ## Conventions for editing this repo
 
 - Python 3.10+. Pillow only in `domain/plot.py`; `lupa` only in `domain/mock_luau.py`.
-- `econbal/core/` is vendored from the suite kit: do not edit it. **Import shared machinery only through `econbal/guide_adapter.py`** (a test enforces this); swapping in the real guide-core means editing that file only.
+- Shared machinery comes from the installed `guide-core` library (install it first: `pip install -e /path/to/guide-core`). **Import it only through `econbal/guide_adapter.py`** (a test enforces this); there is no vendored `core/` any more, so fix shared code in guide-core, not here.
 - Tool functions are annotated `-> dict[str, Any]`, raise `ValueError` with an actionable message, take `project_id`/`place_id`, put a one-line `summary` first, keep descriptions short, and start `[rare]` descriptions with `[rare]`.
+- Thresholds, bands and learning settings in `style/style.yaml` are registered automatically as guide-core parameters by `econbal/learning_params.py` (defaults come from the file); a new numeric threshold there is registered with no extra code.
 - Judgments are data: thresholds in `style/style.yaml`, severities and wording in `rules/findings.yaml`. Add a finding by adding a rule there and a check in `domain/analysis.py`, plus an eval.
 - Generated Luau stays plain-Lua compatible (the mock runs it), injection-safe (ids, names and paths are validated) and lint-clean.
 - New behaviour needs an eval task with a hand-computed or toy expectation, and the budget evals (`evals/tasks/budgets.yaml`) must still pass; if output legitimately grows, raise the budget in the same commit and say why.

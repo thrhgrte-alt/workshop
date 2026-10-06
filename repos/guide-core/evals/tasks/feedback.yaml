@@ -1,0 +1,102 @@
+# Feedback: save and retrieve corrections per project and place (guide_core.feedback).
+- id: fb-retrieves-own-projects-correction
+  tags: [feedback]
+  input:
+    op: feedback
+    project_id: demo-a
+    place_id: main
+    query: door bevels
+    steps:
+      - {project_id: demo-a, place_id: main, request: make door bevels rounder, decision: {decision: revise, reason: too sharp, corrections: [{dimension: bevel, note: round the bevels more}]}}
+      - {project_id: demo-b, place_id: main, request: make door bevels sharper, decision: {decision: revise, reason: too soft, corrections: [{dimension: bevel, note: sharper bevels}]}}
+  checks:
+    - {type: equals, path: hit_requests, value: [make door bevels rounder]}
+- id: fb-never-leaks-another-projects-correction
+  tags: [feedback, scope]
+  input:
+    op: feedback
+    project_id: demo-b
+    place_id: main
+    query: door bevels
+    steps:
+      - {project_id: demo-a, place_id: main, request: make door bevels rounder, decision: {decision: revise, reason: too sharp, corrections: [{dimension: bevel, note: round the bevels more}]}}
+      - {project_id: demo-b, place_id: main, request: make door bevels sharper, decision: {decision: revise, reason: too soft, corrections: [{dimension: bevel, note: sharper bevels}]}}
+  checks:
+    - {type: equals, path: hit_requests, value: [make door bevels sharper]}
+- id: fb-global-correction-is-visible-everywhere
+  tags: [feedback, scope, global]
+  input:
+    op: feedback
+    project_id: demo-a
+    place_id: main
+    query: door bevels
+    steps:
+      - {project_id: demo-a, place_id: main, request: make door bevels rounder, decision: {decision: revise, reason: too sharp, corrections: [{dimension: bevel, note: round the bevels more}]}}
+      - {project_id: demo-b, place_id: main, request: make door bevels sharper, decision: {decision: revise, reason: too soft, global: true, corrections: [{dimension: bevel, note: sharper bevels}]}}
+  checks:
+    - {type: equals, path: count, value: 2}
+- id: fb-unrelated-query-finds-nothing
+  tags: [feedback]
+  input:
+    op: feedback
+    project_id: demo-a
+    place_id: main
+    query: zebra
+    steps:
+      - {project_id: demo-a, place_id: main, request: make door bevels rounder, decision: {decision: revise, reason: too sharp, corrections: [{dimension: bevel, note: round the bevels more}]}}
+  checks:
+    - {type: equals, path: hit_requests, value: []}
+- id: fb-place-level-correction-stays-in-its-place
+  tags: [feedback, scope]
+  input:
+    op: feedback
+    project_id: demo-a
+    place_id: main
+    query: door bevels
+    steps:
+      - {project_id: demo-a, place_id: alt, request: make door bevels rounder, decision: {decision: revise, reason: too sharp, corrections: [{dimension: bevel, note: round the bevels more}]}}
+  checks:
+    - {type: equals, path: hit_requests, value: []}
+- id: fb-project-level-correction-reaches-its-places
+  tags: [feedback, scope]
+  input:
+    op: feedback
+    project_id: demo-a
+    place_id: main
+    query: door bevels
+    steps:
+      - {project_id: demo-a, request: make door bevels rounder, decision: {decision: revise, reason: too sharp, corrections: [{dimension: bevel, note: round the bevels more}]}}
+  checks:
+    - {type: equals, path: count, value: 1}
+- id: fb-refuses-to-record-without-a-scope
+  tags: [feedback, scope, refusal]
+  input:
+    op: feedback
+    project_id: demo-a
+    place_id: main
+    query: door
+    steps:
+      - {unscoped: true, project_id: demo-a, request: make door bevels rounder}
+  checks:
+    - {type: refused, text: "needs a resolved scope"}
+- id: fb-reject-needs-a-reason
+  tags: [feedback, refusal]
+  input:
+    op: feedback
+    project_id: demo-a
+    place_id: main
+    query: door
+    steps:
+      - {project_id: demo-a, place_id: main, request: make door bevels rounder, decision: {decision: reject}}
+  checks:
+    - {type: refused, text: "needs a reason"}
+- id: fb-index-is-rebuilt-from-the-jsonl
+  tags: [feedback]
+  input: {op: feedback_index, what: rebuild}
+  checks:
+    - {type: equals, path: count, value: 1}
+- id: fb-index-carries-a-schema-version
+  tags: [feedback]
+  input: {op: feedback_index, what: schema}
+  checks:
+    - {type: equals, path: schema_version, value: 1}

@@ -1,0 +1,73 @@
+# Eval regression detection and the improvement gate (guide_core.evals, guide_core.gate).
+# The gate suite: two cases that pass at the shipped defaults (a 35-line script has no LEN finding; a clean script is not blocked).
+- id: gate-rejects-a-proposal-that-breaks-a-passing-case
+  tags: [regression, gate]
+  input:
+    op: gate
+    param: lint.max_lines
+    after: 30
+    tasks:
+      - {id: ok-35-lines, input: {code_lines: 35}, checks: [{type: no_len_finding}]}
+      - {id: ok-clean, input: {code: "local x = 1"}, checks: [{type: not_blocked}]}
+  checks:
+    - {type: equals, path: verdict, value: reject}
+    - {type: equals, path: regressions, value: [ok-35-lines]}
+    - {type: equals, path: cases_run, value: 2}
+- id: gate-passes-a-harmless-proposal
+  tags: [regression, gate]
+  input:
+    op: gate
+    param: lint.todo_limit
+    after: 3
+    tasks:
+      - {id: ok-35-lines, input: {code_lines: 35}, checks: [{type: no_len_finding}]}
+      - {id: ok-clean, input: {code: "local x = 1"}, checks: [{type: not_blocked}]}
+  checks:
+    - {type: equals, path: verdict, value: pass}
+    - {type: equals, path: regressions, value: []}
+    - {type: equals, path: cases_run, value: 2}
+- id: gate-with-no-cases-is-inconclusive-not-a-pass
+  tags: [regression, gate]
+  input: {op: gate, param: lint.todo_limit, after: 3, tasks: []}
+  checks:
+    - {type: equals, path: verdict, value: inconclusive}
+    - {type: equals, path: cases_run, value: 0}
+- id: gate-protects-a-past-accepted-correction
+  tags: [regression, gate, feedback]
+  input: {op: gate_correction, param: lint.max_lines, after: 30}
+  checks:
+    - {type: equals, path: verdict, value: reject}
+    - {type: count, path: regressions, value: 1}
+    - {type: contains, path: regressions.0, text: "correction:"}
+    - {type: equals, path: cases_run, value: 1}
+- id: gate-lets-a-correction-safe-proposal-through
+  tags: [regression, gate, feedback]
+  input: {op: gate_correction, param: lint.max_lines, after: 50}
+  checks:
+    - {type: equals, path: verdict, value: pass}
+    - {type: equals, path: regressions, value: []}
+- id: compare-detects-a-regression
+  tags: [regression, compare]
+  input:
+    op: compare
+    param: lint.max_lines
+    after: 30
+    tasks:
+      - {id: ok-35-lines, input: {code_lines: 35}, checks: [{type: no_len_finding}]}
+      - {id: ok-clean, input: {code: "local x = 1"}, checks: [{type: not_blocked}]}
+  checks:
+    - {type: equals, path: regressions, value: [ok-35-lines]}
+    - {type: equals, path: base_score, value: "2/2"}
+    - {type: equals, path: new_score, value: "1/2"}
+- id: compare-reports-no-regression-when-nothing-got-worse
+  tags: [regression, compare]
+  input:
+    op: compare
+    param: lint.max_lines
+    after: 50
+    tasks:
+      - {id: ok-35-lines, input: {code_lines: 35}, checks: [{type: no_len_finding}]}
+      - {id: ok-clean, input: {code: "local x = 1"}, checks: [{type: not_blocked}]}
+  checks:
+    - {type: equals, path: regressions, value: []}
+    - {type: equals, path: new_score, value: "2/2"}

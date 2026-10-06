@@ -11,6 +11,7 @@ from pathlib import Path
 
 from ..guide_adapter import Project
 from . import backends as B
+from .. import learning_params
 from . import learning, projects as PJ, ruleset as RS
 from .detectors import DETECTORS
 from .rules import SEV_RANK, Rule, fmt, load_rules, load_settings, rules_dir
@@ -242,6 +243,7 @@ def review_target(project: Project, target: str, *, project_id: str | None = Non
                   backends: list[str] | str | None = None, ruleset_path: str | None = None, context: str | None = None, timeout: float | None = None) -> dict:
     scope = PJ.resolve_scope(project, project_id, place_id)  # refuses (and says what is missing) before anything is read
     rules, settings = get_rules(project)
+    rules, settings = learning_params.apply_params(rules, settings, learning_params.store(project), learning_params.to_core_scope(scope))  # identity when nothing is learned
     lim = settings.get("limits", {})
     root, files, is_folder = collect_files(target, settings)
     if context not in (None, "server", "client", "shared"):

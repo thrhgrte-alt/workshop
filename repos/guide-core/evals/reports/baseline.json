@@ -1,0 +1,1277 @@
+{
+ "label": "baseline",
+ "self_written": {
+  "label": "baseline.self_written",
+  "mode": "solver",
+  "at": "2026-10-06T08:05:11+00:00",
+  "git_rev": "f7fcd66",
+  "python": "3.11.15",
+  "meta": {},
+  "passed": 80,
+  "total": 80,
+  "tasks": [
+   {
+    "id": "dryrun-default-writes-nothing",
+    "passed": true,
+    "checks": [
+     {
+      "check": "equals",
+      "passed": true,
+      "message": "dry_run == True (got True)"
+     },
+     {
+      "check": "count",
+      "passed": true,
+      "message": "len(steps) == 1 (got 1)"
+     },
+     {
+      "check": "equals",
+      "passed": true,
+      "message": "parts_after == ['Door', 'Lamp'] (got ['Door', 'Lamp'])"
+     },
+     {
+      "check": "equals",
+      "passed": true,
+      "message": "journal_lines == 0 (got 0)"
+     },
+     {
+      "check": "equals",
+      "passed": true,
+      "message": "versions_saved == 0 (got 0)"
+     }
+    ]
+   },
+   {
+    "id": "dryrun-apply-writes-journals-and-versions",
+    "passed": true,
+    "checks": [
+     {
+      "check": "equals",
+      "passed": true,
+      "message": "dry_run == False (got False)"
+     },
+     {
+      "check": "equals",
+      "passed": true,
+      "message": "parts_after == ['Gate', 'Lamp'] (got ['Gate', 'Lamp'])"
+     },
+     {
+      "check": "equals",
+      "passed": true,
+      "message": "journal_lines == 1 (got 1)"
+     },
+     {
+      "check": "equals",
+      "passed": true,
+      "message": "versions_saved == 1 (got 1)"
+     },
+     {
+      "check": "equals",
+      "passed": true,
+      "message": "changed == ['Door'] (got ['Door'])"
+     }
+    ]
+   },
+   {
+    "id": "dryrun-apply-refuses-a-plan-that-changed",
+    "passed": true,
+    "checks": [
+     {
+      "check": "refused",
+      "passed": true,
+      "message": "refused with 'plan changed since it was reviewed' (got 'the plan changed since it was reviewed (expected deadbeef0000, now 7d34a00d2632); show it again')"
+     },
+     {
+      "check": "equals",
+      "passed": true,
+      "message": "parts_after == ['Door', 'Lamp'] (got ['Door', 'Lamp'])"
+     }
+    ]
+   },
+   {
+    "id": "dryrun-warns-about-a-missing-part",
+    "passed": true,
+    "checks": [
+     {
+      "check": "count",
+      "passed": true,
+      "message": "len(steps) == 0 (got 0)"
+     },
+     {
+      "check": "contains",
+      "passed": true,
+      "message": "warnings.0 contains 'does not exist' (got \"'Missing' does not exist\")"
+     }
+    ]
+   },
+   {
+    "id": "dryrun-warns-about-a-name-clash",
+    "passed": true,
+    "checks": [
+     {
+      "check": "count",
+      "passed": true,
+      "message": "len(steps) == 0 (got 0)"
+     },
+     {
+      "check": "contains",
+      "passed": true,
+      "message": "warnings.0 contains 'already exists' (got \"'Lamp' already exists\")"
+     }
+    ]
+   },
+   {
+    "id": "dryrun-refuses-to-apply-a-plan-with-warnings",
+    "passed": true,
+    "checks": [
+     {
+      "check": "refused",
+      "passed": true,
+      "message": "refused with 'refusing to apply a plan with warnings' (got \"refusing to apply a plan with warnings: 'Missing' does not exist\")"
+     },
+     {
+      "check": "equals",
+      "passed": true,
+      "message": "journal_lines == 0 (got 0)"
+     }
+    ]
+   },
+   {
+    "id": "dryrun-plan-carries-a-fingerprint",
+    "passed": true,
+    "checks": [
+     {
+      "check": "count",
+      "passed": true,
+      "message": "len(fingerprint) == 12 (got 12)"
+     }
+    ]
+   },
+   {
+    "id": "dryrun-needs-a-place",
+    "passed": true,
+    "checks": [
+     {
+      "check": "refused",
+      "passed": true,
+      "message": "refused with 'place_id' (got \"place_id is required for project 'demo-a' (this tool is place-specific and will not guess one)\")"
+     }
+    ]
+   },
+   {
+    "id": "fb-retrieves-own-projects-correction",
+    "passed": true,
+    "checks": [
+     {
+      "check": "equals",
+      "passed": true,
+      "message": "hit_requests == ['make door bevels rounder'] (got ['make door bevels rounder'])"
+     }
+    ]
+   },
+   {
+    "id": "fb-never-leaks-another-projects-correction",
+    "passed": true,
+    "checks": [
+     {
+      "check": "equals",
+      "passed": true,
+      "message": "hit_requests == ['make door bevels sharper'] (got ['make door bevels sharper'])"
+     }
+    ]
+   },
+   {
+    "id": "fb-global-correction-is-visible-everywhere",
+    "passed": true,
+    "checks": [
+     {
+      "check": "equals",
+      "passed": true,
+      "message": "count == 2 (got 2)"
+     }
+    ]
+   },
+   {
+    "id": "fb-unrelated-query-finds-nothing",
+    "passed": true,
+    "checks": [
+     {
+      "check": "equals",
+      "passed": true,
+      "message": "hit_requests == [] (got [])"
+     }
+    ]
+   },
+   {
+    "id": "fb-place-level-correction-stays-in-its-place",
+    "passed": true,
+    "checks": [
+     {
+      "check": "equals",
+      "passed": true,
+      "message": "hit_requests == [] (got [])"
+     }
+    ]
+   },
+   {
+    "id": "fb-project-level-correction-reaches-its-places",
+    "passed": true,
+    "checks": [
+     {
+      "check": "equals",
+      "passed": true,
+      "message": "count == 1 (got 1)"
+     }
+    ]
+   },
+   {
+    "id": "fb-refuses-to-record-without-a-scope",
+    "passed": true,
+    "checks": [
+     {
+      "check": "refused",
+      "passed": true,
+      "message": "refused with 'needs a resolved scope' (got 'record_run needs a resolved scope (project_id, optional place_id): refusing to touch project data without one')"
+     }
+    ]
+   },
+   {
+    "id": "fb-reject-needs-a-reason",
+    "passed": true,
+    "checks": [
+     {
+      "check": "refused",
+      "passed": true,
+      "message": "refused with 'needs a reason' (got 'a reject/revise decision needs a reason or at least one correction')"
+     }
+    ]
+   },
+   {
+    "id": "fb-index-is-rebuilt-from-the-jsonl",
+    "passed": true,
+    "checks": [
+     {
+      "check": "equals",
+      "passed": true,
+      "message": "count == 1 (got 1)"
+     }
+    ]
+   },
+   {
+    "id": "fb-index-carries-a-schema-version",
+    "passed": true,
+    "checks": [
+     {
+      "check": "equals",
+      "passed": true,
+      "message": "schema_version == 1 (got 1)"
+     }
+    ]
+   },
+   {
+    "id": "params-default-when-nothing-set",
+    "passed": true,
+    "checks": [
+     {
+      "check": "equals",
+      "passed": true,
+      "message": "value == 40 (got 40)"
+     },
+     {
+      "check": "equals",
+      "passed": true,
+      "message": "source == 'default' (got 'default')"
+     }
+    ]
+   },
+   {
+    "id": "params-update-is-a-versioned-project-value",
+    "passed": true,
+    "checks": [
+     {
+      "check": "equals",
+      "passed": true,
+      "message": "value == 50 (got 50)"
+     },
+     {
+      "check": "equals",
+      "passed": true,
+      "message": "source == 'project' (got 'project')"
+     },
+     {
+      "check": "equals",
+      "passed": true,
+      "message": "version == 1 (got 1)"
+     }
+    ]
+   },
+   {
+    "id": "params-refuses-a-step-larger-than-allowed",
+    "passed": true,
+    "checks": [
+     {
+      "check": "refused",
+      "passed": true,
+      "message": "refused with 'allowed step' (got 'lint.max_lines: moving 40 -> 100 is larger than the allowed step 10; make it in smaller approved steps')"
+     }
+    ]
+   },
+   {
+    "id": "params-refuses-a-value-outside-its-range",
+    "passed": true,
+    "checks": [
+     {
+      "check": "refused",
+      "passed": true,
+      "message": "refused with 'outside the range' (got 'lint.max_lines: 500 is outside the range [10, 200]')"
+     }
+    ]
+   },
+   {
+    "id": "params-refuses-to-change-a-locked-parameter",
+    "passed": true,
+    "checks": [
+     {
+      "check": "refused",
+      "passed": true,
+      "message": "refused with 'locked' (got \"'lint.safety_weight' is locked and cannot be changed\")"
+     }
+    ]
+   },
+   {
+    "id": "params-locked-parameter-ignores-an-explicit-label",
+    "passed": true,
+    "checks": [
+     {
+      "check": "equals",
+      "passed": true,
+      "message": "value == 1.0 (got 1.0)"
+     },
+     {
+      "check": "equals",
+      "passed": true,
+      "message": "locked == True (got True)"
+     },
+     {
+      "check": "equals",
+      "passed": true,
+      "message": "source == 'default' (got 'default')"
+     }
+    ]
+   },
+   {
+    "id": "params-explicit-user-label-beats-the-project-value",
+    "passed": true,
+    "checks": [
+     {
+      "check": "equals",
+      "passed": true,
+      "message": "value == 60 (got 60)"
+     },
+     {
+      "check": "equals",
+      "passed": true,
+      "message": "source == 'user_label' (got 'user_label')"
+     },
+     {
+      "check": "contains",
+      "passed": true,
+      "message": "explain contains 'over: project=50' (got 'lint.max_lines = 60 from user_label (over: project=50; default=40)')"
+     }
+    ]
+   },
+   {
+    "id": "params-rollback-restores-exactly-the-previous-version",
+    "passed": true,
+    "checks": [
+     {
+      "check": "equals",
+      "passed": true,
+      "message": "value == 50 (got 50)"
+     },
+     {
+      "check": "equals",
+      "passed": true,
+      "message": "version == 1 (got 1)"
+     },
+     {
+      "check": "equals",
+      "passed": true,
+      "message": "source == 'project' (got 'project')"
+     }
+    ]
+   },
+   {
+    "id": "params-rollback-of-the-first-change-returns-to-the-default",
+    "passed": true,
+    "checks": [
+     {
+      "check": "equals",
+      "passed": true,
+      "message": "value == 40 (got 40)"
+     },
+     {
+      "check": "equals",
+      "passed": true,
+      "message": "source == 'default' (got 'default')"
+     }
+    ]
+   },
+   {
+    "id": "params-refuses-automatic-approval",
+    "passed": true,
+    "checks": [
+     {
+      "check": "refused",
+      "passed": true,
+      "message": "refused with 'approved_by' (got 'a change needs approved_by: the name of the person who approved it (automatic approval is not allowed)')"
+     }
+    ]
+   },
+   {
+    "id": "params-choice-moves-one-position-at-a-time",
+    "passed": true,
+    "checks": [
+     {
+      "check": "refused",
+      "passed": true,
+      "message": "refused with 'allowed step' (got \"lint.confidence: moving 'high' -> 'low' is larger than the allowed step 1; make it in smaller approved steps\")"
+     }
+    ]
+   },
+   {
+    "id": "promote-two-projects-is-not-offered",
+    "passed": true,
+    "checks": [
+     {
+      "check": "equals",
+      "passed": true,
+      "message": "candidates == [] (got [])"
+     },
+     {
+      "check": "contains",
+      "passed": true,
+      "message": "blocked_by.0 contains 'confirmed in 2 distinct project(s), needs 3' (got 'confirmed in 2 distinct project(s), needs 3')"
+     }
+    ]
+   },
+   {
+    "id": "promote-three-projects-is-offered",
+    "passed": true,
+    "checks": [
+     {
+      "check": "equals",
+      "passed": true,
+      "message": "candidates == ['has_interaction+purchase_remote'] (got ['has_interaction+purchase_remote'])"
+     }
+    ]
+   },
+   {
+    "id": "promote-contradiction-blocks-a-candidate",
+    "passed": true,
+    "checks": [
+     {
+      "check": "equals",
+      "passed": true,
+      "message": "candidates == [] (got [])"
+     },
+     {
+      "check": "contains",
+      "passed": true,
+      "message": "blocked_by.0 contains 'contradicting evidence' (got 'contradicting evidence in demo-c')"
+     }
+    ]
+   },
+   {
+    "id": "promote-non-transferable-pattern-is-never-offered",
+    "passed": true,
+    "checks": [
+     {
+      "check": "equals",
+      "passed": true,
+      "message": "candidates == [] (got [])"
+     },
+     {
+      "check": "contains",
+      "passed": true,
+      "message": "blocked_by.0 contains 'non-transferable' (got 'on the known-non-transferable list: held in one game only')"
+     }
+    ]
+   },
+   {
+    "id": "promote-needs-a-named-person",
+    "passed": true,
+    "checks": [
+     {
+      "check": "equals",
+      "passed": true,
+      "message": "promoted == False (got False)"
+     },
+     {
+      "check": "contains",
+      "passed": true,
+      "message": "error contains 'approved_by' (got 'promotion needs approved_by: the name of the person who approved it (automatic approval is not allowed)')"
+     }
+    ]
+   },
+   {
+    "id": "promote-needs-an-explicit-confirm",
+    "passed": true,
+    "checks": [
+     {
+      "check": "equals",
+      "passed": true,
+      "message": "promoted == False (got False)"
+     },
+     {
+      "check": "contains",
+      "passed": true,
+      "message": "error contains 'confirm=True' (got 'promoting to global needs confirm=True after the user has said yes; without it nothing is changed')"
+     }
+    ]
+   },
+   {
+    "id": "promote-global-with-approval-works",
+    "passed": true,
+    "checks": [
+     {
+      "check": "equals",
+      "passed": true,
+      "message": "promoted == True (got True)"
+     }
+    ]
+   },
+   {
+    "id": "promote-two-projects-is-refused-even-with-approval",
+    "passed": true,
+    "checks": [
+     {
+      "check": "equals",
+      "passed": true,
+      "message": "promoted == False (got False)"
+     },
+     {
+      "check": "contains",
+      "passed": true,
+      "message": "error contains 'cannot be promoted' (got \"'has_interaction+purchase_remote' cannot be promoted to global: confirmed in 2 distinct project(s), needs 3\")"
+     }
+    ]
+   },
+   {
+    "id": "telemetry-reports-output-size-per-tool",
+    "passed": true,
+    "checks": [
+     {
+      "check": "equals",
+      "passed": true,
+      "message": "calls == 3 (got 3)"
+     },
+     {
+      "check": "less_than",
+      "passed": true,
+      "message": "chars_median < 400 (got 177)"
+     },
+     {
+      "check": "equals",
+      "passed": true,
+      "message": "budget_exceeded == [] (got [])"
+     }
+    ]
+   },
+   {
+    "id": "skill-export-is-valid-and-short",
+    "passed": true,
+    "checks": [
+     {
+      "check": "equals",
+      "passed": true,
+      "message": "problems == [] (got [])"
+     },
+     {
+      "check": "less_than",
+      "passed": true,
+      "message": "skill_lines < 71 (got 28)"
+     },
+     {
+      "check": "contains",
+      "passed": true,
+      "message": "skill_md contains 'Knowledge version 0' (got '---\\nname: toytool\\ndescription: \"Use when checking Luau snippets with the toy tool.\"\\n---\\n<!-- generated by guide-core exp')"
+     },
+     {
+      "check": "contains",
+      "passed": true,
+      "message": "skill_md contains 'Nothing learned yet' (got '---\\nname: toytool\\ndescription: \"Use when checking Luau snippets with the toy tool.\"\\n---\\n<!-- generated by guide-core exp')"
+     }
+    ]
+   },
+   {
+    "id": "skill-export-labels-write-tools",
+    "passed": true,
+    "checks": [
+     {
+      "check": "contains",
+      "passed": true,
+      "message": "skill_md contains '`rename_part` [write]' (got '---\\nname: toytool\\ndescription: \"Use when checking Luau snippets with the toy tool.\"\\n---\\n<!-- generated by guide-core exp')"
+     },
+     {
+      "check": "contains",
+      "passed": true,
+      "message": "skill_md contains '`explain_rule` [read-only, rare]' (got '---\\nname: toytool\\ndescription: \"Use when checking Luau snippets with the toy tool.\"\\n---\\n<!-- generated by guide-core exp')"
+     }
+    ]
+   },
+   {
+    "id": "skill-export-states-a-tuned-parameter",
+    "passed": true,
+    "checks": [
+     {
+      "check": "contains",
+      "passed": true,
+      "message": "skill_md contains 'lint.max_lines=50' (got '---\\nname: toytool\\ndescription: \"Use when checking Luau snippets with the toy tool.\"\\n---\\n<!-- generated by guide-core exp')"
+     },
+     {
+      "check": "contains",
+      "passed": true,
+      "message": "parameters_md contains '| lint.max_lines | 50 | project | 1 |' (got '# Parameters (demo-a/main, knowledge version 1, 2026-10-06)\\n\\n| name | value | source | version | default | range | locke')"
+     }
+    ]
+   },
+   {
+    "id": "observe-redacts-paths-and-keys",
+    "passed": true,
+    "checks": [
+     {
+      "check": "excludes",
+      "passed": true,
+      "message": "stored excludes 'alice' (got '{\"at\": \"2026-10-06T08:05:11+00:00\", \"considered\": [], \"extra\": {\"note\": \"fix <path> with <secret>\"}, \"findings\": {}, \"gl')"
+     },
+     {
+      "check": "excludes",
+      "passed": true,
+      "message": "stored excludes 'abc123secretvalue' (got '{\"at\": \"2026-10-06T08:05:11+00:00\", \"considered\": [], \"extra\": {\"note\": \"fix <path> with <secret>\"}, \"findings\": {}, \"gl')"
+     },
+     {
+      "check": "contains",
+      "passed": true,
+      "message": "stored contains '<path>' (got '{\"at\": \"2026-10-06T08:05:11+00:00\", \"considered\": [], \"extra\": {\"note\": \"fix <path> with <secret>\"}, \"findings\": {}, \"gl')"
+     }
+    ]
+   },
+   {
+    "id": "lint-clean-script",
+    "passed": true,
+    "checks": [
+     {
+      "check": "not_blocked",
+      "passed": true,
+      "message": "not blocked (got False)"
+     },
+     {
+      "check": "equals",
+      "passed": true,
+      "message": "total_findings == 0 (got 0)"
+     },
+     {
+      "check": "contains",
+      "passed": true,
+      "message": "verdict contains 'OK: nothing found' (got 'OK: nothing found [demo-a/main]')"
+     }
+    ]
+   },
+   {
+    "id": "lint-blocks-httpget",
+    "passed": true,
+    "checks": [
+     {
+      "check": "equals",
+      "passed": true,
+      "message": "blocked == True (got True)"
+     },
+     {
+      "check": "has_finding",
+      "passed": true,
+      "message": "expected a finding mentioning 'HttpGet'"
+     }
+    ]
+   },
+   {
+    "id": "lint-blocks-requestasync",
+    "passed": true,
+    "checks": [
+     {
+      "check": "equals",
+      "passed": true,
+      "message": "blocked == True (got True)"
+     },
+     {
+      "check": "has_finding",
+      "passed": true,
+      "message": "expected a finding mentioning 'RequestAsync'"
+     }
+    ]
+   },
+   {
+    "id": "lint-blocks-websocket",
+    "passed": true,
+    "checks": [
+     {
+      "check": "equals",
+      "passed": true,
+      "message": "blocked == True (got True)"
+     },
+     {
+      "check": "has_finding",
+      "passed": true,
+      "message": "expected a finding mentioning 'WebSocket'"
+     }
+    ]
+   },
+   {
+    "id": "lint-blocks-loadstring",
+    "passed": true,
+    "checks": [
+     {
+      "check": "equals",
+      "passed": true,
+      "message": "blocked == True (got True)"
+     },
+     {
+      "check": "has_finding",
+      "passed": true,
+      "message": "expected a finding mentioning 'loadstring'"
+     }
+    ]
+   },
+   {
+    "id": "lint-blocks-require",
+    "passed": true,
+    "checks": [
+     {
+      "check": "equals",
+      "passed": true,
+      "message": "blocked == True (got True)"
+     },
+     {
+      "check": "has_finding",
+      "passed": true,
+      "message": "expected a finding mentioning 'require('"
+     }
+    ]
+   },
+   {
+    "id": "lint-blocks-destroy",
+    "passed": true,
+    "checks": [
+     {
+      "check": "equals",
+      "passed": true,
+      "message": "blocked == True (got True)"
+     },
+     {
+      "check": "has_finding",
+      "passed": true,
+      "message": "expected a finding mentioning ':Destroy('"
+     }
+    ]
+   },
+   {
+    "id": "lint-blocks-publish",
+    "passed": true,
+    "checks": [
+     {
+      "check": "equals",
+      "passed": true,
+      "message": "blocked == True (got True)"
+     },
+     {
+      "check": "has_finding",
+      "passed": true,
+      "message": "expected a finding mentioning 'Publish'"
+     }
+    ]
+   },
+   {
+    "id": "lint-blocks-datastore",
+    "passed": true,
+    "checks": [
+     {
+      "check": "equals",
+      "passed": true,
+      "message": "blocked == True (got True)"
+     },
+     {
+      "check": "has_finding",
+      "passed": true,
+      "message": "expected a finding mentioning 'DataStoreService'"
+     }
+    ]
+   },
+   {
+    "id": "lint-allows-jsonencode-only",
+    "passed": true,
+    "checks": [
+     {
+      "check": "not_blocked",
+      "passed": true,
+      "message": "not blocked (got False)"
+     },
+     {
+      "check": "equals",
+      "passed": true,
+      "message": "total_findings == 0 (got 0)"
+     }
+    ]
+   },
+   {
+    "id": "lint-blocks-other-httpservice-use",
+    "passed": true,
+    "checks": [
+     {
+      "check": "equals",
+      "passed": true,
+      "message": "blocked == True (got True)"
+     },
+     {
+      "check": "has_finding",
+      "passed": true,
+      "message": "expected a finding mentioning 'JSONEncode'"
+     }
+    ]
+   },
+   {
+    "id": "lint-todo-is-info-not-block",
+    "passed": true,
+    "checks": [
+     {
+      "check": "not_blocked",
+      "passed": true,
+      "message": "not blocked (got False)"
+     },
+     {
+      "check": "equals",
+      "passed": true,
+      "message": "total_findings == 1 (got 1)"
+     },
+     {
+      "check": "equals",
+      "passed": true,
+      "message": "findings.0.rule == 'TODO' (got 'TODO')"
+     },
+     {
+      "check": "contains",
+      "passed": true,
+      "message": "verdict contains 'OK with 1 note(s)' (got 'OK with 1 note(s) [demo-a/main]')"
+     }
+    ]
+   },
+   {
+    "id": "lint-length-boundary-ok",
+    "passed": true,
+    "checks": [
+     {
+      "check": "equals",
+      "passed": true,
+      "message": "total_findings == 0 (got 0)"
+     }
+    ]
+   },
+   {
+    "id": "lint-length-over-limit-warns",
+    "passed": true,
+    "checks": [
+     {
+      "check": "not_blocked",
+      "passed": true,
+      "message": "not blocked (got False)"
+     },
+     {
+      "check": "equals",
+      "passed": true,
+      "message": "findings.0.rule == 'LEN' (got 'LEN')"
+     },
+     {
+      "check": "equals",
+      "passed": true,
+      "message": "findings.0.severity == 'warn' (got 'warn')"
+     }
+    ]
+   },
+   {
+    "id": "lint-output-capped-at-ten",
+    "passed": true,
+    "checks": [
+     {
+      "check": "equals",
+      "passed": true,
+      "message": "total_findings == 12 (got 12)"
+     },
+     {
+      "check": "count",
+      "passed": true,
+      "message": "len(findings) == 10 (got 10)"
+     },
+     {
+      "check": "equals",
+      "passed": true,
+      "message": "truncated == True (got True)"
+     },
+     {
+      "check": "contains",
+      "passed": true,
+      "message": "verdict contains 'BLOCKED: 12 error(s)' (got 'BLOCKED: 12 error(s), 0 other finding(s) [demo-a/main]')"
+     }
+    ]
+   },
+   {
+    "id": "gen-valid-path-and-attribute",
+    "passed": true,
+    "checks": [
+     {
+      "check": "contains",
+      "passed": true,
+      "message": "script contains 'SetAttribute(\"Open\", true)' (got 'local node = game:GetService(\"Workspace\")\\nnode = node:FindFirstChild(\"Door\")\\nnode:SetAttribute(\"Open\", true)\\nreturn \"don')"
+     },
+     {
+      "check": "equals",
+      "passed": true,
+      "message": "lint == [] (got [])"
+     }
+    ]
+   },
+   {
+    "id": "gen-rejects-empty-path-segment",
+    "passed": true,
+    "checks": [
+     {
+      "check": "refused",
+      "passed": true,
+      "message": "refused with 'dotted path' (got \"path 'Workspace..Door' must be a dotted path of plain names such as ReplicatedStorage.Config (letters, digits, underscore)\")"
+     }
+    ]
+   },
+   {
+    "id": "gen-rejects-slash-path",
+    "passed": true,
+    "checks": [
+     {
+      "check": "refused",
+      "passed": true,
+      "message": "refused with 'dotted path' (got \"path 'Workspace/Door' must be a dotted path of plain names such as ReplicatedStorage.Config (letters, digits, underscore)\")"
+     }
+    ]
+   },
+   {
+    "id": "gen-rejects-injection-in-attribute-name",
+    "passed": true,
+    "checks": [
+     {
+      "check": "refused",
+      "passed": true,
+      "message": "refused with 'must match' (got 'attribute \\'x\"); loadstring(\"\\' must match [A-Za-z][A-Za-z0-9_]{0,39}')"
+     }
+    ]
+   },
+   {
+    "id": "gen-escapes-quotes-in-string-values",
+    "passed": true,
+    "checks": [
+     {
+      "check": "contains",
+      "passed": true,
+      "message": "script contains 'SetAttribute(\"Label\", \"say \\\\\"hi\\\\\"\")' (got 'local node = game:GetService(\"Workspace\")\\nnode = node:FindFirstChild(\"Door\")\\nnode:SetAttribute(\"Label\", \"say \\\\\"hi\\\\\"\")\\nre')"
+     },
+     {
+      "check": "equals",
+      "passed": true,
+      "message": "lint == [] (got [])"
+     }
+    ]
+   },
+   {
+    "id": "gen-rejects-newline-in-string-values",
+    "passed": true,
+    "checks": [
+     {
+      "check": "refused",
+      "passed": true,
+      "message": "refused with 'control characters' (got 'control characters (including newlines) cannot be embedded in a generated string')"
+     }
+    ]
+   },
+   {
+    "id": "gen-runs-on-the-mock-datamodel",
+    "passed": true,
+    "checks": [
+     {
+      "check": "one_of",
+      "passed": true,
+      "message": "mock_status in ['ok', 'skipped'] (got 'ok')"
+     },
+     {
+      "check": "mock_attr",
+      "passed": true,
+      "message": "mock attribute == 5 (got 5)"
+     }
+    ]
+   },
+   {
+    "id": "gate-rejects-a-proposal-that-breaks-a-passing-case",
+    "passed": true,
+    "checks": [
+     {
+      "check": "equals",
+      "passed": true,
+      "message": "verdict == 'reject' (got 'reject')"
+     },
+     {
+      "check": "equals",
+      "passed": true,
+      "message": "regressions == ['ok-35-lines'] (got ['ok-35-lines'])"
+     },
+     {
+      "check": "equals",
+      "passed": true,
+      "message": "cases_run == 2 (got 2)"
+     }
+    ]
+   },
+   {
+    "id": "gate-passes-a-harmless-proposal",
+    "passed": true,
+    "checks": [
+     {
+      "check": "equals",
+      "passed": true,
+      "message": "verdict == 'pass' (got 'pass')"
+     },
+     {
+      "check": "equals",
+      "passed": true,
+      "message": "regressions == [] (got [])"
+     },
+     {
+      "check": "equals",
+      "passed": true,
+      "message": "cases_run == 2 (got 2)"
+     }
+    ]
+   },
+   {
+    "id": "gate-with-no-cases-is-inconclusive-not-a-pass",
+    "passed": true,
+    "checks": [
+     {
+      "check": "equals",
+      "passed": true,
+      "message": "verdict == 'inconclusive' (got 'inconclusive')"
+     },
+     {
+      "check": "equals",
+      "passed": true,
+      "message": "cases_run == 0 (got 0)"
+     }
+    ]
+   },
+   {
+    "id": "gate-protects-a-past-accepted-correction",
+    "passed": true,
+    "checks": [
+     {
+      "check": "equals",
+      "passed": true,
+      "message": "verdict == 'reject' (got 'reject')"
+     },
+     {
+      "check": "count",
+      "passed": true,
+      "message": "len(regressions) == 1 (got 1)"
+     },
+     {
+      "check": "contains",
+      "passed": true,
+      "message": "regressions.0 contains 'correction:' (got 'correction:run-20261006-080511-e2b8f9:0')"
+     },
+     {
+      "check": "equals",
+      "passed": true,
+      "message": "cases_run == 1 (got 1)"
+     }
+    ]
+   },
+   {
+    "id": "gate-lets-a-correction-safe-proposal-through",
+    "passed": true,
+    "checks": [
+     {
+      "check": "equals",
+      "passed": true,
+      "message": "verdict == 'pass' (got 'pass')"
+     },
+     {
+      "check": "equals",
+      "passed": true,
+      "message": "regressions == [] (got [])"
+     }
+    ]
+   },
+   {
+    "id": "compare-detects-a-regression",
+    "passed": true,
+    "checks": [
+     {
+      "check": "equals",
+      "passed": true,
+      "message": "regressions == ['ok-35-lines'] (got ['ok-35-lines'])"
+     },
+     {
+      "check": "equals",
+      "passed": true,
+      "message": "base_score == '2/2' (got '2/2')"
+     },
+     {
+      "check": "equals",
+      "passed": true,
+      "message": "new_score == '1/2' (got '1/2')"
+     }
+    ]
+   },
+   {
+    "id": "compare-reports-no-regression-when-nothing-got-worse",
+    "passed": true,
+    "checks": [
+     {
+      "check": "equals",
+      "passed": true,
+      "message": "regressions == [] (got [])"
+     },
+     {
+      "check": "equals",
+      "passed": true,
+      "message": "new_score == '2/2' (got '2/2')"
+     }
+    ]
+   },
+   {
+    "id": "scope-refuses-missing-project",
+    "passed": true,
+    "checks": [
+     {
+      "check": "refused",
+      "passed": true,
+      "message": "refused with 'project_id is required' (got \"project_id is required: this tool reads or writes project data and will not guess one. Known projects: ['demo-a', 'demo-b', 'demo-c'].\")"
+     }
+    ]
+   },
+   {
+    "id": "scope-refuses-unknown-project",
+    "passed": true,
+    "checks": [
+     {
+      "check": "refused",
+      "passed": true,
+      "message": "refused with \"unknown project_id 'demo-z'\" (got \"unknown project_id 'demo-z'. Known projects: ['demo-a', 'demo-b', 'demo-c']. Did you mean ['demo-c', 'demo-b']? Add it to projects.yaml firs\")"
+     }
+    ]
+   },
+   {
+    "id": "scope-refuses-place-of-another-project",
+    "passed": true,
+    "checks": [
+     {
+      "check": "refused",
+      "passed": true,
+      "message": "refused with \"does not belong to project 'demo-b'\" (got \"place 'alt' does not belong to project 'demo-b'. Its places: ['main']\")"
+     }
+    ]
+   },
+   {
+    "id": "scope-resolves-by-roblox-place-id",
+    "passed": true,
+    "checks": [
+     {
+      "check": "equals",
+      "passed": true,
+      "message": "scope.place_id == 'alt' (got 'alt')"
+     }
+    ]
+   },
+   {
+    "id": "studio-matches-by-name-when-unpublished",
+    "passed": true,
+    "checks": [
+     {
+      "check": "equals",
+      "passed": true,
+      "message": "matched_by == 'name' (got 'name')"
+     },
+     {
+      "check": "equals",
+      "passed": true,
+      "message": "studio_id == 's1' (got 's1')"
+     }
+    ]
+   },
+   {
+    "id": "studio-matches-by-place-id",
+    "passed": true,
+    "checks": [
+     {
+      "check": "equals",
+      "passed": true,
+      "message": "matched_by == 'place_id' (got 'place_id')"
+     },
+     {
+      "check": "equals",
+      "passed": true,
+      "message": "studio_id == 's2' (got 's2')"
+     }
+    ]
+   },
+   {
+    "id": "studio-refuses-when-another-place-is-open",
+    "passed": true,
+    "checks": [
+     {
+      "check": "refused",
+      "passed": true,
+      "message": "refused with \"are not place 'demo-a/main'\" (got 'refusing: the open Studio instance(s) [\"\\'Demo B Main\\' (place_id 0)\"] are not place \\'demo-a/main\\' (expected name \\'Demo A Main\\' or place id No')"
+     }
+    ]
+   },
+   {
+    "id": "studio-refuses-when-nothing-is-open",
+    "passed": true,
+    "checks": [
+     {
+      "check": "refused",
+      "passed": true,
+      "message": "refused with 'cannot confirm the open Studio place' (got \"cannot confirm the open Studio place: pass the output of the hub's list_roblox_studios as a list of {name, place_id, studio_id} and open pla\")"
+     }
+    ]
+   },
+   {
+    "id": "studio-refuses-ambiguous-match",
+    "passed": true,
+    "checks": [
+     {
+      "check": "refused",
+      "passed": true,
+      "message": "refused with '2 open Studio instances match' (got \"refusing: 2 open Studio instances match place 'demo-a/main'; close the extra ones so the target is unambiguous.\")"
+     }
+    ]
+   }
+  ]
+ },
+ "real": {
+  "label": "baseline.real",
+  "mode": "solver",
+  "at": "2026-10-06T08:05:11+00:00",
+  "git_rev": "f7fcd66",
+  "python": "3.11.15",
+  "meta": {},
+  "passed": 0,
+  "total": 0,
+  "tasks": []
+ },
+ "real_count": 0
+}

@@ -1,0 +1,28 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "guide-core"
+version = "0.1.0"
+description = "Shared machinery for the Roblox guide repositories: dry-run plans, scoped feedback, retrieval, evals, Luau safety lint, MCP helpers, config, and a learning layer (params, propose, gate, promote, skill export)."
+readme = "README.md"
+requires-python = ">=3.10"
+license = {text = "MIT"}
+dependencies = ["mcp>=1.2", "pyyaml>=6", "jsonschema>=4.18"]
+
+[project.optional-dependencies]
+mock = ["lupa>=2"]
+imaging = ["numpy>=1.24", "pillow>=10"]
+embeddings = ["sentence-transformers>=2.7", "pillow>=10"]
+dev = ["pytest>=7", "numpy>=1.24", "pillow>=10", "lupa>=2"]
+
+[project.scripts]
+guide-core = "guide_core.__main__:main"
+
+[tool.setuptools.packages.find]
+include = ["guide_core*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"

@@ -17,7 +17,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from econbal import project  # noqa: E402
-from econbal.core.style import load_style  # noqa: E402
+from guide_core.style import load_style  # noqa: E402
 from econbal.domain import analysis as A, plot, rebalance as R, spec as S  # noqa: E402
 
 P = project()

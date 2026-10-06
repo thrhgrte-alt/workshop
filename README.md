@@ -51,3 +51,10 @@ cd repos/concept-art-ai && python -m venv .venv && . .venv/bin/activate && pip i
 `asset-roblox-preflight`, `luau-reviewer` and `roblox-economy-balancer` follow `roblox-repo-build-instructions.md`. `guide-core` was not available, so each reaches shared machinery through one adapter
 module (`guide_adapter.py`); every tool is scoped to a `project_id` (and place), and output is kept short with a size budget in the evals. Starter limits, naming schemes, target pacing and the example
 projects are **placeholders to replace**. None was run against real Blender, Studio, a real game, or (for `luau-reviewer`) the real `luau-analyze`/`selene`/`stylua`.
+
+## Third batch: `guide-core` (shared library)
+
+`guide-core` (`repos/guide-core`, package `guide_core`) holds the machinery the Roblox helper repos shared: dry-run plans, feedback store, retrieval, evals, Luau lint and mock DataModel, MCP helpers, config, project/place scope, and a learning layer
+(observe, tunable parameters, proposals, an eval gate, versioned promotion, skill export). `luau-reviewer`, `roblox-economy-balancer` and `asset-roblox-preflight` now depend on it (their vendored `core/` folders were removed; test and eval
+results were unchanged, see each repo's git history). **Install it first:** `pip install -e repos/guide-core`. The five older repositories still carry their own vendored copy; see `repos/guide-core/docs/migrating-older-repos.md`.
+It improves only as far as the corrections and evals it is given; model weights never change.

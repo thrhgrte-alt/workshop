@@ -8,7 +8,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from luaurev.core.cli import run
+from guide_core.cli import run
 from luaurev import project
 from luaurev.hooks import HOOKS
 

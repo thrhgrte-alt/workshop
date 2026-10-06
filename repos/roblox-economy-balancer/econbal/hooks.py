@@ -12,7 +12,8 @@ from pathlib import Path
 from typing import Any
 
 from . import tools as tools_mod
-from .guide_adapter import DomainHooks, all_tools, config, emit, evals as evals_mod, feedback as fb, mcpkit, scope
+from . import learning_params
+from .guide_adapter import DomainHooks, all_tools, config, emit, evals as evals_mod, feedback as fb, mcpkit, scope, skillgen
 from .domain import analysis as A
 from .domain import importer, learning, luau, places, plot, rebalance as R
 from .domain import sim as M
@@ -453,6 +454,7 @@ def register_cli(sub, project: scope.Project) -> None:
         if name == "plot":
             p.add_argument("--out")
         p.set_defaults(handler={"check": _check, "table": _table, "plot": _plot}[name])
+    skillgen.add_export_skill_command(sub, project, learning_params.skill_kwargs, resolve=learning_params.resolve_scope)
     p = sub.add_parser("places", help="list the projects and places in projects.yaml")
     p.set_defaults(handler=lambda a, pr: emit({"registry": str(places.registry_path(pr)), "places": places.known(places.load_registry(pr))}))
 

@@ -11,7 +11,8 @@ import tempfile
 from pathlib import Path
 
 from . import tools as tools_mod
-from .guide_adapter import Project, config, evals
+from . import learning_params
+from .guide_adapter import Project, config, evals, skillgen
 from .domain import backends as B
 from .domain import projects as PJ
 from .domain import detectors as D
@@ -379,6 +380,8 @@ def register_cli(sub, project: Project) -> None:
     p.add_argument("--compare", metavar="BASE_LABEL")
     p.add_argument("--report", metavar="LABEL", help="do not run: compute from the saved report evals/reports/LABEL.json")
     p.set_defaults(handler=_eval_pr)
+
+    skillgen.add_export_skill_command(sub, project, learning_params.skill_kwargs, resolve=learning_params.resolve_scope)
 
 
 def _review(a, pr) -> int:

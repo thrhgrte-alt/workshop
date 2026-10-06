@@ -31,6 +31,7 @@ from typing import Any
 
 import yaml
 
+from .. import learning_params
 from ..guide_adapter import config
 
 ID_RE = re.compile(r"^[A-Za-z][A-Za-z0-9_]{0,39}$")
@@ -110,6 +111,7 @@ def layered_style(project, entry: dict) -> tuple[dict, dict]:
         if "target_bands" in over:
             style["name"] = over.get("name", f"Pacing bands for {entry['project_id']}/{entry['place_id']}")
         info["place_bands"] = str(bp)
+    style = learning_params.apply_params(style, learning_params.store(project), learning_params.to_core_scope(entry))  # the same object when nothing is learned
     return style, info
 
 

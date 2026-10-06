@@ -13,6 +13,7 @@ python -m venv .venv && . .venv/bin/activate
 pip install -e ".[dev]"
 python -m preflight doctor
 python -m preflight projects
+python -m preflight export-skill --scope <project_id>   # agent skill from learned limits/corrections (dry run; --write)
 python -m preflight report examples/assets/bad_too_many_tris.glb --project synthetic-sandbox --profile prop
 python -m preflight inspect examples/assets/good_tool_drill.glb --project synthetic-sandbox
 python -m preflight fix-script examples/assets/bad_spin_bone_name.glb --project synthetic-sandbox --profile tool
@@ -39,7 +40,8 @@ python scripts/build_schema.py                  # regenerate library/manifest.sc
 
 ## Conventions for editing this repo
 
-- Python 3.10+. Shared machinery is imported **only** through `preflight/guide_adapter.py` (a test greps for violations); `preflight/core/` is vendored: do not edit it.
+- Numeric limits in `rules/*.yaml` and `rules/profiles/*.yaml` are registered automatically as guide-core parameters by `preflight/learning_params.py` (defaults come from the files); a new numeric limit is registered with no extra code.
+- Python 3.10+. Shared machinery comes from the installed `guide-core` library (install it first: `pip install -e /path/to/guide-core`) and is imported **only** through `preflight/guide_adapter.py` (a test greps for violations); there is no vendored `core/` any more, so fix shared code in guide-core, not here.
 - Judgement lives in YAML (`rules/`, `rules/profiles/`, `projects/*/profiles.yaml`, `style/style.yaml`). Add a rule: YAML entry plus an `@implements` check; the tests fail on a mismatch.
 - Tool functions are annotated `-> dict[str, Any]`, raise `ValueError` with an actionable message, keep descriptions short (<= 300 chars) and mark rarely used tools `[rare]` (add to `RARE` in `tools.py`).
 - Add an eval task for every new rule or tool; keep `evals/tasks/token_budget.yaml` budgets honest.

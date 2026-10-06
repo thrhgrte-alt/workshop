@@ -7,8 +7,8 @@ output formats are written from the author's general knowledge of Roblox, Luau, 
 | Item | How | Date |
 |---|---|---|
 | The build instructions for this repository (two versions: the original and the update with `guide-core`, projects/places and token discipline) | read in full | 2026-10 |
-| The structure of the sibling repositories `concept-art-ai` and `modular-set-dressing-ai` and the shared kit in `luaurev/core` | read in full | 2026-10 |
-| `guide-core` and its spec file (`roblox-support-repo-build-instructions.md`) | **not available, not read**; `luaurev/guide_adapter.py` maps the interface names onto the vendored core | - |
+| The structure of the sibling repositories `concept-art-ai` and `modular-set-dressing-ai` and the shared kit (then vendored in `luaurev/core`, now the installed `guide-core` library) | read in full | 2026-10 |
+| `guide-core` and its spec file (`roblox-support-repo-build-instructions.md`) | was not available at first build; now installed and used through `luaurev/guide_adapter.py` | 2026-10 |
 
 ## What is assumed and must be checked by you
 | Claim | Status |

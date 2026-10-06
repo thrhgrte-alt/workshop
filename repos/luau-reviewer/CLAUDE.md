@@ -17,6 +17,7 @@ python -m luaurev review path/to/folder --project example-obby --strict
 python -m luaurev rules --category security                # list the rules
 python -m luaurev eval run --label x && python -m luaurev eval compare baseline x
 python -m luaurev eval-pr --compare baseline                # precision and recall
+python -m luaurev export-skill --scope <project_id>           # generate the agent skill from learned parameters/corrections (dry run; --write)
 python -m luaurev serve                                    # MCP server over stdio
 python -m luaurev call <tool> --json '{...}'               # any tool without an MCP client
 python -m pytest
@@ -41,10 +42,11 @@ python scripts/make_examples.py                            # regenerate examples
 
 ## Conventions for editing this repo
 
-- Python 3.10+. All shared machinery (feedback, evals, retrieval, mcp helpers, style/config, scope, dry-run plans) is imported ONLY through `luaurev/guide_adapter.py` (a test enforces it).
-  `luaurev/core/` is vendored from the suite kit: do not edit it here. `guide-core` was not available; swapping it in means editing `guide_adapter.py` only.
+- Python 3.10+. All shared machinery (feedback, evals, retrieval, mcp helpers, style/config, scope, dry-run plans, params, skill export) comes from the installed `guide-core` library (install it first:
+  `pip install -e /path/to/guide-core`) and is imported ONLY through `luaurev/guide_adapter.py` (a test enforces it). There is no vendored `core/` any more: fix shared code in guide-core, not here.
 - Tool functions are annotated `-> dict[str, Any]` and raise `ValueError` with an actionable message. Read-only tools use `read_only=True`. Keep descriptions short (a test limits their length) and output brief (evals budget it).
 - Everything the tool judges is a rule in `rules/*.yaml` (id, severity, confidence, problem, explanation, example, good, fix, params). The detector for a rule lives in `luaurev/domain/detectors.py`. Numeric limits are defaults marked `verify_against_current_docs`.
 - New rule: add it to the YAML, write its detector, add a planted-bug fixture to `scripts/example_fixtures.py` (plus a clean trap if there is a lookalike), run `python scripts/make_examples.py`, then the evals. A test fails if a rule has no eval.
 - Expectations in `scripts/example_fixtures.py` are written from the planted bug, not copied from the checker's output. Do not edit an expectation to make a failing eval pass; fix the checker or document a known gap (`gap=`).
+- Tunable numbers live in `rules/*.yaml`; they are registered as guide-core parameters automatically by `luaurev/learning_params.py` (defaults come from the YAML). Add a numeric rule param there and it is registered; `limits.*` stay locked.
 - After editing `AGENTS.md` or `skills/`, run `python scripts/sync_agent_files.py`; CI fails on drift.

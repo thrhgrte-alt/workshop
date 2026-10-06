@@ -11,7 +11,7 @@ import json
 from pathlib import Path
 from typing import Any
 
-from . import projects as P
+from . import learning_params, projects as P
 from .domain import engine, fixes, loader, overrides as OV, report as R, summary as SM
 from .domain.rules import Overrides, render
 from .guide_adapter import Plan, Project, ToolSpec, Versioner, common_tools, feedback as fb, resolve_inside, safe_name
@@ -28,7 +28,7 @@ def make_tools(project: Project) -> list[ToolSpec]:
 
     def cfg(project_id: str):
         entry(project_id)
-        return engine.load_config(project.root, project_id)
+        return learning_params.effective_config(project, project_id, engine.load_config(project.root, project_id))  # the same object when nothing is learned
 
     def sp(project_id: str, is_global: bool = False) -> P.ScopedProject:
         entry(project_id)

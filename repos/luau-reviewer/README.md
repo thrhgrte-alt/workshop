@@ -10,7 +10,7 @@ as an MCP server and a CLI.
 
 > **Honest status.** Built without Roblox Studio, without a real game, and **without `luau-analyze`, `selene` or `stylua` installed**. Everything was tested on synthetic fixtures and on stub programs that print canned output in those tools' formats.
 > It has **never been run against** the real tools, a real game or real player scripts, so the backend output formats and the precision on real code are unverified. The own rules are heuristics: expect misses and some noise on real code.
-> guide-core was not available (the shared library named in the build instructions, and its spec file was not provided): see "Shared machinery" below.
+> Shared machinery now comes from the installed `guide-core` library (**install it first**, see Quick start). History: guide-core was not available when this repository was first built, so it shipped a vendored copy of the shared kit; that copy is gone. See "Shared machinery" below.
 
 ## Capability matrix
 
@@ -35,6 +35,7 @@ as an MCP server and a CLI.
 ```bash
 git clone <this repo> && cd luau-reviewer
 python -m venv .venv && . .venv/bin/activate          # Python 3.10+
+pip install -e /path/to/guide-core                    # FIRST: the shared library (a local repository, not on PyPI)
 pip install -e ".[dev]"
 python -m luaurev doctor                              # which backends are installed
 python -m luaurev review examples/negative/sec002_client_price.server.luau --project example-sandbox
@@ -42,6 +43,7 @@ python -m luaurev review examples/places --project example-obby          # folde
 python -m luaurev review my/folder --project example-sandbox --strict --backends none   # own rules only
 python -m luaurev eval run --label mine && python -m luaurev eval compare baseline mine
 python -m luaurev eval-pr --compare baseline          # precision and recall
+python -m luaurev export-skill --scope example-obby    # agent skill with the learned parameters and corrections (dry run; --write to write it)
 python -m pytest
 ```
 The CLI prints the findings table; exit code 1 means at least one error-severity defect, 2 means the request was refused (for example no `--project`).
@@ -142,11 +144,21 @@ precision on real code. If one of the three tools is installed where you run `py
 - Rule thresholds are defaults (`rules/`), not Roblox limits. SEC001 treats an argument as validated when it appears in a type-check call or in an `if`/`assert` line; that is generous on purpose (fewer false alarms, more misses).
 - Large files and folders are capped (1 MB per file, 300 files per review).
 
+## Tunable parameters and skill export (guide-core learning layer)
+
+Every tunable number in `rules/*.yaml` and `rules/_settings.yaml` is registered as a named parameter in guide-core's `params` module (`luaurev/learning_params.py`; 51 in all): `rule.<ID>.confidence` (41), `rule.<ID>.params.<name>` (`rule.DAT005.params.min_seconds`, `rule.API007.params.max_per_file`),
+`learning.similarity_threshold`, `learning.max_confidence_steps`, `learning.ngram`. **The defaults are read from those same files, so with nothing learned every review is byte-for-byte what it was** (the evals and a test check that); the five numeric `limits` (file size, file count, findings cap, backend timeout, batch size) are registered **locked**.
+A value can differ per project or place and carries a version history, a range and a bounded step; changes reach it only through guide-core's propose, gate (all evals, `evals/real/` and past corrections) and an approval by a named person, and a rollback restores the previous version exactly. Nothing is learned automatically and the model's weights never change.
+Severity, `strict_mode.escalate` and the confidences that a detector sets per hit are not parameters. **Not wired yet:** nothing in this repository proposes changes on its own; the parameters are registered and honoured by `review_*`, but filling them with real values needs real runs and a person approving.
+
+`python -m luaurev export-skill [--scope global|<project_id>] [--place ID] [--out DIR] [--write]` generates a short skill folder (`SKILL.md` + `references/`): when to use it, the tool list, the workflow, what is verified and not, the current corrections for the scope, and the parameter values with their versions and the knowledge version/date. It is a dry run unless `--write`; it refuses to overwrite a `SKILL.md` it did not generate and refuses an unregistered project. There is no MCP tool for it (it is a maintenance command, and a tool would add to every client's context).
+
 ## Shared machinery and `guide-core`
 
-guide-core was not available (the shared library the build instructions name) and its spec file was not provided. All shared machinery (dry-run plans, the feedback store, retrieval, the eval runner and compare, MCP helpers, style/config loading, path scoping) comes from the
-shared kit **vendored in `luaurev/core/`**, and **every other module imports it only through one thin file, `luaurev/guide_adapter.py`** (a test greps the package to enforce this), under the interface names `dryrun`, `feedback`, `retrieval`, `evals`, `mock`, `luau_safety`, `mcpkit`, `config`, `scope`.
-`mock` and `luau_safety` are `None` there: the vendored core has no mock DataModel or Luau safety lint, and this repository needs neither (it reads code, never runs or generates it). **Swapping in the real guide-core means editing `guide_adapter.py` and nothing else.** Nothing shared is re-implemented here.
+All shared machinery (dry-run plans, the feedback store, retrieval, the eval runner and compare, MCP helpers, style/config loading, path scoping, and the learning layer: parameters, promotion, skill export) comes from the installed **`guide-core`** library.
+**Install guide-core first** (`pip install -e /path/to/guide-core`; this package declares it as a dependency, but it is a local repository, not on PyPI). The vendored `luaurev/core/` copy and its tests (`tests/core_suite`, now part of guide-core's own test suite) were removed.
+**Every other module imports shared code only through one thin file, `luaurev/guide_adapter.py`** (a test greps the package to enforce this), under the interface names `dryrun`, `feedback`, `retrieval`, `evals`, `mock`, `luau_safety`, `mcpkit`, `config`, `scope`.
+`mock` and `luau_safety` are `None` there: this repository needs neither (it reads code, never runs or generates it). History: guide-core was not available when this repository was first built; the adapter was written so that swapping it in meant editing `guide_adapter.py` and nothing else, and that is what happened. Nothing shared is re-implemented here.
 
 ## What you still need to supply
 
@@ -187,7 +199,7 @@ These follow each vendor's documented shape as understood when written; none was
 
 ## Repository map
 
-`luaurev/` (`guide_adapter.py` the only door to shared code; `core/` vendored; `domain/`: `lexer`, `structure`, `detectors`, `review`, `backends`, `learning`, `ruleset`, `projects`, `patch`) | `rules/` | `projects.yaml`, `projects/` | `style/` | `library/` schema |
+`luaurev/` (`guide_adapter.py` the only door to shared code (`guide-core`, installed separately); `domain/`: `lexer`, `structure`, `detectors`, `review`, `backends`, `learning`, `ruleset`, `projects`, `patch`) | `rules/` | `projects.yaml`, `projects/` | `style/` | `library/` schema |
 `examples/` synthetic Luau | `evals/` | `feedback/` | `skills/` | `adapters/mcp-clients/` | `references/` | `tests/` | `scripts/`.
 
 Licence: MIT for code and docs; see `ASSET_LICENSING.md` for your scripts.

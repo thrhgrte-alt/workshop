@@ -1,0 +1,12 @@
+workspace/
+.env
+*.egg-info/
+__pycache__/
+.pytest_cache/
+.venv/
+dist/
+build/
+evals/reports/*.json
+evals/reports/*.md
+!evals/reports/baseline.json
+!evals/reports/baseline.md

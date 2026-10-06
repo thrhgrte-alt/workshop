@@ -8,10 +8,11 @@ import os
 import tempfile
 from pathlib import Path
 
+from . import learning_params
 from . import tools as tools_mod
 from . import projects as P
 from .domain import bpystub, engine, fixes, imageinfo, loader
-from .guide_adapter import DomainHooks, Project, all_tools, call_local, config, emit, evals as _evals, feedback as fb
+from .guide_adapter import DomainHooks, Project, all_tools, call_local, config, emit, evals as _evals, feedback as fb, skillgen
 
 INSTRUCTIONS = """\
 Blender-to-Roblox asset preflight. Checks an EXPORT (GLB, glTF, OBJ, an FBX header plus a hub summary) against a profile (prop, tool, character_accessory,
@@ -357,6 +358,8 @@ def eval_checks(project: Project) -> dict:
 
 
 def register_cli(sub, project: Project) -> None:
+    skillgen.add_export_skill_command(sub, project, learning_params.skill_kwargs, resolve=learning_params.resolve_scope)
+
     p = sub.add_parser("report", help="full preflight of an export; exit 1 when it fails")
     p.add_argument("path")
     p.add_argument("--project", required=True, help="project_id from projects.yaml")
