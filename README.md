@@ -1,0 +1,44 @@
+# AI creative-work repositories
+
+Five **separate** repositories (not a monorepo), each a practical toolkit that lets a capable AI agent (Claude Code, Codex CLI, Gemini CLI, Copilot, Cursor, ...) do one kind of creative work
+through instructions, a searchable reference library, deterministic tools, evals and a feedback loop. Each is a Git repository with its own history.
+
+| Repository | Work | Tests | Eval tasks | Needs an app to *finish* the job |
+|---|---|---|---|---|
+| `substance-designer-ai` | Substance 3D Designer materials and graphs | 122 | 37 | Designer (to run the generated scripts) |
+| `roblox-vfx-ai` | Roblox Studio VFX (ParticleEmitter, Beam, Trail, light) | 148 | 70 | Roblox Studio (to run the Luau) |
+| `roblox-level-design-ai` | Roblox level design and blockouts | 119 | 100 | Roblox Studio |
+| `modular-set-dressing-ai` | Modular asset placement and set dressing | 100 | 103 | Roblox Studio (clone mode needs your kit) |
+| `concept-art-ai` | Environment and prop concept art (+ optional LoRA prep) | 105 | 127 | An image generator you configure |
+
+Test counts include the 50 shared-core tests vendored into each repository.
+
+## What is true of all five
+
+- **Nothing here changes any model's weights.** A model reasons from what is in its context. These repositories supply that context (style brief, retrieved examples with avoid-examples, corrections),
+  do exact work in deterministic code, and expose actions as typed MCP tools. Improvement comes from data **you** curate. `concept-art-ai` contains an optional LoRA/PEFT *preparation* workflow
+  (dataset validation, config, validation plan); it never trains.
+- **Not run in the real applications.** This workshop had no Substance 3D Designer, Roblox Studio or image-generation model. Everything that can be verified without them is (mock Designer/DataModel runs,
+  independent geometry checks, generated scripts executed on mocks); everything else is labelled **unverified** in each README's capability matrix.
+- **Safe by default.** Write tools default to `dry_run=true`; paths are allow-listed; generated scripts only replace what they created; nothing publishes to Roblox or overwrites a live project;
+  private assets are read in place and never uploaded.
+- **Subjective judgments are not ground truth.** Rubrics mix automatic, manual and hybrid criteria; unscored manual criteria keep a result "incomplete".
+- **Style is data you edit.** Each `style/style.yaml` is a *starter template* with heuristic thresholds. Examples are synthetic and labelled so.
+
+Shared plumbing lives in `suite/kit/core` and is vendored (copied, never imported across repos) into each repository so each stands alone. See `PUBLISH.md` to publish them and `CAPABILITY_MATRIX.md` for the detail.
+
+## Layout of this workshop repository
+
+```
+bundles/           one git bundle per repository (complete history); restore with suite/restore_repos.sh
+suite/kit/         the shared core and its own tests (canonical copy)
+suite/scaffold.py  stamps the common skeleton into a repository and vendors the core
+suite/*.sh         restore_repos.sh (from bundles), publish.sh (private GitHub repos; you run it)
+PUBLISH.md  CAPABILITY_MATRIX.md
+```
+`repos/` (the working copies) is git-ignored here because each is its own repository.
+
+```bash
+sh suite/restore_repos.sh            # recreate repos/<name> from bundles/
+cd repos/concept-art-ai && python -m venv .venv && . .venv/bin/activate && pip install -e ".[dev]" && python -m pytest
+```
