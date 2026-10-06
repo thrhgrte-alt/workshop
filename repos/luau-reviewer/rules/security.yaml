@@ -1,0 +1,111 @@
+category: security
+description: Server code that trusts the client, and code that runs or loads code it cannot vouch for.
+rules:
+  - id: SEC001
+    title: Remote handler trusts client arguments
+    severity: error
+    confidence: medium
+    problem: "Remote handler uses client-supplied argument(s) {args} without a type or range check"
+    explanation: >-
+      Everything a client sends through a RemoteEvent or RemoteFunction is attacker-controlled: any type, any value, nil, NaN,
+      a table with unexpected keys, or an Instance the player should not be able to name. A server handler must check the type
+      (typeof/type/tonumber), the range (math.clamp, comparisons) and, for Instances, that they are what the server expects
+      before it acts on them. The check here is a heuristic: an argument counts as validated when it appears in a typeof/type/tonumber/
+      assert/clamp/IsA/validate-style call or in an if/assert guard. Validation done by a helper that never sees the argument by
+      name, or through varargs, is not seen.
+    example: |
+      remote.OnServerEvent:Connect(function(player, itemName)
+          giveItem(player, itemName)
+      end)
+    good: |
+      remote.OnServerEvent:Connect(function(player, itemName)
+          if typeof(itemName) ~= "string" or not ITEMS[itemName] then
+              return
+          end
+          giveItem(player, itemName)
+      end)
+    fix: "Check typeof/range of every argument (and that Instances are what you expect) before using it"
+  - id: SEC002
+    title: Client-supplied price, currency or damage
+    severity: error
+    confidence: high
+    problem: "Handler takes `{arg}` (price, currency or damage) from the client and uses it"
+    explanation: >-
+      A price, amount, reward, currency or damage value that arrives from the client is a value the exploiter chooses. Validation
+      cannot make it trustworthy: the server must look the value up itself (a price table keyed by item id, a weapon stat) and use
+      the client only to say WHICH item or action. Detected by parameter name (price, cost, amount, damage, coins, gold, ...) and use
+      inside the handler body.
+    example: |
+      buy.OnServerEvent:Connect(function(player, itemId, price)
+          player.leaderstats.Coins.Value -= price
+      end)
+    good: |
+      buy.OnServerEvent:Connect(function(player, itemId)
+          local price = PRICES[itemId]
+          if not price then return end
+          player.leaderstats.Coins.Value -= price
+      end)
+    fix: "Look the value up on the server (price table, weapon stats); accept only an id from the client"
+  - id: SEC003
+    title: Server action without a permission or cooldown check
+    severity: warning
+    confidence: low
+    problem: "Remote handler shows no cooldown, debounce or permission check"
+    explanation: >-
+      A handler that changes game state and can be fired as fast as the client likes enables spam and griefing: free rewards,
+      server lag, repeated purchases. This is a QUESTION, not a defect: the check may be done elsewhere (a wrapper, a rate limiter
+      module, a different script). Detected by the absence of cooldown/debounce/permission style names and of os.clock/os.time calls
+      inside the handler.
+    example: |
+      claim.OnServerEvent:Connect(function(player)
+          reward(player)
+      end)
+    good: |
+      claim.OnServerEvent:Connect(function(player)
+          if os.clock() - (lastClaim[player] or 0) < COOLDOWN then return end
+          lastClaim[player] = os.clock()
+          reward(player)
+      end)
+    fix: "Add a per-player cooldown and, where it matters, a permission check before acting"
+  - id: SEC004
+    title: loadstring
+    severity: error
+    confidence: high
+    problem: "`loadstring` runs arbitrary code"
+    explanation: >-
+      loadstring compiles and runs a string as code. If any part of the string can come from a client, a web request or a model you
+      did not write, it is remote code execution on your server. It is also disabled by default (ServerScriptService.LoadStringEnabled)
+      and defeats analysis, optimisation and review.
+    example: |
+      local fn = loadstring(code)
+      fn()
+    good: |
+      local handlers = { greet = greet, wave = wave }
+      handlers[name](player)
+    fix: "Replace dynamic code with a table of known functions or data; never load code from strings"
+  - id: SEC005
+    title: require of an asset id
+    severity: error
+    confidence: high
+    problem: "`require` of a numeric asset id loads code you do not control"
+    explanation: >-
+      require(<number>) loads a ModuleScript from the Roblox catalog by asset id. The owner of that asset can update it at any time and
+      your game will run the new code on the server. Treat it as a supply-chain risk and keep modules inside your own place or package.
+    example: |
+      local lib = require(1234567890)
+    good: |
+      local lib = require(ReplicatedStorage.Packages.Lib)
+    fix: "Vendor the module into your place (or a pinned package) and require it by path"
+  - id: SEC006
+    title: RemoteFunction:InvokeClient from the server
+    severity: warning
+    confidence: medium
+    problem: "`InvokeClient` can hang the server thread if the client never answers"
+    explanation: >-
+      A RemoteFunction invoked on a client yields until the client returns. A malicious or disconnected client can simply never return,
+      leaving the server thread waiting (and an error if the player leaves). Prefer a RemoteEvent in each direction, or a timeout around the call.
+    example: |
+      local answer = remoteFunction:InvokeClient(player, "ready?")
+    good: |
+      readyEvent:FireClient(player, "ready?")
+    fix: "Use a RemoteEvent each way, or wrap the call with a timeout and never rely on the answer"

@@ -1,0 +1,8 @@
+# Example Obby (synthetic). Suppressions here apply to this project only.
+version: 1
+disabled_rules: []
+severity_overrides: {}
+suppressions:
+  - rule: API001
+    file: "*.luau"
+    reason: "Example Obby still runs on the legacy scheduler; wait() accepted until the task migration lands"

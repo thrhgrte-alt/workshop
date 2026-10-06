@@ -1,0 +1,28 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "luau-reviewer"
+version = "0.1.0"
+description = "Luau script reviewer: instructions, tools, examples and evals that let a compatible AI agent do this work."
+readme = "README.md"
+requires-python = ">=3.10"
+license = {text = "MIT"}
+dependencies = ["mcp>=1.2", "pyyaml>=6", "jsonschema>=4.18"]
+
+[project.optional-dependencies]
+imaging = ["numpy>=1.24", "pillow>=10"]
+embeddings = ["sentence-transformers>=2.7", "pillow>=10"]
+dev = ["pytest>=7", "numpy>=1.24", "pillow>=10"]
+
+[project.scripts]
+luau-reviewer = "luaurev.__main__:main"
+luau-reviewer-mcp = "luaurev.server:main"
+
+[tool.setuptools.packages.find]
+include = ["luaurev*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"

@@ -1,0 +1,3110 @@
+{
+  "label": "baseline",
+  "mode": "solver",
+  "at": "2026-10-06T05:13:01+00:00",
+  "git_rev": "0d0a2b2",
+  "python": "3.11.15",
+  "meta": {},
+  "passed": 188,
+  "total": 188,
+  "tasks": [
+    {
+      "id": "parse-analyze-type-error",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "findings.0.rule_id == 'luau-analyze:TypeError' (got 'luau-analyze:TypeError')"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "findings.0.severity == 'error' (got 'error')"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "findings.0.line == 12 (got 12)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "findings.0.col == 5 (got 5)"
+        }
+      ]
+    },
+    {
+      "id": "parse-analyze-syntax-error-without-column",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "findings.0.line == 3 (got 3)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "findings.0.severity == 'error' (got 'error')"
+        }
+      ]
+    },
+    {
+      "id": "parse-analyze-lint-names-are-warnings",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "findings.0.rule_id == 'luau-analyze:LocalUnused' (got 'luau-analyze:LocalUnused')"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "findings.0.severity == 'warning' (got 'warning')"
+        }
+      ]
+    },
+    {
+      "id": "parse-analyze-garbage-is-ignored-not-fatal",
+      "passed": true,
+      "checks": [
+        {
+          "check": "count_is",
+          "passed": true,
+          "message": "len(findings) == 0 (got 0)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "ignored == 2 (got 2)"
+        }
+      ]
+    },
+    {
+      "id": "parse-selene-json2-is-zero-based",
+      "passed": true,
+      "checks": [
+        {
+          "check": "count_is",
+          "passed": true,
+          "message": "len(findings) == 1 (got 1)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "findings.0.line == 5 (got 5)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "findings.0.col == 7 (got 7)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "findings.0.rule_id == 'selene:unused_variable' (got 'selene:unused_variable')"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "findings.0.severity == 'warning' (got 'warning')"
+        }
+      ]
+    },
+    {
+      "id": "parse-selene-quiet-style",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "findings.0.line == 3 (got 3)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "findings.0.col == 7 (got 7)"
+        }
+      ]
+    },
+    {
+      "id": "parse-selene-truncated-json-is-ignored",
+      "passed": true,
+      "checks": [
+        {
+          "check": "count_is",
+          "passed": true,
+          "message": "len(findings) == 1 (got 1)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "ignored == 1 (got 1)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "findings.0.severity == 'error' (got 'error')"
+        }
+      ]
+    },
+    {
+      "id": "parse-stylua-diff-header",
+      "passed": true,
+      "checks": [
+        {
+          "check": "count_is",
+          "passed": true,
+          "message": "len(findings) == 1 (got 1)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "findings.0.rule_id == 'stylua:format' (got 'stylua:format')"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "findings.0.line == 3 (got 3)"
+        }
+      ]
+    },
+    {
+      "id": "parse-stylua-unrecognised-failure-is-not-silently-clean",
+      "passed": true,
+      "checks": [
+        {
+          "check": "count_is",
+          "passed": true,
+          "message": "len(findings) == 1 (got 1)"
+        }
+      ]
+    },
+    {
+      "id": "parse-stylua-clean",
+      "passed": true,
+      "checks": [
+        {
+          "check": "count_is",
+          "passed": true,
+          "message": "len(findings) == 0 (got 0)"
+        }
+      ]
+    },
+    {
+      "id": "backend-missing-is-reported-not-hidden",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "backends == {'luau-analyze': 'missing', 'selene': 'missing', 'stylua': 'missing'} (got {'luau-analyze': 'missing', 'selene': 'missing', 'stylua': 'missing'})"
+        },
+        {
+          "check": "contains",
+          "passed": true,
+          "message": "statement should contain 'NOT installed: luau-analyze, selene, stylua' (got '[project example-sandbox] CLEAN: no defects. Checked 1 file(s) with 38 own rules (api, correctness, data, leaks, performance, security, structure); backends that ran: none; NOT installed: luau-analyze')"
+        },
+        {
+          "check": "contains",
+          "passed": true,
+          "message": "not_checked should contain 'type and syntax errors (luau-analyze not installed)' (got '[\"runtime behaviour: nothing was executed and no game was loaded\", \"data flow across files and functions (only module require cycles are checked across files, and only in a folder review)\", \"anything ')"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "checked.backends_ran == [] (got [])"
+        },
+        {
+          "check": "no_findings",
+          "passed": true,
+          "message": "expected zero findings, got 0: "
+        }
+      ]
+    },
+    {
+      "id": "backend-missing-does-not-hide-own-findings",
+      "passed": true,
+      "checks": [
+        {
+          "check": "has_rule",
+          "passed": true,
+          "message": "defects ['SEC004']; expected SEC004"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "backends.selene == 'missing' (got 'missing')"
+        },
+        {
+          "check": "precision_recall",
+          "passed": true,
+          "message": "tp=1 fp=0 fn=0 expected=['SEC004']+q[] got=['SEC004']+q[]"
+        }
+      ]
+    },
+    {
+      "id": "backend-stub-luau-analyze-is-folded-in",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "backends == {'luau-analyze': 'ran', 'selene': 'not_requested', 'stylua': 'not_requested'} (got {'luau-analyze': 'ran', 'selene': 'not_requested', 'stylua': 'not_requested'})"
+        },
+        {
+          "check": "contains",
+          "passed": true,
+          "message": "defects should contain 'luau-analyze:TypeError' (got '[{\"file\": \"/home/user/workshop/repos/luau-reviewer/examples/positive/trap_typed_module.luau\", \"line\": 5, \"col\": 3, \"rule_id\": \"luau-analyze:TypeError\", \"source\": \"luau-analyze\", \"category\": \"backend:l')"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "defects.0.source == 'luau-analyze' (got 'luau-analyze')"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "verdict == 'errors' (got 'errors')"
+        }
+      ]
+    },
+    {
+      "id": "backend-stub-selene-json2-is-folded-in",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "defects.0.rule_id == 'selene:shadowing' (got 'selene:shadowing')"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "defects.0.line == 3 (got 3)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "defects.0.source == 'selene' (got 'selene')"
+        }
+      ]
+    },
+    {
+      "id": "backend-stub-stylua-format-is-info",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "defects.0.rule_id == 'stylua:format' (got 'stylua:format')"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "defects.0.severity == 'info' (got 'info')"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "verdict == 'info only' (got 'info only')"
+        }
+      ]
+    },
+    {
+      "id": "backend-stub-crash-is-not-clean",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "backends.luau-analyze == 'error' (got 'error')"
+        },
+        {
+          "check": "contains",
+          "passed": true,
+          "message": "statement should contain 'FAILED: luau-analyze' (got '[project example-sandbox] CLEAN: no defects. Checked 1 file(s) with 38 own rules (api, correctness, data, leaks, performance, security, structure); backends that ran: none; FAILED: luau-analyze. Not c')"
+        },
+        {
+          "check": "contains",
+          "passed": true,
+          "message": "not_checked should contain 'luau-analyze failed to run' (got '[\"runtime behaviour: nothing was executed and no game was loaded\", \"data flow across files and functions (only module require cycles are checked across files, and only in a folder review)\", \"anything ')"
+        }
+      ]
+    },
+    {
+      "id": "backend-stub-own-and-external-findings-in-one-report",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "summary.by_source.own == 1 (got 1)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "summary.by_source.luau-analyze == 1 (got 1)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "summary.by_source.selene == 1 (got 1)"
+        },
+        {
+          "check": "precision_recall",
+          "passed": true,
+          "message": "tp=1 fp=0 fn=0 expected=['API001']+q[] got=['API001']+q[]"
+        }
+      ]
+    },
+    {
+      "id": "pos-trap-strings-and-comments-server",
+      "passed": true,
+      "checks": [
+        {
+          "check": "no_findings",
+          "passed": true,
+          "message": "expected zero findings, got 0: "
+        },
+        {
+          "check": "precision_recall",
+          "passed": true,
+          "message": "tp=0 fp=0 fn=0 expected=[]+q[] got=[]+q[]"
+        }
+      ]
+    },
+    {
+      "id": "pos-trap-pcall-datastore-server",
+      "passed": true,
+      "checks": [
+        {
+          "check": "no_findings",
+          "passed": true,
+          "message": "expected zero findings, got 0: "
+        },
+        {
+          "check": "precision_recall",
+          "passed": true,
+          "message": "tp=0 fp=0 fn=0 expected=[]+q[] got=[]+q[]"
+        }
+      ]
+    },
+    {
+      "id": "pos-trap-validated-remote-server",
+      "passed": true,
+      "checks": [
+        {
+          "check": "no_findings",
+          "passed": true,
+          "message": "expected zero findings, got 0: "
+        },
+        {
+          "check": "precision_recall",
+          "passed": true,
+          "message": "tp=0 fp=0 fn=0 expected=[]+q[] got=[]+q[]"
+        }
+      ]
+    },
+    {
+      "id": "pos-trap-task-library-server",
+      "passed": true,
+      "checks": [
+        {
+          "check": "no_findings",
+          "passed": true,
+          "message": "expected zero findings, got 0: "
+        },
+        {
+          "check": "precision_recall",
+          "passed": true,
+          "message": "tp=0 fp=0 fn=0 expected=[]+q[] got=[]+q[]"
+        }
+      ]
+    },
+    {
+      "id": "pos-trap-loops-that-yield-server",
+      "passed": true,
+      "checks": [
+        {
+          "check": "no_findings",
+          "passed": true,
+          "message": "expected zero findings, got 0: "
+        },
+        {
+          "check": "precision_recall",
+          "passed": true,
+          "message": "tp=0 fp=0 fn=0 expected=[]+q[] got=[]+q[]"
+        }
+      ]
+    },
+    {
+      "id": "pos-trap-heartbeat-cached-client",
+      "passed": true,
+      "checks": [
+        {
+          "check": "no_findings",
+          "passed": true,
+          "message": "expected zero findings, got 0: "
+        },
+        {
+          "check": "precision_recall",
+          "passed": true,
+          "message": "tp=0 fp=0 fn=0 expected=[]+q[] got=[]+q[]"
+        }
+      ]
+    },
+    {
+      "id": "pos-trap-datastore-lookalike",
+      "passed": true,
+      "checks": [
+        {
+          "check": "no_findings",
+          "passed": true,
+          "message": "expected zero findings, got 0: "
+        },
+        {
+          "check": "precision_recall",
+          "passed": true,
+          "message": "tp=0 fp=0 fn=0 expected=[]+q[] got=[]+q[]"
+        }
+      ]
+    },
+    {
+      "id": "pos-trap-receipt-correct-server",
+      "passed": true,
+      "checks": [
+        {
+          "check": "no_findings",
+          "passed": true,
+          "message": "expected zero findings, got 0: "
+        },
+        {
+          "check": "precision_recall",
+          "passed": true,
+          "message": "tp=0 fp=0 fn=0 expected=[]+q[] got=[]+q[]"
+        }
+      ]
+    },
+    {
+      "id": "pos-trap-typed-module",
+      "passed": true,
+      "checks": [
+        {
+          "check": "no_findings",
+          "passed": true,
+          "message": "expected zero findings, got 0: "
+        },
+        {
+          "check": "precision_recall",
+          "passed": true,
+          "message": "tp=0 fp=0 fn=0 expected=[]+q[] got=[]+q[]"
+        }
+      ]
+    },
+    {
+      "id": "pos-trap-client-apis-on-client-client",
+      "passed": true,
+      "checks": [
+        {
+          "check": "no_findings",
+          "passed": true,
+          "message": "expected zero findings, got 0: "
+        },
+        {
+          "check": "precision_recall",
+          "passed": true,
+          "message": "tp=0 fp=0 fn=0 expected=[]+q[] got=[]+q[]"
+        }
+      ]
+    },
+    {
+      "id": "pos-trap-server-apis-on-server-server",
+      "passed": true,
+      "checks": [
+        {
+          "check": "no_findings",
+          "passed": true,
+          "message": "expected zero findings, got 0: "
+        },
+        {
+          "check": "precision_recall",
+          "passed": true,
+          "message": "tp=0 fp=0 fn=0 expected=[]+q[] got=[]+q[]"
+        }
+      ]
+    },
+    {
+      "id": "pos-trap-named-constants",
+      "passed": true,
+      "checks": [
+        {
+          "check": "no_findings",
+          "passed": true,
+          "message": "expected zero findings, got 0: "
+        },
+        {
+          "check": "precision_recall",
+          "passed": true,
+          "message": "tp=0 fp=0 fn=0 expected=[]+q[] got=[]+q[]"
+        }
+      ]
+    },
+    {
+      "id": "pos-trap-connections-tracked-server",
+      "passed": true,
+      "checks": [
+        {
+          "check": "no_findings",
+          "passed": true,
+          "message": "expected zero findings, got 0: "
+        },
+        {
+          "check": "precision_recall",
+          "passed": true,
+          "message": "tp=0 fp=0 fn=0 expected=[]+q[] got=[]+q[]"
+        }
+      ]
+    },
+    {
+      "id": "pos-trap-per-player-cleanup-server",
+      "passed": true,
+      "checks": [
+        {
+          "check": "no_findings",
+          "passed": true,
+          "message": "expected zero findings, got 0: "
+        },
+        {
+          "check": "precision_recall",
+          "passed": true,
+          "message": "tp=0 fp=0 fn=0 expected=[]+q[] got=[]+q[]"
+        }
+      ]
+    },
+    {
+      "id": "pos-trap-if-expressions",
+      "passed": true,
+      "checks": [
+        {
+          "check": "no_findings",
+          "passed": true,
+          "message": "expected zero findings, got 0: "
+        },
+        {
+          "check": "precision_recall",
+          "passed": true,
+          "message": "tp=0 fp=0 fn=0 expected=[]+q[] got=[]+q[]"
+        }
+      ]
+    },
+    {
+      "id": "pos-trap-touched-debounced-server",
+      "passed": true,
+      "checks": [
+        {
+          "check": "no_findings",
+          "passed": true,
+          "message": "expected zero findings, got 0: "
+        },
+        {
+          "check": "precision_recall",
+          "passed": true,
+          "message": "tp=0 fp=0 fn=0 expected=[]+q[] got=[]+q[]"
+        }
+      ]
+    },
+    {
+      "id": "pos-trap-remote-helper-validation-server",
+      "passed": true,
+      "checks": [
+        {
+          "check": "no_findings",
+          "passed": true,
+          "message": "expected zero findings, got 0: "
+        },
+        {
+          "check": "precision_recall",
+          "passed": true,
+          "message": "tp=0 fp=0 fn=0 expected=[]+q[] got=[]+q[]"
+        }
+      ]
+    },
+    {
+      "id": "pos-trap-lookups-outside-frame-code-server",
+      "passed": true,
+      "checks": [
+        {
+          "check": "no_findings",
+          "passed": true,
+          "message": "expected zero findings, got 0: "
+        },
+        {
+          "check": "precision_recall",
+          "passed": true,
+          "message": "tp=0 fp=0 fn=0 expected=[]+q[] got=[]+q[]"
+        }
+      ]
+    },
+    {
+      "id": "pos-trap-similar-names-server",
+      "passed": true,
+      "checks": [
+        {
+          "check": "no_findings",
+          "passed": true,
+          "message": "expected zero findings, got 0: "
+        },
+        {
+          "check": "precision_recall",
+          "passed": true,
+          "message": "tp=0 fp=0 fn=0 expected=[]+q[] got=[]+q[]"
+        }
+      ]
+    },
+    {
+      "id": "pos-trap-pcall-results-used-server",
+      "passed": true,
+      "checks": [
+        {
+          "check": "no_findings",
+          "passed": true,
+          "message": "expected zero findings, got 0: "
+        },
+        {
+          "check": "precision_recall",
+          "passed": true,
+          "message": "tp=0 fp=0 fn=0 expected=[]+q[] got=[]+q[]"
+        }
+      ]
+    },
+    {
+      "id": "pos-trap-module-graph-ok",
+      "passed": true,
+      "checks": [
+        {
+          "check": "no_findings",
+          "passed": true,
+          "message": "expected zero findings, got 0: "
+        },
+        {
+          "check": "precision_recall",
+          "passed": true,
+          "message": "tp=0 fp=0 fn=0 expected=[]+q[] got=[]+q[]"
+        }
+      ]
+    },
+    {
+      "id": "gap-varargs-remote-server",
+      "passed": true,
+      "checks": [
+        {
+          "check": "precision_recall",
+          "passed": true,
+          "message": "tp=0 fp=0 fn=1 expected=['SEC001']+q[] got=[]+q[] (documented known gap: miss allowed)"
+        }
+      ]
+    },
+    {
+      "id": "gap-aliased-getasync-server",
+      "passed": true,
+      "checks": [
+        {
+          "check": "precision_recall",
+          "passed": true,
+          "message": "tp=0 fp=0 fn=1 expected=['DAT001']+q[] got=[]+q[] (documented known gap: miss allowed)"
+        }
+      ]
+    },
+    {
+      "id": "gap-require-variable-id-server",
+      "passed": true,
+      "checks": [
+        {
+          "check": "precision_recall",
+          "passed": true,
+          "message": "tp=0 fp=0 fn=1 expected=['SEC005']+q[] got=[]+q[] (documented known gap: miss allowed)"
+        }
+      ]
+    },
+    {
+      "id": "sim-identical-code",
+      "passed": true,
+      "checks": [
+        {
+          "check": "approx",
+          "passed": true,
+          "message": "similarity=1.0; expected 1.0 +/- 0.001"
+        }
+      ]
+    },
+    {
+      "id": "sim-renamed-locals-still-match",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "a == ['local', 'ID', '=', 'ID', '*', 'NUM'] (got ['local', 'ID', '=', 'ID', '*', 'NUM'])"
+        },
+        {
+          "check": "approx",
+          "passed": true,
+          "message": "similarity=1.0; expected 1.0 +/- 0.001"
+        }
+      ]
+    },
+    {
+      "id": "sim-hand-computed-three-of-seven",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "a == ['ID', '.', 'Coins', '.', 'Value', '-=', 'ID'] (got ['ID', '.', 'Coins', '.', 'Value', '-=', 'ID'])"
+        },
+        {
+          "check": "approx",
+          "passed": true,
+          "message": "similarity=0.4286; expected 0.4286 +/- 0.001"
+        }
+      ]
+    },
+    {
+      "id": "sim-comments-and-strings-are-ignored",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "a == ['ID', '=', 'STR'] (got ['ID', '=', 'STR'])"
+        },
+        {
+          "check": "approx",
+          "passed": true,
+          "message": "similarity=1.0; expected 1.0 +/- 0.001"
+        }
+      ]
+    },
+    {
+      "id": "sim-unrelated-code-is-low",
+      "passed": true,
+      "checks": [
+        {
+          "check": "in_range",
+          "passed": true,
+          "message": "similarity in [None, 0.2] (got 0.0)"
+        }
+      ]
+    },
+    {
+      "id": "learn-false-positive-lowers-confidence-and-becomes-a-question",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "before.confidence == 'medium' (got 'medium')"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "before.kind == 'defect' (got 'defect')"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "after.confidence == 'low' (got 'low')"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "after.kind == 'question' (got 'question')"
+        },
+        {
+          "check": "contains",
+          "passed": true,
+          "message": "after.learned should contain 'Remotes wrapper' (got '[{\"pattern_id\": \"fp-6fe583df54\", \"similarity\": 1.0, \"reason\": \"arguments are validated by the Remotes wrapper module before this handler runs\", \"from\": \"project\"}]')"
+        },
+        {
+          "check": "contains",
+          "passed": true,
+          "message": "past_corrections should contain 'SEC001' (got '[{\"rule_id\": \"SEC001\", \"pattern_id\": \"fp-6fe583df54\", \"reason\": \"arguments are validated by the Remotes wrapper module before this handler runs\", \"saved_from\": null, \"tokens\": 14}]')"
+        },
+        {
+          "check": "precision_recall",
+          "passed": true,
+          "message": "tp=1 fp=0 fn=0 expected=[]+q['SEC001'] got=[]+q['SEC001']"
+        }
+      ]
+    },
+    {
+      "id": "learn-renamed-variables-still-match",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "before.kind == 'defect' (got 'defect')"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "after.kind == 'question' (got 'question')"
+        },
+        {
+          "check": "precision_recall",
+          "passed": true,
+          "message": "tp=1 fp=0 fn=0 expected=[]+q['SEC001'] got=[]+q['SEC001']"
+        }
+      ]
+    },
+    {
+      "id": "learn-different-code-keeps-its-confidence",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "after.confidence == 'medium' (got 'medium')"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "after.kind == 'defect' (got 'defect')"
+        },
+        {
+          "check": "precision_recall",
+          "passed": true,
+          "message": "tp=1 fp=0 fn=0 expected=['SEC001']+q[] got=['SEC001']+q[]"
+        }
+      ]
+    },
+    {
+      "id": "learn-other-rules-are-not-affected",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "after.confidence == 'medium' (got 'medium')"
+        },
+        {
+          "check": "precision_recall",
+          "passed": true,
+          "message": "tp=1 fp=0 fn=0 expected=['SEC001']+q[] got=['SEC001']+q[]"
+        }
+      ]
+    },
+    {
+      "id": "size-review-file-bad-script",
+      "passed": true,
+      "checks": [
+        {
+          "check": "in_range",
+          "passed": true,
+          "message": "chars in [None, 2800] (got 1857)"
+        },
+        {
+          "check": "in_range",
+          "passed": true,
+          "message": "description_chars in [None, 330] (got 203)"
+        }
+      ]
+    },
+    {
+      "id": "size-review-file-clean-script",
+      "passed": true,
+      "checks": [
+        {
+          "check": "in_range",
+          "passed": true,
+          "message": "chars in [None, 2000] (got 1445)"
+        }
+      ]
+    },
+    {
+      "id": "size-review-folder-two-places",
+      "passed": true,
+      "checks": [
+        {
+          "check": "in_range",
+          "passed": true,
+          "message": "chars in [None, 3600] (got 2273)"
+        },
+        {
+          "check": "in_range",
+          "passed": true,
+          "message": "description_chars in [None, 330] (got 186)"
+        }
+      ]
+    },
+    {
+      "id": "size-explain-finding-with-code",
+      "passed": true,
+      "checks": [
+        {
+          "check": "in_range",
+          "passed": true,
+          "message": "chars in [None, 2800] (got 1886)"
+        },
+        {
+          "check": "in_range",
+          "passed": true,
+          "message": "description_chars in [None, 330] (got 174)"
+        }
+      ]
+    },
+    {
+      "id": "size-list-rules-brief",
+      "passed": true,
+      "checks": [
+        {
+          "check": "in_range",
+          "passed": true,
+          "message": "chars in [None, 9500] (got 7264)"
+        },
+        {
+          "check": "in_range",
+          "passed": true,
+          "message": "description_chars in [None, 330] (got 190)"
+        }
+      ]
+    },
+    {
+      "id": "size-find-remote-handlers",
+      "passed": true,
+      "checks": [
+        {
+          "check": "in_range",
+          "passed": true,
+          "message": "chars in [None, 600] (got 369)"
+        },
+        {
+          "check": "in_range",
+          "passed": true,
+          "message": "description_chars in [None, 330] (got 192)"
+        }
+      ]
+    },
+    {
+      "id": "size-find-datastore-calls",
+      "passed": true,
+      "checks": [
+        {
+          "check": "in_range",
+          "passed": true,
+          "message": "chars in [None, 1200] (got 761)"
+        },
+        {
+          "check": "in_range",
+          "passed": true,
+          "message": "description_chars in [None, 330] (got 194)"
+        }
+      ]
+    },
+    {
+      "id": "size-suggest-patch",
+      "passed": true,
+      "checks": [
+        {
+          "check": "in_range",
+          "passed": true,
+          "message": "chars in [None, 1100] (got 728)"
+        },
+        {
+          "check": "in_range",
+          "passed": true,
+          "message": "description_chars in [None, 330] (got 280)"
+        }
+      ]
+    },
+    {
+      "id": "size-suppress-finding-dry-run",
+      "passed": true,
+      "checks": [
+        {
+          "check": "in_range",
+          "passed": true,
+          "message": "chars in [None, 1500] (got 1010)"
+        },
+        {
+          "check": "in_range",
+          "passed": true,
+          "message": "description_chars in [None, 360] (got 265)"
+        }
+      ]
+    },
+    {
+      "id": "size-mark-false-positive-dry-run",
+      "passed": true,
+      "checks": [
+        {
+          "check": "in_range",
+          "passed": true,
+          "message": "chars in [None, 600] (got 399)"
+        },
+        {
+          "check": "in_range",
+          "passed": true,
+          "message": "description_chars in [None, 360] (got 293)"
+        }
+      ]
+    },
+    {
+      "id": "size-compare-reviews",
+      "passed": true,
+      "checks": [
+        {
+          "check": "in_range",
+          "passed": true,
+          "message": "chars in [None, 500] (got 317)"
+        },
+        {
+          "check": "in_range",
+          "passed": true,
+          "message": "description_chars in [None, 360] (got 238)"
+        }
+      ]
+    },
+    {
+      "id": "neg-sec001-unvalidated-remote-server",
+      "passed": true,
+      "checks": [
+        {
+          "check": "has_rule",
+          "passed": true,
+          "message": "defects ['SEC001']; expected SEC001"
+        },
+        {
+          "check": "precision_recall",
+          "passed": true,
+          "message": "tp=1 fp=0 fn=0 expected=['SEC001']+q[] got=['SEC001']+q[]"
+        }
+      ]
+    },
+    {
+      "id": "neg-sec001-unvalidated-remote-function-server",
+      "passed": true,
+      "checks": [
+        {
+          "check": "has_rule",
+          "passed": true,
+          "message": "defects ['SEC001']; expected SEC001"
+        },
+        {
+          "check": "precision_recall",
+          "passed": true,
+          "message": "tp=1 fp=0 fn=0 expected=['SEC001']+q[] got=['SEC001']+q[]"
+        }
+      ]
+    },
+    {
+      "id": "neg-sec002-client-price-server",
+      "passed": true,
+      "checks": [
+        {
+          "check": "has_rule",
+          "passed": true,
+          "message": "defects ['SEC002']; expected SEC002"
+        },
+        {
+          "check": "precision_recall",
+          "passed": true,
+          "message": "tp=1 fp=0 fn=0 expected=['SEC002']+q[] got=['SEC002']+q[]"
+        }
+      ]
+    },
+    {
+      "id": "neg-sec002-client-damage-server",
+      "passed": true,
+      "checks": [
+        {
+          "check": "has_rule",
+          "passed": true,
+          "message": "defects ['SEC002']; expected SEC002"
+        },
+        {
+          "check": "precision_recall",
+          "passed": true,
+          "message": "tp=1 fp=0 fn=0 expected=['SEC002']+q[] got=['SEC002']+q[]"
+        }
+      ]
+    },
+    {
+      "id": "neg-sec003-no-cooldown-server",
+      "passed": true,
+      "checks": [
+        {
+          "check": "has_question",
+          "passed": true,
+          "message": "questions ['SEC003']; expected SEC003"
+        },
+        {
+          "check": "precision_recall",
+          "passed": true,
+          "message": "tp=1 fp=0 fn=0 expected=[]+q['SEC003'] got=[]+q['SEC003']"
+        }
+      ]
+    },
+    {
+      "id": "neg-sec004-loadstring-server",
+      "passed": true,
+      "checks": [
+        {
+          "check": "has_rule",
+          "passed": true,
+          "message": "defects ['SEC004']; expected SEC004"
+        },
+        {
+          "check": "precision_recall",
+          "passed": true,
+          "message": "tp=1 fp=0 fn=0 expected=['SEC004']+q[] got=['SEC004']+q[]"
+        }
+      ]
+    },
+    {
+      "id": "neg-sec005-require-asset-id-server",
+      "passed": true,
+      "checks": [
+        {
+          "check": "has_rule",
+          "passed": true,
+          "message": "defects ['SEC005']; expected SEC005"
+        },
+        {
+          "check": "precision_recall",
+          "passed": true,
+          "message": "tp=1 fp=0 fn=0 expected=['SEC005']+q[] got=['SEC005']+q[]"
+        }
+      ]
+    },
+    {
+      "id": "neg-sec006-invokeclient-server",
+      "passed": true,
+      "checks": [
+        {
+          "check": "has_rule",
+          "passed": true,
+          "message": "defects ['SEC006']; expected SEC006"
+        },
+        {
+          "check": "precision_recall",
+          "passed": true,
+          "message": "tp=1 fp=0 fn=0 expected=['SEC006']+q[] got=['SEC006']+q[]"
+        }
+      ]
+    },
+    {
+      "id": "neg-dat001-unprotected-getasync-server",
+      "passed": true,
+      "checks": [
+        {
+          "check": "has_rule",
+          "passed": true,
+          "message": "defects ['DAT001']; expected DAT001"
+        },
+        {
+          "check": "precision_recall",
+          "passed": true,
+          "message": "tp=1 fp=0 fn=0 expected=['DAT001']+q[] got=['DAT001']+q[]"
+        }
+      ]
+    },
+    {
+      "id": "neg-dat001-unprotected-updateasync-server",
+      "passed": true,
+      "checks": [
+        {
+          "check": "has_rule",
+          "passed": true,
+          "message": "defects ['DAT001']; expected DAT001"
+        },
+        {
+          "check": "precision_recall",
+          "passed": true,
+          "message": "tp=1 fp=0 fn=0 expected=['DAT001']+q[] got=['DAT001']+q[]"
+        }
+      ]
+    },
+    {
+      "id": "neg-dat002-no-retry-server",
+      "passed": true,
+      "checks": [
+        {
+          "check": "has_rule",
+          "passed": true,
+          "message": "defects ['DAT002']; expected DAT002"
+        },
+        {
+          "check": "precision_recall",
+          "passed": true,
+          "message": "tp=1 fp=0 fn=0 expected=['DAT002']+q[] got=['DAT002']+q[]"
+        }
+      ]
+    },
+    {
+      "id": "neg-dat003-setasync-server",
+      "passed": true,
+      "checks": [
+        {
+          "check": "has_rule",
+          "passed": true,
+          "message": "defects ['DAT003']; expected DAT003"
+        },
+        {
+          "check": "precision_recall",
+          "passed": true,
+          "message": "tp=1 fp=0 fn=0 expected=['DAT003']+q[] got=['DAT003']+q[]"
+        }
+      ]
+    },
+    {
+      "id": "neg-dat004-no-bindtoclose-server",
+      "passed": true,
+      "checks": [
+        {
+          "check": "has_rule",
+          "passed": true,
+          "message": "defects ['DAT004']; expected DAT004"
+        },
+        {
+          "check": "precision_recall",
+          "passed": true,
+          "message": "tp=1 fp=0 fn=0 expected=['DAT004']+q[] got=['DAT004']+q[]"
+        }
+      ]
+    },
+    {
+      "id": "neg-dat005-save-every-few-seconds-server",
+      "passed": true,
+      "checks": [
+        {
+          "check": "has_rule",
+          "passed": true,
+          "message": "defects ['DAT005']; expected DAT005"
+        },
+        {
+          "check": "precision_recall",
+          "passed": true,
+          "message": "tp=1 fp=0 fn=0 expected=['DAT005']+q[] got=['DAT005']+q[]"
+        }
+      ]
+    },
+    {
+      "id": "neg-dat005-save-every-frame-server",
+      "passed": true,
+      "checks": [
+        {
+          "check": "has_rule",
+          "passed": true,
+          "message": "defects ['DAT005']; expected DAT005"
+        },
+        {
+          "check": "precision_recall",
+          "passed": true,
+          "message": "tp=1 fp=0 fn=0 expected=['DAT005']+q[] got=['DAT005']+q[]"
+        }
+      ]
+    },
+    {
+      "id": "neg-dat006-no-session-lock-server",
+      "passed": true,
+      "checks": [
+        {
+          "check": "has_question",
+          "passed": true,
+          "message": "questions ['DAT006']; expected DAT006"
+        },
+        {
+          "check": "precision_recall",
+          "passed": true,
+          "message": "tp=1 fp=0 fn=0 expected=[]+q['DAT006'] got=[]+q['DAT006']"
+        }
+      ]
+    },
+    {
+      "id": "neg-dat007-receipt-returns-bool-server",
+      "passed": true,
+      "checks": [
+        {
+          "check": "has_rule",
+          "passed": true,
+          "message": "defects ['DAT007']; expected DAT007"
+        },
+        {
+          "check": "precision_recall",
+          "passed": true,
+          "message": "tp=1 fp=0 fn=0 expected=['DAT007']+q[] got=['DAT007']+q[]"
+        }
+      ]
+    },
+    {
+      "id": "neg-dat008-receipt-always-granted-server",
+      "passed": true,
+      "checks": [
+        {
+          "check": "has_question",
+          "passed": true,
+          "message": "questions ['DAT008']; expected DAT008"
+        },
+        {
+          "check": "precision_recall",
+          "passed": true,
+          "message": "tp=1 fp=0 fn=0 expected=[]+q['DAT008'] got=[]+q['DAT008']"
+        }
+      ]
+    },
+    {
+      "id": "neg-dat009-key-from-player-name-server",
+      "passed": true,
+      "checks": [
+        {
+          "check": "has_rule",
+          "passed": true,
+          "message": "defects ['DAT009']; expected DAT009"
+        },
+        {
+          "check": "precision_recall",
+          "passed": true,
+          "message": "tp=1 fp=0 fn=0 expected=['DAT009']+q[] got=['DAT009']+q[]"
+        }
+      ]
+    },
+    {
+      "id": "neg-perf001-busy-loop-server",
+      "passed": true,
+      "checks": [
+        {
+          "check": "has_rule",
+          "passed": true,
+          "message": "defects ['PERF001']; expected PERF001"
+        },
+        {
+          "check": "precision_recall",
+          "passed": true,
+          "message": "tp=1 fp=0 fn=0 expected=['PERF001']+q[] got=['PERF001']+q[]"
+        }
+      ]
+    },
+    {
+      "id": "neg-perf002-while-true-wait-server",
+      "passed": true,
+      "checks": [
+        {
+          "check": "has_rule",
+          "passed": true,
+          "message": "defects ['PERF002']; expected PERF002"
+        },
+        {
+          "check": "precision_recall",
+          "passed": true,
+          "message": "tp=1 fp=0 fn=0 expected=['PERF002']+q[] got=['PERF002']+q[]"
+        }
+      ]
+    },
+    {
+      "id": "neg-perf003-getdescendants-heartbeat-client",
+      "passed": true,
+      "checks": [
+        {
+          "check": "has_rule",
+          "passed": true,
+          "message": "defects ['PERF003']; expected PERF003"
+        },
+        {
+          "check": "precision_recall",
+          "passed": true,
+          "message": "tp=1 fp=0 fn=0 expected=['PERF003']+q[] got=['PERF003']+q[]"
+        }
+      ]
+    },
+    {
+      "id": "neg-perf003-findfirstchild-renderstepped-client",
+      "passed": true,
+      "checks": [
+        {
+          "check": "has_rule",
+          "passed": true,
+          "message": "defects ['PERF003']; expected PERF003"
+        },
+        {
+          "check": "precision_recall",
+          "passed": true,
+          "message": "tp=1 fp=0 fn=0 expected=['PERF003']+q[] got=['PERF003']+q[]"
+        }
+      ]
+    },
+    {
+      "id": "neg-perf004-instance-new-heartbeat-server",
+      "passed": true,
+      "checks": [
+        {
+          "check": "has_rule",
+          "passed": true,
+          "message": "defects ['PERF004']; expected PERF004"
+        },
+        {
+          "check": "precision_recall",
+          "passed": true,
+          "message": "tp=1 fp=0 fn=0 expected=['PERF004']+q[] got=['PERF004']+q[]"
+        }
+      ]
+    },
+    {
+      "id": "neg-perf005-touched-no-debounce-server",
+      "passed": true,
+      "checks": [
+        {
+          "check": "has_question",
+          "passed": true,
+          "message": "questions ['PERF005']; expected PERF005"
+        },
+        {
+          "check": "precision_recall",
+          "passed": true,
+          "message": "tp=1 fp=0 fn=0 expected=[]+q['PERF005'] got=[]+q['PERF005']"
+        }
+      ]
+    },
+    {
+      "id": "neg-leak001-heartbeat-per-player-server",
+      "passed": true,
+      "checks": [
+        {
+          "check": "has_rule",
+          "passed": true,
+          "message": "defects ['LEAK001']; expected LEAK001"
+        },
+        {
+          "check": "precision_recall",
+          "passed": true,
+          "message": "tp=1 fp=0 fn=0 expected=['LEAK001']+q[] got=['LEAK001']+q[]"
+        }
+      ]
+    },
+    {
+      "id": "neg-leak002-unbounded-log-server",
+      "passed": true,
+      "checks": [
+        {
+          "check": "has_rule",
+          "passed": true,
+          "message": "defects ['LEAK002']; expected LEAK002"
+        },
+        {
+          "check": "precision_recall",
+          "passed": true,
+          "message": "tp=1 fp=0 fn=0 expected=['LEAK002']+q[] got=['LEAK002']+q[]"
+        }
+      ]
+    },
+    {
+      "id": "neg-leak003-player-table-server",
+      "passed": true,
+      "checks": [
+        {
+          "check": "has_rule",
+          "passed": true,
+          "message": "defects ['LEAK003']; expected LEAK003"
+        },
+        {
+          "check": "precision_recall",
+          "passed": true,
+          "message": "tp=1 fp=0 fn=0 expected=['LEAK003']+q[] got=['LEAK003']+q[]"
+        }
+      ]
+    },
+    {
+      "id": "neg-leak004-player-instances-server",
+      "passed": true,
+      "checks": [
+        {
+          "check": "has_question",
+          "passed": true,
+          "message": "questions ['LEAK004']; expected LEAK004"
+        },
+        {
+          "check": "precision_recall",
+          "passed": true,
+          "message": "tp=1 fp=0 fn=0 expected=[]+q['LEAK004'] got=[]+q['LEAK004']"
+        }
+      ]
+    },
+    {
+      "id": "neg-api001-wait-server",
+      "passed": true,
+      "checks": [
+        {
+          "check": "has_rule",
+          "passed": true,
+          "message": "defects ['API001']; expected API001"
+        },
+        {
+          "check": "precision_recall",
+          "passed": true,
+          "message": "tp=1 fp=0 fn=0 expected=['API001']+q[] got=['API001']+q[]"
+        }
+      ]
+    },
+    {
+      "id": "neg-api002-spawn-server",
+      "passed": true,
+      "checks": [
+        {
+          "check": "has_rule",
+          "passed": true,
+          "message": "defects ['API002']; expected API002"
+        },
+        {
+          "check": "precision_recall",
+          "passed": true,
+          "message": "tp=1 fp=0 fn=0 expected=['API002']+q[] got=['API002']+q[]"
+        }
+      ]
+    },
+    {
+      "id": "neg-api003-delay-server",
+      "passed": true,
+      "checks": [
+        {
+          "check": "has_rule",
+          "passed": true,
+          "message": "defects ['API003']; expected API003"
+        },
+        {
+          "check": "precision_recall",
+          "passed": true,
+          "message": "tp=1 fp=0 fn=0 expected=['API003']+q[] got=['API003']+q[]"
+        }
+      ]
+    },
+    {
+      "id": "neg-api004-instance-new-parent-server",
+      "passed": true,
+      "checks": [
+        {
+          "check": "has_rule",
+          "passed": true,
+          "message": "defects ['API004']; expected API004"
+        },
+        {
+          "check": "precision_recall",
+          "passed": true,
+          "message": "tp=1 fp=0 fn=0 expected=['API004']+q[] got=['API004']+q[]"
+        }
+      ]
+    },
+    {
+      "id": "neg-api005-humanoid-loadanimation-server",
+      "passed": true,
+      "checks": [
+        {
+          "check": "has_rule",
+          "passed": true,
+          "message": "defects ['API005']; expected API005"
+        },
+        {
+          "check": "precision_recall",
+          "passed": true,
+          "message": "tp=1 fp=0 fn=0 expected=['API005']+q[] got=['API005']+q[]"
+        }
+      ]
+    },
+    {
+      "id": "neg-api006-camera-cached-client",
+      "passed": true,
+      "checks": [
+        {
+          "check": "has_question",
+          "passed": true,
+          "message": "questions ['API006']; expected API006"
+        },
+        {
+          "check": "precision_recall",
+          "passed": true,
+          "message": "tp=1 fp=0 fn=0 expected=[]+q['API006'] got=[]+q['API006']"
+        }
+      ]
+    },
+    {
+      "id": "neg-api007-magic-numbers-server",
+      "passed": true,
+      "checks": [
+        {
+          "check": "has_question",
+          "passed": true,
+          "message": "questions ['API007']; expected API007"
+        },
+        {
+          "check": "precision_recall",
+          "passed": true,
+          "message": "tp=1 fp=0 fn=0 expected=[]+q['API007'] got=[]+q['API007']"
+        }
+      ]
+    },
+    {
+      "id": "neg-api008-lowercase-connect-server",
+      "passed": true,
+      "checks": [
+        {
+          "check": "has_rule",
+          "passed": true,
+          "message": "defects ['API008']; expected API008"
+        },
+        {
+          "check": "precision_recall",
+          "passed": true,
+          "message": "tp=1 fp=0 fn=0 expected=['API008']+q[] got=['API008']+q[]"
+        }
+      ]
+    },
+    {
+      "id": "neg-api009-tick-server",
+      "passed": true,
+      "checks": [
+        {
+          "check": "has_rule",
+          "passed": true,
+          "message": "defects ['API009']; expected API009"
+        },
+        {
+          "check": "precision_recall",
+          "passed": true,
+          "message": "tp=1 fp=0 fn=0 expected=['API009']+q[] got=['API009']+q[]"
+        }
+      ]
+    },
+    {
+      "id": "neg-api010-table-getn-server",
+      "passed": true,
+      "checks": [
+        {
+          "check": "has_rule",
+          "passed": true,
+          "message": "defects ['API010']; expected API010"
+        },
+        {
+          "check": "precision_recall",
+          "passed": true,
+          "message": "tp=1 fp=0 fn=0 expected=['API010']+q[] got=['API010']+q[]"
+        }
+      ]
+    },
+    {
+      "id": "neg-api011-body-mover-server",
+      "passed": true,
+      "checks": [
+        {
+          "check": "has_rule",
+          "passed": true,
+          "message": "defects ['API011']; expected API011"
+        },
+        {
+          "check": "precision_recall",
+          "passed": true,
+          "message": "tp=1 fp=0 fn=0 expected=['API011']+q[] got=['API011']+q[]"
+        }
+      ]
+    },
+    {
+      "id": "neg-str001-missing-strict-server",
+      "passed": true,
+      "checks": [
+        {
+          "check": "has_rule",
+          "passed": true,
+          "message": "defects ['STR001']; expected STR001"
+        },
+        {
+          "check": "precision_recall",
+          "passed": true,
+          "message": "tp=1 fp=0 fn=0 expected=['STR001']+q[] got=['STR001']+q[]"
+        }
+      ]
+    },
+    {
+      "id": "neg-str002-untyped-public",
+      "passed": true,
+      "checks": [
+        {
+          "check": "has_rule",
+          "passed": true,
+          "message": "defects ['STR002']; expected STR002"
+        },
+        {
+          "check": "precision_recall",
+          "passed": true,
+          "message": "tp=1 fp=0 fn=0 expected=['STR002']+q[] got=['STR002']+q[]"
+        }
+      ]
+    },
+    {
+      "id": "neg-str003-module-cycle",
+      "passed": true,
+      "checks": [
+        {
+          "check": "has_rule",
+          "passed": true,
+          "message": "defects ['STR003']; expected STR003"
+        },
+        {
+          "check": "precision_recall",
+          "passed": true,
+          "message": "tp=1 fp=0 fn=0 expected=['STR003']+q[] got=['STR003']+q[]"
+        }
+      ]
+    },
+    {
+      "id": "neg-str004-server-api-in-client-client",
+      "passed": true,
+      "checks": [
+        {
+          "check": "has_rule",
+          "passed": true,
+          "message": "defects ['STR004']; expected STR004"
+        },
+        {
+          "check": "precision_recall",
+          "passed": true,
+          "message": "tp=1 fp=0 fn=0 expected=['STR004']+q[] got=['STR004']+q[]"
+        }
+      ]
+    },
+    {
+      "id": "neg-str005-client-api-in-server-server",
+      "passed": true,
+      "checks": [
+        {
+          "check": "has_rule",
+          "passed": true,
+          "message": "defects ['STR005']; expected STR005"
+        },
+        {
+          "check": "precision_recall",
+          "passed": true,
+          "message": "tp=1 fp=0 fn=0 expected=['STR005']+q[] got=['STR005']+q[]"
+        }
+      ]
+    },
+    {
+      "id": "neg-cor001-ignored-pcall-server",
+      "passed": true,
+      "checks": [
+        {
+          "check": "has_rule",
+          "passed": true,
+          "message": "defects ['COR001']; expected COR001"
+        },
+        {
+          "check": "precision_recall",
+          "passed": true,
+          "message": "tp=1 fp=0 fn=0 expected=['COR001']+q[] got=['COR001']+q[]"
+        }
+      ]
+    },
+    {
+      "id": "scope-missing-project-is-refused",
+      "passed": true,
+      "checks": [
+        {
+          "check": "error_contains",
+          "passed": true,
+          "message": "error should mention 'project_id is required' (got \"project_id is required (this tool reads or writes project data and will not guess one). Known projects: ['example-obby', 'example-tycoon', 'example-sandbox']. A\")"
+        },
+        {
+          "check": "error_contains",
+          "passed": true,
+          "message": "error should mention 'example-obby' (got \"project_id is required (this tool reads or writes project data and will not guess one). Known projects: ['example-obby', 'example-tycoon', 'example-sandbox']. A\")"
+        }
+      ]
+    },
+    {
+      "id": "scope-unknown-project-is-refused",
+      "passed": true,
+      "checks": [
+        {
+          "check": "error_contains",
+          "passed": true,
+          "message": "error should mention 'unknown project_id' (got \"unknown project_id 'example-obbie'. Known projects: ['example-obby', 'example-tycoon', 'example-sandbox']. Did you mean ['example-obby', 'example-tycoon']? Add \")"
+        },
+        {
+          "check": "error_contains",
+          "passed": true,
+          "message": "error should mention 'Did you mean' (got \"unknown project_id 'example-obbie'. Known projects: ['example-obby', 'example-tycoon', 'example-sandbox']. Did you mean ['example-obby', 'example-tycoon']? Add \")"
+        }
+      ]
+    },
+    {
+      "id": "scope-place-of-another-project-is-refused",
+      "passed": true,
+      "checks": [
+        {
+          "check": "error_contains",
+          "passed": true,
+          "message": "error should mention \"does not belong to project 'example-tycoon'\" (got \"place 'lobby' does not belong to project 'example-tycoon'. Its places: ['main']\")"
+        }
+      ]
+    },
+    {
+      "id": "scope-place-accepted-by-roblox-place-id",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "project.place_id == 'stage-1' (got 'stage-1')"
+        }
+      ]
+    },
+    {
+      "id": "scope-report-names-project-and-place",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "project.project_id == 'example-tycoon' (got 'example-tycoon')"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "project.place_id == 'main' (got 'main')"
+        },
+        {
+          "check": "contains",
+          "passed": true,
+          "message": "summary_line should contain '[example-tycoon/main]' (got '[example-tycoon/main] WARNINGS: 0 error, 1 warning, 0 info, 0 question(s), 0 suppressed in 1 file(s); backends ran: none')"
+        },
+        {
+          "check": "precision_recall",
+          "passed": true,
+          "message": "tp=1 fp=0 fn=0 expected=['API003']+q[] got=['API003']+q[]"
+        }
+      ]
+    },
+    {
+      "id": "scope-write-tool-refuses-without-project",
+      "passed": true,
+      "checks": [
+        {
+          "check": "error_contains",
+          "passed": true,
+          "message": "error should mention 'project_id is required' (got \"project_id is required (this tool reads or writes project data and will not guess one). Known projects: ['example-obby', 'example-tycoon', 'example-sandbox']. A\")"
+        }
+      ]
+    },
+    {
+      "id": "ruleset-project-suppression-applies-in-its-project",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "defect_rules == [] (got [])"
+        },
+        {
+          "check": "count_is",
+          "passed": true,
+          "message": "len(suppressed) == 1 (got 1)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "suppressed.0.suppressed_by == 'project' (got 'project')"
+        },
+        {
+          "check": "contains",
+          "passed": true,
+          "message": "suppressed.0.suppressed_reason should contain 'task migration' (got 'Example Obby still runs on the legacy scheduler; wait() accepted until the task migration lands')"
+        }
+      ]
+    },
+    {
+      "id": "ruleset-project-suppression-does-not-leak-to-another-project",
+      "passed": true,
+      "checks": [
+        {
+          "check": "has_rule",
+          "passed": true,
+          "message": "defects ['API001']; expected API001"
+        },
+        {
+          "check": "count_is",
+          "passed": true,
+          "message": "len(suppressed) == 0 (got 0)"
+        },
+        {
+          "check": "precision_recall",
+          "passed": true,
+          "message": "tp=1 fp=0 fn=0 expected=['API001']+q[] got=['API001']+q[]"
+        }
+      ]
+    },
+    {
+      "id": "ruleset-global-suppression-applies-in-every-project-obby",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "defect_rules == [] (got [])"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "suppressed.0.suppressed_by == 'global' (got 'global')"
+        }
+      ]
+    },
+    {
+      "id": "ruleset-global-suppression-applies-in-every-project-tycoon",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "defect_rules == [] (got [])"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "suppressed.0.suppressed_by == 'global' (got 'global')"
+        }
+      ]
+    },
+    {
+      "id": "ruleset-global-suppression-only-matches-its-file-pattern",
+      "passed": true,
+      "checks": [
+        {
+          "check": "has_rule",
+          "passed": true,
+          "message": "defects ['API009']; expected API009"
+        },
+        {
+          "check": "precision_recall",
+          "passed": true,
+          "message": "tp=1 fp=0 fn=0 expected=['API009']+q[] got=['API009']+q[]"
+        }
+      ]
+    },
+    {
+      "id": "ruleset-report-lists-applied-and-unmatched-suppressions",
+      "passed": true,
+      "checks": [
+        {
+          "check": "contains",
+          "passed": true,
+          "message": "overrides.applied_suppressions should contain 'task migration' (got '[{\"rule\": \"API001\", \"file\": \"*.luau\", \"line\": null, \"layer\": \"project\", \"reason\": \"Example Obby still runs on the legacy scheduler; wait() accepted until the task migration lands\", \"matched\": 1}]')"
+        },
+        {
+          "check": "contains",
+          "passed": true,
+          "message": "overrides.unmatched_suppressions should contain 'API009' (got '[{\"rule\": \"API009\", \"file\": \"*.legacy.luau\", \"line\": null, \"layer\": \"global\", \"reason\": \"legacy scripts keep tick() until the scheduled migration; accepted for all projects\", \"matched\": 0}]')"
+        },
+        {
+          "check": "contains",
+          "passed": true,
+          "message": "overrides.layers should contain 'projects/example-obby/ruleset.yaml' (got '[{\"layer\": \"global\", \"path\": \"projects/_global/ruleset.yaml\", \"suppressions\": 1, \"disabled_rules\": [], \"severity_overrides\": {}, \"place\": null}, {\"layer\": \"project\", \"path\": \"projects/example-obby/rul')"
+        },
+        {
+          "check": "contains",
+          "passed": true,
+          "message": "overrides.layers should contain 'projects/_global/ruleset.yaml' (got '[{\"layer\": \"global\", \"path\": \"projects/_global/ruleset.yaml\", \"suppressions\": 1, \"disabled_rules\": [], \"severity_overrides\": {}, \"place\": null}, {\"layer\": \"project\", \"path\": \"projects/example-obby/rul')"
+        }
+      ]
+    },
+    {
+      "id": "places-folder-review-labels-each-finding-with-its-place",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "places == ['stage-1'] (got ['stage-1'])"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "defects.0.place == 'stage-1' (got 'stage-1')"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "suppressed.0.place == 'lobby' (got 'lobby')"
+        },
+        {
+          "check": "precision_recall",
+          "passed": true,
+          "message": "tp=2 fp=0 fn=0 expected=['API002']+q['PERF005'] got=['API002']+q['PERF005']"
+        }
+      ]
+    },
+    {
+      "id": "places-unassigned-files-have-no-place",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "defects.0.place == None (got None)"
+        },
+        {
+          "check": "precision_recall",
+          "passed": true,
+          "message": "tp=3 fp=0 fn=0 expected=['API001', 'API002']+q['PERF005'] got=['API001', 'API002']+q['PERF005']"
+        }
+      ]
+    },
+    {
+      "id": "places-place-override-applies-only-in-that-place",
+      "passed": true,
+      "checks": [
+        {
+          "check": "rule_severity",
+          "passed": true,
+          "message": "PERF005 severities ['warning']; expected warning"
+        },
+        {
+          "check": "precision_recall",
+          "passed": true,
+          "message": "tp=2 fp=0 fn=0 expected=['API002']+q['PERF005'] got=['API002']+q['PERF005']"
+        }
+      ]
+    },
+    {
+      "id": "places-override-not-applied-in-other-place",
+      "passed": true,
+      "checks": [
+        {
+          "check": "rule_severity",
+          "passed": true,
+          "message": "PERF005 severities ['info']; expected info"
+        },
+        {
+          "check": "precision_recall",
+          "passed": true,
+          "message": "tp=2 fp=0 fn=0 expected=['API002']+q['PERF005'] got=['API002']+q['PERF005']"
+        }
+      ]
+    },
+    {
+      "id": "ruleset-explicit-layer-suppression-with-reason",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "defect_rules == [] (got [])"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "suppressed.0.suppressed_by == 'explicit' (got 'explicit')"
+        }
+      ]
+    },
+    {
+      "id": "ruleset-wrong-line-does-not-suppress",
+      "passed": true,
+      "checks": [
+        {
+          "check": "has_rule",
+          "passed": true,
+          "message": "defects ['API001']; expected API001"
+        },
+        {
+          "check": "precision_recall",
+          "passed": true,
+          "message": "tp=1 fp=0 fn=0 expected=['API001']+q[] got=['API001']+q[]"
+        }
+      ]
+    },
+    {
+      "id": "ruleset-severity-override",
+      "passed": true,
+      "checks": [
+        {
+          "check": "rule_severity",
+          "passed": true,
+          "message": "API001 severities ['error']; expected error"
+        },
+        {
+          "check": "precision_recall",
+          "passed": true,
+          "message": "tp=1 fp=0 fn=0 expected=['API001']+q[] got=['API001']+q[]"
+        }
+      ]
+    },
+    {
+      "id": "ruleset-disabled-rule-is-listed-as-not-checked",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "defect_rules == [] (got [])"
+        },
+        {
+          "check": "contains",
+          "passed": true,
+          "message": "not_checked should contain 'disabled by the layered ruleset: API001' (got '[\"runtime behaviour: nothing was executed and no game was loaded\", \"data flow across files and functions (only module require cycles are checked across files, and only in a folder review)\", \"anything ')"
+        }
+      ]
+    },
+    {
+      "id": "ruleset-suppression-without-reason-is-rejected",
+      "passed": true,
+      "checks": [
+        {
+          "check": "error_contains",
+          "passed": true,
+          "message": "error should mention 'needs a reason' (got '/tmp/tmpgi3p4pe2/ruleset.yaml: suppression of API001 needs a reason of at least 8 characters')"
+        }
+      ]
+    },
+    {
+      "id": "ruleset-unknown-rule-in-suppression-is-rejected",
+      "passed": true,
+      "checks": [
+        {
+          "check": "error_contains",
+          "passed": true,
+          "message": "error should mention 'unknown rule id' (got \"ruleset problems: unknown rule id 'NOPE999'\")"
+        }
+      ]
+    },
+    {
+      "id": "learn-false-positive-in-project-a-not-applied-in-project-b",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "after.confidence == 'medium' (got 'medium')"
+        },
+        {
+          "check": "precision_recall",
+          "passed": true,
+          "message": "tp=1 fp=0 fn=0 expected=['SEC001']+q[] got=['SEC001']+q[]"
+        }
+      ]
+    },
+    {
+      "id": "learn-global-false-positive-applies-everywhere",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "after.confidence == 'low' (got 'low')"
+        },
+        {
+          "check": "contains",
+          "passed": true,
+          "message": "after.learned should contain 'global' (got '[{\"pattern_id\": \"fp-6fe583df54\", \"similarity\": 1.0, \"reason\": \"validated by the shared remotes wrapper\", \"from\": \"global\"}]')"
+        },
+        {
+          "check": "precision_recall",
+          "passed": true,
+          "message": "tp=1 fp=0 fn=0 expected=[]+q['SEC001'] got=[]+q['SEC001']"
+        }
+      ]
+    },
+    {
+      "id": "learn-place-scoped-false-positive-stays-in-its-place",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "after.confidence == 'medium' (got 'medium')"
+        },
+        {
+          "check": "precision_recall",
+          "passed": true,
+          "message": "tp=1 fp=0 fn=0 expected=['SEC001']+q[] got=['SEC001']+q[]"
+        }
+      ]
+    },
+    {
+      "id": "strict-escalates-warning-to-error",
+      "passed": true,
+      "checks": [
+        {
+          "check": "rule_severity",
+          "passed": true,
+          "message": "API001 severities ['error']; expected error"
+        },
+        {
+          "check": "precision_recall",
+          "passed": true,
+          "message": "tp=1 fp=0 fn=0 expected=['API001']+q[] got=['API001']+q[]"
+        }
+      ]
+    },
+    {
+      "id": "strict-escalates-info-to-warning",
+      "passed": true,
+      "checks": [
+        {
+          "check": "rule_severity",
+          "passed": true,
+          "message": "STR001 severities ['warning']; expected warning"
+        },
+        {
+          "check": "precision_recall",
+          "passed": true,
+          "message": "tp=1 fp=0 fn=0 expected=['STR001']+q[] got=['STR001']+q[]"
+        }
+      ]
+    },
+    {
+      "id": "strict-off-hides-untyped-public-function",
+      "passed": true,
+      "checks": [
+        {
+          "check": "no_findings",
+          "passed": true,
+          "message": "expected zero findings, got 0: "
+        }
+      ]
+    },
+    {
+      "id": "strict-off-hides-magic-numbers",
+      "passed": true,
+      "checks": [
+        {
+          "check": "no_findings",
+          "passed": true,
+          "message": "expected zero findings, got 0: "
+        }
+      ]
+    },
+    {
+      "id": "strict-statement-lists-strict-only-rules-as-not-checked",
+      "passed": true,
+      "checks": [
+        {
+          "check": "contains",
+          "passed": true,
+          "message": "not_checked should contain 'strict-only rules (API007, STR002)' (got '[\"runtime behaviour: nothing was executed and no game was loaded\", \"data flow across files and functions (only module require cycles are checked across files, and only in a folder review)\", \"anything ')"
+        },
+        {
+          "check": "no_findings",
+          "passed": true,
+          "message": "expected zero findings, got 0: "
+        }
+      ]
+    },
+    {
+      "id": "finder-remote-handler-validated",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "count == 1 (got 1)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "handlers.0.validated == {'itemId': True, 'quantity': True} (got {'itemId': True, 'quantity': True})"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "handlers.0.cooldown_or_permission_signal == True (got True)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "handlers.0.sensitive_params == [] (got [])"
+        }
+      ]
+    },
+    {
+      "id": "finder-remote-handler-flags-price-parameter",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "handlers.0.sensitive_params == ['price'] (got ['price'])"
+        }
+      ]
+    },
+    {
+      "id": "finder-remote-function-handler",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "handlers.0.kind == 'invoke' (got 'invoke')"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "handlers.0.validated == {'targetId': False} (got {'targetId': False})"
+        }
+      ]
+    },
+    {
+      "id": "finder-datastore-unprotected-call",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "unprotected == 1 (got 1)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "calls.0.in_pcall == False (got False)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "calls.0.method == 'GetAsync' (got 'GetAsync')"
+        }
+      ]
+    },
+    {
+      "id": "finder-datastore-protected-by-retry-helper",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "count == 2 (got 2)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "unprotected == 0 (got 0)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "calls.0.protected_by == 'withRetry' (got 'withRetry')"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "files.0.bind_to_close == True (got True)"
+        }
+      ]
+    },
+    {
+      "id": "finder-datastore-ignores-lookalike-class",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "count == 0 (got 0)"
+        }
+      ]
+    },
+    {
+      "id": "patch-wait-becomes-task-wait",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "supported == True (got True)"
+        },
+        {
+          "check": "contains",
+          "passed": true,
+          "message": "diff should contain '+task.wait(2)' (got '--- a/api001_wait.server.luau\\n+++ b/api001_wait.server.luau\\n@@ -1,4 +1,4 @@\\n --!strict\\n print(\"starting\")\\n-wait(2)\\n+task.wait(2)\\n print(\"done\")\\n')"
+        },
+        {
+          "check": "contains",
+          "passed": true,
+          "message": "diff should contain '-wait(2)' (got '--- a/api001_wait.server.luau\\n+++ b/api001_wait.server.luau\\n@@ -1,4 +1,4 @@\\n --!strict\\n print(\"starting\")\\n-wait(2)\\n+task.wait(2)\\n print(\"done\")\\n')"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "hits_after == 0 (got 0)"
+        }
+      ]
+    },
+    {
+      "id": "patch-spawn-and-delay",
+      "passed": true,
+      "checks": [
+        {
+          "check": "contains",
+          "passed": true,
+          "message": "diff should contain '+task.delay(5, cleanup)' (got '--- a/api003_delay.server.luau\\n+++ b/api003_delay.server.luau\\n@@ -3,4 +3,4 @@\\n \\tprint(\"cleanup\")\\n end\\n \\n-delay(5, cleanup)\\n+task.delay(5, cleanup)\\n')"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "hits_after == 0 (got 0)"
+        }
+      ]
+    },
+    {
+      "id": "patch-instance-new-parent-moves-parent-after",
+      "passed": true,
+      "checks": [
+        {
+          "check": "contains",
+          "passed": true,
+          "message": "diff should contain '+local part = Instance.new(\"Part\")' (got '--- a/api004_instance_new_parent.server.luau\\n+++ b/api004_instance_new_parent.server.luau\\n@@ -1,4 +1,5 @@\\n --!strict\\n-local part = Instance.new(\"Part\", workspace)\\n+local part = Instance.new(\"Part\")\\n+p')"
+        },
+        {
+          "check": "contains",
+          "passed": true,
+          "message": "diff should contain '+part.Parent = workspace' (got '--- a/api004_instance_new_parent.server.luau\\n+++ b/api004_instance_new_parent.server.luau\\n@@ -1,4 +1,5 @@\\n --!strict\\n-local part = Instance.new(\"Part\", workspace)\\n+local part = Instance.new(\"Part\")\\n+p')"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "hits_after == 0 (got 0)"
+        }
+      ]
+    },
+    {
+      "id": "patch-missing-strict-header",
+      "passed": true,
+      "checks": [
+        {
+          "check": "contains",
+          "passed": true,
+          "message": "diff should contain '+--!strict' (got '--- a/str001_missing_strict.server.luau\\n+++ b/str001_missing_strict.server.luau\\n@@ -1 +1,2 @@\\n+--!strict\\n print(\"hello\")\\n')"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "hits_after == 0 (got 0)"
+        }
+      ]
+    },
+    {
+      "id": "patch-datastore-call-wrapped-in-pcall",
+      "passed": true,
+      "checks": [
+        {
+          "check": "contains",
+          "passed": true,
+          "message": "diff should contain 'local ok, data = pcall(function() return store:GetAsync(' (got '--- a/dat001_unprotected_getasync.server.luau\\n+++ b/dat001_unprotected_getasync.server.luau\\n@@ -5,6 +5,6 @@\\n local store = DataStoreService:GetDataStore(\"PlayerData\")\\n \\n Players.PlayerAdded:Connect(fu')"
+        },
+        {
+          "check": "contains",
+          "passed": true,
+          "message": "notes should contain 'introduces a local `ok`' (got '[\"introduces a local `ok`: rename it if it clashes, check it, and add a retry (rule DAT002)\"]')"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "hits_after == 0 (got 0)"
+        }
+      ]
+    },
+    {
+      "id": "patch-security-rule-has-no-mechanical-fix",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "supported == False (got False)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "diff == '' (got '')"
+        },
+        {
+          "check": "contains",
+          "passed": true,
+          "message": "reason should contain 'no mechanical replacement' (got 'loadstring has no mechanical replacement; the code that needs it has to be redesigned around known functions. Suggested fix: Replace dynamic code with a table of known functions or data; never load co')"
+        }
+      ]
+    },
+    {
+      "id": "patch-nothing-to-patch-is-an-error",
+      "passed": true,
+      "checks": [
+        {
+          "check": "error_contains",
+          "passed": true,
+          "message": "error should mention 'nothing to patch' (got 'no API001 finding in trap_task_library.server.luau: nothing to patch (run review_file to see the findings)')"
+        }
+      ]
+    },
+    {
+      "id": "compare-fixed-finding",
+      "passed": true,
+      "checks": [
+        {
+          "check": "contains",
+          "passed": true,
+          "message": "fixed should contain 'API001' (got '[{\"file\": \"/tmp/tmpeqbnbhpw/a/a.server.luau\", \"line\": 2, \"rule_id\": \"API001\", \"severity\": \"warning\", \"confidence\": \"high\", \"kind\": \"defect\"}]')"
+        },
+        {
+          "check": "count_is",
+          "passed": true,
+          "message": "len(new) == 0 (got 0)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "regression == False (got False)"
+        }
+      ]
+    },
+    {
+      "id": "compare-new-error-is-a-regression",
+      "passed": true,
+      "checks": [
+        {
+          "check": "contains",
+          "passed": true,
+          "message": "new should contain 'SEC004' (got '[{\"file\": \"/tmp/tmpkkgqaz40/b/a.server.luau\", \"line\": 3, \"rule_id\": \"SEC004\", \"severity\": \"error\", \"confidence\": \"high\", \"kind\": \"defect\"}]')"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "regression == True (got True)"
+        }
+      ]
+    },
+    {
+      "id": "compare-moved-code-is-not-a-change",
+      "passed": true,
+      "checks": [
+        {
+          "check": "count_is",
+          "passed": true,
+          "message": "len(new) == 0 (got 0)"
+        },
+        {
+          "check": "count_is",
+          "passed": true,
+          "message": "len(fixed) == 0 (got 0)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "unchanged == 1 (got 1)"
+        }
+      ]
+    },
+    {
+      "id": "rules-cover-every-category-in-the-spec",
+      "passed": true,
+      "checks": [
+        {
+          "check": "list_contains",
+          "passed": true,
+          "message": "by_category.security=['SEC001', 'SEC002', 'SEC003', 'SEC004', 'SEC005', 'SEC006']; expected to contain ['SEC001', 'SEC002', 'SEC003', 'SEC004', 'SEC005']"
+        },
+        {
+          "check": "list_contains",
+          "passed": true,
+          "message": "by_category.data=['DAT001', 'DAT002', 'DAT003', 'DAT004', 'DAT005', 'DAT006', 'DAT007', 'DAT008', 'DAT009']; expected to contain ['DAT001', 'DAT002', 'DAT003', 'DAT004', 'DAT005', 'DAT006', 'DAT007']"
+        },
+        {
+          "check": "list_contains",
+          "passed": true,
+          "message": "by_category.performance=['PERF001', 'PERF002', 'PERF003', 'PERF004', 'PERF005']; expected to contain ['PERF001', 'PERF002', 'PERF003', 'PERF004']"
+        },
+        {
+          "check": "list_contains",
+          "passed": true,
+          "message": "by_category.leaks=['LEAK001', 'LEAK002', 'LEAK003', 'LEAK004']; expected to contain ['LEAK001', 'LEAK002', 'LEAK003', 'LEAK004']"
+        },
+        {
+          "check": "list_contains",
+          "passed": true,
+          "message": "by_category.api=['API001', 'API002', 'API003', 'API004', 'API005', 'API006', 'API007', 'API008', 'API009', 'API010', 'API011']; expected to contain ['API001', 'API002', 'API003', 'API004', 'API005', 'API007']"
+        },
+        {
+          "check": "list_contains",
+          "passed": true,
+          "message": "by_category.structure=['STR001', 'STR002', 'STR003', 'STR004', 'STR005']; expected to contain ['STR001', 'STR002', 'STR003', 'STR004', 'STR005']"
+        }
+      ]
+    },
+    {
+      "id": "rules-low-confidence-ones-are-the-questions",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "low_confidence == ['API006', 'API007', 'DAT006', 'DAT008', 'LEAK004', 'PERF005', 'SEC003'] (got ['API006', 'API007', 'DAT006', 'DAT008', 'LEAK004', 'PERF005', 'SEC003'])"
+        }
+      ]
+    },
+    {
+      "id": "inline-local-function-named-wait-is-not-the-legacy-global",
+      "passed": true,
+      "checks": [
+        {
+          "check": "no_findings",
+          "passed": true,
+          "message": "expected zero findings, got 0: "
+        }
+      ]
+    },
+    {
+      "id": "inline-method-named-spawn-is-not-the-global",
+      "passed": true,
+      "checks": [
+        {
+          "check": "no_findings",
+          "passed": true,
+          "message": "expected zero findings, got 0: "
+        }
+      ]
+    },
+    {
+      "id": "inline-animator-loadanimation-is-fine",
+      "passed": true,
+      "checks": [
+        {
+          "check": "no_findings",
+          "passed": true,
+          "message": "expected zero findings, got 0: "
+        }
+      ]
+    },
+    {
+      "id": "inline-event-wait-in-loop-yields",
+      "passed": true,
+      "checks": [
+        {
+          "check": "no_findings",
+          "passed": true,
+          "message": "expected zero findings, got 0: "
+        }
+      ]
+    },
+    {
+      "id": "inline-assert-validates-remote-argument",
+      "passed": true,
+      "checks": [
+        {
+          "check": "no_findings",
+          "passed": true,
+          "message": "expected zero findings, got 0: "
+        }
+      ]
+    },
+    {
+      "id": "inline-equality-allowlist-validates-argument",
+      "passed": true,
+      "checks": [
+        {
+          "check": "no_findings",
+          "passed": true,
+          "message": "expected zero findings, got 0: "
+        }
+      ]
+    },
+    {
+      "id": "inline-unused-sensitive-parameter-is-not-flagged",
+      "passed": true,
+      "checks": [
+        {
+          "check": "no_findings",
+          "passed": true,
+          "message": "expected zero findings, got 0: "
+        }
+      ]
+    },
+    {
+      "id": "inline-sensitive-parameter-used-is-high-confidence",
+      "passed": true,
+      "checks": [
+        {
+          "check": "rule_confidence",
+          "passed": true,
+          "message": "SEC002 confidences ['high']; expected high"
+        },
+        {
+          "check": "rule_at_line",
+          "passed": true,
+          "message": "SEC002 on lines [5]; expected 5"
+        },
+        {
+          "check": "precision_recall",
+          "passed": true,
+          "message": "tp=1 fp=0 fn=0 expected=['SEC002']+q[] got=['SEC002']+q[]"
+        }
+      ]
+    },
+    {
+      "id": "inline-processreceipt-without-return-is-an-error",
+      "passed": true,
+      "checks": [
+        {
+          "check": "has_rule",
+          "passed": true,
+          "message": "defects ['DAT007']; expected DAT007"
+        },
+        {
+          "check": "precision_recall",
+          "passed": true,
+          "message": "tp=1 fp=0 fn=0 expected=['DAT007']+q[] got=['DAT007']+q[]"
+        }
+      ]
+    },
+    {
+      "id": "inline-client-context-flags-server-only-api",
+      "passed": true,
+      "checks": [
+        {
+          "check": "has_rule",
+          "passed": true,
+          "message": "defects ['STR004']; expected STR004"
+        },
+        {
+          "check": "precision_recall",
+          "passed": true,
+          "message": "tp=1 fp=0 fn=0 expected=['STR004']+q[] got=['STR004']+q[]"
+        }
+      ]
+    },
+    {
+      "id": "inline-shared-context-is-not-flagged",
+      "passed": true,
+      "checks": [
+        {
+          "check": "no_findings",
+          "passed": true,
+          "message": "expected zero findings, got 0: "
+        }
+      ]
+    },
+    {
+      "id": "inline-nonstrict-directive-is-reported",
+      "passed": true,
+      "checks": [
+        {
+          "check": "contains",
+          "passed": true,
+          "message": "defects should contain 'weakens or disables type checking' (got '[{\"file\": \"/tmp/tmpouxx6vam/a.server.luau\", \"line\": 1, \"col\": 0, \"rule_id\": \"STR001\", \"source\": \"own\", \"category\": \"structure\", \"severity\": \"info\", \"confidence\": \"high\", \"problem\": \"`--!nonstrict` wea')"
+        },
+        {
+          "check": "precision_recall",
+          "passed": true,
+          "message": "tp=1 fp=0 fn=0 expected=['STR001']+q[] got=['STR001']+q[]"
+        }
+      ]
+    },
+    {
+      "id": "inline-license-comment-before-strict-is-fine",
+      "passed": true,
+      "checks": [
+        {
+          "check": "no_findings",
+          "passed": true,
+          "message": "expected zero findings, got 0: "
+        }
+      ]
+    },
+    {
+      "id": "inline-empty-file-is-clean-and-does-not-crash",
+      "passed": true,
+      "checks": [
+        {
+          "check": "no_findings",
+          "passed": true,
+          "message": "expected zero findings, got 0: "
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "clean == True (got True)"
+        }
+      ]
+    },
+    {
+      "id": "inline-unbalanced-code-does-not-crash",
+      "passed": true,
+      "checks": [
+        {
+          "check": "has_rule",
+          "passed": true,
+          "message": "defects ['API001']; expected API001"
+        },
+        {
+          "check": "precision_recall",
+          "passed": true,
+          "message": "tp=1 fp=0 fn=0 expected=['API001']+q[] got=['API001']+q[]"
+        }
+      ]
+    },
+    {
+      "id": "inline-pcall-with-method-reference-is-not-flagged",
+      "passed": true,
+      "checks": [
+        {
+          "check": "no_findings",
+          "passed": true,
+          "message": "expected zero findings, got 0: "
+        }
+      ]
+    },
+    {
+      "id": "inline-ordered-datastore-setasync-is-allowed",
+      "passed": true,
+      "checks": [
+        {
+          "check": "no_rule",
+          "passed": true,
+          "message": "DAT003 must not be reported (got [])"
+        }
+      ]
+    },
+    {
+      "id": "inline-datastore-key-from-userid-is-fine",
+      "passed": true,
+      "checks": [
+        {
+          "check": "no_rule",
+          "passed": true,
+          "message": "DAT009 must not be reported (got [])"
+        },
+        {
+          "check": "no_rule",
+          "passed": true,
+          "message": "DAT001 must not be reported (got [])"
+        }
+      ]
+    },
+    {
+      "id": "tok-line-comment-is-masked",
+      "passed": true,
+      "checks": [
+        {
+          "check": "contains",
+          "passed": true,
+          "message": "masked should contain 'wait(2)' (got 'local x = 1           \\nwait(2)')"
+        },
+        {
+          "check": "excludes",
+          "passed": true,
+          "message": "masked must not contain 'wait(1)'"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "kinds == ['keyword', 'name', 'op', 'number', 'comment', 'name', 'op', 'number', 'op'] (got ['keyword', 'name', 'op', 'number', 'comment', 'name', 'op', 'number', 'op'])"
+        }
+      ]
+    },
+    {
+      "id": "tok-block-comment-spans-lines-and-keeps-line-numbers",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "kinds == ['comment', 'keyword', 'name'] (got ['comment', 'keyword', 'name'])"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "lines == [1, 3, 3] (got [1, 3, 3])"
+        },
+        {
+          "check": "excludes",
+          "passed": true,
+          "message": "masked must not contain 'wait'"
+        }
+      ]
+    },
+    {
+      "id": "tok-leveled-long-comment-ignores-short-closers",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "kinds == ['comment', 'name'] (got ['comment', 'name'])"
+        }
+      ]
+    },
+    {
+      "id": "tok-long-string-with-brackets-inside",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "kinds == ['keyword', 'name', 'op', 'string', 'name', 'op', 'name', 'op'] (got ['keyword', 'name', 'op', 'string', 'name', 'op', 'name', 'op'])"
+        },
+        {
+          "check": "excludes",
+          "passed": true,
+          "message": "masked must not contain 'while'"
+        }
+      ]
+    },
+    {
+      "id": "tok-quoted-string-with-escaped-quote",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "kinds == ['name', 'op', 'string', 'name'] (got ['name', 'op', 'string', 'name'])"
+        }
+      ]
+    },
+    {
+      "id": "tok-unterminated-string-recovers-on-next-line",
+      "passed": true,
+      "checks": [
+        {
+          "check": "list_contains",
+          "passed": true,
+          "message": "texts=['x', '=', '\"oops', 'wait', '(', '1', ')']; expected to contain ['wait']"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "lines == [1, 1, 1, 2, 2, 2, 2] (got [1, 1, 1, 2, 2, 2, 2])"
+        }
+      ]
+    },
+    {
+      "id": "tok-interpolated-string-is-one-token",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "kinds == ['name', 'op', 'string', 'name'] (got ['name', 'op', 'string', 'name'])"
+        }
+      ]
+    },
+    {
+      "id": "tok-numbers-and-concat-operator",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "texts == ['a', '=', '1', '..', '2', '+', '0xFF', '+', '1e3'] (got ['a', '=', '1', '..', '2', '+', '0xFF', '+', '1e3'])"
+        }
+      ]
+    },
+    {
+      "id": "tok-compound-assignment-operators",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "texts == ['x', '+=', '1', '..=', 'y', '//=', '2'] (got ['x', '+=', '1', '..=', 'y', '//=', '2'])"
+        }
+      ]
+    },
+    {
+      "id": "struct-if-expression-opens-no-block",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "blocks == ['function'] (got ['function'])"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "balanced == True (got True)"
+        }
+      ]
+    },
+    {
+      "id": "struct-statement-if-opens-one-block",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "blocks == ['if'] (got ['if'])"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "balanced == True (got True)"
+        }
+      ]
+    },
+    {
+      "id": "struct-nested-loops-and-repeat",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "blocks == ['for', 'while', 'repeat'] (got ['for', 'while', 'repeat'])"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "balanced == True (got True)"
+        }
+      ]
+    },
+    {
+      "id": "struct-else-if-expression-chain",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "blocks == [] (got [])"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "balanced == True (got True)"
+        }
+      ]
+    },
+    {
+      "id": "struct-function-params-and-calls",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "params == {'M.add': ['a', 'b']} (got {'M.add': ['a', 'b']})"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "calls == ['M.add'] (got ['M.add'])"
+        }
+      ]
+    },
+    {
+      "id": "struct-unbalanced-input-does-not-crash",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "balanced == False (got False)"
+        }
+      ]
+    }
+  ]
+}

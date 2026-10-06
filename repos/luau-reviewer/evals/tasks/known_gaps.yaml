@@ -1,0 +1,40 @@
+# Planted bugs the heuristics do NOT catch. They count against recall on purpose; allow_miss keeps the suite green while the gap is documented. Generated.
+- id: gap-varargs-remote-server
+  title: KNOWN GAP. The handler takes `...` and reads `{...}` unvalidated. The checker looks at named parameters, so it cannot see this.
+  expect_rules:
+  - SEC001
+  expect_questions: []
+  known_gap: varargs handler
+  input:
+    op: review
+    file: examples/negative/gap_varargs_remote.server.luau
+    strict: false
+  checks:
+  - type: precision_recall
+    allow_miss: true
+- id: gap-aliased-getasync-server
+  title: KNOWN GAP. `GetAsync` is called through an alias (`local get = store.GetAsync`), not with `:`, and without pcall. Only `obj:Method(` calls are recognised.
+  expect_rules:
+  - DAT001
+  expect_questions: []
+  known_gap: aliased method
+  input:
+    op: review
+    file: examples/negative/gap_aliased_getasync.server.luau
+    strict: false
+  checks:
+  - type: precision_recall
+    allow_miss: true
+- id: gap-require-variable-id-server
+  title: KNOWN GAP. The asset id is held in a constant and `require(MODULE_ID)` is called with the name. There is no constant propagation.
+  expect_rules:
+  - SEC005
+  expect_questions: []
+  known_gap: no constant propagation
+  input:
+    op: review
+    file: examples/negative/gap_require_variable_id.server.luau
+    strict: false
+  checks:
+  - type: precision_recall
+    allow_miss: true

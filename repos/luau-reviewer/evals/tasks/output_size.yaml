@@ -1,0 +1,46 @@
+# Token discipline: the typical output of each tool (characters of its JSON) must stay under a budget, so growth is noticed.
+# Budgets are about 1.5x the size measured when they were set; raising one is a conscious decision. The tool descriptions are budgeted too.
+- id: size-review-file-bad-script
+  title: review_file on a bad script stays brief
+  input: {op: tool_size, tool: review_file, args: {path: examples/negative/sec002_client_price.server.luau, backends: []}}
+  checks: [{type: in_range, path: chars, max: 2800}, {type: in_range, path: description_chars, max: 330}]
+- id: size-review-file-clean-script
+  title: review_file on a clean script stays brief
+  input: {op: tool_size, tool: review_file, args: {path: examples/positive/trap_pcall_datastore.server.luau, backends: []}}
+  checks: [{type: in_range, path: chars, max: 2000}]
+- id: size-review-folder-two-places
+  title: review_folder over two places
+  input: {op: tool_size, tool: review_folder, args: {path: examples/places, project_id: example-obby, backends: []}}
+  checks: [{type: in_range, path: chars, max: 3600}, {type: in_range, path: description_chars, max: 330}]
+- id: size-explain-finding-with-code
+  title: explain_finding is the place for detail, with a larger budget
+  input: {op: tool_size, tool: explain_finding, args: {rule_id: SEC002, file: examples/negative/sec002_client_price.server.luau, line: 16}}
+  checks: [{type: in_range, path: chars, max: 2800}, {type: in_range, path: description_chars, max: 330}]
+- id: size-list-rules-brief
+  title: list_rules (all rules, one line each)
+  input: {op: tool_size, tool: list_rules, args: {}}
+  checks: [{type: in_range, path: chars, max: 9500}, {type: in_range, path: description_chars, max: 330}]
+- id: size-find-remote-handlers
+  title: find_remote_handlers
+  input: {op: tool_size, tool: find_remote_handlers, args: {path: examples/negative/sec001_unvalidated_remote.server.luau}}
+  checks: [{type: in_range, path: chars, max: 600}, {type: in_range, path: description_chars, max: 330}]
+- id: size-find-datastore-calls
+  title: find_datastore_calls
+  input: {op: tool_size, tool: find_datastore_calls, args: {path: examples/positive/trap_pcall_datastore.server.luau}}
+  checks: [{type: in_range, path: chars, max: 1200}, {type: in_range, path: description_chars, max: 330}]
+- id: size-suggest-patch
+  title: suggest_patch (dry run)
+  input: {op: tool_size, tool: suggest_patch, args: {path: examples/negative/api004_instance_new_parent.server.luau, rule_id: API004}}
+  checks: [{type: in_range, path: chars, max: 1100}, {type: in_range, path: description_chars, max: 330}]
+- id: size-suppress-finding-dry-run
+  title: suppress_finding (dry run)
+  input: {op: tool_size, tool: suppress_finding, args: {rule_id: API001, reason: "legacy script kept as is for now", project_id: example-sandbox}}
+  checks: [{type: in_range, path: chars, max: 1500}, {type: in_range, path: description_chars, max: 360}]
+- id: size-mark-false-positive-dry-run
+  title: mark_false_positive (dry run)
+  input: {op: tool_size, tool: mark_false_positive, args: {rule_id: SEC001, reason: "validated by a wrapper module", code: "remote.OnServerEvent:Connect(function(player, a)", project_id: example-sandbox}}
+  checks: [{type: in_range, path: chars, max: 600}, {type: in_range, path: description_chars, max: 360}]
+- id: size-compare-reviews
+  title: compare_reviews on two files
+  input: {op: tool_size, tool: compare_reviews, args: {base: examples/negative/api001_wait.server.luau, new: examples/positive/trap_task_library.server.luau}}
+  checks: [{type: in_range, path: chars, max: 500}, {type: in_range, path: description_chars, max: 360}]

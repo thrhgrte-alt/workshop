@@ -1,0 +1,8 @@
+# Applies to EVERY project. Synthetic example: the legacy-API warning is accepted everywhere for scripts named *.legacy.luau.
+version: 1
+disabled_rules: []
+severity_overrides: {}
+suppressions:
+  - rule: API009
+    file: "*.legacy.luau"
+    reason: "legacy scripts keep tick() until the scheduled migration; accepted for all projects"

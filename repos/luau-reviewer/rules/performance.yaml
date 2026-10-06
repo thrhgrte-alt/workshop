@@ -1,0 +1,92 @@
+category: performance
+description: Work that runs too often, never yields, or allocates every frame.
+rules:
+  - id: PERF001
+    title: Loop without a yield
+    severity: error
+    confidence: high
+    problem: "`while true do` loop body never yields (no wait, event wait or break): it freezes the script, and with it the server or client"
+    explanation: >-
+      An infinite loop that never yields (task.wait, an event :Wait(), a yielding call) runs until the script times out ("Script timeout: exhausted
+      allowed execution time") and stalls everything that shares the thread. Confidence is high when the body makes no calls at all, medium when it
+      calls functions that might yield. Loops with a break or return are not reported.
+    example: |
+      while true do
+          counter += 1
+      end
+    good: |
+      while true do
+          counter += 1
+          task.wait(1)
+      end
+    fix: "Yield every iteration with task.wait(...), or replace the loop with an event or RunService connection"
+  - id: PERF002
+    title: while true do with wait()
+    severity: warning
+    confidence: high
+    problem: "`while true do ... wait()` polls with the deprecated, throttled global `wait`"
+    explanation: >-
+      The global wait() is throttled and imprecise, and a polling loop wastes work when nothing changed. Prefer an event (Changed, ChildAdded,
+      Heartbeat) or at least task.wait(). Reported instead of (not in addition to) the plain deprecation finding on the same line.
+    supersedes: [API001]
+    example: |
+      while true do
+          wait(1)
+          check()
+      end
+    good: |
+      RunService.Heartbeat:Connect(check)   -- or a task.wait loop if polling is really needed
+    fix: "Use an event, or `while true do task.wait(1) ... end` if you must poll"
+  - id: PERF003
+    title: Expensive lookup every frame
+    severity: warning
+    confidence: high
+    problem: "`{call}` runs every frame inside a {event} handler"
+    explanation: >-
+      GetChildren, GetDescendants and the FindFirstChild family allocate or search on every call. Inside a Heartbeat, RenderStepped, Stepped,
+      PreSimulation or PostSimulation handler they run 60 times per second per script. Look the instances up once outside the handler (or keep a
+      cache updated by ChildAdded/ChildRemoved). GetChildren/GetDescendants are reported with high confidence; FindFirstChild* with medium.
+    example: |
+      RunService.Heartbeat:Connect(function()
+          for _, part in workspace:GetDescendants() do ... end
+      end)
+    good: |
+      local parts = workspace.Map:GetChildren()   -- once, kept up to date with ChildAdded/ChildRemoved
+      RunService.Heartbeat:Connect(function() for _, part in parts do ... end end)
+    fix: "Look it up once outside the handler and cache it"
+  - id: PERF004
+    title: Creating instances every frame
+    severity: warning
+    confidence: high
+    problem: "`{call}` creates instances every frame inside a {event} handler"
+    explanation: >-
+      Creating (and later destroying) instances 60 times a second causes memory churn, replication traffic and garbage. Pool and reuse objects, or create on demand
+      from an event rather than from a per-frame handler.
+    example: |
+      RunService.Heartbeat:Connect(function()
+          local p = Instance.new("Part")
+          p.Parent = workspace
+      end)
+    good: |
+      -- create the part once, or pool parts, and move/reuse them in the handler
+    fix: "Create once or pool and reuse; do not create instances per frame"
+  - id: PERF005
+    title: Touched handler without a debounce
+    severity: info
+    confidence: low
+    problem: "`Touched` fires many times per contact and this handler shows no debounce"
+    explanation: >-
+      Touched can fire repeatedly for one contact (every limb, every physics step). A handler that grants, damages or spawns without a debounce or per-player
+      cooldown runs many times. This is a QUESTION: a guard may exist under a name this check does not recognise.
+    example: |
+      part.Touched:Connect(function(hit)
+          giveCoin(hit)
+      end)
+    good: |
+      local touched = {}
+      part.Touched:Connect(function(hit)
+          if touched[hit.Parent] then return end
+          touched[hit.Parent] = true
+          giveCoin(hit)
+      end)
+    fix: "Add a debounce (per player) and reset it after a cooldown"

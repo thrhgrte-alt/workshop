@@ -1,0 +1,151 @@
+# Backend wrappers: output parsing (pure functions), a missing backend, and stub executables on a temporary PATH.
+- id: parse-analyze-type-error
+  title: A luau-analyze TypeError line becomes an error finding with line and column
+  input: {op: backend_parse, tool: luau-analyze, text: "src/a.lua(12,5): TypeError: Type 'number' could not be converted into 'string'"}
+  checks:
+    - {type: equals, path: findings.0.rule_id, value: "luau-analyze:TypeError"}
+    - {type: equals, path: findings.0.severity, value: error}
+    - {type: equals, path: findings.0.line, value: 12}
+    - {type: equals, path: findings.0.col, value: 5}
+- id: parse-analyze-syntax-error-without-column
+  title: "A SyntaxError line with no column (path(3): ...) is still parsed"
+  input: {op: backend_parse, tool: luau-analyze, text: "a.lua(3): SyntaxError: Expected identifier when parsing expression, got ')'"}
+  checks:
+    - {type: equals, path: findings.0.line, value: 3}
+    - {type: equals, path: findings.0.severity, value: error}
+- id: parse-analyze-lint-names-are-warnings
+  title: Any other word (a lint name such as LocalUnused) is a warning
+  input: {op: backend_parse, tool: luau-analyze, text: "a.lua(7,1): LocalUnused: Variable 'x' is never used"}
+  checks:
+    - {type: equals, path: findings.0.rule_id, value: "luau-analyze:LocalUnused"}
+    - {type: equals, path: findings.0.severity, value: warning}
+- id: parse-analyze-garbage-is-ignored-not-fatal
+  title: Lines that are not diagnostics are counted as unrecognised, never raise
+  input: {op: backend_parse, tool: luau-analyze, text: "hello\n\nnot a diagnostic at all\n"}
+  checks:
+    - {type: count_is, path: findings, value: 0}
+    - {type: equals, path: ignored, value: 2}
+- id: parse-selene-json2-is-zero-based
+  title: "selene json2: start_line 4 (0-based) is line 5; the trailing Summary object is skipped"
+  input:
+    op: backend_parse
+    tool: selene
+    text: |
+      {"type":"Diagnostic","severity":"Warning","code":"unused_variable","message":"x is assigned a value, but never used","primary_label":{"filename":"a.lua","span":{"start":10,"start_line":4,"start_column":6,"end":11}},"notes":["remove the variable"],"secondary_labels":[]}
+      {"type":"Summary","errors":0,"warnings":1,"parse_errors":0}
+  checks:
+    - {type: count_is, path: findings, value: 1}
+    - {type: equals, path: findings.0.line, value: 5}
+    - {type: equals, path: findings.0.col, value: 7}
+    - {type: equals, path: findings.0.rule_id, value: "selene:unused_variable"}
+    - {type: equals, path: findings.0.severity, value: warning}
+- id: parse-selene-quiet-style
+  title: The one-line quiet style is accepted too
+  input: {op: backend_parse, tool: selene, text: "a.lua:3:7: warning[unused_variable]: x is assigned a value, but never used"}
+  checks:
+    - {type: equals, path: findings.0.line, value: 3}
+    - {type: equals, path: findings.0.col, value: 7}
+- id: parse-selene-truncated-json-is-ignored
+  title: A cut-off JSON line is ignored and the valid line is kept
+  input:
+    op: backend_parse
+    tool: selene
+    text: |
+      {"type":"Diagnostic","severity":"Error","code":"x"
+      {"type":"Diagnostic","severity":"Error","code":"undefined_variable","message":"nope","primary_label":{"filename":"b.lua","span":{"start_line":0,"start_column":0}}}
+  checks:
+    - {type: count_is, path: findings, value: 1}
+    - {type: equals, path: ignored, value: 1}
+    - {type: equals, path: findings.0.severity, value: error}
+- id: parse-stylua-diff-header
+  title: "stylua --check: 'Diff in <file> at line N:' is one format finding at that line"
+  input: {op: backend_parse, tool: stylua, exit_code: 1, files: [a.lua], text: "Diff in /x/a.lua at line 3:\n-local x=1\n+local x = 1\n"}
+  checks:
+    - {type: count_is, path: findings, value: 1}
+    - {type: equals, path: findings.0.rule_id, value: "stylua:format"}
+    - {type: equals, path: findings.0.line, value: 3}
+- id: parse-stylua-unrecognised-failure-is-not-silently-clean
+  title: Exit code 1 with output we cannot parse still reports the file as unformatted
+  input: {op: backend_parse, tool: stylua, exit_code: 1, files: [a.lua], text: "something odd"}
+  checks:
+    - {type: count_is, path: findings, value: 1}
+- id: parse-stylua-clean
+  title: Exit code 0 and no output means no findings
+  input: {op: backend_parse, tool: stylua, exit_code: 0, files: [a.lua], text: ""}
+  checks:
+    - {type: count_is, path: findings, value: 0}
+- id: backend-missing-is-reported-not-hidden
+  title: With no backends on PATH the review says so; a bug-free file is clean for the own rules only
+  input: {op: backend_missing, file: examples/positive/trap_task_library.server.luau}
+  checks:
+    - {type: equals, path: backends, value: {luau-analyze: missing, selene: missing, stylua: missing}}
+    - {type: contains, path: statement, text: "NOT installed: luau-analyze, selene, stylua"}
+    - {type: contains, path: not_checked, text: "type and syntax errors (luau-analyze not installed)"}
+    - {type: equals, path: checked.backends_ran, value: []}
+    - {type: no_findings}
+- id: backend-missing-does-not-hide-own-findings
+  title: A missing backend never stops the own rules
+  input: {op: backend_missing, file: examples/negative/sec004_loadstring.server.luau}
+  expect_rules: [SEC004]
+  checks:
+    - {type: has_rule, rule: SEC004}
+    - {type: equals, path: backends.selene, value: missing}
+    - {type: precision_recall}
+- id: backend-stub-luau-analyze-is-folded-in
+  title: A stub luau-analyze's TypeError appears in the same report, labelled with its tool
+  input:
+    op: backend_stub
+    file: examples/positive/trap_typed_module.luau
+    stubs: {luau-analyze: {stdout: "", stderr: "{FILE}(5,3): TypeError: boom\n", exit: 1}}
+  checks:
+    - {type: equals, path: backends, value: {luau-analyze: ran, selene: not_requested, stylua: not_requested}}
+    - {type: contains, path: defects, text: "luau-analyze:TypeError"}
+    - {type: equals, path: defects.0.source, value: luau-analyze}
+    - {type: equals, path: verdict, value: errors}
+- id: backend-stub-selene-json2-is-folded-in
+  title: A stub selene's JSON diagnostic is mapped to the right file and 1-based line
+  input:
+    op: backend_stub
+    file: examples/positive/trap_typed_module.luau
+    stubs:
+      selene:
+        stdout: "{\"type\":\"Diagnostic\",\"severity\":\"Warning\",\"code\":\"shadowing\",\"message\":\"shadowed\",\"primary_label\":{\"filename\":\"{FILE}\",\"span\":{\"start_line\":2,\"start_column\":0}}}\n{\"type\":\"Summary\"}\n"
+        exit: 1
+  checks:
+    - {type: equals, path: defects.0.rule_id, value: "selene:shadowing"}
+    - {type: equals, path: defects.0.line, value: 3}
+    - {type: equals, path: defects.0.source, value: selene}
+- id: backend-stub-stylua-format-is-info
+  title: A stub stylua --check diff becomes an info finding, not an error
+  input:
+    op: backend_stub
+    file: examples/positive/trap_typed_module.luau
+    stubs: {stylua: {stdout: "Diff in {FILE} at line 4:\n-a\n+b\n", exit: 1}}
+  checks:
+    - {type: equals, path: defects.0.rule_id, value: "stylua:format"}
+    - {type: equals, path: defects.0.severity, value: info}
+    - {type: equals, path: verdict, value: "info only"}
+- id: backend-stub-crash-is-not-clean
+  title: A backend that exits with code 2 and no recognisable output is reported as failed, never as clean
+  input:
+    op: backend_stub
+    file: examples/positive/trap_typed_module.luau
+    stubs: {luau-analyze: {stdout: "", stderr: "fatal: cannot open\n", exit: 2}}
+  checks:
+    - {type: equals, path: backends.luau-analyze, value: error}
+    - {type: contains, path: statement, text: "FAILED: luau-analyze"}
+    - {type: contains, path: not_checked, text: "luau-analyze failed to run"}
+- id: backend-stub-own-and-external-findings-in-one-report
+  title: Own findings and two stub backends are merged and counted per tool
+  input:
+    op: backend_stub
+    file: examples/negative/api001_wait.server.luau
+    stubs:
+      luau-analyze: {stderr: "{FILE}(3,1): LocalUnused: unused\n", exit: 1}
+      selene: {stdout: "{FILE}:3:1: warning[unused_variable]: x\n", exit: 1}
+  expect_rules: [API001]
+  checks:
+    - {type: equals, path: summary.by_source.own, value: 1}
+    - {type: equals, path: summary.by_source.luau-analyze, value: 1}
+    - {type: equals, path: summary.by_source.selene, value: 1}
+    - {type: precision_recall}

@@ -1,0 +1,14 @@
+{
+  "mcpServers": {
+    "luau-reviewer": {
+      "command": "python",
+      "args": [
+        "-m",
+        "luaurev.server"
+      ],
+      "env": {
+        "LUAUREV_ROOT": "/ABSOLUTE/PATH/TO/luau-reviewer"
+      }
+    }
+  }
+}

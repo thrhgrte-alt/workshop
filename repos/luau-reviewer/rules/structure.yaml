@@ -1,0 +1,76 @@
+category: structure
+description: Type-checking mode, public API typing, module dependencies and keeping server and client code apart.
+rules:
+  - id: STR001
+    title: Missing --!strict
+    severity: info
+    confidence: high
+    problem: "No `--!strict` header: type checking is in the weakest mode"
+    explanation: >-
+      Without a `--!strict` first-line directive Luau type-checks in nonstrict mode (or not at all with --!nocheck), so most type errors go unreported. New code should
+      start with --!strict.
+    example: |
+      local function add(a, b) return a + b end
+    good: |
+      --!strict
+      local function add(a: number, b: number): number return a + b end
+    fix: "Add `--!strict` as the first line and fix the type errors it reports"
+  - id: STR002
+    title: Untyped public function
+    severity: info
+    confidence: medium
+    strict_only: true
+    problem: "Public function `{name}` has untyped parameters or no return type"
+    explanation: >-
+      Functions on a module's public table are its contract. Annotating parameters and the return type documents it and lets strict mode catch misuse at the call site.
+      Only reported in --strict mode, for functions declared on the table the module returns.
+    example: |
+      function M.add(a, b) return a + b end
+    good: |
+      function M.add(a: number, b: number): number return a + b end
+    fix: "Annotate every parameter and the return type"
+  - id: STR003
+    title: Module require cycle
+    severity: warning
+    confidence: medium
+    problem: "Modules require each other in a cycle: {cycle}"
+    scope: folder
+    explanation: >-
+      When module A requires B and B (directly or through others) requires A, Roblox throws a "requested module was required recursively" error or one side sees an
+      incomplete module. Break the cycle: move the shared part to a third module, pass dependencies in, or require lazily inside the function that needs it. Found only by a folder
+      review; modules are matched by file name (the last name in the require path), which is a heuristic.
+    example: |
+      -- A.luau: local B = require(script.Parent.B)
+      -- B.luau: local A = require(script.Parent.A)
+    good: |
+      -- move shared code to Shared.luau; A and B both require Shared only
+    fix: "Extract the shared code into a third module, or require lazily inside the function that needs it"
+  - id: STR004
+    title: Server-only API in a client script
+    severity: error
+    confidence: medium
+    problem: "`{name}` is server-only but this is a client script"
+    explanation: >-
+      DataStoreService, ServerStorage, ServerScriptService, OnServerEvent/OnServerInvoke, FireClient/FireAllClients and ProcessReceipt only work (or are only visible) on the server.
+      In a client script they error or are simply empty. Whether a file is a client script comes from its name (.client.luau), its folder (StarterPlayerScripts, StarterGui, ...) or an
+      explicit context argument, so confidence is medium.
+    example: |
+      -- Foo.client.luau
+      local store = DataStoreService:GetDataStore("x")
+    good: |
+      -- do the DataStore work in a server script and ask for it through a RemoteEvent
+    fix: "Move the code to a server script and communicate through a RemoteEvent/RemoteFunction"
+  - id: STR005
+    title: Client-only API in a server script
+    severity: error
+    confidence: medium
+    problem: "`{name}` is client-only but this is a server script"
+    explanation: >-
+      LocalPlayer, UserInputService, ContextActionService, RenderStepped, OnClientEvent, FireServer/InvokeServer and workspace.CurrentCamera only work on the client; on the server LocalPlayer
+      is nil and the rest do nothing or error. Whether a file is a server script comes from its name (.server.luau), its folder (ServerScriptService, ServerStorage) or an explicit context.
+    example: |
+      -- Foo.server.luau
+      local player = Players.LocalPlayer
+    good: |
+      -- take the player from the remote's first argument, or iterate Players:GetPlayers()
+    fix: "Move the code to a LocalScript, or get the player from the event/remote argument"

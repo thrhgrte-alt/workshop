@@ -1,0 +1,153 @@
+category: api
+description: Deprecated or poor API use. Some of these are from the author's knowledge of Roblox and Luau, not from a source read while building; see references/README.md.
+rules:
+  - id: API001
+    title: Deprecated global wait
+    severity: warning
+    confidence: high
+    problem: "Global `wait` is deprecated and throttled; use `task.wait`"
+    explanation: >-
+      The global wait() is part of the legacy scheduler: it can yield longer than asked and its arguments are clamped. The task library (task.wait, task.spawn,
+      task.delay, task.defer) is the supported replacement. Not reported when the file defines its own `wait`.
+    example: |
+      wait(1)
+    good: |
+      task.wait(1)
+    fix: "Replace `wait(...)` with `task.wait(...)`"
+  - id: API002
+    title: Deprecated global spawn
+    severity: warning
+    confidence: high
+    problem: "Global `spawn` is deprecated and delays the callback; use `task.spawn` (or `task.defer`)"
+    explanation: >-
+      The global spawn() schedules the function on the legacy scheduler with a delay; task.spawn runs it immediately on a new thread and task.defer at the end
+      of the current resumption cycle.
+    example: |
+      spawn(function() work() end)
+    good: |
+      task.spawn(function() work() end)
+    fix: "Replace `spawn(...)` with `task.spawn(...)`"
+  - id: API003
+    title: Deprecated global delay
+    severity: warning
+    confidence: high
+    problem: "Global `delay` is deprecated; use `task.delay`"
+    explanation: >-
+      delay(seconds, fn) is the legacy scheduler. task.delay(seconds, fn) is the supported replacement.
+    example: |
+      delay(5, cleanup)
+    good: |
+      task.delay(5, cleanup)
+    fix: "Replace `delay(...)` with `task.delay(...)`"
+  - id: API004
+    title: Instance.new with a parent argument
+    severity: warning
+    confidence: high
+    problem: "`Instance.new(class, parent)` sets Parent before the properties: slower and replicates a half-built instance"
+    explanation: >-
+      Passing the parent as the second argument parents the new instance before you have set its properties, which makes every later property change replicate
+      and fire events separately. Create the instance, set its properties, then set Parent last.
+    example: |
+      local part = Instance.new("Part", workspace)
+      part.Anchored = true
+    good: |
+      local part = Instance.new("Part")
+      part.Anchored = true
+      part.Parent = workspace
+    fix: "Create with Instance.new(class), set properties, then assign Parent last"
+  - id: API005
+    title: Humanoid:LoadAnimation
+    severity: warning
+    confidence: high
+    problem: "`Humanoid:LoadAnimation` is deprecated; load animations through the Animator"
+    explanation: >-
+      Loading animations directly on the Humanoid is deprecated. Use the Animator that lives under the Humanoid (or AnimationController): animator:LoadAnimation(animation).
+    example: |
+      local track = humanoid:LoadAnimation(anim)
+    good: |
+      local animator = humanoid:WaitForChild("Animator")
+      local track = animator:LoadAnimation(anim)
+    fix: "Call LoadAnimation on humanoid:WaitForChild(\"Animator\")"
+  - id: API006
+    title: workspace.CurrentCamera cached once
+    severity: info
+    confidence: low
+    problem: "`workspace.CurrentCamera` is cached at the top level; the camera object can be replaced"
+    explanation: >-
+      The Camera instance in workspace.CurrentCamera can change (for example when a script sets a new CurrentCamera, or the engine recreates it). A reference cached
+      once at the top of a script may then point at a stale camera. This is a QUESTION: it is often fine in a normal game; re-read workspace.CurrentCamera where it matters or
+      listen to GetPropertyChangedSignal("CurrentCamera").
+    example: |
+      local camera = workspace.CurrentCamera
+    good: |
+      local function getCamera() return workspace.CurrentCamera end
+    fix: "Read workspace.CurrentCamera when you need it, or reconnect on GetPropertyChangedSignal(\"CurrentCamera\")"
+  - id: API007
+    title: Magic number
+    severity: info
+    confidence: low
+    problem: "Unexplained number {number} in a comparison or tunable; name it as a constant"
+    strict_only: true
+    params: {allowed: [0, 1, 2, -1], max_per_file: 5}
+    explanation: >-
+      Numbers with no name make rules hard to tune and easy to get out of sync. Give gameplay values a named constant (`local MAX_HEALTH = 100`). A QUESTION, only in --strict
+      mode: some numbers are obvious in context.
+    example: |
+      if distance < 37 then ... end
+    good: |
+      local AGGRO_RANGE = 37
+      if distance < AGGRO_RANGE then ... end
+    fix: "Declare a named constant near the top of the file"
+  - id: API008
+    title: Lower-case connect/disconnect
+    severity: warning
+    confidence: medium
+    problem: "`:{method}` is the deprecated lower-case alias; use `:{fixed}`"
+    explanation: >-
+      The lower-case signal methods connect and disconnect are old deprecated aliases for Connect and Disconnect. Custom signal classes may define their own lower-case
+      methods; that is why confidence is medium.
+    example: |
+      part.Touched:connect(onTouched)
+    good: |
+      part.Touched:Connect(onTouched)
+    fix: "Use :Connect / :Disconnect"
+  - id: API009
+    title: Deprecated tick()
+    severity: warning
+    confidence: medium
+    problem: "`tick()` is deprecated; use os.clock() for durations, os.time() or DateTime for wall-clock time"
+    explanation: >-
+      tick() mixes up two jobs (elapsed time and wall-clock time) and is deprecated. os.clock() is the monotonic high-resolution clock for measuring durations;
+      os.time()/DateTime.now() give wall-clock time; workspace:GetServerTimeNow() is the synchronised server time. The replacement depends on the use, so the
+      patch tool does not rewrite it.
+    example: |
+      local start = tick()
+    good: |
+      local start = os.clock()
+    fix: "Use os.clock() to time things, os.time()/DateTime for the date, workspace:GetServerTimeNow() for synchronised time"
+  - id: API010
+    title: Removed or deprecated table/global function
+    severity: warning
+    confidence: medium
+    problem: "`{call}` is deprecated or removed in Luau"
+    explanation: >-
+      table.getn, table.foreach, table.foreachi and gcinfo are legacy Lua 5.0/5.1 functions that Luau deprecates. Use the length operator (#t), a for-in loop and
+      collectgarbage("count") instead.
+    example: |
+      local n = table.getn(list)
+    good: |
+      local n = #list
+    fix: "Use #t, a generic for loop, or collectgarbage(\"count\")"
+  - id: API011
+    title: Deprecated body mover
+    severity: info
+    confidence: medium
+    problem: "`{class}` is a deprecated body mover; use a constraint (LinearVelocity, AlignPosition, ...)"
+    explanation: >-
+      BodyVelocity, BodyPosition, BodyGyro, BodyForce, BodyAngularVelocity, BodyThrust and RocketPropulsion are deprecated in favour of physics constraints
+      (LinearVelocity, AlignPosition, AlignOrientation, VectorForce, AngularVelocity, Torque). Verify against the current Roblox documentation for your use.
+    example: |
+      local bv = Instance.new("BodyVelocity")
+    good: |
+      local lv = Instance.new("LinearVelocity")
+    fix: "Use LinearVelocity / AlignPosition / AlignOrientation / VectorForce instead"

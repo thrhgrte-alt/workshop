@@ -1,0 +1,83 @@
+# Learning from false positives: a deterministic similarity over normalised code, and its effect on a later review.
+- id: sim-identical-code
+  title: Identical code has similarity 1
+  input: {op: similarity, a: "local damage = amount * 2", b: "local damage = amount * 2"}
+  checks:
+    - {type: approx, path: similarity, value: 1.0}
+- id: sim-renamed-locals-still-match
+  title: "Local names and numbers are normalised: [local ID = ID * NUM] twice -> 1.0"
+  input: {op: similarity, a: "local damage = amount * 2", b: "local hit = value * 7"}
+  checks:
+    - {type: equals, path: a, value: [local, ID, "=", ID, "*", NUM]}
+    - {type: approx, path: similarity, value: 1.0}
+- id: sim-hand-computed-three-of-seven
+  title: "Hand-computed: 5 and 5 trigrams share 3, union 7 -> 3/7 = 0.4286"
+  input: {op: similarity, a: "player.Coins.Value -= price", b: "player.Coins.Value += price"}
+  checks:
+    - {type: equals, path: a, value: [ID, ".", Coins, ".", Value, "-=", ID]}
+    - {type: approx, path: similarity, value: 0.4286, tol: 0.001}
+- id: sim-comments-and-strings-are-ignored
+  title: Comments vanish and string contents are replaced, so only the shape matters
+  input: {op: similarity, a: "x = \"wait\" -- hi", b: "y = \"other\""}
+  checks:
+    - {type: equals, path: a, value: [ID, "=", STR]}
+    - {type: approx, path: similarity, value: 1.0}
+- id: sim-unrelated-code-is-low
+  title: Unrelated statements score under 0.2
+  input: {op: similarity, a: "local t = Instance.new(\"Part\")", b: "for _, p in Players:GetPlayers() do end"}
+  checks:
+    - {type: in_range, path: similarity, max: 0.2}
+- id: learn-false-positive-lowers-confidence-and-becomes-a-question
+  title: After the user rejects a SEC001 finding, the same code is reported at low confidence (a question, no longer a defect)
+  input:
+    op: learning_effect
+    file: examples/negative/sec001_unvalidated_remote.server.luau
+    rule: SEC001
+    mark: [{rule: SEC001, line: 9, reason: "arguments are validated by the Remotes wrapper module before this handler runs"}]
+  expect_rules: []
+  expect_questions: [SEC001]
+  checks:
+    - {type: equals, path: before.confidence, value: medium}
+    - {type: equals, path: before.kind, value: defect}
+    - {type: equals, path: after.confidence, value: low}
+    - {type: equals, path: after.kind, value: question}
+    - {type: contains, path: after.learned, text: "Remotes wrapper"}
+    - {type: contains, path: past_corrections, text: SEC001}
+    - {type: precision_recall}
+- id: learn-renamed-variables-still-match
+  title: The saved pattern matches a handler with different parameter and remote names
+  input:
+    op: learning_effect
+    rule: SEC001
+    name: other.server.luau
+    code: "--!strict\nlocal Players = game:GetService(\"Players\")\nlocal cooldown = 1\nthing.OnServerEvent:Connect(function(plr, x, y)\n\tprint(plr, x, y, cooldown)\nend)\n"
+    mark: [{rule: SEC001, code: "remote.OnServerEvent:Connect(function(player, itemName, slot)", reason: "inputs are validated by a shared wrapper"}]
+  expect_rules: []
+  expect_questions: [SEC001]
+  checks:
+    - {type: equals, path: before.kind, value: defect}
+    - {type: equals, path: after.kind, value: question}
+    - {type: precision_recall}
+- id: learn-different-code-keeps-its-confidence
+  title: A saved pattern for an OnServerInvoke handler does not quiet an OnServerEvent handler
+  input:
+    op: learning_effect
+    file: examples/negative/sec001_unvalidated_remote.server.luau
+    rule: SEC001
+    mark: [{rule: SEC001, code: "getInfo.OnServerInvoke = function(player, targetId)", reason: "invoke handler goes through a validator"}]
+  expect_rules: [SEC001]
+  checks:
+    - {type: equals, path: after.confidence, value: medium}
+    - {type: equals, path: after.kind, value: defect}
+    - {type: precision_recall}
+- id: learn-other-rules-are-not-affected
+  title: A false positive saved for SEC003 leaves SEC001 on the same code untouched
+  input:
+    op: learning_effect
+    file: examples/negative/sec001_unvalidated_remote.server.luau
+    rule: SEC001
+    mark: [{rule: SEC003, line: 9, reason: "rate limiting happens in the network layer"}]
+  expect_rules: [SEC001]
+  checks:
+    - {type: equals, path: after.confidence, value: medium}
+    - {type: precision_recall}

@@ -1,0 +1,72 @@
+category: leaks
+description: Connections, tables and instances that outlive what they belong to.
+rules:
+  - id: LEAK001
+    title: Connection never disconnected
+    severity: warning
+    confidence: medium
+    problem: "Connection to {signal} is created in code that runs repeatedly and its handle is never kept or disconnected"
+    explanation: >-
+      Connecting to a long-lived signal (RunService, UserInputService, Players...) from a handler that runs per player, per character, per touch
+      or per loop iteration adds a new connection each time and none is ever removed: the handlers pile up and keep their upvalues alive. Store
+      the connection and Disconnect it (on PlayerRemoving, Destroying, or a cleanup object). Not reported when the file contains any Disconnect.
+    example: |
+      Players.PlayerAdded:Connect(function(player)
+          RunService.Heartbeat:Connect(function() update(player) end)
+      end)
+    good: |
+      local conns = {}
+      Players.PlayerAdded:Connect(function(player)
+          conns[player] = RunService.Heartbeat:Connect(function() update(player) end)
+      end)
+      Players.PlayerRemoving:Connect(function(player)
+          conns[player]:Disconnect(); conns[player] = nil
+      end)
+    fix: "Keep the connection in a variable or table and Disconnect it when its owner goes away"
+  - id: LEAK002
+    title: Table grows without bound
+    severity: warning
+    confidence: medium
+    problem: "`{table}` only ever grows: it is appended to repeatedly and never trimmed or cleared"
+    explanation: >-
+      A module-level table that is appended to from a loop or an event handler, with no table.remove, table.clear, nil assignment or reset anywhere, grows for the
+      life of the server. Cap it, trim old entries, or key it so that entries are removed when they stop mattering.
+    example: |
+      local log = {}
+      RunService.Heartbeat:Connect(function(dt) table.insert(log, dt) end)
+    good: |
+      RunService.Heartbeat:Connect(function(dt)
+          table.insert(log, dt)
+          if #log > 100 then table.remove(log, 1) end
+      end)
+    fix: "Cap the size (remove the oldest) or clear it when the data is no longer needed"
+  - id: LEAK003
+    title: Per-player table never cleaned up
+    severity: warning
+    confidence: medium
+    problem: "`{table}` is keyed by player but never cleared on PlayerRemoving"
+    explanation: >-
+      A table keyed by Player (or UserId, or the character) keeps the Player object and everything it references alive after the player has left. Remove the
+      entry on PlayerRemoving (or Destroying). Reported when no assignment of nil, table.remove or table.clear for that table exists in the file.
+    example: |
+      local data = {}
+      Players.PlayerAdded:Connect(function(player) data[player] = {} end)
+    good: |
+      Players.PlayerRemoving:Connect(function(player) data[player] = nil end)
+    fix: "Set the entry to nil on PlayerRemoving"
+  - id: LEAK004
+    title: Per-player instances not destroyed on removal
+    severity: info
+    confidence: low
+    problem: "Instances are created for each player but this file never destroys them or handles PlayerRemoving"
+    explanation: >-
+      Instances parented to the workspace or ReplicatedStorage for a player (a folder, a pet, a marker) stay there after the player leaves unless something
+      destroys them. This is a QUESTION: they may be parented to the character or player (cleaned up automatically) or removed by another script.
+    example: |
+      Players.PlayerAdded:Connect(function(player)
+          local folder = Instance.new("Folder")
+          folder.Parent = workspace
+      end)
+    good: |
+      Players.PlayerRemoving:Connect(function(player) folders[player]:Destroy() end)
+    fix: "Track the instance per player and Destroy it on PlayerRemoving"

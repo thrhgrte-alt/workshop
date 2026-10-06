@@ -1,0 +1,188 @@
+# Projects, places and the layered ruleset (global -> project -> place -> explicit file). All projects are the synthetic ones in projects.yaml.
+- id: scope-missing-project-is-refused
+  title: A review with no project_id refuses and lists the known projects (never guesses)
+  input: {op: review, catch: true, file: examples/negative/api001_wait.server.luau, project_id: ""}
+  checks:
+    - {type: error_contains, text: "project_id is required"}
+    - {type: error_contains, text: "example-obby"}
+- id: scope-unknown-project-is-refused
+  title: An unknown project is refused with a did-you-mean
+  input: {op: review, catch: true, file: examples/negative/api001_wait.server.luau, project_id: example-obbie}
+  checks:
+    - {type: error_contains, text: "unknown project_id"}
+    - {type: error_contains, text: "Did you mean"}
+- id: scope-place-of-another-project-is-refused
+  title: A place that belongs to a different project is refused
+  input: {op: review, catch: true, file: examples/negative/api001_wait.server.luau, project_id: example-tycoon, place_id: lobby}
+  checks:
+    - {type: error_contains, text: "does not belong to project 'example-tycoon'"}
+- id: scope-place-accepted-by-roblox-place-id
+  title: A place can be named by its registry id or its (synthetic) place id
+  input: {op: review, file: examples/negative/api001_wait.server.luau, project_id: example-obby, place_id: "9100000002"}
+  checks:
+    - {type: equals, path: project.place_id, value: stage-1}
+- id: scope-report-names-project-and-place
+  title: The report states which project and place it was produced for
+  input: {op: review, file: examples/negative/api003_delay.server.luau, project_id: example-tycoon, place_id: main}
+  expect_rules: [API003]
+  checks:
+    - {type: equals, path: project.project_id, value: example-tycoon}
+    - {type: equals, path: project.place_id, value: main}
+    - {type: contains, path: summary_line, text: "[example-tycoon/main]"}
+    - {type: precision_recall}
+- id: scope-write-tool-refuses-without-project
+  title: suppress_finding without a project_id refuses
+  input: {op: suppress_write, catch: true, rule: API001, reason: "legacy script kept as is for now", project_id: ""}
+  checks:
+    - {type: error_contains, text: "project_id is required"}
+- id: ruleset-project-suppression-applies-in-its-project
+  title: example-obby suppresses API001; the finding moves to the suppressed list with the reason and layer
+  input: {op: review, file: examples/negative/api001_wait.server.luau, project_id: example-obby}
+  checks:
+    - {type: equals, path: defect_rules, value: []}
+    - {type: count_is, path: suppressed, value: 1}
+    - {type: equals, path: suppressed.0.suppressed_by, value: project}
+    - {type: contains, path: suppressed.0.suppressed_reason, text: "task migration"}
+- id: ruleset-project-suppression-does-not-leak-to-another-project
+  title: The same file reviewed for example-tycoon still reports API001
+  input: {op: review, file: examples/negative/api001_wait.server.luau, project_id: example-tycoon}
+  expect_rules: [API001]
+  checks:
+    - {type: has_rule, rule: API001}
+    - {type: count_is, path: suppressed, value: 0}
+    - {type: precision_recall}
+- id: ruleset-global-suppression-applies-in-every-project-obby
+  title: The global API009 suppression for *.legacy.luau applies in example-obby
+  input: {op: review, name: clock.legacy.luau, project_id: example-obby, code: "--!strict\nlocal started = tick()\nprint(started)\n"}
+  checks:
+    - {type: equals, path: defect_rules, value: []}
+    - {type: equals, path: suppressed.0.suppressed_by, value: global}
+- id: ruleset-global-suppression-applies-in-every-project-tycoon
+  title: ... and in example-tycoon
+  input: {op: review, name: clock.legacy.luau, project_id: example-tycoon, code: "--!strict\nlocal started = tick()\nprint(started)\n"}
+  checks:
+    - {type: equals, path: defect_rules, value: []}
+    - {type: equals, path: suppressed.0.suppressed_by, value: global}
+- id: ruleset-global-suppression-only-matches-its-file-pattern
+  title: The same tick() in a file not named *.legacy.luau is still reported
+  input: {op: review, name: clock.server.luau, project_id: example-obby, code: "--!strict\nlocal started = tick()\nprint(started)\n"}
+  expect_rules: [API009]
+  checks:
+    - {type: has_rule, rule: API009}
+    - {type: precision_recall}
+- id: ruleset-report-lists-applied-and-unmatched-suppressions
+  title: The report lists every layer, the suppressions that matched (with counts) and those that matched nothing
+  input: {op: review, file: examples/negative/api001_wait.server.luau, project_id: example-obby}
+  checks:
+    - {type: contains, path: overrides.applied_suppressions, text: "task migration"}
+    - {type: contains, path: overrides.unmatched_suppressions, text: API009}
+    - {type: contains, path: overrides.layers, text: "projects/example-obby/ruleset.yaml"}
+    - {type: contains, path: overrides.layers, text: "projects/_global/ruleset.yaml"}
+- id: places-folder-review-labels-each-finding-with-its-place
+  title: review_folder over both places of example-obby labels each finding lobby or stage-1 (API001 suppressed project-wide)
+  input: {op: review_folder, folder: examples/places, project_id: example-obby}
+  expect_rules: [API002]
+  expect_questions: [PERF005]
+  checks:
+    - {type: equals, path: places, value: [stage-1]}
+    - {type: equals, path: defects.0.place, value: stage-1}
+    - {type: equals, path: suppressed.0.place, value: lobby}
+    - {type: precision_recall}
+- id: places-unassigned-files-have-no-place
+  title: A project whose registry has no matching sub-folder gets place null, not a guess
+  input: {op: review_folder, folder: examples/places, project_id: example-tycoon}
+  expect_rules: [API001, API002]
+  expect_questions: [PERF005]
+  checks:
+    - {type: equals, path: defects.0.place, value: null}
+    - {type: precision_recall}
+- id: places-place-override-applies-only-in-that-place
+  title: stage-1 raises PERF005 to a warning; with the lobby named as the place the override is not applied
+  input: {op: review, file: examples/places/stage-1/Pad.server.luau, project_id: example-obby, place_id: stage-1}
+  expect_rules: [API002]
+  expect_questions: [PERF005]
+  checks:
+    - {type: rule_severity, rule: PERF005, severity: warning}
+    - {type: precision_recall}
+- id: places-override-not-applied-in-other-place
+  title: Same file reviewed as the lobby keeps PERF005 at info
+  input: {op: review, file: examples/places/stage-1/Pad.server.luau, project_id: example-obby, place_id: lobby}
+  expect_rules: [API002]
+  expect_questions: [PERF005]
+  checks:
+    - {type: rule_severity, rule: PERF005, severity: info}
+    - {type: precision_recall}
+- id: ruleset-explicit-layer-suppression-with-reason
+  title: An explicit extra ruleset layer can suppress by rule and line (fingerprint), and the reason is reported
+  input: {op: review, file: examples/negative/api001_wait.server.luau, project_id: example-sandbox, ruleset: {suppressions: [{rule: API001, file: api001_wait.server.luau, line: 3, reason: "legacy script kept as is for now"}]}}
+  checks:
+    - {type: equals, path: defect_rules, value: []}
+    - {type: equals, path: suppressed.0.suppressed_by, value: explicit}
+- id: ruleset-wrong-line-does-not-suppress
+  title: A suppression for line 2 does not hide a finding on line 3
+  input: {op: review, file: examples/negative/api001_wait.server.luau, project_id: example-sandbox, ruleset: {suppressions: [{rule: API001, file: api001_wait.server.luau, line: 2, reason: "legacy script kept as is for now"}]}}
+  expect_rules: [API001]
+  checks:
+    - {type: has_rule, rule: API001}
+    - {type: precision_recall}
+- id: ruleset-severity-override
+  title: A severity override in a ruleset layer changes the reported severity
+  input: {op: review, file: examples/negative/api001_wait.server.luau, project_id: example-sandbox, ruleset: {severity_overrides: {API001: error}}}
+  expect_rules: [API001]
+  checks:
+    - {type: rule_severity, rule: API001, severity: error}
+    - {type: precision_recall}
+- id: ruleset-disabled-rule-is-listed-as-not-checked
+  title: A disabled rule does not run and the report says so
+  input: {op: review, file: examples/negative/api001_wait.server.luau, project_id: example-sandbox, ruleset: {disabled_rules: [API001]}}
+  checks:
+    - {type: equals, path: defect_rules, value: []}
+    - {type: contains, path: not_checked, text: "disabled by the layered ruleset: API001"}
+- id: ruleset-suppression-without-reason-is-rejected
+  title: A suppression with a one-word reason is refused
+  input: {op: review, catch: true, file: examples/negative/api001_wait.server.luau, project_id: example-sandbox, ruleset: {suppressions: [{rule: API001, reason: "ok"}]}}
+  checks:
+    - {type: error_contains, text: "needs a reason"}
+- id: ruleset-unknown-rule-in-suppression-is-rejected
+  title: A suppression of an unknown rule id is refused
+  input: {op: review, catch: true, file: examples/negative/api001_wait.server.luau, project_id: example-sandbox, ruleset: {suppressions: [{rule: NOPE999, reason: "a perfectly good reason"}]}}
+  checks:
+    - {type: error_contains, text: "unknown rule id"}
+- id: learn-false-positive-in-project-a-not-applied-in-project-b
+  title: A false positive saved for example-obby leaves example-tycoon's confidence untouched
+  input:
+    op: learning_effect
+    project_id: example-tycoon
+    file: examples/negative/sec001_unvalidated_remote.server.luau
+    rule: SEC001
+    mark: [{rule: SEC001, line: 9, project_id: example-obby, reason: "validated by the obby remotes wrapper"}]
+  expect_rules: [SEC001]
+  checks:
+    - {type: equals, path: after.confidence, value: medium}
+    - {type: precision_recall}
+- id: learn-global-false-positive-applies-everywhere
+  title: A false positive marked global lowers confidence in any project
+  input:
+    op: learning_effect
+    project_id: example-tycoon
+    file: examples/negative/sec001_unvalidated_remote.server.luau
+    rule: SEC001
+    mark: [{rule: SEC001, line: 9, project_id: example-obby, global: true, reason: "validated by the shared remotes wrapper"}]
+  expect_questions: [SEC001]
+  checks:
+    - {type: equals, path: after.confidence, value: low}
+    - {type: contains, path: after.learned, text: global}
+    - {type: precision_recall}
+- id: learn-place-scoped-false-positive-stays-in-its-place
+  title: A false positive saved for the lobby does not lower confidence when the same code is reviewed as stage-1
+  input:
+    op: learning_effect
+    project_id: example-obby
+    place_id: stage-1
+    file: examples/negative/sec001_unvalidated_remote.server.luau
+    rule: SEC001
+    mark: [{rule: SEC001, line: 9, project_id: example-obby, place_id: lobby, reason: "lobby remotes are validated by a wrapper"}]
+  expect_rules: [SEC001]
+  checks:
+    - {type: equals, path: after.confidence, value: medium}
+    - {type: precision_recall}

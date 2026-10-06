@@ -1,0 +1,28 @@
+# Registry of the user's games. EVERYTHING BELOW IS SYNTHETIC EXAMPLE DATA: replace it with your own projects.
+# The place_id numbers are made up and do not refer to real Roblox places. Tools refuse to run for a project or place that is not listed here.
+# Each project has a layered ruleset: projects/_global/ruleset.yaml -> the project's ruleset -> an optional per-place ruleset.
+# Place `path` is a sub-folder of the folder you review; it is how review_folder labels each finding with its place.
+version: 1
+projects:
+  - id: example-obby
+    alias: Example Obby (synthetic)
+    universe_id: 9000000001
+    synthetic: true
+    ruleset: projects/example-obby/ruleset.yaml
+    places:
+      - {id: lobby, place_id: 9100000001, name: Lobby, path: lobby}
+      - {id: stage-1, place_id: 9100000002, name: Stage 1, path: stage-1, ruleset: projects/example-obby/places/stage-1.ruleset.yaml}
+  - id: example-tycoon
+    alias: Example Tycoon (synthetic)
+    universe_id: 9000000002
+    synthetic: true
+    ruleset: projects/example-tycoon/ruleset.yaml
+    places:
+      - {id: main, place_id: 9100000003, name: Main island, path: main}
+  - id: example-sandbox
+    alias: Example Sandbox (synthetic, no overrides)
+    universe_id: null
+    synthetic: true
+    ruleset: projects/example-sandbox/ruleset.yaml
+    places:
+      - {id: sandbox, place_id: null, name: Sandbox (unpublished), path: sandbox}

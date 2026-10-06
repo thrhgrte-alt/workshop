@@ -1,0 +1,17 @@
+category: correctness
+description: Plain bugs that are not security or data specific.
+rules:
+  - id: COR001
+    title: pcall result ignored
+    severity: warning
+    confidence: medium
+    problem: "The result of `pcall` is discarded, so failures disappear silently"
+    explanation: >-
+      pcall returns false plus the error message when the call fails. Calling it as a bare statement throws that away: bugs and outages become invisible. Capture the result
+      (`local ok, err = pcall(...)`) and at least warn(err) or handle it. Deliberate best-effort calls can be suppressed with a reason.
+    example: |
+      pcall(function() risky() end)
+    good: |
+      local ok, err = pcall(function() risky() end)
+      if not ok then warn("risky failed:", err) end
+    fix: "Capture `local ok, err = pcall(...)` and handle or log err"

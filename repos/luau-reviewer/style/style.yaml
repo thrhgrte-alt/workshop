@@ -1,0 +1,39 @@
+# Machine-readable style spec. Human-editable companion: STYLE.md.
+#
+# !! STARTER TEMPLATE. Your script naming scheme was NOT supplied, so the naming traits below are a clearly-labelled starter
+# !! (common Roblox community conventions), NOT your conventions. Replace them. They are ADVISORY: no rule checks naming yet.
+# !! What IS enforced is in rules/*.yaml; this file tells the agent how to behave when reviewing.
+version: 1
+name: Luau review policy and naming (starter template)
+summary: >
+  Review for correctness, security, data safety, performance and API currency, in that order. Report defects with a line, a severity and
+  a one-line fix; report low-confidence findings as QUESTIONS, never as defects. Say exactly which tools and rule categories ran. Never
+  claim a backend ran when it did not. Prefer a missed bug to a noisy false alarm, and learn from false positives the user rejects.
+traits:
+  review_order: security first (remote handlers, loadstring, require of asset ids), then data (DataStore, receipts), then performance and leaks, then deprecated API, then structure
+  severity: error means broken or exploitable; warning means likely wrong or fragile; info means style or possible improvement
+  confidence: high and medium are reported as defects; low is reported as a question the user can answer
+  strict_mode: --strict enables strict-only rules (magic numbers, untyped public functions), and escalates warnings to errors and infos to warnings
+  naming_modules: PascalCase module names (Inventory.luau), one module per file (STARTER, not enforced)
+  naming_locals: camelCase for locals, parameters and functions (STARTER, not enforced)
+  naming_constants: UPPER_SNAKE_CASE for constants (STARTER, not enforced)
+  naming_scripts: 'Name.server.luau for server scripts, Name.client.luau for client scripts, plain Name.luau for ModuleScripts (STARTER; the reviewer also uses these suffixes to tell server from client)'
+  naming_remotes: verb-first remote names such as RequestPurchase, NotifyLevelUp (STARTER, not enforced)
+  typing: start every file with --!strict; annotate the public functions of every module
+  data: every DataStore call in pcall with a retry, UpdateAsync for read-modify-write, a session lock, BindToClose, save on a slow timer
+  remotes: validate type and range of every argument; look prices, damage and rewards up on the server; add a cooldown
+constraints:
+  - {id: R1, severity: must,   rule: "Never edit the user's files: suggest_patch returns diff text only; the user applies it."}
+  - {id: R2, severity: must,   rule: "Never claim a backend (luau-analyze, selene, stylua) ran unless the report says status ran. A missing backend is reported as missing."}
+  - {id: R3, severity: must,   rule: "Report low-confidence findings as questions, not defects. Do not count them as bugs in a summary."}
+  - {id: R4, severity: must,   rule: "A clean review states exactly what was and was not checked (backends that ran, rule categories, strict mode)."}
+  - {id: R5, severity: must,   rule: "Suppressions need a reason; mark_false_positive only with the user's verdict. Never suppress to make a report look clean."}
+  - {id: R6, severity: should, rule: "Explain the why of a security or data finding in one or two sentences before proposing the fix."}
+  - {id: R7, severity: should, rule: "Review a whole folder when module structure matters (cycles are only found in folder reviews)."}
+  - {id: R8, severity: should, rule: "Get script source with the hub's script_read, save it to disk, then review the file; do not connect to Studio from this server."}
+exclusions:
+  - presenting a heuristic finding as proven
+  - reporting findings inside strings or comments
+  - suggesting a patch that changes behaviour without saying so
+  - treating "no findings" as "no bugs"
+correction_dimensions: [false_positive, missed_bug, severity_wrong, confidence_wrong, wrong_fix, noisy_rule, naming, other]

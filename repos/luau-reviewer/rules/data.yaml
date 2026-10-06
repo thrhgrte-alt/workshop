@@ -1,0 +1,162 @@
+category: data
+description: DataStore and purchase handling. Data loss and double grants are the expensive bugs.
+rules:
+  - id: DAT001
+    title: DataStore call not wrapped in pcall
+    severity: error
+    confidence: high
+    problem: "`{call}` can throw (throttling, outage) and is not wrapped in pcall"
+    explanation: >-
+      DataStore requests fail routinely: throttling, Roblox outages, studio API access disabled. An unprotected call raises an error that
+      kills the calling thread, so the player's data is never loaded or saved. Wrap every request in pcall (or a retry helper that does).
+      Only calls on receivers that look like DataStores are checked (the file mentions DataStoreService/GetDataStore, or the receiver
+      name contains store/data); HttpService is excluded.
+    example: |
+      local data = store:GetAsync(key)
+    good: |
+      local ok, data = pcall(function()
+          return store:GetAsync(key)
+      end)
+    fix: "Wrap the call in pcall and handle the failure (retry, or keep the player's data unsaved/locked)"
+  - id: DAT002
+    title: DataStore call without a retry
+    severity: warning
+    confidence: medium
+    problem: "`{call}` is in a pcall but nothing retries it when it fails"
+    explanation: >-
+      A single failed request is usually transient. A pcall with no retry turns one hiccup into lost data or an empty profile that then
+      gets saved over the real one. Retry a few times with a delay (a loop around the pcall, or a retry helper). Detected as a pcall that is not
+      inside a loop and not inside a helper whose name suggests retry/attempt/backoff.
+    example: |
+      local ok, data = pcall(function() return store:GetAsync(key) end)
+    good: |
+      local ok, data
+      for attempt = 1, 3 do
+          ok, data = pcall(function() return store:GetAsync(key) end)
+          if ok then break end
+          task.wait(attempt)
+      end
+    fix: "Retry the call a few times with a growing delay before giving up"
+  - id: DAT003
+    title: SetAsync where UpdateAsync should be used
+    severity: warning
+    confidence: medium
+    problem: "`SetAsync` overwrites blindly; a read-modify-write needs `UpdateAsync`"
+    explanation: >-
+      SetAsync replaces the value without looking at what is stored, so two servers (or a quick rejoin) overwrite each other. UpdateAsync hands you
+      the current value and applies your change atomically. Confidence is medium when the same file also reads with GetAsync (a classic
+      read-modify-write), low (a question) otherwise. OrderedDataStore receivers are skipped.
+    example: |
+      local data = store:GetAsync(key)
+      data.coins += 10
+      store:SetAsync(key, data)
+    good: |
+      store:UpdateAsync(key, function(old)
+          old = old or {coins = 0}
+          old.coins += 10
+          return old
+      end)
+    fix: "Use UpdateAsync(key, function(old) ... return new end) for read-modify-write"
+  - id: DAT004
+    title: No BindToClose save
+    severity: warning
+    confidence: medium
+    problem: "DataStore writes but no `game:BindToClose`: players still in the server at shutdown lose their data"
+    explanation: >-
+      When a server shuts down, PlayerRemoving may not finish all saves. BindToClose gives you up to about 30 seconds to flush every player's
+      data. Detected as a file with DataStore writes and no BindToClose; confidence drops to low when the file has no PlayerRemoving
+      handler (it may just be a module whose caller binds).
+    example: |
+      Players.PlayerRemoving:Connect(function(player) save(player) end)
+    good: |
+      game:BindToClose(function()
+          for _, player in Players:GetPlayers() do save(player) end
+      end)
+    fix: "Add game:BindToClose that saves every remaining player and waits for the saves to finish"
+  - id: DAT005
+    title: Saving too often
+    severity: warning
+    confidence: medium
+    problem: "DataStore write inside {where}: DataStore request budgets are limited"
+    explanation: >-
+      DataStore writes have a per-minute request budget and a per-key write cooldown. Writing every frame, on every Changed event, or in a loop that
+      waits only a few seconds burns the budget, causes throttling and queues, and gets saves dropped. Autosave every minute or more, and
+      on leave. The loop threshold is params.min_seconds (a heuristic, verify against the current DataStore limits).
+    params: {min_seconds: 30, verify_against_current_docs: true}
+    example: |
+      while true do
+          task.wait(5)
+          pcall(function() store:UpdateAsync(key, f) end)
+      end
+    good: |
+      while true do
+          task.wait(120)
+          saveAll()
+      end
+    fix: "Autosave on a slow timer (a minute or more) and on PlayerRemoving/BindToClose, not every frame or few seconds"
+  - id: DAT006
+    title: Missing session lock
+    severity: warning
+    confidence: low
+    problem: "Profile data is loaded and saved with no sign of a session lock"
+    explanation: >-
+      With more than one server (a quick rejoin, a teleport) two servers can hold the same player's data at once, and the last save wins,
+      silently deleting the other's progress. A session lock (store the owning JobId and refuse to load while another live server owns it, or use a
+      library that does) prevents this. This is a QUESTION: locking may live in a module this file calls. Detected as DataStore writes in a
+      file with player events and no name containing lock/session/JobId.
+    example: |
+      local data = store:GetAsync(key)  -- another server may also be using this key
+    good: |
+      -- store.UpdateAsync claims the key with JobId, and refuses while another live server owns it
+    fix: "Claim the key with a session lock (owner JobId + timestamp) before loading, and release it on save"
+  - id: DAT007
+    title: ProcessReceipt returns the wrong status
+    severity: error
+    confidence: high
+    problem: "`ProcessReceipt` must return an Enum.ProductPurchaseDecision; this return gives {what}"
+    explanation: >-
+      MarketplaceService.ProcessReceipt must return Enum.ProductPurchaseDecision.PurchaseGranted once the purchase is safely recorded, or
+      NotProcessedYet to be called again. Returning true/false/nil (or nothing) is not a valid decision, so the purchase is not acknowledged
+      and the callback is retried or the player is not credited correctly.
+    example: |
+      MarketplaceService.ProcessReceipt = function(receipt)
+          grant(receipt)
+          return true
+      end
+    good: |
+      MarketplaceService.ProcessReceipt = function(receipt)
+          if not recordPurchase(receipt) then
+              return Enum.ProductPurchaseDecision.NotProcessedYet
+          end
+          return Enum.ProductPurchaseDecision.PurchaseGranted
+      end
+    fix: "Return Enum.ProductPurchaseDecision.PurchaseGranted after saving, or NotProcessedYet on failure"
+  - id: DAT008
+    title: ProcessReceipt never returns NotProcessedYet
+    severity: warning
+    confidence: low
+    problem: "`ProcessReceipt` never returns NotProcessedYet, so a failed save is still acknowledged as granted"
+    explanation: >-
+      If saving the purchase fails (DataStore error, player left), the callback should return NotProcessedYet so Roblox retries later. A handler that
+      can only return PurchaseGranted acknowledges purchases it may not have recorded. This is a QUESTION: the failure path may be handled by an error
+      thrown instead.
+    example: |
+      MarketplaceService.ProcessReceipt = function(receipt)
+          return Enum.ProductPurchaseDecision.PurchaseGranted
+      end
+    good: |
+      -- return NotProcessedYet when the grant or the save fails
+    fix: "Return NotProcessedYet on any failure before the purchase is recorded; grant exactly once (key by PurchaseId)"
+  - id: DAT009
+    title: DataStore key built from the player name
+    severity: warning
+    confidence: medium
+    problem: "DataStore key uses the player's Name, which can change; use UserId"
+    explanation: >-
+      Usernames can be changed. A key built from player.Name can orphan the player's data after a rename (or hand it to a different account that
+      takes the old name). Key by UserId, which never changes.
+    example: |
+      store:GetAsync(player.Name)
+    good: |
+      store:GetAsync("Player_" .. player.UserId)
+    fix: 'Key the data by player.UserId (for example "Player_" .. player.UserId)'

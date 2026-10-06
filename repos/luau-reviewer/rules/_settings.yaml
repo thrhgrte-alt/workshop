@@ -1,0 +1,23 @@
+# Settings that are not rules. Every numeric value is a HEURISTIC default (verify_against_current_docs: true where Roblox
+# publishes a limit) and can be tuned here instead of in code.
+version: 1
+verify_against_current_docs: true
+severities: [error, warning, info]
+confidences: [high, medium, low]
+learning:
+  # A false-positive decision lowers a rule's confidence for code whose normalised token 3-gram Jaccard similarity to the
+  # saved pattern is at least this value. Deterministic: no model, no randomness.
+  similarity_threshold: 0.6
+  max_confidence_steps: 2
+  ngram: 3
+limits:
+  max_file_bytes: 1048576
+  max_files: 300
+  max_findings_returned: 400
+  backend_timeout_seconds: 20
+  backend_batch_size: 40
+  skip_dirs: [".git", "node_modules", "Packages", "DevPackages", "workspace"]
+  extensions: [".lua", ".luau"]
+strict_mode:
+  # --strict: rules marked strict_only are enabled, warnings become errors and infos become warnings.
+  escalate: {warning: error, info: warning}

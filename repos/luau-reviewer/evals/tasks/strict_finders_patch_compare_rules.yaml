@@ -1,0 +1,254 @@
+- id: strict-escalates-warning-to-error
+  title: In --strict mode a warning rule is reported as an error
+  input: {op: review, file: examples/negative/api001_wait.server.luau, strict: true}
+  expect_rules: [API001]
+  checks:
+    - {type: rule_severity, rule: API001, severity: error}
+    - {type: precision_recall}
+- id: strict-escalates-info-to-warning
+  title: In --strict mode an info rule becomes a warning
+  input: {op: review, file: examples/negative/str001_missing_strict.server.luau, strict: true}
+  expect_rules: [STR001]
+  checks:
+    - {type: rule_severity, rule: STR001, severity: warning}
+    - {type: precision_recall}
+- id: strict-off-hides-untyped-public-function
+  title: STR002 (strict-only) is silent in the default mode on the same file
+  input: {op: review, file: examples/negative/str002_untyped_public.luau, strict: false}
+  checks:
+    - {type: no_findings}
+- id: strict-off-hides-magic-numbers
+  title: API007 (strict-only) is silent in the default mode
+  input: {op: review, file: examples/negative/api007_magic_numbers.server.luau, strict: false}
+  checks:
+    - {type: no_findings}
+- id: strict-statement-lists-strict-only-rules-as-not-checked
+  title: A default review says the strict-only rules were not checked
+  input: {op: review, file: examples/positive/trap_typed_module.luau, strict: false}
+  checks:
+    - {type: contains, path: not_checked, text: "strict-only rules (API007, STR002)"}
+    - {type: no_findings}
+- id: finder-remote-handler-validated
+  title: find_remote_handlers sees a validated handler with a cooldown and no sensitive parameter
+  input: {op: finder, tool: find_remote_handlers, path: examples/positive/trap_validated_remote.server.luau}
+  checks:
+    - {type: equals, path: count, value: 1}
+    - {type: equals, path: handlers.0.validated, value: {itemId: true, quantity: true}}
+    - {type: equals, path: handlers.0.cooldown_or_permission_signal, value: true}
+    - {type: equals, path: handlers.0.sensitive_params, value: []}
+- id: finder-remote-handler-flags-price-parameter
+  title: find_remote_handlers marks `price` as a sensitive, client-supplied parameter
+  input: {op: finder, tool: find_remote_handlers, path: examples/negative/sec002_client_price.server.luau}
+  checks:
+    - {type: equals, path: handlers.0.sensitive_params, value: [price]}
+- id: finder-remote-function-handler
+  title: An OnServerInvoke handler is listed as kind invoke
+  input: {op: finder, tool: find_remote_handlers, path: examples/negative/sec001_unvalidated_remote_function.server.luau}
+  checks:
+    - {type: equals, path: handlers.0.kind, value: invoke}
+    - {type: equals, path: handlers.0.validated, value: {targetId: false}}
+- id: finder-datastore-unprotected-call
+  title: find_datastore_calls reports a GetAsync outside pcall
+  input: {op: finder, tool: find_datastore_calls, path: examples/negative/dat001_unprotected_getasync.server.luau}
+  checks:
+    - {type: equals, path: unprotected, value: 1}
+    - {type: equals, path: calls.0.in_pcall, value: false}
+    - {type: equals, path: calls.0.method, value: GetAsync}
+- id: finder-datastore-protected-by-retry-helper
+  title: The correct DataStore script has two calls, both protected by withRetry
+  input: {op: finder, tool: find_datastore_calls, path: examples/positive/trap_pcall_datastore.server.luau}
+  checks:
+    - {type: equals, path: count, value: 2}
+    - {type: equals, path: unprotected, value: 0}
+    - {type: equals, path: calls.0.protected_by, value: withRetry}
+    - {type: equals, path: files.0.bind_to_close, value: true}
+- id: finder-datastore-ignores-lookalike-class
+  title: A custom Cache class with GetAsync/SetAsync is not a DataStore
+  input: {op: finder, tool: find_datastore_calls, path: examples/positive/trap_datastore_lookalike.luau}
+  checks:
+    - {type: equals, path: count, value: 0}
+- id: patch-wait-becomes-task-wait
+  title: The patch for API001 replaces wait with task.wait and leaves no finding
+  input: {op: patch, file: examples/negative/api001_wait.server.luau, rule: API001}
+  checks:
+    - {type: equals, path: supported, value: true}
+    - {type: contains, path: diff, text: "+task.wait(2)"}
+    - {type: contains, path: diff, text: "-wait(2)"}
+    - {type: equals, path: hits_after, value: 0}
+- id: patch-spawn-and-delay
+  title: spawn and delay patches
+  input: {op: patch, file: examples/negative/api003_delay.server.luau, rule: API003}
+  checks:
+    - {type: contains, path: diff, text: "+task.delay(5, cleanup)"}
+    - {type: equals, path: hits_after, value: 0}
+- id: patch-instance-new-parent-moves-parent-after
+  title: Instance.new(class, parent) is split into creation and a Parent assignment
+  input: {op: patch, file: examples/negative/api004_instance_new_parent.server.luau, rule: API004}
+  checks:
+    - {type: contains, path: diff, text: "+local part = Instance.new(\"Part\")"}
+    - {type: contains, path: diff, text: "+part.Parent = workspace"}
+    - {type: equals, path: hits_after, value: 0}
+- id: patch-missing-strict-header
+  title: The STR001 patch inserts --!strict as a new first line
+  input: {op: patch, file: examples/negative/str001_missing_strict.server.luau, rule: STR001}
+  checks:
+    - {type: contains, path: diff, text: "+--!strict"}
+    - {type: equals, path: hits_after, value: 0}
+- id: patch-datastore-call-wrapped-in-pcall
+  title: The DAT001 patch wraps the assignment in a pcall and says it introduces `ok`
+  input: {op: patch, file: examples/negative/dat001_unprotected_getasync.server.luau, rule: DAT001}
+  checks:
+    - {type: contains, path: diff, text: "local ok, data = pcall(function() return store:GetAsync("}
+    - {type: contains, path: notes, text: "introduces a local `ok`"}
+    - {type: equals, path: hits_after, value: 0}
+- id: patch-security-rule-has-no-mechanical-fix
+  title: loadstring has no safe patch; the reason is returned instead of a diff
+  input: {op: patch, file: examples/negative/sec004_loadstring.server.luau, rule: SEC004}
+  checks:
+    - {type: equals, path: supported, value: false}
+    - {type: equals, path: diff, value: ""}
+    - {type: contains, path: reason, text: "no mechanical replacement"}
+- id: patch-nothing-to-patch-is-an-error
+  title: Asking for a patch of a rule that does not fire is refused
+  input: {op: patch, file: examples/positive/trap_task_library.server.luau, rule: API001}
+  checks:
+    - {type: error_contains, text: "nothing to patch"}
+- id: compare-fixed-finding
+  title: Replacing wait with task.wait shows API001 as fixed and nothing new
+  input: {op: compare_code, name: a.server.luau, base_code: "--!strict\nwait(1)\n", new_code: "--!strict\ntask.wait(1)\n"}
+  checks:
+    - {type: contains, path: fixed, text: API001}
+    - {type: count_is, path: new, value: 0}
+    - {type: equals, path: regression, value: false}
+- id: compare-new-error-is-a-regression
+  title: Introducing loadstring is reported as a new error
+  input: {op: compare_code, name: a.server.luau, base_code: "--!strict\nprint(1)\n", new_code: "--!strict\nprint(1)\nlocal f = loadstring(\"x\")\n"}
+  checks:
+    - {type: contains, path: new, text: SEC004}
+    - {type: equals, path: regression, value: true}
+- id: compare-moved-code-is-not-a-change
+  title: Adding blank lines above a finding changes its line but not its identity
+  input: {op: compare_code, name: a.server.luau, base_code: "--!strict\nwait(1)\n", new_code: "--!strict\n\n\n\nwait(1)\n"}
+  checks:
+    - {type: count_is, path: new, value: 0}
+    - {type: count_is, path: fixed, value: 0}
+    - {type: equals, path: unchanged, value: 1}
+- id: rules-cover-every-category-in-the-spec
+  title: Rules exist for security, data, performance, leaks, API and structure
+  input: {op: rules}
+  checks:
+    - {type: list_contains, path: by_category.security, items: [SEC001, SEC002, SEC003, SEC004, SEC005]}
+    - {type: list_contains, path: by_category.data, items: [DAT001, DAT002, DAT003, DAT004, DAT005, DAT006, DAT007]}
+    - {type: list_contains, path: by_category.performance, items: [PERF001, PERF002, PERF003, PERF004]}
+    - {type: list_contains, path: by_category.leaks, items: [LEAK001, LEAK002, LEAK003, LEAK004]}
+    - {type: list_contains, path: by_category.api, items: [API001, API002, API003, API004, API005, API007]}
+    - {type: list_contains, path: by_category.structure, items: [STR001, STR002, STR003, STR004, STR005]}
+- id: rules-low-confidence-ones-are-the-questions
+  title: The rules that are reported as questions are exactly the low-confidence ones
+  input: {op: rules}
+  checks:
+    - {type: equals, path: low_confidence, value: [API006, API007, DAT006, DAT008, LEAK004, PERF005, SEC003]}
+# --- small inline cases: tricky false-positive traps and edge cases ---
+- id: inline-local-function-named-wait-is-not-the-legacy-global
+  title: A script that defines its own `wait` is not calling the deprecated global
+  input: {op: review, name: a.server.luau, code: "--!strict\nlocal function wait(n: number)\n\tprint(n)\nend\nwait(1)\n"}
+  checks:
+    - {type: no_findings}
+- id: inline-method-named-spawn-is-not-the-global
+  title: "`pool:spawn()` and `self.wait()` are methods, not the legacy globals"
+  input: {op: review, name: a.server.luau, code: "--!strict\nlocal pool = {}\nfunction pool.spawn() end\npool.spawn()\nlocal self = {wait = function() end}\nself.wait()\n"}
+  checks:
+    - {type: no_findings}
+- id: inline-animator-loadanimation-is-fine
+  title: Animator:LoadAnimation (through a Humanoid's Animator child) is the supported path
+  input: {op: review, name: a.server.luau, code: "--!strict\nlocal function play(humanoid: Humanoid, anim: Animation)\n\treturn humanoid:WaitForChild(\"Animator\"):LoadAnimation(anim)\nend\nreturn play\n"}
+  checks:
+    - {type: no_findings}
+- id: inline-event-wait-in-loop-yields
+  title: "`while true do signal:Wait() end` yields; it is not a busy loop"
+  input: {op: review, name: a.server.luau, code: "--!strict\nlocal signal = Instance.new(\"BindableEvent\").Event\nwhile true do\n\tsignal:Wait()\nend\n"}
+  checks:
+    - {type: no_findings}
+- id: inline-assert-validates-remote-argument
+  title: An assert on the argument counts as validation
+  input: {op: review, name: a.server.luau, code: "--!strict\nlocal remote = Instance.new(\"RemoteEvent\")\nlocal COOLDOWN = 1\nremote.OnServerEvent:Connect(function(player, mode)\n\tassert(mode == \"a\" or mode == \"b\", COOLDOWN)\n\tprint(mode)\nend)\n"}
+  checks:
+    - {type: no_findings}
+- id: inline-equality-allowlist-validates-argument
+  title: "`if mode ~= \"a\" and mode ~= \"b\" then return end` is a valid allow-list"
+  input: {op: review, name: a.server.luau, code: "--!strict\nlocal remote = Instance.new(\"RemoteEvent\")\nlocal debounce = false\nremote.OnServerEvent:Connect(function(player, mode)\n\tif mode ~= \"a\" and mode ~= \"b\" then\n\t\treturn\n\tend\n\tprint(mode, debounce)\nend)\n"}
+  checks:
+    - {type: no_findings}
+- id: inline-unused-sensitive-parameter-is-not-flagged
+  title: A parameter called `price` that the handler never reads is not a client-supplied price
+  input: {op: review, name: a.server.luau, code: "--!strict\nlocal remote = Instance.new(\"RemoteEvent\")\nlocal debounce = false\nremote.OnServerEvent:Connect(function(player, price)\n\tprint(debounce)\nend)\n"}
+  checks:
+    - {type: no_findings}
+- id: inline-sensitive-parameter-used-is-high-confidence
+  title: "`damage` read by TakeDamage on the same line is a high-confidence SEC002"
+  input: {op: review, name: a.server.luau, code: "--!strict\nlocal remote = Instance.new(\"RemoteEvent\")\nlocal debounce = false\nremote.OnServerEvent:Connect(function(player, damage)\n\tplayer.Character.Humanoid:TakeDamage(damage)\n\tprint(debounce)\nend)\n"}
+  expect_rules: [SEC002]
+  checks:
+    - {type: rule_confidence, rule: SEC002, confidence: high}
+    - {type: rule_at_line, rule: SEC002, line: 5}
+    - {type: precision_recall}
+- id: inline-processreceipt-without-return-is-an-error
+  title: A ProcessReceipt that never returns a decision is DAT007
+  input: {op: review, name: a.server.luau, code: "--!strict\nlocal MarketplaceService = game:GetService(\"MarketplaceService\")\nMarketplaceService.ProcessReceipt = function(receipt)\n\tprint(receipt)\nend\n"}
+  expect_rules: [DAT007]
+  checks:
+    - {type: has_rule, rule: DAT007}
+    - {type: precision_recall}
+- id: inline-client-context-flags-server-only-api
+  title: With context=client a DataStoreService reference is STR004
+  input: {op: review, name: a.luau, context: client, code: "--!strict\nlocal ds = game:GetService(\"DataStoreService\")\nprint(ds)\n"}
+  expect_rules: [STR004]
+  checks:
+    - {type: has_rule, rule: STR004}
+    - {type: precision_recall}
+- id: inline-shared-context-is-not-flagged
+  title: With context=shared neither STR004 nor STR005 applies
+  input: {op: review, name: a.luau, context: shared, code: "--!strict\nlocal ds = game:GetService(\"DataStoreService\")\nlocal p = game:GetService(\"Players\").LocalPlayer\nprint(ds, p)\n"}
+  checks:
+    - {type: no_findings}
+- id: inline-nonstrict-directive-is-reported
+  title: "`--!nonstrict` is reported as STR001 with a specific message"
+  input: {op: review, name: a.server.luau, code: "--!nonstrict\nprint(1)\n"}
+  expect_rules: [STR001]
+  checks:
+    - {type: contains, path: defects, text: "weakens or disables type checking"}
+    - {type: precision_recall}
+- id: inline-license-comment-before-strict-is-fine
+  title: "`--!strict` after a header comment block still counts"
+  input: {op: review, name: a.server.luau, code: "-- Copyright (c) someone\n-- Licensed under MIT\n--!strict\nprint(1)\n"}
+  checks:
+    - {type: no_findings}
+- id: inline-empty-file-is-clean-and-does-not-crash
+  title: An empty file produces no findings and no exception
+  input: {op: review, name: a.server.luau, code: ""}
+  checks:
+    - {type: no_findings}
+    - {type: equals, path: clean, value: true}
+- id: inline-unbalanced-code-does-not-crash
+  title: Truncated code is reviewed as far as it goes
+  input: {op: review, name: a.server.luau, code: "--!strict\nwait(1)\nfunction f(\n\tif then\n"}
+  expect_rules: [API001]
+  checks:
+    - {type: has_rule, rule: API001}
+    - {type: precision_recall}
+- id: inline-pcall-with-method-reference-is-not-flagged
+  title: "`pcall(store.GetAsync, store, key)` passes the method to pcall: protected (and an accepted blind spot for other checks)"
+  input: {op: review, name: a.server.luau, code: "--!strict\nlocal store = game:GetService(\"DataStoreService\"):GetDataStore(\"x\")\nlocal function load(key: string)\n\tlocal ok, v = pcall(store.GetAsync, store, key)\n\treturn ok and v\nend\nreturn load\n"}
+  checks:
+    - {type: no_findings}
+- id: inline-ordered-datastore-setasync-is-allowed
+  title: SetAsync on a leaderboard (ordered) store is not DAT003
+  input: {op: review, name: a.server.luau, code: "--!strict\nlocal leaderboardStore = game:GetService(\"DataStoreService\"):GetOrderedDataStore(\"Wins\")\nlocal function post(key: string, wins: number)\n\tfor attempt = 1, 3 do\n\t\tlocal ok = pcall(function()\n\t\t\tleaderboardStore:SetAsync(key, wins)\n\t\tend)\n\t\tif ok then break end\n\t\ttask.wait(attempt)\n\tend\nend\nreturn post\n"}
+  checks:
+    - {type: no_rule, rule: DAT003}
+- id: inline-datastore-key-from-userid-is-fine
+  title: "A key built from player.UserId is not DAT009"
+  input: {op: review, name: a.server.luau, code: "--!strict\nlocal store = game:GetService(\"DataStoreService\"):GetDataStore(\"x\")\nlocal function load(player: Player)\n\tfor attempt = 1, 3 do\n\t\tlocal ok, v = pcall(function()\n\t\t\treturn store:GetAsync(\"P_\" .. player.UserId)\n\t\tend)\n\t\tif ok then return v end\n\t\ttask.wait(attempt)\n\tend\n\treturn nil\nend\nreturn load\n"}
+  checks:
+    - {type: no_rule, rule: DAT009}
+    - {type: no_rule, rule: DAT001}

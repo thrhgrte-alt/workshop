@@ -1,0 +1,5 @@
+# Example Tycoon (synthetic): no suppressions, one stricter severity.
+version: 1
+disabled_rules: []
+severity_overrides: {DAT003: error}
+suppressions: []

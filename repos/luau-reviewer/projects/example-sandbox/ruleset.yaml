@@ -1,0 +1,5 @@
+# Example Sandbox (synthetic): empty on purpose.
+version: 1
+disabled_rules: []
+severity_overrides: {}
+suppressions: []

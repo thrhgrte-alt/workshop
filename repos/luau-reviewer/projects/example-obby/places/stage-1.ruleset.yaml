@@ -1,0 +1,5 @@
+# Place override: Stage 1 only (synthetic).
+version: 1
+disabled_rules: []
+severity_overrides: {PERF005: warning}
+suppressions: []
