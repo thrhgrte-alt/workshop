@@ -1,0 +1,14 @@
+{
+  "mcpServers": {
+    "asset-roblox-preflight": {
+      "command": "python",
+      "args": [
+        "-m",
+        "preflight.server"
+      ],
+      "env": {
+        "PREFLIGHT_ROOT": "/ABSOLUTE/PATH/TO/asset-roblox-preflight"
+      }
+    }
+  }
+}

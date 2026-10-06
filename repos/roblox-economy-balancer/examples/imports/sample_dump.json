@@ -1,0 +1,105 @@
+{
+  "format": "econbal-import/1",
+  "game": "Sample Mine (hand-written)",
+  "truncated": false,
+  "currencies": [
+    {
+      "id": "Coins",
+      "start": 0
+    }
+  ],
+  "containers": {
+    "ores": {
+      "path": "ReplicatedStorage.Ores",
+      "items": [
+        {
+          "name": "Copper",
+          "class": "Configuration",
+          "fields": {
+            "Value": 5,
+            "ItemsPerMinute": 4,
+            "Currency": "Coins"
+          }
+        },
+        {
+          "name": "Iron",
+          "class": "Configuration",
+          "fields": {
+            "Value": 12,
+            "ItemsPerMinute": 2,
+            "Currency": "Coins"
+          }
+        }
+      ]
+    },
+    "tool_stats": {
+      "path": "ReplicatedStorage.Tools",
+      "items": [
+        {
+          "name": "StarterDrill",
+          "class": "Configuration",
+          "fields": {
+            "Tier": 1,
+            "SpeedMult": 1.0
+          }
+        },
+        {
+          "name": "SteelDrill",
+          "class": "Configuration",
+          "fields": {
+            "Tier": 2,
+            "SpeedMult": 1.5,
+            "ValueMult": 1.0
+          }
+        },
+        {
+          "name": "DiamondDrill",
+          "class": "Configuration",
+          "fields": {
+            "Tier": 3,
+            "SpeedMult": 2.0,
+            "ValueMult": 1.5
+          }
+        }
+      ]
+    },
+    "vendor_items": {
+      "path": "ReplicatedStorage.Shop.Items",
+      "items": [
+        {
+          "name": "Steel Drill",
+          "class": "Configuration",
+          "fields": {
+            "Price": 200,
+            "Tier": 2,
+            "Category": "Drill",
+            "Tool": "SteelDrill",
+            "Currency": "Coins"
+          }
+        },
+        {
+          "name": "Diamond Drill",
+          "class": "Configuration",
+          "fields": {
+            "Price": 1800,
+            "Tier": 3,
+            "Category": "Drill",
+            "Tool": "DiamondDrill",
+            "Currency": "Coins"
+          }
+        },
+        {
+          "name": "Iron Bonus",
+          "class": "Configuration",
+          "fields": {
+            "Price": 120,
+            "Tier": 1,
+            "Category": "Drill",
+            "Ore": "Iron",
+            "Mult": 1.25
+          }
+        }
+      ]
+    }
+  }
+}

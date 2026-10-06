@@ -1,0 +1,56 @@
+# Machine-readable pacing spec. Human-editable companion: STYLE.md.
+#
+# !! PLACEHOLDER. The user has NOT supplied target pacing. Every number below is a STARTER BAND chosen only so the tools
+# !! have something to compare against (early game 5-15 active minutes per upgrade, and so on). REPLACE target_bands and
+# !! ranges with your game's real pacing before you trust any finding. Nothing here comes from Roblox or from player data.
+version: 1
+name: Starter pacing bands (PLACEHOLDER - replace)
+placeholder: true
+summary: >
+  PLACEHOLDER pacing for an incremental or mining-style game. The next upgrade arrives after a few active minutes early on
+  and after longer waits later; no single step is a wall or a cliff; no choice is dominated; currency never floods;
+  paid boosts speed pace without making free players fall off a cliff. Times are ACTIVE minutes of play for the
+  reference archetype, as computed by the simulator, never mental arithmetic.
+traits:
+  pacing_early: "tiers 1-3: next upgrade in 5-15 active minutes (PLACEHOLDER band 'early')"
+  pacing_mid: "tiers 4-6: next upgrade in 15-45 active minutes (PLACEHOLDER band 'mid')"
+  pacing_late: "tiers 7 and up: next upgrade in 45-120 active minutes (PLACEHOLDER band 'late')"
+  smoothness: "no cost step above 5x the previous step; no step more than 4x slower than the previous one"
+  choices: "alternatives at a tier should trade off; none may beat the others for every archetype"
+  currency: "content lasts at least 7 days for the reference archetype; income is not left unspent at the end"
+  monetisation: "boosts speed progress by at most 3x; free players stay inside 2x the band maximum"
+# Bands apply to purchases of the listed archetypes (default: the reference archetypes). 'tiers' is inclusive [lo, hi].
+reference_archetypes: [regular]
+target_bands:
+  - {id: early, tiers: [1, 3],  min_minutes: 5,  max_minutes: 15,  archetypes: [regular], placeholder: true}
+  - {id: mid,   tiers: [4, 6],  min_minutes: 15, max_minutes: 45,  archetypes: [regular], placeholder: true}
+  - {id: late,  tiers: [7, 99], min_minutes: 45, max_minutes: 120, archetypes: [regular], placeholder: true}
+# Thresholds the analyses read (check_ranges semantics: measured value must stay inside min/max). All PLACEHOLDERS.
+ranges:
+  max_cost_jump_ratio: {max: 5.0, severity: warning, note: "cost of a step divided by the previous step's cost in the same track"}
+  max_gap_jump_ratio: {max: 4.0, severity: warning, note: "time of a step divided by the time of the previous step"}
+  wall_factor: {max: 3.0, severity: error, note: "slowest step divided by its band maximum"}
+  max_idle_minutes: {max: 240, severity: error, note: "wall limit for tiers that no band covers (active minutes)"}
+  max_days_per_step: {max: 7.0, severity: warning, note: "calendar days for one step, any archetype"}
+  max_payback_minutes: {max: 240, severity: warning, note: "active minutes an upgrade needs to repay its cost"}
+  min_content_days: {min: 7.0, severity: warning, note: "calendar days until the reference archetype runs out of things to buy"}
+  max_tail_net_share: {max: 0.8, severity: error, note: "share of income left unspent in the final quarter of the horizon once content is exhausted"}
+  max_boost_speedup: {max: 3.0, severity: warning, note: "time without boosts divided by time with all boosts, at the same tier"}
+  max_free_gap_over_band: {max: 2.0, severity: error, note: "free-player step time divided by the band maximum, when boosted play is inside the band"}
+  dominance_margin: {min: 0.1, severity: warning, note: "an option dominates when its payback is at least this fraction better than every alternative"}
+learning:
+  min_votes: 2          # reports needed before suggest_band_adjustments proposes a change
+  shrink: 0.2           # 'felt too slow': propose band max = (1 - shrink) x the simulated step time
+  grow: 0.25            # 'felt too fast': propose band min = (1 + grow) x the simulated step time
+constraints:
+  - {id: E1, severity: must,   rule: "Every number in a reply comes from a tool result; never do arithmetic in your head."}
+  - {id: E2, severity: must,   rule: "Locked values in the spec are never changed by a proposal."}
+  - {id: E3, severity: must,   rule: "State that bands and archetypes are assumptions until the user confirms them."}
+  - {id: E4, severity: should, rule: "Propose the smallest set of value changes that fixes a finding."}
+  - {id: E5, severity: should, rule: "Show before and after timings for every tier a change moves."}
+exclusions:
+  - predicting retention or revenue from the simulator
+  - treating placeholder bands as the user's pacing
+  - changing several unrelated values at once
+  - claiming a number the simulator did not print
+correction_dimensions: [pacing, band, archetype_assumption, cost, boost_power, inflation, wall, dead_option, dominant_option, locked_value, other]

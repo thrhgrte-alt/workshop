@@ -1,0 +1,15 @@
+{
+  "request": "Playtest note on the wall toy: tier 4 felt too slow",
+  "decision": "revise",
+  "reason": "tier 4 felt too slow",
+  "corrections": [
+    {
+      "dimension": "pacing",
+      "direction": "less",
+      "felt": "too_slow",
+      "tier": 4,
+      "archetype": "regular",
+      "note": "tier 4 felt too slow"
+    }
+  ]
+}

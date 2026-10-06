@@ -1,0 +1,245 @@
+# Small economies whose answers can be derived on paper. Source: mining 10 coins per active minute, archetype regular (efficiency 1).
+# A purchase happens at the end of the first whole minute whose balance covers the cost. Every expected number below was worked out by hand
+# (see the task titles); none was copied from simulator output.
+- id: hand-single-step
+  title: "cost 100 at 10 per minute is bought at minute 10; income becomes 20 (hand: 100/10)"
+  input:
+    op: simulate
+    spec: &base
+      format: econbal-economy/1
+      id: hand
+      simulation: {days: 7, seed: 0}
+      currencies: {coins: {start: 0}}
+      sources: [{id: mining, currency: coins, per_minute: 10}]
+      archetypes: {regular: {session_minutes: 20, sessions_per_day: 3}}
+      upgrades: [{id: u1, track: t, tier: 1, currency: coins, cost: 100, effects: [{source: mining, add: 10}]}]
+  checks: [{type: equals, path: minutes.u1, value: 10}, {type: equals, path: gaps.u1, value: 10}, {type: approx, path: end_rates.coins, value: 20}, {type: approx, path: paybacks.u1, value: 10}]
+- id: hand-two-steps
+  title: "second step costs 200 at income 20, so it takes 10 more minutes (hand: 100/10 + 200/20 = 20); income ends at 40"
+  input:
+    op: simulate
+    spec:
+      <<: *base
+      upgrades:
+        - {id: u1, track: t, tier: 1, currency: coins, cost: 100, effects: [{source: mining, add: 10}]}
+        - {id: u2, track: t, tier: 2, currency: coins, cost: 200, effects: [{source: mining, add: 20}]}
+  checks: [{type: equals, path: minutes.u2, value: 20}, {type: equals, path: gaps.u2, value: 10}, {type: approx, path: end_rates.coins, value: 40}, {type: equals, path: order, value: [u1, u2]}]
+- id: hand-efficiency-halves-income
+  title: "efficiency 0.5 halves income to 5 per minute, so cost 100 takes 20 minutes (hand: 100/5)"
+  input:
+    op: simulate
+    spec:
+      <<: *base
+      archetypes: {regular: {session_minutes: 20, sessions_per_day: 3, efficiency: 0.5}}
+  checks: [{type: equals, path: minutes.u1, value: 20}]
+- id: hand-start-balance
+  title: "a start balance of 50 leaves 50 to earn: 5 minutes (hand: 50/10)"
+  input:
+    op: simulate
+    spec:
+      <<: *base
+      currencies: {coins: {start: 50}}
+  checks: [{type: equals, path: minutes.u1, value: 5}]
+- id: hand-add-applies-before-mult
+  title: "x3 first (rate 30), then +30 on the base: (10+30)*3 = 120, bought at 10 + 300/30 = 20"
+  input:
+    op: simulate
+    spec:
+      <<: *base
+      upgrades:
+        - {id: u1, track: t, tier: 1, currency: coins, cost: 100, effects: [{source: mining, mult: 3}]}
+        - {id: u2, track: t, tier: 2, currency: coins, cost: 300, effects: [{source: mining, add: 30}]}
+  checks: [{type: equals, path: minutes.u1, value: 10}, {type: equals, path: minutes.u2, value: 20}, {type: approx, path: end_rates.coins, value: 120}]
+- id: hand-tax-reduces-net-income
+  title: "a 10 percent tax leaves 9 per minute, so cost 90 takes 10 minutes; income after: 20 gross, 18 net"
+  input:
+    op: simulate
+    spec:
+      <<: *base
+      sinks: [{id: fee, currency: coins, kind: tax, value: 0.1}]
+      upgrades: [{id: u1, track: t, tier: 1, currency: coins, cost: 90, effects: [{source: mining, add: 10}]}]
+  checks: [{type: equals, path: minutes.u1, value: 10}, {type: approx, path: end_rates.coins, value: 18}]
+- id: hand-upkeep-reduces-net-income
+  title: "upkeep of 2 per minute leaves 8 per minute, cost 80 takes 10 minutes; after: 20 - 2 = 18"
+  input:
+    op: simulate
+    spec:
+      <<: *base
+      sinks: [{id: fuel, currency: coins, kind: upkeep, value: 2}]
+      upgrades: [{id: u1, track: t, tier: 1, currency: coins, cost: 80, effects: [{source: mining, add: 10}]}]
+  checks: [{type: equals, path: minutes.u1, value: 10}, {type: approx, path: end_rates.coins, value: 18}]
+- id: hand-upkeep-beyond-income-never-buys
+  title: "upkeep 20 against income 10 drains the balance to 0 and nothing is ever bought"
+  input:
+    op: simulate
+    spec:
+      <<: *base
+      sinks: [{id: fuel, currency: coins, kind: upkeep, value: 20}]
+  checks: [{type: equals, path: count, value: 0}, {type: approx, path: end_balance.coins, value: 0}, {type: equals, path: stalled_at_minute, value: 0}]
+- id: hand-owned-boost-doubles-income
+  title: "an owned x2 boost makes income 20, so cost 100 takes 5 minutes"
+  input:
+    op: simulate
+    spec:
+      <<: *base
+      boosts: [{id: b, effects: [{source: "*", mult: 2}]}]
+      archetypes: {regular: {session_minutes: 20, sessions_per_day: 3, boosts: [b]}}
+  checks: [{type: equals, path: minutes.u1, value: 5}]
+- id: hand-free-run-ignores-boosts
+  title: "boost_mode none removes the owned boost: back to 10 minutes"
+  input:
+    op: simulate
+    boost_mode: none
+    spec:
+      <<: *base
+      boosts: [{id: b, effects: [{source: "*", mult: 2}]}]
+      archetypes: {regular: {session_minutes: 20, sessions_per_day: 3, boosts: [b]}}
+  checks: [{type: equals, path: minutes.u1, value: 10}]
+- id: hand-alternatives-buy-the-better-payback
+  title: "same cost 100, add 10 versus add 20: the player takes add 20 and the other is foreclosed"
+  input:
+    op: simulate
+    spec:
+      <<: *base
+      upgrades:
+        - {id: slow, track: t, tier: 1, currency: coins, cost: 100, effects: [{source: mining, add: 10}]}
+        - {id: fast, track: t, tier: 1, currency: coins, cost: 100, effects: [{source: mining, add: 20}]}
+  checks: [{type: equals, path: order, value: [fast]}, {type: approx, path: end_rates.coins, value: 30}]
+- id: hand-policy-payback-saves-for-the-best
+  title: "payback ranks b (200/20=10) above a (100/1=100): b at minute 20, then a at 20 + ceil(100/30)=24"
+  input:
+    op: simulate
+    spec:
+      <<: *base
+      upgrades:
+        - {id: ua, track: a, tier: 1, currency: coins, cost: 100, effects: [{source: mining, add: 1}]}
+        - {id: ub, track: b, tier: 1, currency: coins, cost: 200, effects: [{source: mining, add: 20}]}
+  checks: [{type: equals, path: order, value: [ub, ua]}, {type: equals, path: minutes.ub, value: 20}, {type: equals, path: minutes.ua, value: 24}]
+- id: hand-policy-cheapest-cost
+  title: "cheapest_cost buys a first (minute 10, income 11) then b after ceil(200/11)=19 more minutes: 29"
+  input:
+    op: simulate
+    policy: cheapest_cost
+    spec:
+      <<: *base
+      upgrades:
+        - {id: ua, track: a, tier: 1, currency: coins, cost: 100, effects: [{source: mining, add: 1}]}
+        - {id: ub, track: b, tier: 1, currency: coins, cost: 200, effects: [{source: mining, add: 20}]}
+  checks: [{type: equals, path: order, value: [ua, ub]}, {type: equals, path: minutes.ua, value: 10}, {type: equals, path: minutes.ub, value: 29}]
+- id: hand-unlock-source
+  title: "u1 (cost 100) unlocks a 100 per minute source: income 110; u2 costs 1100 and adds 110 to it: minutes 10 and 20, income 220"
+  input:
+    op: simulate
+    spec:
+      <<: *base
+      sources:
+        - {id: mining, currency: coins, per_minute: 10}
+        - {id: deep, currency: coins, per_minute: 100, unlock: u1}
+      upgrades:
+        - {id: u1, track: t, tier: 1, currency: coins, cost: 100, effects: []}
+        - {id: u2, track: t, tier: 2, currency: coins, cost: 1100, effects: [{source: deep, add: 110}]}
+  checks: [{type: equals, path: minutes.u1, value: 10}, {type: equals, path: minutes.u2, value: 20}, {type: approx, path: end_rates.coins, value: 220}]
+- id: hand-requires-orders-purchases
+  title: "ua (add 100, payback 1) requires ub (add 10): ub at minute 10, then ua after 100/20 = 5 minutes: 15"
+  input:
+    op: simulate
+    spec:
+      <<: *base
+      upgrades:
+        - {id: ua, track: a, tier: 1, currency: coins, cost: 100, effects: [{source: mining, add: 100}], requires: [ub]}
+        - {id: ub, track: b, tier: 1, currency: coins, cost: 100, effects: [{source: mining, add: 10}]}
+  checks: [{type: equals, path: order, value: [ub, ua]}, {type: equals, path: minutes.ua, value: 15}]
+- id: hand-tier-gating
+  title: "tier 2 (cost 50) cannot be bought before tier 1 (cost 200): u1 at 20, then u2 after ceil(50/20)=3 more: 23"
+  input:
+    op: simulate
+    spec:
+      <<: *base
+      upgrades:
+        - {id: u1, track: t, tier: 1, currency: coins, cost: 200, effects: [{source: mining, add: 10}]}
+        - {id: u2, track: t, tier: 2, currency: coins, cost: 50, effects: [{source: mining, add: 100}]}
+  checks: [{type: equals, path: minutes.u1, value: 20}, {type: equals, path: minutes.u2, value: 23}]
+- id: hand-whole-minute-rounding-keeps-leftover
+  title: "cost 105 at 10 per minute is bought at minute 11 (balance 110, 5 left); then cost 50 at 20 per minute needs ceil(45/20)=3 more: 14"
+  input:
+    op: simulate
+    spec:
+      <<: *base
+      upgrades:
+        - {id: u1, track: t, tier: 1, currency: coins, cost: 105, effects: [{source: mining, add: 10}]}
+        - {id: u2, track: t, tier: 2, currency: coins, cost: 50, effects: [{source: mining, add: 10}]}
+  checks: [{type: equals, path: minutes.u1, value: 11}, {type: equals, path: minutes.u2, value: 14}]
+- id: hand-rebirth-loop
+  title: "u1 at 10, rebirth (cost 200) at 20, income then 10*(1+1.0)=20 so u1 again at 20+5=25; content ends there"
+  input:
+    op: simulate
+    spec:
+      <<: *base
+      rebirths: [{id: rb, currency: coins, cost: 200, resets: {tracks: [t], currencies: [coins]}, bonus: {source: "*", mult_per_rebirth: 1.0}, max: 1}]
+  checks: [{type: equals, path: order, value: [u1, rb, u1]}, {type: equals, path: minutes.rb, value: 20}, {type: equals, path: rebirths, value: 1}, {type: equals, path: exhausted_at_minute, value: 25}, {type: approx, path: end_rates.coins, value: 40}]
+- id: hand-rebirth-second-lap-minutes
+  title: "lap 1 of the same economy: u1 at minute 25 (rebirth multiplier 2 gives 20 per minute, 100/20 = 5)"
+  input:
+    op: simulate
+    lap: 1
+    spec:
+      <<: *base
+      rebirths: [{id: rb, currency: coins, cost: 200, resets: {tracks: [t], currencies: [coins]}, bonus: {source: "*", mult_per_rebirth: 1.0}, max: 1}]
+  checks: [{type: equals, path: minutes.u1, value: 25}, {type: equals, path: gaps.u1, value: 5}]
+- id: hand-pending-step-at-the-horizon
+  title: "one day of 20 minutes and cost 1000 at 10 per minute: unreachable in the horizon, balance 200, projected 100 minutes (hand: 1000/10)"
+  input:
+    op: simulate
+    spec:
+      <<: *base
+      simulation: {days: 1, seed: 0}
+      archetypes: {regular: {session_minutes: 20, sessions_per_day: 1}}
+      upgrades: [{id: u1, track: t, tier: 1, currency: coins, cost: 1000, effects: [{source: mining, add: 10}]}]
+  checks: [{type: equals, path: count, value: 0}, {type: approx, path: end_balance.coins, value: 200}, {type: equals, path: pending.waited_minutes, value: 20}, {type: equals, path: pending.projected_gap_minutes, value: 100}]
+- id: hand-currency-without-income-stalls
+  title: "an upgrade priced in a currency that nothing earns is never bought and the player is reported stalled"
+  input:
+    op: simulate
+    spec:
+      <<: *base
+      currencies: {coins: {start: 0}, gems: {start: 0}}
+      upgrades: [{id: u1, track: t, tier: 1, currency: gems, cost: 5, effects: [{source: mining, add: 10}]}]
+  checks: [{type: equals, path: count, value: 0}, {type: equals, path: stalled_at_minute, value: 0}]
+- id: hand-fewer-days-fewer-purchases
+  title: "one 60 minute day of the balanced toy buys drill_1..4 at minutes 10, 20, 30, 50 and drill_5 at 80 is out of reach"
+  input: {op: simulate, econ: balanced, days: 1}
+  checks: [{type: equals, path: count, value: 4}, {type: equals, path: minutes.drill_4, value: 50}]
+- id: hand-grinder-efficiency
+  title: "grinder efficiency 1.5 gives 15 per minute: drill_1 (100) takes ceil(6.67) = 7 minutes"
+  input: {op: simulate, econ: balanced, archetype: grinder}
+  checks: [{type: equals, path: minutes.drill_1, value: 7}]
+- id: hand-flow-day-one-totals
+  title: "day 1 of the balanced toy earns 100+200+400+1600+1600 = 3900 and spends 100+200+400+1600 = 2300 (hand integration of 10, 20, 40, 80, 160 per minute)"
+  input: {op: flow, econ: balanced, days: 3}
+  checks: [{type: approx, path: day1_sources, value: 3900}, {type: approx, path: day1_sinks, value: 2300}, {type: approx, path: day1_sinks_by.upgrades, value: 2300}]
+- id: hand-flow-conserves-currency
+  title: "balance end = start + sources - sinks for the whole run, with a tax and an upkeep sink present"
+  input:
+    op: flow
+    econ: balanced
+    mutations:
+      - {op: add, section: sinks, value: {id: fee, currency: coins, kind: tax, value: 0.05}}
+      - {op: add, section: sinks, value: {id: fuel, currency: coins, kind: upkeep, value: 3}}
+  checks: [{type: less, path: identity_error, than: 0.0001}, {type: greater, path: total_sinks, than: 0}]
+- id: hand-deterministic-with-seed
+  title: "variance 0.4: the same seed gives byte-identical results, another seed gives other minutes"
+  input:
+    op: determinism
+    seed: 11
+    spec:
+      <<: *base
+      archetypes: {regular: {session_minutes: 20, sessions_per_day: 3, variance: 0.4}}
+      upgrades:
+        - {id: u1, track: t, tier: 1, currency: coins, cost: 100, effects: [{source: mining, add: 10}]}
+        - {id: u2, track: t, tier: 2, currency: coins, cost: 300, effects: [{source: mining, add: 20}]}
+        - {id: u3, track: t, tier: 3, currency: coins, cost: 900, effects: [{source: mining, add: 40}]}
+  checks: [{type: equals, path: same_seed_identical, value: true}, {type: equals, path: other_seed_differs, value: true}, {type: equals, path: n, value: 3}]
+- id: hand-no-variance-ignores-seed
+  title: "with variance 0 the seed cannot matter: two seeds give the same minutes"
+  input: {op: determinism, econ: balanced, seed: 3}
+  checks: [{type: equals, path: same_seed_identical, value: true}, {type: equals, path: other_seed_differs, value: false}]

@@ -1,0 +1,101 @@
+category: rig
+# Rig rules apply only to the profiles named in applies_to (tool, character_accessory).
+rules:
+  - id: RIG_UNEXPECTED
+    severity: warn
+    applies_to: [prop, terrain_piece]
+    title: Rig present in a profile that has no rig checks
+    explanation: Props and terrain pieces are static. A skin here is probably a leftover armature; rig checks are not run for this profile.
+    fix: "Remove the armature from this export, or run the preflight with the tool or character_accessory profile ({measured})."
+    safe: false
+  - id: RIG_REQUIRED
+    severity: error
+    applies_to: [tool, character_accessory]
+    title: Profile requires a rig but the export has none
+    explanation: "Only enforced when the profile sets required true (default false, because a static tool needs no rig)."
+    fix: "Export the armature together with the mesh ({measured})."
+    safe: false
+    limits:
+      required: {default: false, verify_against_current_docs: false, heuristic: true, note: "Profiles override."}
+  - id: RIG_ROOT_SINGLE
+    severity: error
+    applies_to: [tool, character_accessory]
+    title: Skeleton does not have exactly one root bone
+    explanation: Several roots (or none) make the skeleton ambiguous to import.
+    fix: "Parent all bones under one root bone ({measured} roots found: {limit})."
+    safe: false
+  - id: RIG_ROOT_NAME
+    severity: warn
+    applies_to: [tool, character_accessory]
+    title: Root bone has an unexpected name
+    explanation: The expected root bone name is a DEFAULT convention of this tool (style/ may change it per project).
+    fix: "Rename the root bone '{measured}' to '{limit}'."
+    safe: true
+    limits:
+      root_name: {default: root, verify_against_current_docs: false, heuristic: true, note: "STARTER convention; replace with yours."}
+  - id: RIG_BONE_NAMING
+    severity: warn
+    applies_to: [tool, character_accessory]
+    title: Bone name breaks the bone naming pattern
+    explanation: Bone names should be lower snake_case without spaces or dots so animations and scripts can address them reliably.
+    fix: "Rename bone '{object}' to match {limit}."
+    safe: true
+    limits:
+      pattern: {default: "^[a-z][a-z0-9_]*$", verify_against_current_docs: false, heuristic: true, note: "STARTER convention."}
+  - id: RIG_BONE_COUNT
+    severity: error
+    applies_to: [tool, character_accessory]
+    title: Too many bones
+    explanation: The bone budget is a DEFAULT in the profile, not an official limit.
+    fix: "Reduce the skeleton to at most {limit} bones (now {measured})."
+    safe: false
+    limits:
+      max_bones: {default: 16, verify_against_current_docs: true, note: "DEFAULT chosen by this tool. Profiles override."}
+  - id: RIG_SPIN_SETUP
+    severity: error
+    applies_to: [tool, character_accessory]
+    title: The one-bone spin setup (drill tip) is wrong
+    explanation: "A spinning part (a drill tip) is driven by exactly one bone named 'spin', a direct child of the root bone, with no child bones, that owns its vertices rigidly. A bone named almost-spin (Spin, spin_bone, bone_spin) is renamed by the safe fix. The setup is required when the asset name matches hint_pattern."
+    fix: "{message}"
+    safe: true
+    limits:
+      spin_name: {default: spin, verify_against_current_docs: false, heuristic: true, note: "Convention from the project brief."}
+      hint_pattern: {default: "drill|spin", verify_against_current_docs: false, heuristic: true, note: "Asset names matching this must have the spin setup."}
+      max_spin_bones: {default: 1, verify_against_current_docs: false, heuristic: true}
+      min_rigid_fraction: {default: 0.99, verify_against_current_docs: false, heuristic: true, note: "Share of the spin bone's vertices weighted at least 0.99 to it."}
+  - id: RIG_INFLUENCES
+    severity: warn
+    applies_to: [tool, character_accessory]
+    title: Too many bone influences per vertex
+    explanation: The influence count per vertex is a DEFAULT here (glTF stores up to four in the first set).
+    fix: "Limit weights to {limit} bones per vertex (Weight Paint > Limit Total); {object} has {measured}."
+    safe: false
+    limits:
+      max_influences: {default: 4, verify_against_current_docs: true, note: "DEFAULT; verify against current Roblox documentation."}
+  - id: RIG_WEIGHTS
+    severity: warn
+    applies_to: [tool, character_accessory]
+    title: Vertices with missing or unnormalised skin weights
+    explanation: Vertices with no weights do not follow the rig; weights that do not sum to one distort.
+    fix: "Normalise all weights and assign unweighted vertices on {object} (Weight Paint > Normalize All): {measured}."
+    safe: false
+  - id: RIG_ANIM_NAMES
+    severity: warn
+    applies_to: [tool, character_accessory]
+    title: Animation clip name is a default or breaks the pattern
+    explanation: Default names such as 'Action' or 'Take 001' make clips impossible to find by name.
+    fix: "Rename clip '{object}' to match {limit}."
+    safe: false
+    limits:
+      pattern: {default: "^[a-z][a-z0-9_]*$", verify_against_current_docs: false, heuristic: true, note: "STARTER convention."}
+      forbidden: {default: [action, default, take_001, take001, "take 001"], verify_against_current_docs: false, heuristic: true}
+  - id: RIG_ANIM_FPS
+    severity: warn
+    applies_to: [tool, character_accessory]
+    title: Animation frame rate is not an accepted rate
+    explanation: "glTF stores times in seconds; the frame rate here is estimated from keyframe spacing (summary input reports it directly). The accepted list is a DEFAULT."
+    fix: "Re-export clip '{object}' at one of {limit} fps (it is {measured})."
+    safe: false
+    limits:
+      allowed_fps: {default: [24, 30, 60], verify_against_current_docs: true, note: "DEFAULT list."}
+      tolerance: {default: 0.5, verify_against_current_docs: false, heuristic: true}

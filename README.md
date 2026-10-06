@@ -1,6 +1,6 @@
 # AI creative-work repositories
 
-Five **separate** repositories (not a monorepo), each a practical toolkit that lets a capable AI agent (Claude Code, Codex CLI, Gemini CLI, Copilot, Cursor, ...) do one kind of creative work
+Eight **separate** repositories (not a monorepo), each a practical toolkit that lets a capable AI agent (Claude Code, Codex CLI, Gemini CLI, Copilot, Cursor, ...) do one kind of creative work
 through instructions, a searchable reference library, deterministic tools, evals and a feedback loop. Each is a Git repository with its own history.
 
 | Repository | Work | Tests | Eval tasks | Needs an app to *finish* the job |
@@ -10,6 +10,9 @@ through instructions, a searchable reference library, deterministic tools, evals
 | `roblox-level-design-ai` | Roblox level design and blockouts | 119 | 100 | Roblox Studio |
 | `modular-set-dressing-ai` | Modular asset placement and set dressing | 100 | 103 | Roblox Studio (clone mode needs your kit) |
 | `concept-art-ai` | Environment and prop concept art (+ optional LoRA prep) | 105 | 127 | An image generator you configure |
+| `asset-roblox-preflight` | Blender export preflight for Roblox uploads | 125 | 157 | Blender and the Roblox upload plan (via the hub) |
+| `luau-reviewer` | Luau script review (security, data, performance, style) | 136 | 188 | real luau-analyze, selene, stylua (optional backends) |
+| `roblox-economy-balancer` | Economy and progression simulation, per place | 143 | 177 | Studio (to dump real values and apply changes) |
 
 Test counts include the 50 shared-core tests vendored into each repository.
 
@@ -42,3 +45,9 @@ PUBLISH.md  CAPABILITY_MATRIX.md
 sh suite/restore_repos.sh            # recreate repos/<name> from bundles/
 cd repos/concept-art-ai && python -m venv .venv && . .venv/bin/activate && pip install -e ".[dev]" && python -m pytest
 ```
+
+## Second batch (three Roblox helper repos)
+
+`asset-roblox-preflight`, `luau-reviewer` and `roblox-economy-balancer` follow `roblox-repo-build-instructions.md`. `guide-core` was not available, so each reaches shared machinery through one adapter
+module (`guide_adapter.py`); every tool is scoped to a `project_id` (and place), and output is kept short with a size budget in the evals. Starter limits, naming schemes, target pacing and the example
+projects are **placeholders to replace**. None was run against real Blender, Studio, a real game, or (for `luau-reviewer`) the real `luau-analyze`/`selene`/`stylua`.

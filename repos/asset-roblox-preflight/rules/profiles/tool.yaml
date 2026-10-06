@@ -1,0 +1,20 @@
+# Profile: a hand-held tool (drill, pickaxe). ALL numbers are DEFAULTS chosen by this tool, not official Roblox limits.
+name: tool
+description: A hand-held tool such as a drill or pickaxe. May carry a small rig; a drill tip is driven by the one-bone `spin` setup. Origin is not checked (the grip is up to you).
+rig_checks: true
+limits_are_defaults: true
+verify_against_current_docs: true
+settings:
+  studs_per_unit: 1.0
+limits:
+  MESH_TRI_BUDGET: {max_triangles: 6000}
+  MESH_TRI_BUDGET_TOTAL: {max_triangles_total: 8000}
+  MESH_OBJECT_COUNT: {max_mesh_objects: 6}
+  MESH_BBOX_PROFILE: {min_largest_dimension_studs: 1.0, max_largest_dimension_studs: 12}
+  XFM_ORIGIN_PLACEMENT: {mode: any}
+  MAT_COUNT: {max_materials: 3}
+  TEX_OVERSIZE: {max_dimension_px: 1024}
+  COL_PROXY_MISSING: {required_above_triangles: 4000}
+  RIG_REQUIRED: {required: false}
+  RIG_BONE_COUNT: {max_bones: 8}
+  RIG_INFLUENCES: {max_influences: 4}

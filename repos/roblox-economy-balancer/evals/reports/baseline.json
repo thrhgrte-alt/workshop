@@ -1,0 +1,3024 @@
+{
+  "label": "baseline",
+  "mode": "solver",
+  "at": "2026-10-06T05:20:59+00:00",
+  "git_rev": "484ca62",
+  "python": "3.11.15",
+  "meta": {},
+  "passed": 177,
+  "total": 177,
+  "tasks": [
+    {
+      "id": "budget-get-style-brief",
+      "passed": true,
+      "checks": [
+        {
+          "check": "step_ok",
+          "passed": true,
+          "message": "step 0 should succeed (got None)"
+        },
+        {
+          "check": "less",
+          "passed": true,
+          "message": "steps.0.chars=2581 should be < 3600"
+        }
+      ]
+    },
+    {
+      "id": "budget-find-past-corrections",
+      "passed": true,
+      "checks": [
+        {
+          "check": "step_ok",
+          "passed": true,
+          "message": "step 0 should succeed (got None)"
+        },
+        {
+          "check": "less",
+          "passed": true,
+          "message": "steps.0.chars=140 should be < 400"
+        }
+      ]
+    },
+    {
+      "id": "budget-validate-economy-spec",
+      "passed": true,
+      "checks": [
+        {
+          "check": "step_ok",
+          "passed": true,
+          "message": "step 0 should succeed (got None)"
+        },
+        {
+          "check": "less",
+          "passed": true,
+          "message": "steps.0.chars=508 should be < 800"
+        }
+      ]
+    },
+    {
+      "id": "budget-check-economy",
+      "passed": true,
+      "checks": [
+        {
+          "check": "step_ok",
+          "passed": true,
+          "message": "step 0 should succeed (got None)"
+        },
+        {
+          "check": "less",
+          "passed": true,
+          "message": "steps.0.chars=798 should be < 1200"
+        }
+      ]
+    },
+    {
+      "id": "budget-simulate-progression",
+      "passed": true,
+      "checks": [
+        {
+          "check": "step_ok",
+          "passed": true,
+          "message": "step 0 should succeed (got None)"
+        },
+        {
+          "check": "less",
+          "passed": true,
+          "message": "steps.0.chars=2426 should be < 3400"
+        }
+      ]
+    },
+    {
+      "id": "budget-time-to-upgrade-table",
+      "passed": true,
+      "checks": [
+        {
+          "check": "step_ok",
+          "passed": true,
+          "message": "step 0 should succeed (got None)"
+        },
+        {
+          "check": "less",
+          "passed": true,
+          "message": "steps.0.chars=1498 should be < 2100"
+        }
+      ]
+    },
+    {
+      "id": "budget-flow-report",
+      "passed": true,
+      "checks": [
+        {
+          "check": "step_ok",
+          "passed": true,
+          "message": "step 0 should succeed (got None)"
+        },
+        {
+          "check": "less",
+          "passed": true,
+          "message": "steps.0.chars=1074 should be < 1500"
+        }
+      ]
+    },
+    {
+      "id": "budget-find-dominant-strategies",
+      "passed": true,
+      "checks": [
+        {
+          "check": "step_ok",
+          "passed": true,
+          "message": "step 0 should succeed (got None)"
+        },
+        {
+          "check": "less",
+          "passed": true,
+          "message": "steps.0.chars=674 should be < 950"
+        }
+      ]
+    },
+    {
+      "id": "budget-find-dead-options",
+      "passed": true,
+      "checks": [
+        {
+          "check": "step_ok",
+          "passed": true,
+          "message": "step 0 should succeed (got None)"
+        },
+        {
+          "check": "less",
+          "passed": true,
+          "message": "steps.0.chars=397 should be < 600"
+        }
+      ]
+    },
+    {
+      "id": "budget-monetisation-check",
+      "passed": true,
+      "checks": [
+        {
+          "check": "step_ok",
+          "passed": true,
+          "message": "step 0 should succeed (got None)"
+        },
+        {
+          "check": "less",
+          "passed": true,
+          "message": "steps.0.chars=756 should be < 1100"
+        }
+      ]
+    },
+    {
+      "id": "budget-sensitivity",
+      "passed": true,
+      "checks": [
+        {
+          "check": "step_ok",
+          "passed": true,
+          "message": "step 0 should succeed (got None)"
+        },
+        {
+          "check": "less",
+          "passed": true,
+          "message": "steps.0.chars=2715 should be < 3800"
+        }
+      ]
+    },
+    {
+      "id": "budget-plot-curves",
+      "passed": true,
+      "checks": [
+        {
+          "check": "step_ok",
+          "passed": true,
+          "message": "step 0 should succeed (got None)"
+        },
+        {
+          "check": "less",
+          "passed": true,
+          "message": "steps.0.chars=620 should be < 900"
+        }
+      ]
+    },
+    {
+      "id": "budget-suggest-band-adjustments",
+      "passed": true,
+      "checks": [
+        {
+          "check": "step_ok",
+          "passed": true,
+          "message": "step 0 should succeed (got None)"
+        },
+        {
+          "check": "less",
+          "passed": true,
+          "message": "steps.0.chars=751 should be < 1100"
+        }
+      ]
+    },
+    {
+      "id": "budget-emit-import-luau",
+      "passed": true,
+      "checks": [
+        {
+          "check": "step_ok",
+          "passed": true,
+          "message": "step 0 should succeed (got None)"
+        },
+        {
+          "check": "less",
+          "passed": true,
+          "message": "steps.0.chars=3265 should be < 4500"
+        }
+      ]
+    },
+    {
+      "id": "budget-normalise-import",
+      "passed": true,
+      "checks": [
+        {
+          "check": "step_ok",
+          "passed": true,
+          "message": "step 0 should succeed (got None)"
+        },
+        {
+          "check": "less",
+          "passed": true,
+          "message": "steps.0.chars=2446 should be < 3400"
+        }
+      ]
+    },
+    {
+      "id": "budget-export-values-luau",
+      "passed": true,
+      "checks": [
+        {
+          "check": "step_ok",
+          "passed": true,
+          "message": "step 0 should succeed (got None)"
+        },
+        {
+          "check": "less",
+          "passed": true,
+          "message": "steps.0.chars=1071 should be < 1500"
+        }
+      ]
+    },
+    {
+      "id": "budget-save-spec-version",
+      "passed": true,
+      "checks": [
+        {
+          "check": "step_ok",
+          "passed": true,
+          "message": "step 0 should succeed (got None)"
+        },
+        {
+          "check": "less",
+          "passed": true,
+          "message": "steps.0.chars=601 should be < 900"
+        }
+      ]
+    },
+    {
+      "id": "budget-record-run",
+      "passed": true,
+      "checks": [
+        {
+          "check": "step_ok",
+          "passed": true,
+          "message": "step 0 should succeed (got None)"
+        },
+        {
+          "check": "less",
+          "passed": true,
+          "message": "steps.0.chars=200 should be < 350"
+        }
+      ]
+    },
+    {
+      "id": "budget-compare-specs",
+      "passed": true,
+      "checks": [
+        {
+          "check": "step_ok",
+          "passed": true,
+          "message": "step 0 should succeed (got None)"
+        },
+        {
+          "check": "less",
+          "passed": true,
+          "message": "steps.0.chars=1815 should be < 3000"
+        }
+      ]
+    },
+    {
+      "id": "budget-propose-rebalance",
+      "passed": true,
+      "checks": [
+        {
+          "check": "step_ok",
+          "passed": true,
+          "message": "step 0 should succeed (got None)"
+        },
+        {
+          "check": "less",
+          "passed": true,
+          "message": "steps.0.chars=1360 should be < 1900"
+        }
+      ]
+    },
+    {
+      "id": "budget-tool-descriptions",
+      "passed": true,
+      "checks": [
+        {
+          "check": "less",
+          "passed": true,
+          "message": "description_chars_total=3313 should be < 3800"
+        },
+        {
+          "check": "less",
+          "passed": true,
+          "message": "max_description_chars=195 should be < 260"
+        },
+        {
+          "check": "less",
+          "passed": true,
+          "message": "core_description_chars=1890 should be < 2300"
+        }
+      ]
+    },
+    {
+      "id": "budget-rare-group-can-be-left-out",
+      "passed": true,
+      "checks": [
+        {
+          "check": "list_contains",
+          "passed": true,
+          "message": "rare=['compare_specs', 'emit_import_luau', 'export_values_luau', 'normalise_import', 'plot_curves', 'promote_run', 'save_spec_version', 'sensitivity', 'suggest_band_adjustments']; expected to contain ['sensitivity', 'compare_specs', 'plot_curves', 'emit_import_luau', 'normalise_import', 'export_values_luau', 'save_spec_version', 'suggest_band_adjustments']"
+        },
+        {
+          "check": "list_contains",
+          "passed": true,
+          "message": "core=['check_economy', 'find_dead_options', 'find_dominant_strategies', 'find_past_corrections', 'flow_report', 'get_style_brief', 'monetisation_check', 'propose_rebalance', 'record_decision', 'record_run', 'simulate_progression', 'time_to_upgrade_table', 'validate_economy_spec']; expected to contain ['check_economy', 'time_to_upgrade_table', 'flow_report', 'propose_rebalance', 'record_run', 'record_decision', 'find_past_corrections', 'get_style_brief']"
+        },
+        {
+          "check": "list_excludes",
+          "passed": true,
+          "message": "core=['check_economy', 'find_dead_options', 'find_dominant_strategies', 'find_past_corrections', 'flow_report', 'get_style_brief', 'monetisation_check', 'propose_rebalance', 'record_decision', 'record_run', 'simulate_progression', 'time_to_upgrade_table', 'validate_economy_spec']; must not contain ['sensitivity', 'plot_curves']"
+        }
+      ]
+    },
+    {
+      "id": "budget-summary-comes-first",
+      "passed": true,
+      "checks": [
+        {
+          "check": "text_contains",
+          "passed": true,
+          "message": "steps.0.result.summary should mention 'PASS' (got 'PASS for demo_mine/main: 0 error, 0 warning, 9 info; bands are PLACEHOLDERS')"
+        }
+      ]
+    },
+    {
+      "id": "budget-detail-is-opt-in",
+      "passed": true,
+      "checks": [
+        {
+          "check": "greater",
+          "passed": true,
+          "message": "steps.1.chars=3117 should be > 1000"
+        },
+        {
+          "check": "less",
+          "passed": true,
+          "message": "steps.0.chars=798 should be < 1200"
+        }
+      ]
+    },
+    {
+      "id": "hand-single-step",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "minutes.u1 == 10 (got 10)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "gaps.u1 == 10 (got 10)"
+        },
+        {
+          "check": "approx",
+          "passed": true,
+          "message": "end_rates.coins=20.0; expected 20 +/- 1e-06"
+        },
+        {
+          "check": "approx",
+          "passed": true,
+          "message": "paybacks.u1=10.0; expected 10 +/- 1e-06"
+        }
+      ]
+    },
+    {
+      "id": "hand-two-steps",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "minutes.u2 == 20 (got 20)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "gaps.u2 == 10 (got 10)"
+        },
+        {
+          "check": "approx",
+          "passed": true,
+          "message": "end_rates.coins=40.0; expected 40 +/- 1e-06"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "order == ['u1', 'u2'] (got ['u1', 'u2'])"
+        }
+      ]
+    },
+    {
+      "id": "hand-efficiency-halves-income",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "minutes.u1 == 20 (got 20)"
+        }
+      ]
+    },
+    {
+      "id": "hand-start-balance",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "minutes.u1 == 5 (got 5)"
+        }
+      ]
+    },
+    {
+      "id": "hand-add-applies-before-mult",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "minutes.u1 == 10 (got 10)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "minutes.u2 == 20 (got 20)"
+        },
+        {
+          "check": "approx",
+          "passed": true,
+          "message": "end_rates.coins=120.0; expected 120 +/- 1e-06"
+        }
+      ]
+    },
+    {
+      "id": "hand-tax-reduces-net-income",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "minutes.u1 == 10 (got 10)"
+        },
+        {
+          "check": "approx",
+          "passed": true,
+          "message": "end_rates.coins=18.0; expected 18 +/- 1e-06"
+        }
+      ]
+    },
+    {
+      "id": "hand-upkeep-reduces-net-income",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "minutes.u1 == 10 (got 10)"
+        },
+        {
+          "check": "approx",
+          "passed": true,
+          "message": "end_rates.coins=18.0; expected 18 +/- 1e-06"
+        }
+      ]
+    },
+    {
+      "id": "hand-upkeep-beyond-income-never-buys",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "count == 0 (got 0)"
+        },
+        {
+          "check": "approx",
+          "passed": true,
+          "message": "end_balance.coins=0.0; expected 0 +/- 1e-06"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "stalled_at_minute == 0 (got 0)"
+        }
+      ]
+    },
+    {
+      "id": "hand-owned-boost-doubles-income",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "minutes.u1 == 5 (got 5)"
+        }
+      ]
+    },
+    {
+      "id": "hand-free-run-ignores-boosts",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "minutes.u1 == 10 (got 10)"
+        }
+      ]
+    },
+    {
+      "id": "hand-alternatives-buy-the-better-payback",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "order == ['fast'] (got ['fast'])"
+        },
+        {
+          "check": "approx",
+          "passed": true,
+          "message": "end_rates.coins=30.0; expected 30 +/- 1e-06"
+        }
+      ]
+    },
+    {
+      "id": "hand-policy-payback-saves-for-the-best",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "order == ['ub', 'ua'] (got ['ub', 'ua'])"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "minutes.ub == 20 (got 20)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "minutes.ua == 24 (got 24)"
+        }
+      ]
+    },
+    {
+      "id": "hand-policy-cheapest-cost",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "order == ['ua', 'ub'] (got ['ua', 'ub'])"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "minutes.ua == 10 (got 10)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "minutes.ub == 29 (got 29)"
+        }
+      ]
+    },
+    {
+      "id": "hand-unlock-source",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "minutes.u1 == 10 (got 10)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "minutes.u2 == 20 (got 20)"
+        },
+        {
+          "check": "approx",
+          "passed": true,
+          "message": "end_rates.coins=220.0; expected 220 +/- 1e-06"
+        }
+      ]
+    },
+    {
+      "id": "hand-requires-orders-purchases",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "order == ['ub', 'ua'] (got ['ub', 'ua'])"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "minutes.ua == 15 (got 15)"
+        }
+      ]
+    },
+    {
+      "id": "hand-tier-gating",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "minutes.u1 == 20 (got 20)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "minutes.u2 == 23 (got 23)"
+        }
+      ]
+    },
+    {
+      "id": "hand-whole-minute-rounding-keeps-leftover",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "minutes.u1 == 11 (got 11)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "minutes.u2 == 14 (got 14)"
+        }
+      ]
+    },
+    {
+      "id": "hand-rebirth-loop",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "order == ['u1', 'rb', 'u1'] (got ['u1', 'rb', 'u1'])"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "minutes.rb == 20 (got 20)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "rebirths == 1 (got 1)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "exhausted_at_minute == 25 (got 25)"
+        },
+        {
+          "check": "approx",
+          "passed": true,
+          "message": "end_rates.coins=40.0; expected 40 +/- 1e-06"
+        }
+      ]
+    },
+    {
+      "id": "hand-rebirth-second-lap-minutes",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "minutes.u1 == 25 (got 25)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "gaps.u1 == 5 (got 5)"
+        }
+      ]
+    },
+    {
+      "id": "hand-pending-step-at-the-horizon",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "count == 0 (got 0)"
+        },
+        {
+          "check": "approx",
+          "passed": true,
+          "message": "end_balance.coins=200.0; expected 200 +/- 1e-06"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "pending.waited_minutes == 20 (got 20)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "pending.projected_gap_minutes == 100 (got 100)"
+        }
+      ]
+    },
+    {
+      "id": "hand-currency-without-income-stalls",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "count == 0 (got 0)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "stalled_at_minute == 0 (got 0)"
+        }
+      ]
+    },
+    {
+      "id": "hand-fewer-days-fewer-purchases",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "count == 4 (got 4)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "minutes.drill_4 == 50 (got 50)"
+        }
+      ]
+    },
+    {
+      "id": "hand-grinder-efficiency",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "minutes.drill_1 == 7 (got 7)"
+        }
+      ]
+    },
+    {
+      "id": "hand-flow-day-one-totals",
+      "passed": true,
+      "checks": [
+        {
+          "check": "approx",
+          "passed": true,
+          "message": "day1_sources=3900.0; expected 3900 +/- 1e-06"
+        },
+        {
+          "check": "approx",
+          "passed": true,
+          "message": "day1_sinks=2300.0; expected 2300 +/- 1e-06"
+        },
+        {
+          "check": "approx",
+          "passed": true,
+          "message": "day1_sinks_by.upgrades=2300.0; expected 2300 +/- 1e-06"
+        }
+      ]
+    },
+    {
+      "id": "hand-flow-conserves-currency",
+      "passed": true,
+      "checks": [
+        {
+          "check": "less",
+          "passed": true,
+          "message": "identity_error=0.0 should be < 0.0001"
+        },
+        {
+          "check": "greater",
+          "passed": true,
+          "message": "total_sinks=2340640.75 should be > 0"
+        }
+      ]
+    },
+    {
+      "id": "hand-deterministic-with-seed",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "same_seed_identical == True (got True)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "other_seed_differs == True (got True)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "n == 3 (got 3)"
+        }
+      ]
+    },
+    {
+      "id": "hand-no-variance-ignores-seed",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "same_seed_identical == True (got True)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "other_seed_differs == False (got False)"
+        }
+      ]
+    },
+    {
+      "id": "learning-one-report-is-not-enough",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "steps.2.result.suggestions.0.type == 'need_more_reports' (got 'need_more_reports')"
+        }
+      ]
+    },
+    {
+      "id": "learning-too-fast-raises-the-band-minimum",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "steps.4.result.suggestions.0.type == 'raise_band_min' (got 'raise_band_min')"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "steps.4.result.suggestions.0.suggested == 25 (got 25)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "steps.4.result.suggestions.0.current == 15 (got 15)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "steps.4.result.applied == False (got False)"
+        }
+      ]
+    },
+    {
+      "id": "learning-complaint-the-simulator-confirms-points-at-the-economy",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "steps.4.result.suggestions.0.type == 'fix_economy' (got 'fix_economy')"
+        }
+      ]
+    },
+    {
+      "id": "learning-archetype-observations-use-the-median",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "steps.2.result.suggestions.0.type == 'change_archetype' (got 'change_archetype')"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "steps.2.result.suggestions.0.suggested == 10 (got 10)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "steps.2.result.suggestions.0.current == 15 (got 15)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "steps.2.result.suggestions.0.path == 'archetypes.casual.session_minutes' (got 'archetypes.casual.session_minutes')"
+        }
+      ]
+    },
+    {
+      "id": "learning-rejected-twice-suggests-a-lock",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "steps.4.result.suggestions.0.type == 'consider_locking' (got 'consider_locking')"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "steps.4.result.suggestions.0.path == 'upgrades.drill_4.cost' (got 'upgrades.drill_4.cost')"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "steps.4.result.suggestions.0.rejected == 2 (got 2)"
+        }
+      ]
+    },
+    {
+      "id": "learning-an-accepted-change-prevents-the-lock-suggestion",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "steps.6.result.suggestions == [] (got [])"
+        }
+      ]
+    },
+    {
+      "id": "learning-unreadable-notes-are-reported-not-guessed",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "steps.2.result.suggestions == [] (got [])"
+        },
+        {
+          "check": "text_contains",
+          "passed": true,
+          "message": "steps.2.result.notes.0 should mention 'ignored' (got '1 pacing note(s) had no readable tier or feeling and were ignored; save corrections with tier and felt (too_slow|too_fast).')"
+        }
+      ]
+    },
+    {
+      "id": "learning-conflicting-reports-ask-for-a-split-band",
+      "passed": true,
+      "checks": [
+        {
+          "check": "text_contains",
+          "passed": true,
+          "message": "steps.2.result.notes.0 should mention 'split' (got \"band 'mid' received both 'too slow' and 'too fast' reports for different tiers; split the band instead of moving it.\")"
+        }
+      ]
+    },
+    {
+      "id": "learning-corrections-are-recalled-for-the-same-place",
+      "passed": true,
+      "checks": [
+        {
+          "check": "text_contains",
+          "passed": true,
+          "message": "steps.2.result.corrections.0.reason should mention 'tier 4 price' (got 'never touch the tier 4 price')"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "steps.2.result.project_id == 'demo_mine' (got 'demo_mine')"
+        }
+      ]
+    },
+    {
+      "id": "learning-unknown-correction-dimension-is-refused",
+      "passed": true,
+      "checks": [
+        {
+          "check": "step_error_contains",
+          "passed": true,
+          "message": "step 1 should be refused mentioning 'unknown correction dimension' (got \"unknown correction dimension 'vibes'. Allowed: ['pacing', 'band', 'archetype_assumption', 'cost', 'boost_power', 'inflation', 'wall', 'dead_option', 'dominant_option', 'locked_value', 'other']\")"
+        }
+      ]
+    },
+    {
+      "id": "learning-reject-needs-a-reason",
+      "passed": true,
+      "checks": [
+        {
+          "check": "step_error_contains",
+          "passed": true,
+          "message": "step 1 should be refused mentioning 'needs a reason' (got 'a reject/revise decision needs a reason or at least one correction')"
+        }
+      ]
+    },
+    {
+      "id": "learning-unknown-run-is-refused-in-another-place",
+      "passed": true,
+      "checks": [
+        {
+          "check": "step_error_contains",
+          "passed": true,
+          "message": "step 1 should be refused mentioning 'unknown run_id' (got \"unknown run_id 'run-20261006-052051-4aa49a'\")"
+        }
+      ]
+    },
+    {
+      "id": "rebalance-wall-smallest-single-change",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "found == True (got True)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "paths == ['upgrades.drill_4.cost'] (got ['upgrades.drill_4.cost'])"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "n_changes == 1 (got 1)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "changes.0.after == 1920 (got 1920)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "changes.0.path == 'upgrades.drill_4.cost' (got 'upgrades.drill_4.cost')"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "target_gone == True (got True)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "original_untouched == True (got True)"
+        }
+      ]
+    },
+    {
+      "id": "rebalance-result-is-clean",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "verdict_after == 'pass' (got 'pass')"
+        },
+        {
+          "check": "list_empty",
+          "passed": true,
+          "message": "new_codes=[] should be empty"
+        }
+      ]
+    },
+    {
+      "id": "rebalance-never-changes-a-locked-value",
+      "passed": true,
+      "checks": [
+        {
+          "check": "list_contains",
+          "passed": true,
+          "message": "locked_skipped=['upgrades.drill_4.cost']; expected to contain ['upgrades.drill_4.cost']"
+        },
+        {
+          "check": "list_excludes",
+          "passed": true,
+          "message": "paths=[]; must not contain ['upgrades.drill_4.cost']"
+        },
+        {
+          "check": "list_empty",
+          "passed": true,
+          "message": "locked_touched=None should be empty"
+        }
+      ]
+    },
+    {
+      "id": "rebalance-refuses-when-everything-relevant-is-locked",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "found == False (got False)"
+        },
+        {
+          "check": "list_contains",
+          "passed": true,
+          "message": "locked_skipped=['upgrades.drill_4.cost', 'upgrades.drill_3.effects.0.add', 'sources.mining.per_minute']; expected to contain ['upgrades.drill_4.cost', 'sources.mining.per_minute']"
+        },
+        {
+          "check": "text_contains",
+          "passed": true,
+          "message": "reason should mention 'locked' (got 'every candidate value is locked')"
+        }
+      ]
+    },
+    {
+      "id": "rebalance-entity-flag-locks-too",
+      "passed": true,
+      "checks": [
+        {
+          "check": "list_contains",
+          "passed": true,
+          "message": "locked_skipped=['upgrades.drill_4.cost']; expected to contain ['upgrades.drill_4.cost']"
+        },
+        {
+          "check": "list_empty",
+          "passed": true,
+          "message": "locked_touched=None should be empty"
+        }
+      ]
+    },
+    {
+      "id": "rebalance-too-fast-step-raises-cost",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "found == True (got True)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "n_changes == 1 (got 1)"
+        },
+        {
+          "check": "greater",
+          "passed": true,
+          "message": "changes.0.after=120 should be > 20"
+        }
+      ]
+    },
+    {
+      "id": "rebalance-dead-option",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "found == True (got True)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "target_gone == True (got True)"
+        }
+      ]
+    },
+    {
+      "id": "rebalance-dominant-option",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "found == True (got True)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "target_gone == True (got True)"
+        },
+        {
+          "check": "list_empty",
+          "passed": true,
+          "message": "locked_touched=[] should be empty"
+        }
+      ]
+    },
+    {
+      "id": "rebalance-runaway-inflation",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "found == False (got False)"
+        },
+        {
+          "check": "text_contains",
+          "passed": true,
+          "message": "reason should mention 'no change' (got 'no change on the search grid fixes the finding without creating a new warning or error')"
+        },
+        {
+          "check": "list_contains",
+          "passed": true,
+          "message": "considered=['sources.mining.per_minute', 'upgrades.drill_3.cost']; expected to contain ['upgrades.drill_3.cost']"
+        }
+      ]
+    },
+    {
+      "id": "rebalance-unfixable-code-is-refused",
+      "passed": true,
+      "checks": [
+        {
+          "check": "error_contains",
+          "passed": true,
+          "message": "error should mention 'no automatic rebalance' (got \"no automatic rebalance exists for 'not_reached'. Fixable codes: ['wall', 'over_band', 'under_band', 'gap_cliff', 'slow_for_archetype', 'cost_cliff', 'dead_optio\")"
+        }
+      ]
+    },
+    {
+      "id": "rebalance-without-a-finding-is-refused",
+      "passed": true,
+      "checks": [
+        {
+          "check": "error_contains",
+          "passed": true,
+          "message": "error should mention 'no matching finding' (got \"no matching finding to fix (code=None, {}). Findings present: ['boost_trivialises', 'not_reached']. Run check_economy first.\")"
+        }
+      ]
+    },
+    {
+      "id": "luau-export-lints-clean-and-runs-on-the-mock",
+      "passed": true,
+      "checks": [
+        {
+          "check": "list_empty",
+          "passed": true,
+          "message": "lint=[] should be empty"
+        },
+        {
+          "check": "mock_ok_or_skipped",
+          "passed": true,
+          "message": "mock status 'ok' (error: None)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "creates_module == True (got True)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "refuses_overwrite == True (got True)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "has_place_guard == True (got True)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "deterministic == True (got True)"
+        }
+      ]
+    },
+    {
+      "id": "luau-export-changed-values-only",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "values == 1 (got 1)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "has_previous == True (got True)"
+        },
+        {
+          "check": "mock_ok_or_skipped",
+          "passed": true,
+          "message": "mock status 'ok' (error: None)"
+        }
+      ]
+    },
+    {
+      "id": "luau-export-never-overwrites",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "mock == 'error' (got 'error')"
+        },
+        {
+          "check": "text_contains",
+          "passed": true,
+          "message": "mock_error should mention 'refusing to overwrite' (got '[string \"generated\"]:37: refusing to overwrite: \\'EconomyValues_Proposed\\' already exists under ReplicatedStorage.Config; choose a new config_name')"
+        }
+      ]
+    },
+    {
+      "id": "luau-export-refuses-in-the-wrong-place",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "mock == 'error' (got 'error')"
+        },
+        {
+          "check": "text_contains",
+          "passed": true,
+          "message": "mock_error should mention 'wrong place' (got '[string \"generated\"]:15: wrong place: this script is for eval/place (Eval Place) but Some Other Place is open')"
+        }
+      ]
+    },
+    {
+      "id": "luau-export-rejects-injection-in-the-module-name",
+      "passed": true,
+      "checks": [
+        {
+          "check": "error_contains",
+          "passed": true,
+          "message": "error should mention 'config_name' (got 'config_name \\'X\"]==]; os.execute(\\'x\\') --\\' must match ^[A-Za-z][A-Za-z0-9_]{0,39}$')"
+        }
+      ]
+    },
+    {
+      "id": "luau-export-rejects-injection-in-the-parent-path",
+      "passed": true,
+      "checks": [
+        {
+          "check": "error_contains",
+          "passed": true,
+          "message": "error should mention 'parent_path' (got \"parent_path 'ReplicatedStorage.Config; game:Destroy()' must be a dotted path of plain names such as ReplicatedStorage.Config (letters, digits, underscore)\")"
+        }
+      ]
+    },
+    {
+      "id": "luau-lint-rejects-loadstring",
+      "passed": true,
+      "checks": [
+        {
+          "check": "list_contains",
+          "passed": true,
+          "message": "lint=[\"forbidden token 'loadstring'\"]; expected to contain [\"forbidden token 'loadstring'\"]"
+        }
+      ]
+    },
+    {
+      "id": "luau-lint-rejects-publishing-and-network",
+      "passed": true,
+      "checks": [
+        {
+          "check": "list_contains",
+          "passed": true,
+          "message": "lint=[\"forbidden token 'Publish'\", \"forbidden token 'MarketplaceService'\", \"forbidden token 'GetAsync'\", 'HttpService may only be used for JSONEncode']; expected to contain [\"forbidden token 'GetAsync'\", \"forbidden token 'MarketplaceService'\", \"forbidden token 'Publish'\"]"
+        }
+      ]
+    },
+    {
+      "id": "luau-lint-accepts-json-encode",
+      "passed": true,
+      "checks": [
+        {
+          "check": "list_empty",
+          "passed": true,
+          "message": "lint=[] should be empty"
+        }
+      ]
+    },
+    {
+      "id": "luau-lint-rejects-destroy",
+      "passed": true,
+      "checks": [
+        {
+          "check": "list_contains",
+          "passed": true,
+          "message": "lint=[\"forbidden token ':Destroy('\"]; expected to contain [\"forbidden token ':Destroy('\"]"
+        }
+      ]
+    },
+    {
+      "id": "import-luau-is-read-only",
+      "passed": true,
+      "checks": [
+        {
+          "check": "list_empty",
+          "passed": true,
+          "message": "lint=[] should be empty"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "read_only == True (got True)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "uses_json_encode == True (got True)"
+        }
+      ]
+    },
+    {
+      "id": "import-luau-needs-a-container",
+      "passed": true,
+      "checks": [
+        {
+          "check": "error_contains",
+          "passed": true,
+          "message": "error should mention 'at least one' (got 'give at least one of vendor_path, tools_path, ores_path (dotted paths such as ReplicatedStorage.Shop.Items)')"
+        }
+      ]
+    },
+    {
+      "id": "import-luau-rejects-injection-in-paths",
+      "passed": true,
+      "checks": [
+        {
+          "check": "error_contains",
+          "passed": true,
+          "message": "error should mention 'dotted path' (got 'vendor_items path \\'ReplicatedStorage.x\"; game:Destroy() --\\' must be a dotted path of plain names such as ReplicatedStorage.Config (letters, digits, underscore)')"
+        }
+      ]
+    },
+    {
+      "id": "import-luau-dump-on-the-mock-round-trips",
+      "passed": true,
+      "checks": [
+        {
+          "check": "mock_ok_or_skipped",
+          "passed": true,
+          "message": "mock status 'ok' (error: None)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "costs.Drill2 == 150 (got 150.0)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "sources == ['ore_Copper'] (got ['ore_Copper'])"
+        }
+      ]
+    },
+    {
+      "id": "import-luau-refuses-in-the-wrong-place",
+      "passed": true,
+      "checks": [
+        {
+          "check": "text_contains",
+          "passed": true,
+          "message": "error should mention 'wrong place' (got '[string \"generated\"]:17: wrong place: this script is for eval/place (Eval Place) but Some Other Place is open')"
+        }
+      ]
+    },
+    {
+      "id": "normalise-sample-dump",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "sources.ore_Copper == 20 (got 20.0)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "sources.ore_Iron == 24 (got 24.0)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "upgrades.Steel_Drill.cost == 200 (got 200.0)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "upgrades.Steel_Drill.effects == [{'source': '*', 'mult': 1.5}] (got [{'source': '*', 'mult': 1.5}])"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "upgrades.Diamond_Drill.effects == [{'source': '*', 'mult': 3.0}] (got [{'source': '*', 'mult': 3.0}])"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "upgrades.Iron_Bonus.effects == [{'source': 'ore_Iron', 'mult': 1.25}] (got [{'source': 'ore_Iron', 'mult': 1.25}])"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "mapping.Steel Drill == 'Steel_Drill' (got 'Steel_Drill')"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "ok == True (got True)"
+        }
+      ]
+    },
+    {
+      "id": "normalise-says-what-it-assumed",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "archetypes_assumed == True (got True)"
+        },
+        {
+          "check": "greater",
+          "passed": true,
+          "message": "n_assumptions=6 should be > 2"
+        },
+        {
+          "check": "greater",
+          "passed": true,
+          "message": "n_unresolved=1 should be > 0"
+        },
+        {
+          "check": "text_contains",
+          "passed": true,
+          "message": "unresolved_text should mention 'effect' (got \"upgrades.Drill.effects: the dump gave no income effect for 'Drill'; the upgrade imports with NO effect and will be flagged until you fill it in\")"
+        }
+      ]
+    },
+    {
+      "id": "normalise-drafts-run-through-the-analyses",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "ok == True (got True)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "check_runs == True (got True)"
+        }
+      ]
+    },
+    {
+      "id": "normalise-infers-tiers-from-price-and-says-so",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "upgrades.A.tier == 1 (got 1)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "upgrades.B.tier == 2 (got 2)"
+        },
+        {
+          "check": "text_contains",
+          "passed": true,
+          "message": "assumptions_text should mention 'ascending price' (got \"an item had no currency; assumed 'Coins' | some vendor items had no track/category field; they were put in track 'items' | track 'items': at least one item had \")"
+        }
+      ]
+    },
+    {
+      "id": "normalise-skips-items-without-a-price",
+      "passed": true,
+      "checks": [
+        {
+          "check": "text_contains",
+          "passed": true,
+          "message": "unresolved_text should mention 'price' (got \"vendor item 'Free': no positive numeric price (looked for ['price', 'cost']); skipped\")"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "upgrades == {} (got {})"
+        }
+      ]
+    },
+    {
+      "id": "normalise-field-map-overrides-aliases",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "upgrades.Drill.cost == 777 (got 777.0)"
+        }
+      ]
+    },
+    {
+      "id": "normalise-sanitises-and-dedupes-ids",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "ok == True (got True)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "mapping.Drill 2! == 'Drill_2' (got 'Drill_2')"
+        }
+      ]
+    },
+    {
+      "id": "normalise-rejects-a-foreign-format",
+      "passed": true,
+      "checks": [
+        {
+          "check": "error_contains",
+          "passed": true,
+          "message": "error should mention 'econbal-import/1' (got 'import JSON must be an object with \"format\": \"econbal-import/1\" (use emit_import_luau to produce it)')"
+        }
+      ]
+    },
+    {
+      "id": "normalise-rejects-an-unknown-container",
+      "passed": true,
+      "checks": [
+        {
+          "check": "error_contains",
+          "passed": true,
+          "message": "error should mention 'unknown container' (got \"unknown container 'pets'. Expected: ['ores', 'tool_stats', 'vendor_items']\")"
+        }
+      ]
+    },
+    {
+      "id": "sensitivity-shifts-every-later-tier-equally",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "delta.drill_1 == 0 (got 0)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "delta.drill_2 == 10 (got 10)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "delta.drill_10 == 10 (got 10)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "locked == False (got False)"
+        }
+      ]
+    },
+    {
+      "id": "sensitivity-marks-locked-values",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "locked == True (got True)"
+        }
+      ]
+    },
+    {
+      "id": "sensitivity-rejects-a-bad-path",
+      "passed": true,
+      "checks": [
+        {
+          "check": "error_contains",
+          "passed": true,
+          "message": "error should mention 'nope' (got \"'upgrades.nope.cost': no entry 'nope' in 'upgrades'. Known: ['drill_1', 'drill_2', 'drill_3', 'drill_4', 'drill_4b', 'drill_5', 'drill_6', 'drill_7', 'drill_8',\")"
+        }
+      ]
+    },
+    {
+      "id": "scope-missing-both-is-refused",
+      "passed": true,
+      "checks": [
+        {
+          "check": "step_error_contains",
+          "passed": true,
+          "message": "step 0 should be refused mentioning 'missing project_id and place_id' (got \"missing project_id and place_id: every tool needs both so that specs, bands and feedback are never mixed between places. Known places: ['demo_mine/hardcore', 'demo_mine/main', 'demo_tycoon/main']\")"
+        },
+        {
+          "check": "step_error_contains",
+          "passed": true,
+          "message": "step 0 should be refused mentioning 'demo_mine/main' (got \"missing project_id and place_id: every tool needs both so that specs, bands and feedback are never mixed between places. Known places: ['demo_mine/hardcore', 'demo_mine/main', 'demo_tycoon/main']\")"
+        }
+      ]
+    },
+    {
+      "id": "scope-missing-place-is-refused",
+      "passed": true,
+      "checks": [
+        {
+          "check": "step_error_contains",
+          "passed": true,
+          "message": "step 0 should be refused mentioning 'missing place_id' (got \"missing place_id: every tool needs both so that specs, bands and feedback are never mixed between places. Known places: ['demo_mine/hardcore', 'demo_mine/main', 'demo_tycoon/main']\")"
+        }
+      ]
+    },
+    {
+      "id": "scope-missing-project-is-refused",
+      "passed": true,
+      "checks": [
+        {
+          "check": "step_error_contains",
+          "passed": true,
+          "message": "step 0 should be refused mentioning 'missing project_id' (got \"missing project_id: every tool needs both so that specs, bands and feedback are never mixed between places. Known places: ['demo_mine/hardcore', 'demo_mine/main', 'demo_tycoon/main']\")"
+        }
+      ]
+    },
+    {
+      "id": "scope-unknown-place-is-refused-not-guessed",
+      "passed": true,
+      "checks": [
+        {
+          "check": "step_error_contains",
+          "passed": true,
+          "message": "step 0 should be refused mentioning 'unknown place' (got \"unknown place 'demo_mine/nowhere' (project 'demo_mine' has places ['hardcore', 'main']). Known places: ['demo_mine/hardcore', 'demo_mine/main', 'demo_tycoon/main']. Add it to /home/user/workshop/repos\")"
+        },
+        {
+          "check": "step_error_contains",
+          "passed": true,
+          "message": "step 0 should be refused mentioning 'will not guess' (got \"unknown place 'demo_mine/nowhere' (project 'demo_mine' has places ['hardcore', 'main']). Known places: ['demo_mine/hardcore', 'demo_mine/main', 'demo_tycoon/main']. Add it to /home/user/workshop/repos\")"
+        }
+      ]
+    },
+    {
+      "id": "scope-unknown-project-is-refused",
+      "passed": true,
+      "checks": [
+        {
+          "check": "step_error_contains",
+          "passed": true,
+          "message": "step 0 should be refused mentioning 'known projects' (got \"unknown place 'ghost_game/main' (known projects: ['demo_mine', 'demo_tycoon']). Known places: ['demo_mine/hardcore', 'demo_mine/main', 'demo_tycoon/main']. Add it to /home/user/workshop/repos/roblox-e\")"
+        }
+      ]
+    },
+    {
+      "id": "scope-path-tricks-are-just-unknown-places",
+      "passed": true,
+      "checks": [
+        {
+          "check": "step_error_contains",
+          "passed": true,
+          "message": "step 0 should be refused mentioning 'unknown place' (got \"unknown place '../../etc/passwd' (known projects: ['demo_mine', 'demo_tycoon']). Known places: ['demo_mine/hardcore', 'demo_mine/main', 'demo_tycoon/main']. Add it to /home/user/workshop/repos/roblox-\")"
+        },
+        {
+          "check": "list_empty",
+          "passed": true,
+          "message": "wrote=[] should be empty"
+        }
+      ]
+    },
+    {
+      "id": "scope-every-tool-refuses-without-scope",
+      "passed": true,
+      "checks": [
+        {
+          "check": "list_empty",
+          "passed": true,
+          "message": "not_refused=[] should be empty"
+        },
+        {
+          "check": "greater",
+          "passed": true,
+          "message": "checked=22 should be > 20"
+        }
+      ]
+    },
+    {
+      "id": "scope-every-report-states-project-and-place",
+      "passed": true,
+      "checks": [
+        {
+          "check": "list_empty",
+          "passed": true,
+          "message": "missing=[] should be empty"
+        }
+      ]
+    },
+    {
+      "id": "scope-per-place-bands",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "steps.0.result.bands.0.max_minutes == 15 (got 15)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "steps.1.result.bands.0.max_minutes == 30 (got 30)"
+        }
+      ]
+    },
+    {
+      "id": "scope-same-spec-different-verdict-per-place",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "steps.0.result.verdict == 'pass' (got 'pass')"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "steps.1.result.verdict == 'fail' (got 'fail')"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "steps.1.result.place_id == 'hardcore' (got 'hardcore')"
+        }
+      ]
+    },
+    {
+      "id": "scope-each-place-has-its-own-spec",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "steps.0.result.verdict == 'fail' (got 'fail')"
+        },
+        {
+          "check": "has_finding",
+          "passed": true,
+          "message": "expected a finding mentioning 'runaway_inflation'"
+        }
+      ]
+    },
+    {
+      "id": "scope-notes-do-not-leak-between-places",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "steps.4.result.evidence.pacing_reports == 2 (got 2)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "steps.4.result.suggestions.0.type == 'lower_band_max' (got 'lower_band_max')"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "steps.4.result.suggestions.0.suggested == 16 (got 16)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "steps.5.result.evidence.pacing_reports == 0 (got 0)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "steps.5.result.suggestions == [] (got [])"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "steps.6.result.corrections == [] (got [])"
+        },
+        {
+          "check": "text_contains",
+          "passed": true,
+          "message": "steps.7.result.corrections.0.reason should mention 'too slow' (got 'too slow')"
+        }
+      ]
+    },
+    {
+      "id": "scope-feedback-files-live-in-the-place-folder",
+      "passed": true,
+      "checks": [
+        {
+          "check": "list_contains",
+          "passed": true,
+          "message": "wrote=['projects/demo_mine/main/feedback/runs.jsonl']; expected to contain ['projects/demo_mine/main/feedback/runs.jsonl']"
+        },
+        {
+          "check": "list_excludes",
+          "passed": true,
+          "message": "wrote=['projects/demo_mine/main/feedback/runs.jsonl']; must not contain ['projects/demo_mine/hardcore/feedback/runs.jsonl']"
+        }
+      ]
+    },
+    {
+      "id": "scope-global-flag-shares-a-note-with-every-place",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "steps.2.result.evidence.pacing_reports == 1 (got 1)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "steps.3.result.corrections.0.scope == 'global' (got 'global')"
+        },
+        {
+          "check": "list_contains",
+          "passed": true,
+          "message": "wrote=['projects/_global/_global/feedback/decisions.jsonl', 'projects/_global/_global/feedback/runs.jsonl']; expected to contain ['projects/_global/_global/feedback/runs.jsonl']"
+        },
+        {
+          "check": "list_excludes",
+          "passed": true,
+          "message": "wrote=['projects/_global/_global/feedback/decisions.jsonl', 'projects/_global/_global/feedback/runs.jsonl']; must not contain ['projects/demo_mine/main/feedback/runs.jsonl']"
+        }
+      ]
+    },
+    {
+      "id": "scope-global-can-be-switched-off-when-reading",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "steps.2.result.corrections == [] (got [])"
+        }
+      ]
+    },
+    {
+      "id": "scope-compare-across-places-is-allowed",
+      "passed": true,
+      "checks": [
+        {
+          "check": "step_ok",
+          "passed": true,
+          "message": "step 0 should succeed (got None)"
+        },
+        {
+          "check": "text_contains",
+          "passed": true,
+          "message": "steps.0.result.summary should mention 'no change can be applied across places' (got '37 value(s) differ between demo_mine/main and demo_tycoon/main; comparison only, no change can be applied across places')"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "steps.0.result.a.place_id == 'main' (got 'main')"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "steps.0.result.b.project_id == 'demo_tycoon' (got 'demo_tycoon')"
+        }
+      ]
+    },
+    {
+      "id": "scope-compare-same-spec-different-bands-shows-different-findings",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "steps.0.result.value_changes == [] (got [])"
+        }
+      ]
+    },
+    {
+      "id": "scope-rebalance-takes-one-place-only",
+      "passed": true,
+      "checks": [
+        {
+          "check": "step_error_contains",
+          "passed": true,
+          "message": "step 0 should be refused mentioning 'unknown argument' (got \"unknown argument(s) ['b_place_id', 'b_project_id'] for 'propose_rebalance'. Expected: ['project_id', 'place_id', 'spec', 'spec_name', 'spec_version', 'finding_code', 'upgrade', 'archetype', 'currency'\")"
+        },
+        {
+          "check": "step_error_contains",
+          "passed": true,
+          "message": "step 1 should be refused mentioning 'unknown argument' (got \"unknown argument(s) ['a_place_id'] for 'export_values_luau'. Expected: ['project_id', 'place_id', 'studios', 'spec', 'spec_name', 'spec_version', 'all_values', 'config_name', 'parent_path', 'verify_on\")"
+        }
+      ]
+    },
+    {
+      "id": "scope-rebalance-reports-its-place",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "steps.0.result.project_id == 'demo_mine' (got 'demo_mine')"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "steps.0.result.place_id == 'hardcore' (got 'hardcore')"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "steps.0.result.dry_run == True (got True)"
+        },
+        {
+          "check": "list_empty",
+          "passed": true,
+          "message": "wrote=[] should be empty"
+        }
+      ]
+    },
+    {
+      "id": "scope-rebalance-write-goes-to-a-new-file-in-the-place-folder",
+      "passed": true,
+      "checks": [
+        {
+          "check": "text_contains",
+          "passed": true,
+          "message": "wrote.0 should mention 'projects/demo_mine/hardcore/output/rebalance/' (got 'projects/demo_mine/hardcore/output/rebalance/demo_mine_hardcore-8ffbb7956282.yaml')"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "steps.0.result.locked_values_untouched == True (got True)"
+        }
+      ]
+    },
+    {
+      "id": "scope-whatif-rebalance-on-the-wall-economy",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "steps.0.result.changes.0.path == 'upgrades.drill_4.cost' (got 'upgrades.drill_4.cost')"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "steps.0.result.changes.0.after == 1920 (got 1920)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "steps.0.result.locked_values_untouched == True (got True)"
+        }
+      ]
+    },
+    {
+      "id": "scope-whatif-rebalance-respects-locks",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "steps.0.result.locked_skipped.0 == 'upgrades.drill_4.cost' (got 'upgrades.drill_4.cost')"
+        }
+      ]
+    },
+    {
+      "id": "scope-import-refused-when-another-place-is-open",
+      "passed": true,
+      "checks": [
+        {
+          "check": "step_error_contains",
+          "passed": true,
+          "message": "step 0 should be refused mentioning 'are not place 'demo_mine/main'' (got 'refusing: the open Studio instance(s) [\"\\'Demo Mine Hardcore (SYNTHETIC)\\' (place_id 0)\"] are not place \\'demo_mine/main\\' (expected name \\'Demo Mine Main (SYNTHETIC)\\' or place id 0). Open the right place;')"
+        },
+        {
+          "check": "step_error_contains",
+          "passed": true,
+          "message": "step 0 should be refused mentioning 'nothing was generated' (got 'refusing: the open Studio instance(s) [\"\\'Demo Mine Hardcore (SYNTHETIC)\\' (place_id 0)\"] are not place \\'demo_mine/main\\' (expected name \\'Demo Mine Main (SYNTHETIC)\\' or place id 0). Open the right place;')"
+        }
+      ]
+    },
+    {
+      "id": "scope-import-refused-without-studio-list",
+      "passed": true,
+      "checks": [
+        {
+          "check": "step_error_contains",
+          "passed": true,
+          "message": "step 0 should be refused mentioning 'list_roblox_studios' (got \"cannot confirm the open Studio place: pass 'studios', the output of the hub's list_roblox_studios as a list of {name, place_id, studio_id}, and open place 'demo_mine/main' (Demo Mine Main (SYNTHETIC))\")"
+        }
+      ]
+    },
+    {
+      "id": "scope-import-refused-with-an-empty-studio-list",
+      "passed": true,
+      "checks": [
+        {
+          "check": "step_error_contains",
+          "passed": true,
+          "message": "step 0 should be refused mentioning 'open place' (got \"cannot confirm the open Studio place: pass 'studios', the output of the hub's list_roblox_studios as a list of {name, place_id, studio_id}, and open place 'demo_mine/main' (Demo Mine Main (SYNTHETIC))\")"
+        }
+      ]
+    },
+    {
+      "id": "scope-import-accepted-for-the-open-place-by-name",
+      "passed": true,
+      "checks": [
+        {
+          "check": "text_contains",
+          "passed": true,
+          "message": "steps.0.result.luau should mention 'EXPECTED_LABEL = \"demo_mine/main\"' (got '-- GENERATED by econbal (import dump) - READ ONLY: it changes nothing, publishes nothing, makes no network requests.\\n-- Prints and returns JSON in the econbal-i')"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "steps.0.result.studio.studio_id == 's1' (got 's1')"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "steps.0.result.studio.matched_by == 'name' (got 'name')"
+        },
+        {
+          "check": "list_empty",
+          "passed": true,
+          "message": "steps.0.result.lint=[] should be empty"
+        }
+      ]
+    },
+    {
+      "id": "scope-import-accepted-for-the-open-place-by-place-id",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "steps.0.result.studio.matched_by == 'place_id' (got 'place_id')"
+        },
+        {
+          "check": "text_contains",
+          "passed": true,
+          "message": "steps.0.result.luau should mention 'EXPECTED_PLACE_ID = 9000000001' (got '-- GENERATED by econbal (import dump) - READ ONLY: it changes nothing, publishes nothing, makes no network requests.\\n-- Prints and returns JSON in the econbal-i')"
+        }
+      ]
+    },
+    {
+      "id": "scope-import-refused-when-two-open-instances-match",
+      "passed": true,
+      "checks": [
+        {
+          "check": "step_error_contains",
+          "passed": true,
+          "message": "step 0 should be refused mentioning 'unambiguous' (got \"refusing: 2 open Studio instances match place 'demo_mine/main'; close the extra ones so the target is unambiguous.\")"
+        }
+      ]
+    },
+    {
+      "id": "scope-export-refused-when-another-place-is-open",
+      "passed": true,
+      "checks": [
+        {
+          "check": "step_error_contains",
+          "passed": true,
+          "message": "step 0 should be refused mentioning 'are not place 'demo_mine/main'' (got 'refusing: the open Studio instance(s) [\"\\'Demo Tycoon (SYNTHETIC)\\' (place_id 9000000001)\"] are not place \\'demo_mine/main\\' (expected name \\'Demo Mine Main (SYNTHETIC)\\' or place id 0). Open the right plac')"
+        }
+      ]
+    },
+    {
+      "id": "scope-export-embeds-and-checks-the-place",
+      "passed": true,
+      "checks": [
+        {
+          "check": "text_contains",
+          "passed": true,
+          "message": "steps.0.result.luau should mention 'EXPECTED_LABEL = \"demo_mine/main\"' (got '-- GENERATED by econbal (spec 6ddfb6c25fe2) - review before running.\\n-- Creates ONE NEW ModuleScript named EconomyValues_Proposed under ReplicatedStorage.Config')"
+        },
+        {
+          "check": "text_contains",
+          "passed": true,
+          "message": "steps.0.result.luau should mention 'wrong place' (got '-- GENERATED by econbal (spec 6ddfb6c25fe2) - review before running.\\n-- Creates ONE NEW ModuleScript named EconomyValues_Proposed under ReplicatedStorage.Config')"
+        },
+        {
+          "check": "text_contains",
+          "passed": true,
+          "message": "steps.0.result.module_source should mention 'place = \"demo_mine/main\"' (got '-- GENERATED by econbal - PROPOSED values for review. Not applied to the game until you wire them in.\\n-- spec demo_mine_main 6ddfb6c25fe2. Keys are value paths ')"
+        },
+        {
+          "check": "list_empty",
+          "passed": true,
+          "message": "steps.0.result.lint=[] should be empty"
+        },
+        {
+          "check": "text_contains",
+          "passed": true,
+          "message": "wrote.0 should mention 'projects/demo_mine/main/output/export/' (got 'projects/demo_mine/main/output/export/EconomyValues_Proposed-8802266cc1de.luau')"
+        }
+      ]
+    },
+    {
+      "id": "scope-export-dry-run-writes-nothing",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "steps.0.result.dry_run == True (got True)"
+        },
+        {
+          "check": "list_empty",
+          "passed": true,
+          "message": "wrote=[] should be empty"
+        }
+      ]
+    },
+    {
+      "id": "scope-saved-versions-are-per-place",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "steps.0.result.saved.version == 1 (got 1)"
+        },
+        {
+          "check": "step_ok",
+          "passed": true,
+          "message": "step 1 should succeed (got None)"
+        },
+        {
+          "check": "step_error_contains",
+          "passed": true,
+          "message": "step 2 should be refused mentioning 'versions are per place' (got \"no versions saved for 'spec-v1' for place demo_mine/hardcore. Save one with save_spec_version first (versions are per place).\")"
+        }
+      ]
+    },
+    {
+      "id": "scope-dry-run-writes-nothing",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "steps.0.result.dry_run == True (got True)"
+        },
+        {
+          "check": "text_contains",
+          "passed": true,
+          "message": "wrote.0 should mention 'output/plots/' (got 'projects/demo_mine/main/output/plots/demo_mine_main-b0375c777fb9.png')"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "n_errors == 0 (got 0)"
+        }
+      ]
+    },
+    {
+      "id": "scope-writes-state-not-applied-to-the-spec-file",
+      "passed": true,
+      "checks": [
+        {
+          "check": "list_excludes",
+          "passed": true,
+          "message": "wrote=['projects/demo_mine/hardcore/output/rebalance/demo_mine_hardcore-8ffbb7956282.yaml']; must not contain ['economy.yaml', 'projects/demo_mine/hardcore/economy.yaml']"
+        }
+      ]
+    },
+    {
+      "id": "scope-normalise-import-names-the-place",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "steps.0.result.place_id == 'main' (got 'main')"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "steps.0.result.ok == True (got True)"
+        },
+        {
+          "check": "text_contains",
+          "passed": true,
+          "message": "steps.0.result.summary should mention 'draft spec' (got 'draft spec: 1 upgrade(s), 1 source(s); 6 assumption(s), 0 unresolved; valid')"
+        }
+      ]
+    },
+    {
+      "id": "toy-balanced-passes",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "verdict == 'pass' (got 'pass')"
+        },
+        {
+          "check": "list_empty",
+          "passed": true,
+          "message": "codes=[] should be empty"
+        },
+        {
+          "check": "list_empty",
+          "passed": true,
+          "message": "range_flagged=[] should be empty"
+        }
+      ]
+    },
+    {
+      "id": "toy-balanced-regular-steps-are-the-designed-ones",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "gaps.drill_1 == 10 (got 10)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "gaps.drill_3 == 10 (got 10)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "gaps.drill_4 == 20 (got 20)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "gaps.drill_5 == 30 (got 30)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "gaps.drill_6 == 40 (got 40)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "gaps.drill_7 == 60 (got 60)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "gaps.drill_8 == 80 (got 80)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "gaps.drill_9 == 100 (got 100)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "gaps.drill_10 == 120 (got 120)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "minutes.drill_10 == 480 (got 480)"
+        }
+      ]
+    },
+    {
+      "id": "toy-balanced-rebirth-timing",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "minutes.rebirth == 580 (got 580)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "rebirths == 1 (got 1)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "exhausted_at_minute == None (got None)"
+        }
+      ]
+    },
+    {
+      "id": "toy-balanced-fits-the-placeholder-bands",
+      "passed": true,
+      "checks": [
+        {
+          "check": "list_excludes",
+          "passed": true,
+          "message": "codes=['not_reached']; must not contain ['over_band', 'under_band', 'wall', 'gap_cliff', 'cost_cliff']"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "status.drill_1 == 'ok' (got 'ok')"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "status.drill_10 == 'ok' (got 'ok')"
+        }
+      ]
+    },
+    {
+      "id": "toy-wall-is-flagged",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "verdict == 'fail' (got 'fail')"
+        },
+        {
+          "check": "list_contains",
+          "passed": true,
+          "message": "errors=['wall']; expected to contain ['wall']"
+        },
+        {
+          "check": "has_finding",
+          "passed": true,
+          "message": "expected a finding mentioning 'drill_4'"
+        }
+      ]
+    },
+    {
+      "id": "toy-wall-gap-and-cost-cliffs",
+      "passed": true,
+      "checks": [
+        {
+          "check": "list_contains",
+          "passed": true,
+          "message": "codes=['cost_cliff', 'dead_option', 'gap_cliff', 'slow_for_archetype', 'wall']; expected to contain ['cost_cliff', 'gap_cliff']"
+        }
+      ]
+    },
+    {
+      "id": "toy-wall-step-takes-400-minutes",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "gaps.drill_4 == 400 (got 400)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "status.drill_4 == 'over_band' (got 'over_band')"
+        }
+      ]
+    },
+    {
+      "id": "toy-wall-option-is-dead",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "status.drill_4 == 'dead' (got 'dead')"
+        },
+        {
+          "check": "approx",
+          "passed": true,
+          "message": "best_payback.drill_4=266.6666666666667; expected 266.6667 +/- 0.001"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "status.drill_1 == 'ok' (got 'ok')"
+        }
+      ]
+    },
+    {
+      "id": "toy-runaway-is-flagged",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "verdict == 'fail' (got 'fail')"
+        },
+        {
+          "check": "list_contains",
+          "passed": true,
+          "message": "errors=['runaway_inflation']; expected to contain ['runaway_inflation']"
+        },
+        {
+          "check": "list_contains",
+          "passed": true,
+          "message": "codes=['content_exhausted', 'runaway_inflation', 'under_band']; expected to contain ['content_exhausted', 'under_band']"
+        }
+      ]
+    },
+    {
+      "id": "toy-runaway-flow-numbers",
+      "passed": true,
+      "checks": [
+        {
+          "check": "greater",
+          "passed": true,
+          "message": "tail_net_share=1.0 should be > 0.95"
+        },
+        {
+          "check": "less",
+          "passed": true,
+          "message": "exhausted_after_days=0.08333333333333333 should be < 0.1"
+        },
+        {
+          "check": "list_contains",
+          "passed": true,
+          "message": "codes=['content_exhausted', 'runaway_inflation']; expected to contain ['runaway_inflation']"
+        }
+      ]
+    },
+    {
+      "id": "toy-runaway-steps-are-seconds-not-minutes",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "gaps.drill_1 == 1 (got 1)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "count == 3 (got 3)"
+        }
+      ]
+    },
+    {
+      "id": "toy-dominant-is-flagged",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "verdict == 'fail' (got 'fail')"
+        },
+        {
+          "check": "list_contains",
+          "passed": true,
+          "message": "codes=['dominant_option', 'dominant_strategy']; expected to contain ['dominant_option', 'dominant_strategy']"
+        }
+      ]
+    },
+    {
+      "id": "toy-dominant-names-the-winners",
+      "passed": true,
+      "checks": [
+        {
+          "check": "list_contains",
+          "passed": true,
+          "message": "dominant=['drill_2', 'drill_3']; expected to contain ['drill_2', 'drill_3']"
+        },
+        {
+          "check": "list_contains",
+          "passed": true,
+          "message": "dominated=['drill_2b', 'drill_3b']; expected to contain ['drill_2b', 'drill_3b']"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "strategies.speed == [2, 2] (got [2, 2])"
+        },
+        {
+          "check": "approx",
+          "passed": true,
+          "message": "paybacks.drill:2.drill_2=10.0; expected 10 +/- 1e-06"
+        },
+        {
+          "check": "approx",
+          "passed": true,
+          "message": "paybacks.drill:2.drill_2b=20.0; expected 20 +/- 1e-06"
+        }
+      ]
+    },
+    {
+      "id": "toy-balanced-tradeoff-is-not-dominant",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "dominant == [] (got [])"
+        },
+        {
+          "check": "approx",
+          "passed": true,
+          "message": "paybacks.drill:4.drill_4=20.0; expected 20 +/- 1e-06"
+        },
+        {
+          "check": "approx",
+          "passed": true,
+          "message": "paybacks.drill:4.drill_4b=20.0; expected 20 +/- 1e-06"
+        },
+        {
+          "check": "list_excludes",
+          "passed": true,
+          "message": "codes=[]; must not contain ['dominant_option', 'dominant_strategy']"
+        }
+      ]
+    },
+    {
+      "id": "toy-balanced-alternative-not-dead",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "status.drill_4b == 'ok' (got 'ok')"
+        },
+        {
+          "check": "list_excludes",
+          "passed": true,
+          "message": "codes=[]; must not contain ['dead_option']"
+        }
+      ]
+    },
+    {
+      "id": "toy-balanced-monetisation-within-limits",
+      "passed": true,
+      "checks": [
+        {
+          "check": "approx",
+          "passed": true,
+          "message": "speedups.drill_1=2.5; expected 2.5 +/- 1e-06"
+        },
+        {
+          "check": "list_excludes",
+          "passed": true,
+          "message": "codes=['boost_trivialises']; must not contain ['pay_to_win', 'free_cliff']"
+        },
+        {
+          "check": "approx",
+          "passed": true,
+          "message": "per_boost.double_income=2.0; expected 2.0 +/- 1e-06"
+        }
+      ]
+    },
+    {
+      "id": "toy-pay-to-win-is-flagged",
+      "passed": true,
+      "checks": [
+        {
+          "check": "list_contains",
+          "passed": true,
+          "message": "codes=['boost_trivialises', 'pay_to_win']; expected to contain ['pay_to_win']"
+        }
+      ]
+    },
+    {
+      "id": "toy-free-player-cliff-is-flagged",
+      "passed": true,
+      "checks": [
+        {
+          "check": "list_contains",
+          "passed": true,
+          "message": "codes=['boost_trivialises', 'free_cliff', 'pay_to_win']; expected to contain ['free_cliff']"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "gap_free.drill_4 == 400 (got 400)"
+        }
+      ]
+    },
+    {
+      "id": "toy-balanced-flows-do-not-run-away",
+      "passed": true,
+      "checks": [
+        {
+          "check": "less",
+          "passed": true,
+          "message": "tail_net_share=0.24210986130828874 should be < 0.5"
+        },
+        {
+          "check": "list_excludes",
+          "passed": true,
+          "message": "codes=[]; must not contain ['runaway_inflation', 'content_exhausted']"
+        }
+      ]
+    },
+    {
+      "id": "toy-casual-does-not-reach-the-last-tiers",
+      "passed": true,
+      "checks": [
+        {
+          "check": "list_contains",
+          "passed": true,
+          "message": "codes=['not_reached']; expected to contain ['not_reached']"
+        }
+      ]
+    },
+    {
+      "id": "toy-bands-only-judge-the-reference-archetype",
+      "passed": true,
+      "checks": [
+        {
+          "check": "list_excludes",
+          "passed": true,
+          "message": "codes=[]; must not contain ['under_band', 'over_band']"
+        }
+      ]
+    },
+    {
+      "id": "toy-slow-casual-days-are-flagged",
+      "passed": true,
+      "checks": [
+        {
+          "check": "list_contains",
+          "passed": true,
+          "message": "codes=['not_reached', 'slow_for_archetype']; expected to contain ['slow_for_archetype']"
+        }
+      ]
+    },
+    {
+      "id": "toy-projected-wall-at-the-horizon",
+      "passed": true,
+      "checks": [
+        {
+          "check": "list_contains",
+          "passed": true,
+          "message": "codes=['not_reached', 'slow_for_archetype', 'wall']; expected to contain ['wall']"
+        },
+        {
+          "check": "greater",
+          "passed": true,
+          "message": "projected.drill_9=35157 should be > 1000"
+        }
+      ]
+    },
+    {
+      "id": "validate-balanced-is-clean",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "ok == True (got True)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "error_codes == [] (got [])"
+        }
+      ]
+    },
+    {
+      "id": "validate-unknown-currency",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "ok == False (got False)"
+        },
+        {
+          "check": "list_contains",
+          "passed": true,
+          "message": "error_codes=['unknown_reference']; expected to contain ['unknown_reference']"
+        }
+      ]
+    },
+    {
+      "id": "validate-duplicate-id",
+      "passed": true,
+      "checks": [
+        {
+          "check": "list_contains",
+          "passed": true,
+          "message": "error_codes=['duplicate_id']; expected to contain ['duplicate_id']"
+        }
+      ]
+    },
+    {
+      "id": "validate-negative-cost",
+      "passed": true,
+      "checks": [
+        {
+          "check": "list_contains",
+          "passed": true,
+          "message": "error_codes=['bad_value']; expected to contain ['bad_value']"
+        },
+        {
+          "check": "text_contains",
+          "passed": true,
+          "message": "text should mention 'upgrades.drill_1.cost' (got 'upgrades.drill_1.cost must be > 0 (got -5)')"
+        }
+      ]
+    },
+    {
+      "id": "validate-zero-cost",
+      "passed": true,
+      "checks": [
+        {
+          "check": "list_contains",
+          "passed": true,
+          "message": "error_codes=['bad_value']; expected to contain ['bad_value']"
+        }
+      ]
+    },
+    {
+      "id": "validate-tier-gap",
+      "passed": true,
+      "checks": [
+        {
+          "check": "list_contains",
+          "passed": true,
+          "message": "error_codes=['tier_gap']; expected to contain ['tier_gap']"
+        },
+        {
+          "check": "text_contains",
+          "passed": true,
+          "message": "text should mention 'no upgrade at tier 3' (got \"track 'drill' has tier 10 but no upgrade at tier 3; tiers must be contiguous from 1\")"
+        }
+      ]
+    },
+    {
+      "id": "validate-requires-cycle",
+      "passed": true,
+      "checks": [
+        {
+          "check": "list_contains",
+          "passed": true,
+          "message": "error_codes=['cycle']; expected to contain ['cycle']"
+        }
+      ]
+    },
+    {
+      "id": "validate-typo-in-a-field-is-a-warning",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "ok == True (got True)"
+        },
+        {
+          "check": "list_contains",
+          "passed": true,
+          "message": "warning_codes=['unknown_key']; expected to contain ['unknown_key']"
+        },
+        {
+          "check": "text_contains",
+          "passed": true,
+          "message": "text should mention 'cots' (got \"unknown field 'cots' in upgrades (typo? known: ['cost', 'currency', 'effects', 'id', 'locked', 'min_rebirths', 'name', 'requires', 'strategy', 'tier', 'track'])\")"
+        }
+      ]
+    },
+    {
+      "id": "validate-locked-pattern-matching-nothing",
+      "passed": true,
+      "checks": [
+        {
+          "check": "list_contains",
+          "passed": true,
+          "message": "error_codes=['locked_matches_nothing']; expected to contain ['locked_matches_nothing']"
+        }
+      ]
+    },
+    {
+      "id": "validate-star-add-is-rejected",
+      "passed": true,
+      "checks": [
+        {
+          "check": "list_contains",
+          "passed": true,
+          "message": "error_codes=['star_add']; expected to contain ['star_add']"
+        }
+      ]
+    },
+    {
+      "id": "validate-effect-needs-exactly-one-of-add-mult",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "ok == False (got False)"
+        }
+      ]
+    },
+    {
+      "id": "validate-unsafe-id",
+      "passed": true,
+      "checks": [
+        {
+          "check": "list_contains",
+          "passed": true,
+          "message": "error_codes=['bad_id']; expected to contain ['bad_id']"
+        }
+      ]
+    },
+    {
+      "id": "validate-missing-standard-archetypes-warns",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "ok == True (got True)"
+        },
+        {
+          "check": "list_contains",
+          "passed": true,
+          "message": "warning_codes=['missing_archetypes']; expected to contain ['missing_archetypes']"
+        }
+      ]
+    },
+    {
+      "id": "validate-variance-must-be-below-one",
+      "passed": true,
+      "checks": [
+        {
+          "check": "list_contains",
+          "passed": true,
+          "message": "error_codes=['bad_value']; expected to contain ['bad_value']"
+        }
+      ]
+    },
+    {
+      "id": "validate-zero-effect-gate-warns",
+      "passed": true,
+      "checks": [
+        {
+          "check": "list_contains",
+          "passed": true,
+          "message": "warning_codes=['missing_archetypes', 'zero_effect_gate']; expected to contain ['zero_effect_gate']"
+        }
+      ]
+    },
+    {
+      "id": "validate-unreachable-currency-warns",
+      "passed": true,
+      "checks": [
+        {
+          "check": "list_contains",
+          "passed": true,
+          "message": "warning_codes=['unreachable_currency']; expected to contain ['unreachable_currency']"
+        }
+      ]
+    },
+    {
+      "id": "validate-bad-simulation-days",
+      "passed": true,
+      "checks": [
+        {
+          "check": "list_contains",
+          "passed": true,
+          "message": "error_codes=['bad_value']; expected to contain ['bad_value']"
+        }
+      ]
+    },
+    {
+      "id": "validate-more-than-one-rebirth-is-refused",
+      "passed": true,
+      "checks": [
+        {
+          "check": "list_contains",
+          "passed": true,
+          "message": "error_codes=['multiple_rebirths']; expected to contain ['multiple_rebirths']"
+        }
+      ]
+    }
+  ]
+}

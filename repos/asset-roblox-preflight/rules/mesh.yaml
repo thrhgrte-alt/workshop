@@ -1,0 +1,89 @@
+category: mesh
+rules:
+  - id: MESH_NO_GEOMETRY
+    severity: error
+    title: No visible mesh geometry found
+    explanation: The export contains no mesh with triangles outside collision proxies, so there is nothing to upload.
+    fix: Export at least one visible mesh object (check that the correct objects or collection were selected for export).
+    safe: false
+  - id: MESH_NON_FINITE
+    severity: error
+    title: Vertex positions contain NaN or infinity
+    explanation: Non-finite coordinates corrupt bounding boxes and are rejected or mangled by importers.
+    fix: "Find and delete or repair the broken vertices on {object} (Blender: Select All by Trait, then re-export)."
+    safe: false
+  - id: MESH_TRI_BUDGET
+    severity: error
+    title: Triangle count over the profile budget (per mesh)
+    explanation: Each visible mesh must stay within the profile's triangle budget. The budget is a DEFAULT in rules/profiles/*.yaml, not an official Roblox number.
+    fix: "Decimate or retopologise {object}: {measured} triangles, limit {limit}."
+    safe: false
+    limits:
+      max_triangles: {default: 10000, verify_against_current_docs: true, note: "DEFAULT chosen by this tool, not an official Roblox limit. Profiles override it."}
+  - id: MESH_TRI_BUDGET_TOTAL
+    severity: warn
+    title: Total triangles of all visible meshes over the profile budget
+    explanation: Several parts that are each under budget can still add up to a heavy asset.
+    fix: "Reduce the combined triangle count of the asset: {measured} triangles in total, limit {limit}."
+    safe: false
+    limits:
+      max_triangles_total: {default: 20000, verify_against_current_docs: true, note: "DEFAULT chosen by this tool."}
+  - id: MESH_OBJECT_COUNT
+    severity: warn
+    title: Too many separate mesh objects
+    explanation: Many small mesh objects become many parts after import. Merge pieces that never move independently.
+    fix: "Join mesh objects that share a material and never move on their own ({measured} objects, limit {limit})."
+    safe: false
+    limits:
+      max_mesh_objects: {default: 20, verify_against_current_docs: false, heuristic: true, note: "Heuristic default."}
+  - id: MESH_LOOSE_GEOMETRY
+    severity: warn
+    title: Loose vertices or degenerate triangles
+    explanation: Vertices that no triangle uses, and triangles with zero area or repeated corners, add weight and can confuse collision and UVs.
+    fix: "On {object}: Mesh > Clean Up > Delete Loose, and Merge by Distance / Dissolve Degenerate ({measured}, limit {limit})."
+    safe: false
+    limits:
+      max_orphan_vertices: {default: 0, verify_against_current_docs: false, heuristic: true}
+      max_degenerate_triangles: {default: 0, verify_against_current_docs: false, heuristic: true}
+  - id: MESH_NON_MANIFOLD
+    severity: warn
+    title: Open or non-manifold edges
+    explanation: Edges used by one triangle (open boundary) or by more than two (non-manifold) mean holes or internal faces. Intentionally open meshes (planes, cloth) can override this per profile.
+    fix: "On {object}: Select > Select All by Trait > Non Manifold, fill holes or delete internal faces ({measured} edges, limit {limit})."
+    safe: false
+    limits:
+      max_non_manifold_edges: {default: 0, verify_against_current_docs: false, heuristic: true}
+  - id: MESH_FLIPPED_NORMALS
+    severity: error
+    title: Normals point inward or disagree with the face winding
+    explanation: The stored vertex normals oppose the triangle winding for part of the mesh, or a closed mesh has negative volume (inside out). Faces render dark or invisible after import.
+    fix: "On {object}: Edit Mode, select all, Mesh > Normals > Recalculate Outside ({measured})."
+    safe: false
+    limits:
+      max_flipped_ratio: {default: 0.02, verify_against_current_docs: false, heuristic: true, note: "Share of triangles allowed to disagree."}
+  - id: MESH_NGONS
+    severity: warn
+    title: Polygons with more than four sides
+    explanation: N-gons are triangulated unpredictably at export. Measurable only from OBJ or from a hub summary; GLB is already triangulated.
+    fix: "On {object}: Select > Select All by Trait > Faces by Sides (greater than 4) and triangulate or re-topologise ({measured} n-gons, limit {limit})."
+    safe: false
+    limits:
+      max_ngons: {default: 0, verify_against_current_docs: false, heuristic: true}
+  - id: MESH_SCALE_RANGE
+    severity: error
+    title: Overall size outside a sane range
+    explanation: Bounding-box extent (in studs = export units times settings.studs_per_unit) is far too small or large to be intended. Usually a unit or scale mistake.
+    fix: "Check scene units and scale: largest dimension is {measured} studs, sane range is {limit}."
+    safe: false
+    limits:
+      min_dimension_studs: {default: 0.05, verify_against_current_docs: true, note: "DEFAULT sanity bound, not an official limit."}
+      max_dimension_studs: {default: 2048, verify_against_current_docs: true, note: "DEFAULT sanity bound, not an official limit."}
+  - id: MESH_BBOX_PROFILE
+    severity: warn
+    title: Bounding box outside the profile's expected size
+    explanation: Each profile states the size its assets normally have (largest dimension, in studs). Outside it the asset is probably mis-scaled for its role.
+    fix: "Rescale {object} (apply scale afterwards) so its largest dimension is within {limit} studs; it is {measured}."
+    safe: false
+    limits:
+      min_largest_dimension_studs: {default: 0.2, verify_against_current_docs: false, heuristic: true, note: "Profiles override."}
+      max_largest_dimension_studs: {default: 50, verify_against_current_docs: false, heuristic: true, note: "Profiles override."}

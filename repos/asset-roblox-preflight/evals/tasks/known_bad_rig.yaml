@@ -1,0 +1,87 @@
+# Rig cases, including the one-bone spin setup, plus rig measurements.
+- id: bad-spin-bone-name
+  title: A spin bone called Spin_Bone is an error and the safe fix renames it to spin
+  input: {op: preflight, file: bad_spin_bone_name, profile: tool}
+  checks:
+  - {type: has_rule, rule: RIG_SPIN_SETUP, severity: error, object: Spin_Bone}
+  - {type: finding_text, rule: RIG_SPIN_SETUP, text: Rename bone 'Spin_Bone' to 'spin'}
+  - {type: lacks_rule, rule: RIG_BONE_NAMING}
+  - type: rules_only
+    rules: [RIG_SPIN_SETUP]
+- id: bad-spin-missing
+  title: A drill with no spin bone at all is an error
+  input: {op: preflight, file: bad_spin_missing, profile: tool}
+  checks:
+  - {type: has_rule, rule: RIG_SPIN_SETUP, severity: error}
+  - {type: finding_text, rule: RIG_SPIN_SETUP, text: Add one bone named 'spin'}
+- id: bad-spin-wrong-parent
+  title: spin under another bone is not a direct child of root
+  input: {op: preflight, file: bad_spin_wrong_parent, profile: tool}
+  checks:
+  - {type: has_rule, rule: RIG_SPIN_SETUP}
+  - {type: finding_text, rule: RIG_SPIN_SETUP, text: direct child, field: limit}
+- id: bad-spin-blended
+  title: A spin bone that shares its vertices 50/50 with root is not rigid
+  input: {op: preflight, file: bad_spin_blended, profile: tool}
+  checks:
+  - {type: has_rule, rule: RIG_SPIN_SETUP}
+  - {type: finding_text, rule: RIG_SPIN_SETUP, text: 0.0% rigid, field: measured}
+- id: bad-rig-two-roots
+  title: Two root bones are an error
+  input: {op: preflight, file: bad_rig_two_roots, profile: tool}
+  checks:
+  - {type: has_rule, rule: RIG_ROOT_SINGLE, severity: error}
+  - {type: finding_value, rule: RIG_ROOT_SINGLE, value: 2, tol: 0}
+- id: bad-rig-too-many-bones
+  title: Ten bones exceed the tool default of eight
+  input: {op: preflight, file: bad_rig_too_many_bones, profile: tool}
+  checks:
+  - {type: has_rule, rule: RIG_BONE_COUNT}
+  - {type: finding_value, rule: RIG_BONE_COUNT, value: 10, tol: 0}
+  - {type: finding_value, rule: RIG_BONE_COUNT, value: 8, field: limit, tol: 0}
+- id: bad-rig-bone-count-project-override
+  title: synthetic-mining-tycoon raises the tool bone limit to 12, so ten bones pass there
+  input: {op: preflight, file: bad_rig_too_many_bones, profile: tool, project_id: synthetic-mining-tycoon}
+  checks:
+  - {type: lacks_rule, rule: RIG_BONE_COUNT}
+- id: bad-anim-clip-name-and-fps
+  title: A clip called Action at 12 fps breaks the name pattern and the frame rate list
+  input: {op: preflight, file: bad_anim_names_fps, profile: tool}
+  checks:
+  - {type: has_rule, rule: RIG_ANIM_NAMES, object: Action}
+  - {type: has_rule, rule: RIG_ANIM_FPS}
+  - {type: finding_value, rule: RIG_ANIM_FPS, value: 12, tol: 0.01}
+- id: bad-rig-in-prop
+  title: A rig in a prop is reported as unexpected and no rig rule runs
+  input: {op: preflight, file: good_tool_drill, profile: prop}
+  checks:
+  - {type: has_rule, rule: RIG_UNEXPECTED}
+  - {type: lacks_rule, rule: RIG_SPIN_SETUP}
+  - {type: lacks_rule, rule: RIG_ROOT_SINGLE}
+- id: bad-rig-tool-check-scope
+  title: check_rig on a rigged tool reports only rig rules
+  input: {op: preflight, file: bad_spin_bone_name, profile: tool, tool: check_rig}
+  checks:
+  - {type: has_rule, rule: RIG_SPIN_SETUP}
+  - type: equals
+    path: scope
+    value: [rig]
+  - {type: is_none, path: ready}
+- id: good-rig-accessory-no-rig
+  title: An accessory with no rig is fine (rig not required by default)
+  input: {op: preflight, file: good_accessory_hat, profile: character_accessory, tool: check_rig}
+  checks:
+  - {type: equals, path: result, value: pass}
+  - type: equals
+    path: findings
+    value: []
+- id: measure-drill-rig
+  title: 'The drill''s bones and clip are read from the GLB: root and spin, a clip called spin at 30 fps'
+  input: {op: measure, file: good_tool_drill}
+  checks:
+  - type: equals
+    path: bones
+    value:
+    - [root, spin]
+  - {type: equals, path: animations.0.name, value: spin}
+  - {type: approx, path: animations.0.fps, value: 30, tol: 0.01}

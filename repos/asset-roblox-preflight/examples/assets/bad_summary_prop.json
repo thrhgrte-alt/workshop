@@ -1,0 +1,72 @@
+{
+ "format": "preflight-summary/1",
+ "source": "asset_validate (hand-written synthetic example)",
+ "file": "crate.fbx",
+ "up_axis": "Z",
+ "unit_scale": 1.0,
+ "objects": [
+  {
+   "name": "Crate One",
+   "type": "MESH",
+   "parent": null,
+   "location": [
+    0,
+    0,
+    0
+   ],
+   "rotation_euler_deg": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    2,
+    2,
+    2
+   ],
+   "dimensions": [
+    1,
+    1,
+    1
+   ],
+   "triangles": 14000,
+   "vertices": 9000,
+   "ngons": 6,
+   "quads": 100,
+   "loose_vertices": 4,
+   "degenerate_faces": 0,
+   "non_manifold_edges": 8,
+   "flipped_normal_faces": 300,
+   "uv_layers": 1,
+   "uv_out_of_range_fraction": 0.2,
+   "uv_overlap_ratio": 0.3,
+   "uv_coverage": 0.1,
+   "texel_density_spread": 9.0,
+   "origin_offset": [
+    0,
+    0.5,
+    0
+   ],
+   "materials": [
+    "crate_mat"
+   ]
+  }
+ ],
+ "materials": [
+  {
+   "name": "crate_mat",
+   "textures": [
+    {
+     "slot": "base_color",
+     "path": "textures/summary_bad_albedo.png",
+     "colorspace": "sRGB"
+    },
+    {
+     "slot": "normal",
+     "path": "textures/summary_bad_normal.png",
+     "colorspace": "sRGB"
+    }
+   ]
+  }
+ ]
+}

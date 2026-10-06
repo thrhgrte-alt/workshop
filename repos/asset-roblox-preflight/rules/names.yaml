@@ -1,0 +1,50 @@
+category: names
+rules:
+  - id: NAME_DUPLICATE
+    severity: error
+    title: Duplicate object or bone names
+    explanation: Two objects (or bones) with the same name cannot be told apart after import and break scripts that look parts up by name.
+    fix: "Rename the duplicates of '{object}' so every name is unique ({measured} copies)."
+    safe: true
+  - id: NAME_DUPLICATE_MATERIAL
+    severity: warn
+    title: Duplicate material names
+    explanation: Materials sharing a name usually mean accidental copies that should be one material.
+    fix: "Merge or rename the materials called '{object}' ({measured} copies)."
+    safe: false
+  - id: NAME_INVALID_CHARS
+    severity: warn
+    title: Spaces or odd characters in a name
+    explanation: Names should use letters, digits, underscore, dot and dash only, so they survive export, import and scripting without escaping.
+    fix: "Rename '{object}' to '{limit}' (no spaces or special characters)."
+    safe: true
+    limits:
+      allowed_pattern: {default: "^[A-Za-z0-9_.-]+$", verify_against_current_docs: false, heuristic: true}
+  - id: NAME_BLENDER_SUFFIX
+    severity: warn
+    title: Blender duplicate suffix (.001) left in a name
+    explanation: A trailing .001 is what Blender adds to a copy. It almost always means a leftover duplicate, not a deliberate name.
+    fix: "Rename '{object}' to '{limit}' or delete the duplicate it came from."
+    safe: true
+    limits:
+      suffix_pattern: {default: "\\.\\d{3,}$", verify_against_current_docs: false, heuristic: true}
+  - id: NAME_SCHEME
+    severity: warn
+    title: Name does not follow the naming scheme in style/
+    explanation: "The naming scheme comes from style/style.yaml (a clearly labelled STARTER scheme until you replace it): visible meshes <prefix>_<snake_case>, collision proxies <mesh>_col."
+    fix: "Rename '{object}' to match {limit}."
+    safe: false
+  - id: NAME_UNNAMED
+    severity: warn
+    title: Object has no name
+    explanation: The exporter wrote a node without a name, so the importer will invent one.
+    fix: "Give '{object}' a real name in Blender before export."
+    safe: false
+  - id: NAME_TOO_LONG
+    severity: info
+    title: Very long name
+    explanation: Long names are hard to read and may be truncated by tools.
+    fix: "Shorten '{object}' ({measured} characters, limit {limit})."
+    safe: false
+    limits:
+      max_length: {default: 60, verify_against_current_docs: true, note: "DEFAULT chosen by this tool."}

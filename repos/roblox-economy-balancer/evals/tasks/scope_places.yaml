@@ -1,0 +1,228 @@
+# Projects and places (synthetic registry projects.yaml: demo_mine/main, demo_mine/hardcore, demo_tycoon/main). Every tool refuses without a resolved scope,
+# nothing learned in one place leaks to another unless marked global, comparing across places is allowed and applying a change across places is not.
+- id: scope-missing-both-is-refused
+  input: {op: tools_seq, steps: [{tool: check_economy, args: {}}]}
+  checks: [{type: step_error_contains, step: 0, text: "missing project_id and place_id"}, {type: step_error_contains, step: 0, text: "demo_mine/main"}]
+- id: scope-missing-place-is-refused
+  input: {op: tools_seq, steps: [{tool: check_economy, args: {project_id: demo_mine}}]}
+  checks: [{type: step_error_contains, step: 0, text: "missing place_id"}]
+- id: scope-missing-project-is-refused
+  input: {op: tools_seq, steps: [{tool: time_to_upgrade_table, args: {place_id: main}}]}
+  checks: [{type: step_error_contains, step: 0, text: "missing project_id"}]
+- id: scope-unknown-place-is-refused-not-guessed
+  input: {op: tools_seq, steps: [{tool: check_economy, args: {project_id: demo_mine, place_id: nowhere}}]}
+  checks: [{type: step_error_contains, step: 0, text: "unknown place"}, {type: step_error_contains, step: 0, text: "will not guess"}]
+- id: scope-unknown-project-is-refused
+  input: {op: tools_seq, steps: [{tool: check_economy, args: {project_id: ghost_game, place_id: main}}]}
+  checks: [{type: step_error_contains, step: 0, text: "known projects"}]
+- id: scope-path-tricks-are-just-unknown-places
+  input: {op: tools_seq, steps: [{tool: record_run, args: {request: x, project_id: "../../etc", place_id: passwd}}]}
+  checks: [{type: step_error_contains, step: 0, text: "unknown place"}, {type: list_empty, path: wrote}]
+- id: scope-every-tool-refuses-without-scope
+  title: "all tools in the list (read and write) refuse when project_id and place_id are missing"
+  input: {op: refuse_all}
+  checks: [{type: list_empty, path: not_refused}, {type: greater, path: checked, than: 20}]
+- id: scope-every-report-states-project-and-place
+  title: "every read-only tool's result names demo_mine/main and starts with a one-line summary"
+  input: {op: scope_stated}
+  checks: [{type: list_empty, path: missing}]
+- id: scope-per-place-bands
+  title: "the early band maximum is 15 in main (global placeholder) and 30 in hardcore (its own bands.yaml)"
+  input:
+    op: tools_seq
+    steps:
+      - {tool: get_style_brief, args: {project_id: demo_mine, place_id: main}}
+      - {tool: get_style_brief, args: {project_id: demo_mine, place_id: hardcore}}
+  checks: [{type: equals, path: steps.0.result.bands.0.max_minutes, value: 15}, {type: equals, path: steps.1.result.bands.0.max_minutes, value: 30}]
+- id: scope-same-spec-different-verdict-per-place
+  title: "the same balanced economy passes main's bands and fails hardcore's slower bands"
+  input:
+    op: tools_seq
+    steps:
+      - {tool: check_economy, args: {project_id: demo_mine, place_id: main}}
+      - {tool: check_economy, args: {project_id: demo_mine, place_id: hardcore}}
+  checks: [{type: equals, path: steps.0.result.verdict, value: pass}, {type: equals, path: steps.1.result.verdict, value: fail}, {type: equals, path: steps.1.result.place_id, value: hardcore}]
+- id: scope-each-place-has-its-own-spec
+  title: "demo_tycoon/main is the runaway toy: it fails with runaway_inflation while demo_mine/main passes"
+  input:
+    op: tools_seq
+    steps:
+      - {tool: check_economy, args: {project_id: demo_tycoon, place_id: main, detail: true}}
+  checks: [{type: equals, path: steps.0.result.verdict, value: fail}, {type: has_finding, code_or_text: runaway_inflation, path: steps.0.result.findings}]
+- id: scope-notes-do-not-leak-between-places
+  title: "two 'tier 4 too slow' reports saved for demo_mine/main drive a band suggestion there and none in hardcore"
+  input:
+    op: tools_seq
+    steps:
+      - {tool: record_run, args: {request: "playtest: tier 4 felt too slow", project_id: demo_mine, place_id: main}}
+      - {tool: record_decision, args: {run_id: "$ref:steps.0.result.run_id", decision: revise, project_id: demo_mine, place_id: main, reason: too slow, corrections: [{dimension: pacing, tier: 4, felt: too_slow, note: tier 4 felt too slow}]}}
+      - {tool: record_run, args: {request: "playtest again: tier 4 felt too slow", project_id: demo_mine, place_id: main}}
+      - {tool: record_decision, args: {run_id: "$ref:steps.2.result.run_id", decision: revise, project_id: demo_mine, place_id: main, reason: too slow, corrections: [{dimension: pacing, tier: 4, felt: too_slow, note: tier 4 felt too slow}]}}
+      - {tool: suggest_band_adjustments, args: {project_id: demo_mine, place_id: main}}
+      - {tool: suggest_band_adjustments, args: {project_id: demo_mine, place_id: hardcore}}
+      - {tool: find_past_corrections, args: {request: "tier 4 too slow", project_id: demo_mine, place_id: hardcore}}
+      - {tool: find_past_corrections, args: {request: "tier 4 too slow", project_id: demo_mine, place_id: main}}
+  checks:
+    - {type: equals, path: steps.4.result.evidence.pacing_reports, value: 2}
+    - {type: equals, path: steps.4.result.suggestions.0.type, value: lower_band_max}
+    - {type: equals, path: steps.4.result.suggestions.0.suggested, value: 16}
+    - {type: equals, path: steps.5.result.evidence.pacing_reports, value: 0}
+    - {type: equals, path: steps.5.result.suggestions, value: []}
+    - {type: equals, path: steps.6.result.corrections, value: []}
+    - {type: text_contains, path: steps.7.result.corrections.0.reason, text: too slow}
+- id: scope-feedback-files-live-in-the-place-folder
+  input:
+    op: tools_seq
+    steps:
+      - {tool: record_run, args: {request: "note", project_id: demo_mine, place_id: main}}
+  checks: [{type: list_contains, path: wrote, items: [projects/demo_mine/main/feedback/runs.jsonl]}, {type: list_excludes, path: wrote, items: [projects/demo_mine/hardcore/feedback/runs.jsonl]}]
+- id: scope-global-flag-shares-a-note-with-every-place
+  title: "a note saved with is_global reaches hardcore's suggestions and corrections; the same note without the flag does not"
+  input:
+    op: tools_seq
+    steps:
+      - {tool: record_run, args: {request: "playtest: tier 4 felt too slow", project_id: demo_mine, place_id: main, is_global: true}}
+      - {tool: record_decision, args: {run_id: "$ref:steps.0.result.run_id", decision: revise, project_id: demo_mine, place_id: main, is_global: true, reason: too slow, corrections: [{dimension: pacing, tier: 4, felt: too_slow, note: tier 4 felt too slow}]}}
+      - {tool: suggest_band_adjustments, args: {project_id: demo_mine, place_id: hardcore}}
+      - {tool: find_past_corrections, args: {request: "tier 4 too slow", project_id: demo_tycoon, place_id: main}}
+  checks:
+    - {type: equals, path: steps.2.result.evidence.pacing_reports, value: 1}
+    - {type: equals, path: steps.3.result.corrections.0.scope, value: global}
+    - {type: list_contains, path: wrote, items: [projects/_global/_global/feedback/runs.jsonl]}
+    - {type: list_excludes, path: wrote, items: [projects/demo_mine/main/feedback/runs.jsonl]}
+- id: scope-global-can-be-switched-off-when-reading
+  input:
+    op: tools_seq
+    steps:
+      - {tool: record_run, args: {request: "tier 4 felt too slow", project_id: demo_mine, place_id: main, is_global: true}}
+      - {tool: record_decision, args: {run_id: "$ref:steps.0.result.run_id", decision: revise, project_id: demo_mine, place_id: main, is_global: true, reason: too slow, corrections: [{dimension: pacing, tier: 4, felt: too_slow, note: tier 4 felt too slow}]}}
+      - {tool: find_past_corrections, args: {request: "tier 4 too slow", project_id: demo_mine, place_id: hardcore, include_global: false}}
+  checks: [{type: equals, path: steps.2.result.corrections, value: []}]
+- id: scope-compare-across-places-is-allowed
+  input:
+    op: tools_seq
+    steps:
+      - {tool: compare_specs, args: {a_project_id: demo_mine, a_place_id: main, b_project_id: demo_tycoon, b_place_id: main}}
+  checks: [{type: step_ok, step: 0}, {type: text_contains, path: steps.0.result.summary, text: no change can be applied across places}, {type: equals, path: steps.0.result.a.place_id, value: main}, {type: equals, path: steps.0.result.b.project_id, value: demo_tycoon}]
+- id: scope-compare-same-spec-different-bands-shows-different-findings
+  input:
+    op: tools_seq
+    steps:
+      - {tool: compare_specs, args: {a_project_id: demo_mine, a_place_id: main, b_project_id: demo_mine, b_place_id: hardcore}}
+  checks: [{type: equals, path: steps.0.result.value_changes, value: []}]
+- id: scope-rebalance-takes-one-place-only
+  title: "propose_rebalance and export_values_luau have no second-place arguments: a cross-place apply is refused as an unknown argument"
+  input:
+    op: tools_seq
+    steps:
+      - {tool: propose_rebalance, args: {project_id: demo_mine, place_id: main, b_project_id: demo_tycoon, b_place_id: main}}
+      - {tool: export_values_luau, args: {project_id: demo_mine, place_id: main, a_place_id: hardcore}}
+  checks: [{type: step_error_contains, step: 0, text: unknown argument}, {type: step_error_contains, step: 1, text: unknown argument}]
+- id: scope-rebalance-reports-its-place
+  input:
+    op: tools_seq
+    steps:
+      - {tool: propose_rebalance, args: {project_id: demo_mine, place_id: hardcore, finding_code: under_band}}
+  checks: [{type: equals, path: steps.0.result.project_id, value: demo_mine}, {type: equals, path: steps.0.result.place_id, value: hardcore}, {type: equals, path: steps.0.result.dry_run, value: true}, {type: list_empty, path: wrote}]
+- id: scope-rebalance-write-goes-to-a-new-file-in-the-place-folder
+  input:
+    op: tools_seq
+    steps:
+      - {tool: propose_rebalance, args: {project_id: demo_mine, place_id: hardcore, finding_code: under_band, dry_run: false}}
+  checks: [{type: text_contains, path: wrote.0, text: "projects/demo_mine/hardcore/output/rebalance/"}, {type: equals, path: steps.0.result.locked_values_untouched, value: true}]
+- id: scope-whatif-rebalance-on-the-wall-economy
+  title: "an inline what-if spec still needs a place; the wall toy's drill_4 cost is proposed down to 1920"
+  input:
+    op: tools_seq
+    steps:
+      - {tool: propose_rebalance, args: {project_id: demo_mine, place_id: main, spec: {"$econ": wall}, finding_code: wall, upgrade: drill_4}}
+  checks: [{type: equals, path: steps.0.result.changes.0.path, value: upgrades.drill_4.cost}, {type: equals, path: steps.0.result.changes.0.after, value: 1920}, {type: equals, path: steps.0.result.locked_values_untouched, value: true}]
+- id: scope-whatif-rebalance-respects-locks
+  input:
+    op: tools_seq
+    steps:
+      - {tool: propose_rebalance, args: {project_id: demo_mine, place_id: main, spec: {"$econ": wall, mutations: [{op: lock, pattern: "upgrades.drill_4.cost"}]}, finding_code: wall, upgrade: drill_4}}
+  checks: [{type: equals, path: steps.0.result.locked_skipped.0, value: upgrades.drill_4.cost}]
+- id: scope-import-refused-when-another-place-is-open
+  input:
+    op: tools_seq
+    steps:
+      - {tool: emit_import_luau, args: {project_id: demo_mine, place_id: main, vendor_path: ReplicatedStorage.Shop, studios: [{name: "Demo Mine Hardcore (SYNTHETIC)", place_id: 0, studio_id: s2}]}}
+  checks: [{type: step_error_contains, step: 0, text: "are not place 'demo_mine/main'"}, {type: step_error_contains, step: 0, text: "nothing was generated"}]
+- id: scope-import-refused-without-studio-list
+  input: {op: tools_seq, steps: [{tool: emit_import_luau, args: {project_id: demo_mine, place_id: main, vendor_path: ReplicatedStorage.Shop}}]}
+  checks: [{type: step_error_contains, step: 0, text: list_roblox_studios}]
+- id: scope-import-refused-with-an-empty-studio-list
+  input: {op: tools_seq, steps: [{tool: emit_import_luau, args: {project_id: demo_mine, place_id: main, vendor_path: ReplicatedStorage.Shop, studios: []}}]}
+  checks: [{type: step_error_contains, step: 0, text: "open place"}]
+- id: scope-import-accepted-for-the-open-place-by-name
+  input:
+    op: tools_seq
+    steps:
+      - {tool: emit_import_luau, args: {project_id: demo_mine, place_id: main, vendor_path: ReplicatedStorage.Shop, studios: [{name: "Other", place_id: 5, studio_id: s0}, {name: "demo mine main (synthetic)", place_id: 0, studio_id: s1}]}}
+  checks: [{type: text_contains, path: steps.0.result.luau, text: 'EXPECTED_LABEL = "demo_mine/main"'}, {type: equals, path: steps.0.result.studio.studio_id, value: s1}, {type: equals, path: steps.0.result.studio.matched_by, value: name}, {type: list_empty, path: steps.0.result.lint}]
+- id: scope-import-accepted-for-the-open-place-by-place-id
+  input:
+    op: tools_seq
+    steps:
+      - {tool: emit_import_luau, args: {project_id: demo_tycoon, place_id: main, ores_path: ReplicatedStorage.Ores, studios: [{placeName: "Renamed in Studio", placeId: 9000000001, id: s9}]}}
+  checks: [{type: equals, path: steps.0.result.studio.matched_by, value: place_id}, {type: text_contains, path: steps.0.result.luau, text: "EXPECTED_PLACE_ID = 9000000001"}]
+- id: scope-import-refused-when-two-open-instances-match
+  input:
+    op: tools_seq
+    steps:
+      - {tool: emit_import_luau, args: {project_id: demo_mine, place_id: main, vendor_path: ReplicatedStorage.Shop, studios: [{name: "Demo Mine Main (SYNTHETIC)", studio_id: a}, {name: "Demo Mine Main (SYNTHETIC)", studio_id: b}]}}
+  checks: [{type: step_error_contains, step: 0, text: "unambiguous"}]
+- id: scope-export-refused-when-another-place-is-open
+  input:
+    op: tools_seq
+    steps:
+      - {tool: export_values_luau, args: {project_id: demo_mine, place_id: main, all_values: true, studios: [{name: "Demo Tycoon (SYNTHETIC)", place_id: 9000000001, studio_id: t}]}}
+  checks: [{type: step_error_contains, step: 0, text: "are not place 'demo_mine/main'"}]
+- id: scope-export-embeds-and-checks-the-place
+  title: "the emitted Luau names the place, refuses elsewhere, creates a NEW module, and is written under the place's output folder"
+  input:
+    op: tools_seq
+    steps:
+      - {tool: export_values_luau, args: {project_id: demo_mine, place_id: main, all_values: true, verify_on_mock: true, dry_run: false, studios: [{name: "Demo Mine Main (SYNTHETIC)", place_id: 0, studio_id: s1}]}}
+  checks:
+    - {type: text_contains, path: steps.0.result.luau, text: 'EXPECTED_LABEL = "demo_mine/main"'}
+    - {type: text_contains, path: steps.0.result.luau, text: wrong place}
+    - {type: text_contains, path: steps.0.result.module_source, text: 'place = "demo_mine/main"'}
+    - {type: list_empty, path: steps.0.result.lint}
+    - {type: text_contains, path: wrote.0, text: "projects/demo_mine/main/output/export/"}
+- id: scope-export-dry-run-writes-nothing
+  input:
+    op: tools_seq
+    steps:
+      - {tool: export_values_luau, args: {project_id: demo_mine, place_id: main, all_values: true, studios: [{name: "Demo Mine Main (SYNTHETIC)", studio_id: s1}]}}
+  checks: [{type: equals, path: steps.0.result.dry_run, value: true}, {type: list_empty, path: wrote}]
+- id: scope-saved-versions-are-per-place
+  input:
+    op: tools_seq
+    steps:
+      - {tool: save_spec_version, args: {name: v1, project_id: demo_mine, place_id: main, dry_run: false}}
+      - {tool: check_economy, args: {project_id: demo_mine, place_id: main, spec_name: v1}}
+      - {tool: check_economy, args: {project_id: demo_mine, place_id: hardcore, spec_name: v1}}
+  checks: [{type: equals, path: steps.0.result.saved.version, value: 1}, {type: step_ok, step: 1}, {type: step_error_contains, step: 2, text: "versions are per place"}]
+- id: scope-dry-run-writes-nothing
+  input:
+    op: tools_seq
+    steps:
+      - {tool: save_spec_version, args: {name: v1, project_id: demo_mine, place_id: main}}
+      - {tool: propose_rebalance, args: {project_id: demo_mine, place_id: hardcore, finding_code: under_band}}
+      - {tool: plot_curves, args: {project_id: demo_mine, place_id: main}}
+  checks: [{type: equals, path: steps.0.result.dry_run, value: true}, {type: text_contains, path: wrote.0, text: "output/plots/"}, {type: equals, path: n_errors, value: 0}]
+- id: scope-writes-state-not-applied-to-the-spec-file
+  title: "no tool writes economy.yaml: the only files created are versions, feedback, plots, proposals and exports in the place workspace"
+  input:
+    op: tools_seq
+    steps:
+      - {tool: propose_rebalance, args: {project_id: demo_mine, place_id: hardcore, finding_code: under_band, dry_run: false}}
+  checks: [{type: list_excludes, path: wrote, items: [economy.yaml, projects/demo_mine/hardcore/economy.yaml]}]
+- id: scope-normalise-import-names-the-place
+  input:
+    op: tools_seq
+    steps:
+      - {tool: normalise_import, args: {project_id: demo_tycoon, place_id: main, import_json: {format: econbal-import/1, containers: {ores: {items: [{name: Copper, fields: {Value: 5, ItemsPerMinute: 2}}]}, vendor_items: {items: [{name: Drill, fields: {Price: 100, Tier: 1, Add: 5}}]}}}}}
+  checks: [{type: equals, path: steps.0.result.place_id, value: main}, {type: equals, path: steps.0.result.ok, value: true}, {type: text_contains, path: steps.0.result.summary, text: draft spec}]

@@ -1,0 +1,45 @@
+# AGENTS.md - roblox-economy-balancer
+
+A toolkit that lets an AI agent model one Roblox place's economy and progression (ore values, tool tiers, vendor prices, upgrade costs, rebirths, gamepass boosts), find walls, cliffs, runaway currency, dominant and dead options,
+propose the smallest fix, and emit reviewable Luau. It does not retrain any model and never talks to Studio.
+
+## Setup and commands
+
+```bash
+python -m venv .venv && . .venv/bin/activate
+pip install -e ".[dev]"                  # Pillow, lupa (Luau mock), pytest
+python -m econbal doctor                 # what works on this machine right now
+python -m econbal places                 # the registry (projects.yaml)
+python -m econbal check --project-id demo_mine --place-id main     # verdict + findings for one place
+python -m econbal table --project-id demo_mine --place-id main
+python -m econbal plot  --project-id demo_mine --place-id main --out /tmp/c.png
+python -m econbal eval run --label x     # compare: eval compare baseline x
+python -m econbal serve                  # MCP server over stdio (ECONBAL_DISABLE_GROUPS=rare leaves out the rarely used tools)
+python -m econbal call                   # list tools; `call <tool> --json '{...}'` runs one without an MCP client
+python -m pytest
+python scripts/make_examples.py          # regenerate the synthetic toy economies, projects/, plots, library
+python scripts/build_schema.py           # library/manifest.schema.json
+python scripts/sync_agent_files.py       # regenerate CLAUDE.md, GEMINI.md, copilot file, skill mirrors
+```
+
+## Operating rules for an AI agent using this repo
+
+1. Load `skills/roblox-economy-balancer-workflow/SKILL.md` and follow it. Keep context small: results are short on purpose, ask for `detail=true` only when needed.
+2. **Name the project and place on every call.** Without both, a tool refuses. Never guess a place; never reuse one place's notes or numbers for another unless a record is marked global. State the project and place in your report.
+3. **The simulator does all the arithmetic.** Every number you state (minutes, costs, ratios, days) is copied from a tool result. Never calculate in your head, never round a number the tool did not round.
+4. **The target pacing is a placeholder** until the user supplies theirs; archetype assumptions are assumptions, not player data. Say so whenever you judge pacing. The simulator predicts relative pacing, not retention or revenue.
+5. Start with `check_economy`; drill into one finding at a time. Choose targets and explain trade-offs; let `propose_rebalance` find the numbers. It changes the smallest set of values (1-2) that fixes ONE finding and **never changes a locked value**. If it finds nothing it says why; do not hand-edit around a lock.
+6. This server **does not connect to Studio**. To read a real game: `emit_import_luau` (pass `studios` from the hub's `list_roblox_studios`; it refuses unless the open place is the named one) -> Studio's `execute_luau` -> `normalise_import` -> review every assumption. To apply values: `export_values_luau` (new config module; never overwrites) -> review -> run it in the matching place. Never claim anything ran in Studio without a Studio report.
+7. Every write is a dry run first (`dry_run=true`). Nothing publishes, saves a place or overwrites a config. A rebalance or export applies to ONE place; comparing places (`compare_specs`) is analysis only.
+8. Record the user's verdicts with `record_decision` using their words and a correction dimension from `style/style.yaml` (`pacing` with a `tier` and `felt: too_slow|too_fast` for playtest notes). Use `suggest_band_adjustments` before touching bands. Promote results only with a yes. Mark a record `is_global` only when the user says it applies to every place.
+9. Subjective judgments (does the pacing match the design intent; are the bands and archetypes right) are the user's. Report what the tools measured; leave the rest as open questions.
+
+## Conventions for editing this repo
+
+- Python 3.10+. Pillow only in `domain/plot.py`; `lupa` only in `domain/mock_luau.py`.
+- `econbal/core/` is vendored from the suite kit: do not edit it. **Import shared machinery only through `econbal/guide_adapter.py`** (a test enforces this); swapping in the real guide-core means editing that file only.
+- Tool functions are annotated `-> dict[str, Any]`, raise `ValueError` with an actionable message, take `project_id`/`place_id`, put a one-line `summary` first, keep descriptions short, and start `[rare]` descriptions with `[rare]`.
+- Judgments are data: thresholds in `style/style.yaml`, severities and wording in `rules/findings.yaml`. Add a finding by adding a rule there and a check in `domain/analysis.py`, plus an eval.
+- Generated Luau stays plain-Lua compatible (the mock runs it), injection-safe (ids, names and paths are validated) and lint-clean.
+- New behaviour needs an eval task with a hand-computed or toy expectation, and the budget evals (`evals/tasks/budgets.yaml`) must still pass; if output legitimately grows, raise the budget in the same commit and say why.
+- After editing `AGENTS.md` or `skills/`, run `python scripts/sync_agent_files.py`; a test fails on drift. After editing the toy economies or the registry, run `python scripts/make_examples.py` and `python -m econbal eval run --label baseline`.

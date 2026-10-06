@@ -1,0 +1,203 @@
+# Known-bad UV, texture, material, name and limit cases that must be caught; tool scope and limit behaviour.
+- id: bad-texture-4k
+  title: A real 4096x4096 albedo is oversize and adds a large texture-memory estimate
+  input: {op: preflight, file: bad_texture_4k, profile: prop}
+  checks:
+  - {type: has_rule, rule: TEX_OVERSIZE, severity: error}
+  - {type: finding_text, rule: TEX_OVERSIZE, text: 4096x4096, field: measured}
+  - {type: has_rule, rule: UPL_TEXTURE_MEMORY}
+- id: bad-texture-4k-under-obby
+  title: The synthetic-obby project lowers the texture limit to 1024, so even a 1024-class limit applies there
+  input: {op: preflight, file: good_prop_crate, profile: prop, project_id: synthetic-obby}
+  checks:
+  - {type: lacks_rule, rule: TEX_OVERSIZE}
+- id: bad-texture-non-pot
+  title: A 300x200 texture is not a power of two
+  input: {op: preflight, file: bad_texture_non_pot, profile: prop}
+  checks:
+  - {type: has_rule, rule: TEX_NON_POT, severity: warn}
+  - {type: finding_text, rule: TEX_NON_POT, text: 300x200, field: measured}
+- id: bad-missing-texture
+  title: A glTF pointing at a file that is not there is an error naming the path
+  input: {op: preflight, file: bad_missing_texture, profile: prop}
+  checks:
+  - {type: has_rule, rule: TEX_MISSING_FILE, severity: error}
+  - {type: finding_text, rule: TEX_MISSING_FILE, text: textures/missing_albedo.png, field: measured}
+  - {type: equals, path: ready, value: false}
+- id: bad-absolute-texture-path
+  title: An absolute C:/ texture path is non-portable and never read
+  input: {op: preflight, file: bad_absolute_texture_path, profile: prop}
+  checks:
+  - {type: has_rule, rule: TEX_UNSAFE_PATH, severity: error}
+  - {type: lacks_rule, rule: TEX_MISSING_FILE}
+- id: bad-obj-missing-texture
+  title: An OBJ whose MTL map is missing is caught too
+  input: {op: preflight, file: bad_obj_missing_texture, profile: prop}
+  checks:
+  - {type: has_rule, rule: TEX_MISSING_FILE}
+- id: bad-normal-as-color
+  title: A flat normal map in the base colour slot is a colour-space/slot error
+  input: {op: preflight, file: bad_normal_as_color, profile: prop}
+  checks:
+  - {type: has_rule, rule: TEX_COLORSPACE, severity: error}
+  - type: rules_only
+    rules: [TEX_COLORSPACE]
+- id: bad-grey-normal
+  title: A one-channel normal map has too few channels and does not look like a normal map
+  input: {op: preflight, file: bad_grey_normal, profile: prop}
+  checks:
+  - {type: has_rule, rule: TEX_CHANNELS, severity: error}
+  - {type: has_rule, rule: TEX_SLOT_HEURISTIC, severity: warn}
+- id: bad-summary-normal-declared-srgb
+  title: A normal map declared sRGB by the summary is a colour-space error
+  input: {op: preflight, file: bad_summary_prop, profile: prop}
+  checks:
+  - {type: has_rule, rule: TEX_COLORSPACE, severity: error, object: textures/summary_bad_normal.png}
+- id: bad-many-materials
+  title: Six materials exceed the prop default of four
+  input: {op: preflight, file: bad_many_materials, profile: prop}
+  checks:
+  - {type: finding_value, rule: MAT_COUNT, value: 6, tol: 0}
+  - {type: finding_value, rule: MAT_COUNT, value: 4, field: limit, tol: 0}
+- id: bad-unused-material
+  title: An unused material is an info finding
+  input: {op: preflight, file: bad_unused_material, profile: prop}
+  checks:
+  - {type: has_rule, rule: MAT_UNUSED, severity: info}
+  - {type: equals, path: result, value: pass}
+- id: bad-no-uvs
+  title: A textured mesh without UVs is an error
+  input: {op: preflight, file: bad_no_uvs, profile: prop}
+  checks:
+  - {type: has_rule, rule: UV_MISSING, severity: error}
+- id: bad-no-uvs-untextured
+  title: An untextured mesh without UVs is only info
+  input: {op: preflight, file: bad_duplicate_names, profile: prop}
+  checks:
+  - {type: lacks_rule, rule: UV_MISSING}
+- id: bad-uv-out-of-range
+  title: 'UVs scaled to 0-2: 75% of vertices lie outside 0-1 (hand-computed from the 3x2 atlas)'
+  input: {op: preflight, file: bad_uv_out_of_range, profile: prop}
+  checks:
+  - {type: has_rule, rule: UV_OUT_OF_RANGE, severity: warn}
+- id: bad-uv-overlap
+  title: All six faces on one UV cell overlap almost completely and waste the square
+  input: {op: preflight, file: bad_uv_overlap, profile: prop}
+  checks:
+  - {type: has_rule, rule: UV_OVERLAP}
+  - {type: has_rule, rule: UV_WASTED_SPACE, severity: info}
+  - {type: at_least, path: findings.0.measured, value: 0}
+- id: bad-uv-density
+  title: One huge cell and five tiny ones make the texel density very uneven
+  input: {op: preflight, file: bad_uv_density, profile: prop}
+  checks:
+  - {type: has_rule, rule: UV_TEXEL_SPREAD, severity: warn}
+- id: bad-uv-zero-area
+  title: A face collapsed to a UV point is reported as 2 zero-area triangles
+  input: {op: preflight, file: bad_uv_zero_area, profile: prop}
+  checks:
+  - {type: finding_value, rule: UV_ZERO_AREA, value: 2, tol: 0}
+- id: surface-uvs-tool-is-partial
+  title: check_uvs only runs UV rules, never says ready_to_upload and reports its scope
+  input: {op: preflight, file: bad_uv_overlap, profile: prop, tool: check_uvs}
+  checks:
+  - {type: has_rule, rule: UV_OVERLAP}
+  - {type: is_none, path: ready}
+  - type: equals
+    path: scope
+    value: [uv]
+  - {type: lacks_rule, rule: MESH_TRI_BUDGET}
+- id: surface-textures-tool-scope
+  title: check_textures runs only material rules
+  input: {op: preflight, file: bad_texture_4k, profile: prop, tool: check_textures}
+  checks:
+  - {type: has_rule, rule: TEX_OVERSIZE}
+  - type: equals
+    path: scope
+    value: [materials]
+  - {type: lacks_rule, rule: UPL_TEXTURE_MEMORY}
+- id: surface-mesh-tool-scope
+  title: check_mesh runs mesh, transform and collision rules only
+  input: {op: preflight, file: bad_flipped_normals, profile: prop, tool: check_mesh}
+  checks:
+  - {type: has_rule, rule: MESH_FLIPPED_NORMALS}
+  - type: equals
+    path: scope
+    value: [collision, mesh, transform]
+  - {type: is_none, path: ready}
+- id: surface-names-tool-scope
+  title: check_names finds the duplicate, the space, the suffix and the scheme
+  input: {op: preflight, file: bad_names_spaces, profile: prop, tool: check_names}
+  checks:
+  - {type: has_rule, rule: NAME_INVALID_CHARS}
+  - {type: has_rule, rule: NAME_BLENDER_SUFFIX}
+  - {type: has_rule, rule: NAME_SCHEME}
+- id: surface-dup-names
+  title: Two objects named prop_crate are an error; two materials are a warning
+  input: {op: preflight, file: bad_duplicate_names, profile: prop}
+  checks:
+  - {type: has_rule, rule: NAME_DUPLICATE, severity: error, object: prop_crate}
+  - {type: has_rule, rule: NAME_DUPLICATE_MATERIAL, severity: warn}
+  - {type: finding_value, rule: NAME_DUPLICATE, value: 2, tol: 0}
+- id: surface-names-spaces
+  title: '''My Crate.001'' has a space, a Blender suffix and breaks the starter scheme'
+  input: {op: preflight, file: bad_names_spaces, profile: prop}
+  checks:
+  - {type: finding_text, rule: NAME_INVALID_CHARS, text: My_Crate, field: limit}
+  - {type: has_rule, rule: NAME_BLENDER_SUFFIX}
+  - {type: has_rule, rule: NAME_SCHEME}
+- id: surface-size-limit
+  title: UPL_FILE_SIZE fires when the limit is overridden for one call (no 10 MB fixture is stored)
+  input:
+    op: preflight
+    file: good_prop_crate
+    profile: prop
+    limit_overrides:
+      UPL_FILE_SIZE: {max_mb: 0.0001}
+  checks:
+  - {type: has_rule, rule: UPL_FILE_SIZE, severity: error}
+  - {type: equals, path: overrides_applied.0.source, value: call}
+- id: surface-size-warning
+  title: UPL_FILE_SIZE_LARGE warns below the hard limit
+  input:
+    op: preflight
+    file: good_prop_crate
+    profile: prop
+    limit_overrides:
+      UPL_FILE_SIZE_LARGE: {warn_mb: 0.0001}
+  checks:
+  - {type: has_rule, rule: UPL_FILE_SIZE_LARGE, severity: warn}
+  - {type: lacks_rule, rule: UPL_FILE_SIZE}
+- id: surface-call-limit-override
+  title: Raising the triangle budget for one call removes the finding and says so
+  input:
+    op: preflight
+    file: bad_too_many_tris
+    profile: prop
+    limit_overrides:
+      MESH_TRI_BUDGET: {max_triangles: 30000}
+  checks:
+  - {type: lacks_rule, rule: MESH_TRI_BUDGET}
+  - {type: equals, path: overrides_applied.0.value, value: 30000}
+- id: surface-collision-intent-absent
+  title: Declaring collision intentionally absent silences the missing-proxy warning
+  input: {op: preflight, file: bad_too_many_tris, profile: prop, collision_intent: absent}
+  checks:
+  - {type: lacks_rule, rule: COL_PROXY_MISSING}
+  - {type: equals, path: facts.collision_status, value: declared_absent}
+- id: surface-collision-intent-present
+  title: Saying collision is expected but absent is flagged even for a tiny asset
+  input: {op: preflight, file: good_prop_crate, profile: prop, collision_intent: present}
+  checks:
+  - {type: has_rule, rule: COL_PROXY_MISSING}
+- id: surface-profile-terrain-budget
+  title: The terrain_piece profile allows 19200 triangles but still wants a proxy above 5000
+  input: {op: preflight, file: bad_too_many_tris, profile: terrain_piece}
+  checks:
+  - {type: lacks_rule, rule: MESH_TRI_BUDGET}
+  - {type: has_rule, rule: COL_PROXY_MISSING}
+- id: surface-unknown-profile
+  title: An unknown profile is refused with the list
+  input: {op: preflight, file: good_prop_crate, profile: vehicle}
+  checks:
+  - {type: error_contains, text: unknown profile}

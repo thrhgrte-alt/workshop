@@ -1,0 +1,161 @@
+# Rebalancing (smallest change, locked values untouched), the generated Luau (lint, mock run, injection, place guard) and the importer (hand-written JSON).
+- id: rebalance-wall-smallest-single-change
+  title: "the wall at drill_4 is fixed by ONE value, its cost, to 1920 (-94 percent; 1920 is within 5x of drill_3's 400, so no cost cliff appears)"
+  input: {op: rebalance, econ: wall, code: wall, upgrade: drill_4, archetype: regular}
+  checks: [{type: equals, path: found, value: true}, {type: equals, path: paths, value: [upgrades.drill_4.cost]}, {type: equals, path: n_changes, value: 1}, {type: equals, path: changes.0.after, value: 1920}, {type: equals, path: changes.0.path, value: upgrades.drill_4.cost}, {type: equals, path: target_gone, value: true}, {type: equals, path: original_untouched, value: true}]
+- id: rebalance-result-is-clean
+  input: {op: rebalance, econ: wall, code: wall, upgrade: drill_4, archetype: regular}
+  checks: [{type: equals, path: verdict_after, value: pass}, {type: list_empty, path: new_codes}]
+- id: rebalance-never-changes-a-locked-value
+  title: "with drill_4.cost locked the proposal moves other numbers (or none) and the locked one is untouched"
+  input: {op: rebalance, econ: wall, code: wall, upgrade: drill_4, archetype: regular, mutations: [{op: lock, pattern: "upgrades.drill_4.cost"}]}
+  checks: [{type: list_contains, path: locked_skipped, items: [upgrades.drill_4.cost]}, {type: list_excludes, path: paths, items: [upgrades.drill_4.cost]}, {type: list_empty, path: locked_touched}]
+- id: rebalance-refuses-when-everything-relevant-is-locked
+  input: {op: rebalance, econ: wall, code: wall, upgrade: drill_4, archetype: regular, mutations: [{op: lock, pattern: "upgrades.*"}, {op: lock, pattern: "sources.*"}]}
+  checks: [{type: equals, path: found, value: false}, {type: list_contains, path: locked_skipped, items: [upgrades.drill_4.cost, sources.mining.per_minute]}, {type: text_contains, path: reason, text: locked}]
+- id: rebalance-entity-flag-locks-too
+  title: "locked: true on an upgrade locks its cost and effects"
+  input: {op: rebalance, econ: wall, code: wall, upgrade: drill_4, archetype: regular, mutations: [{op: set, path: upgrades.drill_4.cost, value: 32000}, {op: lock, pattern: upgrades.drill_4}]}
+  checks: [{type: list_contains, path: locked_skipped, items: [upgrades.drill_4.cost]}, {type: list_empty, path: locked_touched}]
+- id: rebalance-too-fast-step-raises-cost
+  title: "a step that is too quick (under band) is fixed by raising its cost, never by lowering it"
+  input: {op: rebalance, econ: balanced, mutations: [{op: set, path: upgrades.drill_2.cost, value: 20}], code: under_band, upgrade: drill_2, archetype: regular}
+  checks: [{type: equals, path: found, value: true}, {type: equals, path: n_changes, value: 1}, {type: greater, path: changes.0.after, than: 20}]
+- id: rebalance-dead-option
+  input: {op: rebalance, econ: wall, code: dead_option, upgrade: drill_4}
+  checks: [{type: equals, path: found, value: true}, {type: equals, path: target_gone, value: true}]
+- id: rebalance-dominant-option
+  title: "the dominant option is nerfed or its alternative buffed until the choice is real"
+  input: {op: rebalance, econ: dominant, code: dominant_option}
+  checks: [{type: equals, path: found, value: true}, {type: equals, path: target_gone, value: true}, {type: list_empty, path: locked_touched}]
+- id: rebalance-runaway-inflation
+  title: "honest limit - the toy has only 3 tiers, and no one or two value changes on the search grid keep it from running out inside 14 days, so NO proposal is made (rather than a bad one)"
+  input: {op: rebalance, econ: runaway, code: runaway_inflation}
+  checks: [{type: equals, path: found, value: false}, {type: text_contains, path: reason, text: no change}, {type: list_contains, path: considered, items: [upgrades.drill_3.cost]}]
+- id: rebalance-unfixable-code-is-refused
+  input: {op: rebalance, econ: balanced, code: not_reached}
+  checks: [{type: error_contains, text: no automatic rebalance}]
+- id: rebalance-without-a-finding-is-refused
+  input: {op: rebalance, econ: balanced}
+  checks: [{type: error_contains, text: no matching finding}]
+- id: luau-export-lints-clean-and-runs-on-the-mock
+  input: {op: export, econ: balanced}
+  checks: [{type: list_empty, path: lint}, {type: mock_ok_or_skipped}, {type: equals, path: creates_module, value: true}, {type: equals, path: refuses_overwrite, value: true}, {type: equals, path: has_place_guard, value: true}, {type: equals, path: deterministic, value: true}]
+- id: luau-export-changed-values-only
+  title: "against the balanced baseline the wall economy differs in exactly one value"
+  input: {op: export, econ: wall, baseline: balanced}
+  checks: [{type: equals, path: values, value: 1}, {type: equals, path: has_previous, value: true}, {type: mock_ok_or_skipped}]
+- id: luau-export-never-overwrites
+  input: {op: export, econ: balanced, pre_existing: true}
+  checks: [{type: equals, path: mock, value: error}, {type: text_contains, path: mock_error, text: refusing to overwrite}]
+- id: luau-export-refuses-in-the-wrong-place
+  title: "the script embeds the place and stops when another place is open"
+  input: {op: export, econ: balanced, open_name: Some Other Place}
+  checks: [{type: equals, path: mock, value: error}, {type: text_contains, path: mock_error, text: wrong place}]
+- id: luau-export-rejects-injection-in-the-module-name
+  input: {op: export, econ: balanced, config_name: "X\"]==]; os.execute('x') --"}
+  checks: [{type: error_contains, text: config_name}]
+- id: luau-export-rejects-injection-in-the-parent-path
+  input: {op: export, econ: balanced, parent_path: "ReplicatedStorage.Config; game:Destroy()"}
+  checks: [{type: error_contains, text: parent_path}]
+- id: luau-lint-rejects-loadstring
+  input: {op: luau_lint, code: "local f = loadstring('x')"}
+  checks: [{type: list_contains, path: lint, items: ["forbidden token 'loadstring'"]}]
+- id: luau-lint-rejects-publishing-and-network
+  input: {op: luau_lint, code: "game:GetService('HttpService'):GetAsync('http://x') MarketplaceService:Publish()"}
+  checks: [{type: list_contains, path: lint, items: ["forbidden token 'GetAsync'", "forbidden token 'MarketplaceService'", "forbidden token 'Publish'"]}]
+- id: luau-lint-accepts-json-encode
+  input: {op: luau_lint, code: "local j = game:GetService(\"HttpService\"):JSONEncode({a = 1})"}
+  checks: [{type: list_empty, path: lint}]
+- id: luau-lint-rejects-destroy
+  input: {op: luau_lint, code: "x:Destroy()"}
+  checks: [{type: list_contains, path: lint, items: ["forbidden token ':Destroy('"]}]
+- id: import-luau-is-read-only
+  input: {op: import_text, vendor_path: ReplicatedStorage.Shop.Items, tools_path: ReplicatedStorage.Tools, ores_path: ReplicatedStorage.Ores}
+  checks: [{type: list_empty, path: lint}, {type: equals, path: read_only, value: true}, {type: equals, path: uses_json_encode, value: true}]
+- id: import-luau-needs-a-container
+  input: {op: import_text}
+  checks: [{type: error_contains, text: at least one}]
+- id: import-luau-rejects-injection-in-paths
+  input: {op: import_text, vendor_path: "ReplicatedStorage.x\"; game:Destroy() --"}
+  checks: [{type: error_contains, text: dotted path}]
+- id: import-luau-dump-on-the-mock-round-trips
+  title: "a mock Shop folder dumped by the generated script normalises into an upgrade with cost 150"
+  input:
+    op: import_roundtrip
+    vendor_path: ReplicatedStorage.Shop.Items
+    ores_path: ReplicatedStorage.Ores
+    tree:
+      - {parent: ReplicatedStorage.Shop.Items, class: Configuration, name: Drill2, attributes: {Price: 150, Tier: 1, Mult: 1.5}}
+      - {parent: ReplicatedStorage.Ores, class: Configuration, name: Copper, attributes: {Value: 5, ItemsPerMinute: 2}}
+  checks: [{type: mock_ok_or_skipped}, {type: equals, path: costs.Drill2, value: 150}, {type: equals, path: sources, value: [ore_Copper]}]
+- id: import-luau-refuses-in-the-wrong-place
+  input:
+    op: import_roundtrip
+    vendor_path: ReplicatedStorage.Shop.Items
+    open_name: Some Other Place
+    tree: [{parent: ReplicatedStorage.Shop.Items, class: Configuration, name: Drill2, attributes: {Price: 150}}]
+  checks: [{type: text_contains, path: error, text: wrong place}]
+- id: normalise-sample-dump
+  title: "ores: Copper 5 x 4/min = 20, Iron 12 x 2/min = 24; Steel Drill price 200 with the tool's x1.5; Diamond 2.0 x 1.5 = 3.0"
+  input:
+    op: normalise
+    dump:
+      format: econbal-import/1
+      containers:
+        ores:
+          items:
+            - {name: Copper, fields: {Value: 5, ItemsPerMinute: 4, Currency: Coins}}
+            - {name: Iron, fields: {Value: 12, ItemsPerMinute: 2, Currency: Coins}}
+        tool_stats:
+          items:
+            - {name: SteelDrill, fields: {Tier: 2, SpeedMult: 1.5, ValueMult: 1.0}}
+            - {name: DiamondDrill, fields: {Tier: 3, SpeedMult: 2.0, ValueMult: 1.5}}
+        vendor_items:
+          items:
+            - {name: Steel Drill, fields: {Price: 200, Tier: 2, Category: Drill, Tool: SteelDrill, Currency: Coins}}
+            - {name: Diamond Drill, fields: {Price: 1800, Tier: 3, Category: Drill, Tool: DiamondDrill, Currency: Coins}}
+            - {name: Iron Bonus, fields: {Price: 120, Tier: 1, Category: Drill, Ore: Iron, Mult: 1.25, Currency: Coins}}
+  checks:
+    - {type: equals, path: sources.ore_Copper, value: 20}
+    - {type: equals, path: sources.ore_Iron, value: 24}
+    - {type: equals, path: upgrades.Steel_Drill.cost, value: 200}
+    - {type: equals, path: upgrades.Steel_Drill.effects, value: [{source: "*", mult: 1.5}]}
+    - {type: equals, path: upgrades.Diamond_Drill.effects, value: [{source: "*", mult: 3.0}]}
+    - {type: equals, path: upgrades.Iron_Bonus.effects, value: [{source: ore_Iron, mult: 1.25}]}
+    - {type: equals, path: mapping.Steel Drill, value: Steel_Drill}
+    - {type: equals, path: ok, value: true}
+- id: normalise-says-what-it-assumed
+  input: {op: normalise, dump: {format: econbal-import/1, containers: {ores: {items: [{name: Copper, fields: {Value: 5}}]}, vendor_items: {items: [{name: Drill, fields: {Price: 100, Tier: 1}}]}}}}
+  checks: [{type: equals, path: archetypes_assumed, value: true}, {type: greater, path: n_assumptions, than: 2}, {type: greater, path: n_unresolved, than: 0}, {type: text_contains, path: unresolved_text, text: effect}]
+- id: normalise-drafts-run-through-the-analyses
+  input: {op: normalise, dump: {format: econbal-import/1, containers: {ores: {items: [{name: Copper, fields: {Value: 5, ItemsPerMinute: 2}}]}, vendor_items: {items: [{name: Drill, fields: {Price: 100, Tier: 1, Add: 5}}]}}}}
+  checks: [{type: equals, path: ok, value: true}, {type: equals, path: check_runs, value: true}]
+- id: normalise-infers-tiers-from-price-and-says-so
+  input: {op: normalise, dump: {format: econbal-import/1, containers: {ores: {items: [{name: Copper, fields: {Value: 5, ItemsPerMinute: 2}}]}, vendor_items: {items: [{name: B, fields: {Price: 500, Add: 5}}, {name: A, fields: {Price: 100, Add: 5}}]}}}}
+  checks: [{type: equals, path: upgrades.A.tier, value: 1}, {type: equals, path: upgrades.B.tier, value: 2}, {type: text_contains, path: assumptions_text, text: ascending price}]
+- id: normalise-skips-items-without-a-price
+  input: {op: normalise, dump: {format: econbal-import/1, containers: {ores: {items: [{name: Copper, fields: {Value: 5, ItemsPerMinute: 2}}]}, vendor_items: {items: [{name: Free, fields: {Tier: 1}}]}}}}
+  checks: [{type: text_contains, path: unresolved_text, text: price}, {type: equals, path: upgrades, value: {}}]
+- id: normalise-field-map-overrides-aliases
+  input: {op: normalise, field_map: {price: Gold}, dump: {format: econbal-import/1, containers: {ores: {items: [{name: Copper, fields: {Value: 5, ItemsPerMinute: 2}}]}, vendor_items: {items: [{name: Drill, fields: {Gold: 777, Cost: 1, Tier: 1, Add: 5}}]}}}}
+  checks: [{type: equals, path: upgrades.Drill.cost, value: 777}]
+- id: normalise-sanitises-and-dedupes-ids
+  input: {op: normalise, dump: {format: econbal-import/1, containers: {ores: {items: [{name: Copper, fields: {Value: 5, ItemsPerMinute: 2}}]}, vendor_items: {items: [{name: "Drill 2!", fields: {Price: 100, Tier: 1, Add: 1}}, {name: "Drill_2_", fields: {Price: 150, Tier: 1, Add: 1}}]}}}}
+  checks: [{type: equals, path: ok, value: true}, {type: equals, path: mapping.Drill 2!, value: Drill_2}]
+- id: normalise-rejects-a-foreign-format
+  input: {op: normalise, dump: {format: something-else, containers: {}}}
+  checks: [{type: error_contains, text: econbal-import/1}]
+- id: normalise-rejects-an-unknown-container
+  input: {op: normalise, dump: {format: econbal-import/1, containers: {pets: {items: []}}}}
+  checks: [{type: error_contains, text: unknown container}]
+- id: sensitivity-shifts-every-later-tier-equally
+  title: "doubling drill_2 (200 to 400) adds 10 minutes at drill_2 (400/20 instead of 200/20) and every later purchase moves by exactly those 10"
+  input: {op: sensitivity, econ: balanced, path: upgrades.drill_2.cost, pct: [100]}
+  checks: [{type: equals, path: delta.drill_1, value: 0}, {type: equals, path: delta.drill_2, value: 10}, {type: equals, path: delta.drill_10, value: 10}, {type: equals, path: locked, value: false}]
+- id: sensitivity-marks-locked-values
+  input: {op: sensitivity, econ: balanced, path: upgrades.drill_2.cost, pct: [10], mutations: [{op: lock, pattern: "upgrades.drill_2.cost"}]}
+  checks: [{type: equals, path: locked, value: true}]
+- id: sensitivity-rejects-a-bad-path
+  input: {op: sensitivity, econ: balanced, path: upgrades.nope.cost, pct: [10]}
+  checks: [{type: error_contains, text: nope}]

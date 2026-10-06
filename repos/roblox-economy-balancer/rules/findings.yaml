@@ -1,0 +1,106 @@
+# Finding catalogue. Every judgement the tools make is one of these codes; severity and wording live HERE, not in code.
+# Numeric thresholds live in style/style.yaml (ranges, target_bands). Edit severities to taste: error | warning | info.
+# verify_against_current_docs: these are balance heuristics, not Roblox limits; nothing here comes from Roblox documentation.
+version: 1
+verify_against_current_docs: false
+findings:
+  over_band:
+    severity: warning
+    title: Step slower than the target band
+    explanation: "The time (active minutes) from the previous purchase to this one is above the band maximum for this tier."
+    fix: Lower the cost, raise the income gained from the previous step, or move the band if the pacing is intended.
+  under_band:
+    severity: warning
+    title: Step faster than the target band
+    explanation: "The step takes less time than the band minimum, so the purchase carries no anticipation."
+    fix: Raise the cost or reduce the income gained from the previous step.
+  wall:
+    severity: error
+    title: Progression wall
+    explanation: "A single step takes more than wall_factor times the band maximum (or exceeds max_idle_minutes where no band covers the tier)."
+    fix: Lower the cost of the step, or add income before it.
+  cost_cliff:
+    severity: warning
+    title: Cost cliff
+    explanation: "The cost of this step is more than max_cost_jump_ratio times the cost of the previous step in the same track."
+    fix: Smooth the cost curve or give a matching income bonus on the previous step.
+  gap_cliff:
+    severity: warning
+    title: Time cliff
+    explanation: "This step takes more than max_gap_jump_ratio times as long as the previous step."
+    fix: Smooth the cost curve; the previous step did not raise income enough.
+  not_reached:
+    severity: info
+    title: Tier not reached in the simulated horizon
+    explanation: "The archetype did not buy this tier within the simulated days. This is normal for slow archetypes on long ladders."
+    fix: None needed unless the reference archetype should reach it.
+  slow_for_archetype:
+    severity: warning
+    title: Too many calendar days for one step
+    explanation: "Converted to calendar days with this archetype's sessions per day, one step takes more than max_days_per_step days."
+    fix: Lower the cost or raise income for early and mid tiers.
+  dead_option:
+    severity: warning
+    title: Dead option (payback too long)
+    explanation: "The upgrade repays its cost in more than max_payback_minutes of active play for every evaluated archetype, so nobody should buy it."
+    fix: Lower the cost or raise the income it adds.
+  no_effect:
+    severity: info
+    title: Upgrade without income effect
+    explanation: "The upgrade changes no income, so the simulator can never justify buying it. Only worth keeping if it is cosmetic or unlocks something."
+    fix: Give it an effect, or leave it out of the economy model.
+  zero_effect_gate:
+    severity: warning
+    title: Zero-effect upgrade that gates others
+    explanation: "A purchase policy that ranks by payback buys zero-effect upgrades last, which would starve everything behind this one. The model cannot represent this honestly."
+    fix: Give the step an income effect, or fold it into the next tier.
+  dominant_option:
+    severity: warning
+    title: Dominant option
+    explanation: "One option in a choice has a better payback than every alternative for every archetype (by at least dominance_margin), so the choice is not a choice."
+    fix: Nerf the dominant option or buff the alternatives.
+  dominated_option:
+    severity: info
+    title: Dominated option
+    explanation: "This option costs at least as much as an alternative and gives no more income at the moment of choice."
+    fix: Buff it or remove it.
+  dominant_strategy:
+    severity: warning
+    title: Dominant strategy across stages
+    explanation: "Options tagged with the same strategy label win every contested choice, so the label is always the right answer."
+    fix: Rebalance at least one choice so the other strategy wins somewhere.
+  content_exhausted:
+    severity: warning
+    title: Content runs out early
+    explanation: "The reference archetype has bought everything available before min_content_days."
+    fix: Add tiers, a rebirth loop, or raise costs.
+  runaway_inflation:
+    severity: error
+    title: Runaway currency
+    explanation: "Content is exhausted and most income in the final stretch of the horizon is unspent (tail net share above max_tail_net_share)."
+    fix: Add sinks (upkeep, taxes, repeatable purchases) or more content; lower the source rate.
+  stalled:
+    severity: warning
+    title: Nothing affordable can ever be bought
+    explanation: "Upgrades remain but none is reachable (for example the cost currency has no income)."
+    fix: Add a source for that currency or remove the dependency.
+  pay_to_win:
+    severity: warning
+    title: Boost speeds pace too much
+    explanation: "With all boosts the reference archetype reaches a tier more than max_boost_speedup times faster than without."
+    fix: Reduce the boost multiplier or make it convenience rather than raw speed.
+  free_cliff:
+    severity: error
+    title: Free players fall off a cliff
+    explanation: "Without boosts a step is slower than max_free_gap_over_band times the band maximum while the boosted run stays inside the band."
+    fix: Fix the cost curve for free players; do not let a boost paper over it.
+  boost_trivialises:
+    severity: info
+    title: Boost makes a step trivial
+    explanation: "With boosts the step is faster than the band minimum although it is inside the band without them."
+    fix: Check whether the boost is too strong at this tier.
+  invalid_spec:
+    severity: error
+    title: Invalid economy spec
+    explanation: "The spec failed validation; analyses refuse to run on it."
+    fix: Run validate_economy_spec and fix the listed errors.

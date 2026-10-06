@@ -1,0 +1,87 @@
+# Known-bad specs the validator must reject (or warn about) with an actionable message, and a good one that must pass cleanly.
+- id: validate-balanced-is-clean
+  input: {op: validate, econ: balanced}
+  checks: [{type: equals, path: ok, value: true}, {type: equals, path: error_codes, value: []}]
+- id: validate-unknown-currency
+  input: {op: validate, econ: balanced, mutations: [{op: top, field: sources, value: [{id: mining, currency: nope, per_minute: 10}]}]}
+  checks: [{type: equals, path: ok, value: false}, {type: list_contains, path: error_codes, items: [unknown_reference]}]
+- id: validate-duplicate-id
+  input:
+    op: validate
+    econ: balanced
+    mutations: [{op: add, section: upgrades, value: {id: drill_1, track: other, tier: 1, currency: coins, cost: 5, effects: [{source: mining, add: 1}]}}]
+  checks: [{type: list_contains, path: error_codes, items: [duplicate_id]}]
+- id: validate-negative-cost
+  input: {op: validate, econ: balanced, mutations: [{op: set, path: upgrades.drill_1.cost, value: -5}]}
+  checks: [{type: list_contains, path: error_codes, items: [bad_value]}, {type: text_contains, path: text, text: "upgrades.drill_1.cost"}]
+- id: validate-zero-cost
+  input: {op: validate, econ: balanced, mutations: [{op: set, path: upgrades.drill_1.cost, value: 0}]}
+  checks: [{type: list_contains, path: error_codes, items: [bad_value]}]
+- id: validate-tier-gap
+  input: {op: validate, econ: balanced, mutations: [{op: remove, section: upgrades, id: drill_3}]}
+  checks: [{type: list_contains, path: error_codes, items: [tier_gap]}, {type: text_contains, path: text, text: "no upgrade at tier 3"}]
+- id: validate-requires-cycle
+  input:
+    op: validate
+    spec:
+      format: econbal-economy/1
+      id: cyc
+      currencies: {coins: {start: 0}}
+      sources: [{id: mining, currency: coins, per_minute: 10}]
+      archetypes: {regular: {session_minutes: 20, sessions_per_day: 3}}
+      upgrades:
+        - {id: a, track: t1, tier: 1, currency: coins, cost: 10, effects: [{source: mining, add: 1}], requires: [b]}
+        - {id: b, track: t2, tier: 1, currency: coins, cost: 10, effects: [{source: mining, add: 1}], requires: [a]}
+  checks: [{type: list_contains, path: error_codes, items: [cycle]}]
+- id: validate-typo-in-a-field-is-a-warning
+  input: {op: validate, econ: balanced, mutations: [{op: add, section: upgrades, value: {id: u1, track: t, tier: 1, currency: coins, cots: 10, cost: 10, effects: [{source: mining, add: 1}]}}]}
+  checks: [{type: equals, path: ok, value: true}, {type: list_contains, path: warning_codes, items: [unknown_key]}, {type: text_contains, path: text, text: cots}]
+- id: validate-locked-pattern-matching-nothing
+  input: {op: validate, econ: balanced, mutations: [{op: lock, pattern: "upgrades.dril_1.cost"}]}
+  checks: [{type: list_contains, path: error_codes, items: [locked_matches_nothing]}]
+- id: validate-star-add-is-rejected
+  input:
+    op: validate
+    econ: balanced
+    mutations: [{op: set, path: upgrades.drill_1.effects.0.add, value: 10}, {op: top, field: boosts, value: [{id: b, effects: [{source: "*", add: 5}]}]}]
+  checks: [{type: list_contains, path: error_codes, items: [star_add]}]
+- id: validate-effect-needs-exactly-one-of-add-mult
+  input: {op: validate, econ: balanced, mutations: [{op: top, field: boosts, value: [{id: b, effects: [{source: mining, add: 5, mult: 2}]}]}]}
+  checks: [{type: equals, path: ok, value: false}]
+- id: validate-unsafe-id
+  input: {op: validate, econ: balanced, mutations: [{op: top, field: sources, value: [{id: "min ing; x", currency: coins, per_minute: 10}]}]}
+  checks: [{type: list_contains, path: error_codes, items: [bad_id]}]
+- id: validate-missing-standard-archetypes-warns
+  input: {op: validate, econ: balanced, mutations: [{op: remove, section: archetypes, id: casual}]}
+  checks: [{type: equals, path: ok, value: true}, {type: list_contains, path: warning_codes, items: [missing_archetypes]}]
+- id: validate-variance-must-be-below-one
+  input: {op: validate, econ: balanced, mutations: [{op: set, path: archetypes.regular.variance, value: 1.0}]}
+  checks: [{type: list_contains, path: error_codes, items: [bad_value]}]
+- id: validate-zero-effect-gate-warns
+  input:
+    op: validate
+    spec:
+      format: econbal-economy/1
+      id: gate
+      currencies: {coins: {start: 0}}
+      sources: [{id: mining, currency: coins, per_minute: 10}]
+      archetypes: {regular: {session_minutes: 20, sessions_per_day: 3}}
+      upgrades:
+        - {id: u1, track: t, tier: 1, currency: coins, cost: 10, effects: []}
+        - {id: u2, track: t, tier: 2, currency: coins, cost: 20, effects: [{source: mining, add: 5}]}
+  checks: [{type: list_contains, path: warning_codes, items: [zero_effect_gate]}]
+- id: validate-unreachable-currency-warns
+  input:
+    op: validate
+    econ: balanced
+    mutations: [{op: top, field: currencies, value: {coins: {start: 0}, gems: {start: 0}}}, {op: add, section: upgrades, value: {id: gem_up, track: gem, tier: 1, currency: gems, cost: 5, effects: [{source: mining, add: 1}]}}]
+  checks: [{type: list_contains, path: warning_codes, items: [unreachable_currency]}]
+- id: validate-bad-simulation-days
+  input: {op: validate, econ: balanced, mutations: [{op: top, field: simulation, value: {days: 0, seed: 0}}]}
+  checks: [{type: list_contains, path: error_codes, items: [bad_value]}]
+- id: validate-more-than-one-rebirth-is-refused
+  input:
+    op: validate
+    econ: balanced
+    mutations: [{op: add, section: rebirths, value: {id: rb2, currency: coins, cost: 5, resets: {tracks: [drill], currencies: [coins]}, bonus: {source: "*", mult_per_rebirth: 1}, max: 1}}]
+  checks: [{type: list_contains, path: error_codes, items: [multiple_rebirths]}]

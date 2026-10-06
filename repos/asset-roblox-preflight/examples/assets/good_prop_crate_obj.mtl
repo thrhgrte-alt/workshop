@@ -1,0 +1,4 @@
+newmtl crate_mat
+Kd 1 1 1
+map_Kd textures/crate_obj_albedo.png
+map_Bump textures/crate_obj_normal.png

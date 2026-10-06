@@ -1,0 +1,40 @@
+# Machine-readable style spec. Human-editable companion: STYLE.md.
+#
+# !! STARTER SCHEME. The user's real naming scheme was not supplied, so everything under `naming` and the traits below are a clearly
+# !! labelled starting point chosen by the author of this tool. Replace them with your own conventions; the rules in rules/ read them.
+version: 1
+name: Roblox-ready Blender export (starter scheme)
+summary: >
+  Clean, small, honestly named exports: transforms applied, origin where the asset sits or is held, outward normals, tidy non-overlapping UVs,
+  power-of-two textures within budget, a minimal rig only where needed (one root bone, and for drill tips one bone named spin), a cheap collision
+  proxy for heavy props, and names that survive scripting without escaping. Every limit is a default to verify, not an official Roblox number.
+traits:
+  naming: lower snake_case with a profile prefix (prop_, tool_, acc_, terrain_); collision proxies end in _col; bones are lower snake_case with one root named root
+  transforms: scale and rotation applied; prop origin at the centre of the base; tool and accessory origin chosen by you
+  geometry: closed outward-facing meshes within the profile triangle budget, no loose vertices, no n-gons
+  uvs: inside 0-1, no overlap, even texel density
+  textures: PNG, power-of-two sizes within the profile limit, normal maps in the normal slot as Non-Color data
+  rig: only for tools and accessories; one root bone; a drill tip is driven by exactly one bone named spin under the root
+  collision: proxies are cheap and match the visible bounds; absent collision is declared, not accidental
+naming:
+  # STARTER patterns, per profile, applied to visible mesh objects by NAME_SCHEME. Replace with your scheme.
+  mesh_patterns:
+    prop: "^prop_[a-z0-9]+(_[a-z0-9]+)*$"
+    tool: "^tool_[a-z0-9]+(_[a-z0-9]+)*$"
+    character_accessory: "^acc_[a-z0-9]+(_[a-z0-9]+)*$"
+    terrain_piece: "^terrain_[a-z0-9]+(_[a-z0-9]+)*$"
+  collision_pattern: "^[a-z0-9]+(_[a-z0-9]+)*_col$"
+  bone_pattern: "^[a-z][a-z0-9_]*$"
+constraints:
+  - {id: P1, severity: must,   rule: "Never claim an asset is ready for Roblox unless preflight_report says ready_to_upload and no errors remain; say the limits are defaults to verify."}
+  - {id: P2, severity: must,   rule: "Never upload, publish or call Roblox from these tools: hand a ready asset to roblox_upload_plan through the hub."}
+  - {id: P3, severity: must,   rule: "apply_safe_fix only emits a Blender script for fixes marked safe: true; run it on a copy of the .blend, then re-export and re-check."}
+  - {id: P4, severity: should, rule: "Check only what the request names; do not widen the scope or add rules the user did not ask for."}
+  - {id: P5, severity: should, rule: "Record an override with the user's actual words, scoped to the profile, and offer to promote it to the profile only after repeats."}
+  - {id: P6, severity: should, rule: "Say what could not be measured (FBX geometry, n-gons in GLB, anything reported by a summary instead of measured)."}
+exclusions:
+  - treating default limits as official Roblox limits
+  - fixing a file in place
+  - rewriting names with spaces by hand when a safe rename script exists
+  - hiding a failed check by lowering a limit without recording why
+correction_dimensions: [mesh, transform, names, uv, materials, rig, collision, upload, profile_limit, false_positive, naming_scheme]

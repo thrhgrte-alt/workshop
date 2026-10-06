@@ -1,0 +1,13 @@
+# SYNTHETIC EXAMPLE overrides for a made-up mining game. Layered over rules/profiles/*.yaml and style/style.yaml. Numbers are still DEFAULTS to verify.
+project: synthetic-mining-tycoon
+profiles:
+  prop:
+    limits:
+      MESH_TRI_BUDGET: {max_triangles: 12000}
+      MESH_TRI_BUDGET_TOTAL: {max_triangles_total: 18000}
+  tool:
+    limits:
+      RIG_BONE_COUNT: {max_bones: 12}
+naming:
+  mesh_patterns:
+    prop: "^prop_[a-z0-9]+(_[a-z0-9]+)*$"

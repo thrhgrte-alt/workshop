@@ -1,0 +1,57 @@
+category: transform
+rules:
+  - id: XFM_UNAPPLIED_SCALE
+    severity: error
+    title: Object scale is not applied
+    explanation: A scale other than 1 on the object means the mesh data and the object disagree about size; importers and rigs handle it inconsistently.
+    fix: "Apply scale to {object} (Ctrl+A > Scale); it is {measured}."
+    safe: true
+    limits:
+      tolerance: {default: 0.001, verify_against_current_docs: false, heuristic: true}
+  - id: XFM_NEGATIVE_SCALE
+    severity: error
+    title: Mirrored (negative) scale
+    explanation: A negative scale flips the winding order, so faces face the wrong way unless the exporter compensates.
+    fix: "Apply scale to {object}, then recalculate normals outside; scale is {measured}."
+    safe: false
+  - id: XFM_UNAPPLIED_ROTATION
+    severity: warn
+    title: Object rotation is not applied
+    explanation: A leftover rotation on a mesh object changes its orientation relative to the pivot after import.
+    fix: "Apply rotation to {object} (Ctrl+A > Rotation); it is {measured} degrees."
+    safe: true
+    limits:
+      tolerance_degrees: {default: 0.5, verify_against_current_docs: false, heuristic: true}
+  - id: XFM_ORIGIN_PLACEMENT
+    severity: warn
+    title: Origin (pivot) is not where the profile expects it
+    explanation: "The pivot decides where the asset rotates and sits. Modes: bottom_center (base centre on the origin), center (bounding-box centre), any (not checked). The offset is measured as a fraction of the largest local dimension."
+    fix: "Move the origin of {object} to the {limit} point (Object > Set Origin) - offset is {measured}."
+    safe: false
+    limits:
+      mode: {default: any, verify_against_current_docs: false, heuristic: true, note: "bottom_center | center | any. Profiles override."}
+      tolerance: {default: 0.1, verify_against_current_docs: false, heuristic: true}
+  - id: XFM_ROOT_OFFSET
+    severity: warn
+    title: Root object far from the world origin
+    explanation: A top-level object exported far from the origin usually means the asset was not centred before export.
+    fix: "Move {object} to the world origin or apply location before export; it is {measured} units away (limit {limit})."
+    safe: false
+    limits:
+      max_offset_units: {default: 1.0, verify_against_current_docs: false, heuristic: true}
+  - id: XFM_UNITS_SUSPECT
+    severity: warn
+    title: Size looks like a unit mistake
+    explanation: The asset is outside the profile's size range as exported, but would fit it after a common unit factor (centimetres vs metres, inches vs metres, ...).
+    fix: "Check scene unit settings and the exporter scale: multiplying the size by {limit} would fit the profile (now {measured} studs)."
+    safe: false
+    limits:
+      factors: {default: [0.001, 0.01, 0.0254, 0.1, 10, 39.3701, 100, 1000], verify_against_current_docs: false, heuristic: true}
+  - id: XFM_AXIS_UP
+    severity: warn
+    title: Up axis is not the expected one
+    explanation: The summary declares a different up axis, or the root carries a 90 degree rotation about X (a leftover Z-up to Y-up conversion). The asset may import lying down.
+    fix: "Re-export with the up axis set to {limit}, and no leftover 90 degree rotation on {object} ({measured})."
+    safe: false
+    limits:
+      expected_up_axis: {default: "Y", verify_against_current_docs: true, note: "DEFAULT: glTF is +Y up by specification; verify the target engine convention."}

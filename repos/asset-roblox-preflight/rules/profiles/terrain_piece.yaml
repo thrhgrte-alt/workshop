@@ -1,0 +1,17 @@
+# Profile: a terrain piece (cliff slab, rock arch). ALL numbers are DEFAULTS chosen by this tool, not official Roblox limits.
+name: terrain_piece
+description: A large static terrain-style piece (cliff, boulder, slab). No rig. Origin at the centre of the base.
+rig_checks: false
+limits_are_defaults: true
+verify_against_current_docs: true
+settings:
+  studs_per_unit: 1.0
+limits:
+  MESH_TRI_BUDGET: {max_triangles: 20000}
+  MESH_TRI_BUDGET_TOTAL: {max_triangles_total: 30000}
+  MESH_OBJECT_COUNT: {max_mesh_objects: 8}
+  MESH_BBOX_PROFILE: {min_largest_dimension_studs: 4, max_largest_dimension_studs: 512}
+  XFM_ORIGIN_PLACEMENT: {mode: bottom_center, tolerance: 0.15}
+  MAT_COUNT: {max_materials: 4}
+  TEX_OVERSIZE: {max_dimension_px: 2048}
+  COL_PROXY_MISSING: {required_above_triangles: 5000}

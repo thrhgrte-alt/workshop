@@ -1,0 +1,78 @@
+# Output-size budgets (characters of the JSON each tool returns for a typical call on demo_mine/main). Output is loaded into the model's context, so growth is a regression.
+# If a change legitimately needs more room, raise the number here deliberately in the same commit and say why.
+- id: budget-get-style-brief
+  input: {op: tools_seq, steps: [{tool: get_style_brief, args: {"project_id": "demo_mine", "place_id": "main"}}]}
+  checks: [{type: step_ok, step: 0}, {type: less, path: steps.0.chars, than: 3600}]
+- id: budget-find-past-corrections
+  input: {op: tools_seq, steps: [{tool: find_past_corrections, args: {"project_id": "demo_mine", "place_id": "main", "request": "x"}}]}
+  checks: [{type: step_ok, step: 0}, {type: less, path: steps.0.chars, than: 400}]
+- id: budget-validate-economy-spec
+  input: {op: tools_seq, steps: [{tool: validate_economy_spec, args: {"project_id": "demo_mine", "place_id": "main"}}]}
+  checks: [{type: step_ok, step: 0}, {type: less, path: steps.0.chars, than: 800}]
+- id: budget-check-economy
+  input: {op: tools_seq, steps: [{tool: check_economy, args: {"project_id": "demo_mine", "place_id": "main"}}]}
+  checks: [{type: step_ok, step: 0}, {type: less, path: steps.0.chars, than: 1200}]
+- id: budget-simulate-progression
+  input: {op: tools_seq, steps: [{tool: simulate_progression, args: {"project_id": "demo_mine", "place_id": "main"}}]}
+  checks: [{type: step_ok, step: 0}, {type: less, path: steps.0.chars, than: 3400}]
+- id: budget-time-to-upgrade-table
+  input: {op: tools_seq, steps: [{tool: time_to_upgrade_table, args: {"project_id": "demo_mine", "place_id": "main"}}]}
+  checks: [{type: step_ok, step: 0}, {type: less, path: steps.0.chars, than: 2100}]
+- id: budget-flow-report
+  input: {op: tools_seq, steps: [{tool: flow_report, args: {"project_id": "demo_mine", "place_id": "main"}}]}
+  checks: [{type: step_ok, step: 0}, {type: less, path: steps.0.chars, than: 1500}]
+- id: budget-find-dominant-strategies
+  input: {op: tools_seq, steps: [{tool: find_dominant_strategies, args: {"project_id": "demo_mine", "place_id": "main"}}]}
+  checks: [{type: step_ok, step: 0}, {type: less, path: steps.0.chars, than: 950}]
+- id: budget-find-dead-options
+  input: {op: tools_seq, steps: [{tool: find_dead_options, args: {"project_id": "demo_mine", "place_id": "main"}}]}
+  checks: [{type: step_ok, step: 0}, {type: less, path: steps.0.chars, than: 600}]
+- id: budget-monetisation-check
+  input: {op: tools_seq, steps: [{tool: monetisation_check, args: {"project_id": "demo_mine", "place_id": "main"}}]}
+  checks: [{type: step_ok, step: 0}, {type: less, path: steps.0.chars, than: 1100}]
+- id: budget-sensitivity
+  input: {op: tools_seq, steps: [{tool: sensitivity, args: {"project_id": "demo_mine", "place_id": "main", "path": "upgrades.drill_2.cost", "pct": [-20, 20]}}]}
+  checks: [{type: step_ok, step: 0}, {type: less, path: steps.0.chars, than: 3800}]
+- id: budget-plot-curves
+  input: {op: tools_seq, steps: [{tool: plot_curves, args: {"project_id": "demo_mine", "place_id": "main"}}]}
+  checks: [{type: step_ok, step: 0}, {type: less, path: steps.0.chars, than: 900}]
+- id: budget-suggest-band-adjustments
+  input: {op: tools_seq, steps: [{tool: suggest_band_adjustments, args: {"project_id": "demo_mine", "place_id": "main"}}]}
+  checks: [{type: step_ok, step: 0}, {type: less, path: steps.0.chars, than: 1100}]
+- id: budget-emit-import-luau
+  input: {op: tools_seq, steps: [{tool: emit_import_luau, args: {"project_id": "demo_mine", "place_id": "main", "vendor_path": "ReplicatedStorage.Shop.Items", "tools_path": "ReplicatedStorage.Tools", "ores_path": "ReplicatedStorage.Ores", "studios": [{"name": "Demo Mine Main (SYNTHETIC)", "place_id": 0, "studio_id": "s"}]}}]}
+  checks: [{type: step_ok, step: 0}, {type: less, path: steps.0.chars, than: 4500}]
+- id: budget-normalise-import
+  input: {op: tools_seq, steps: [{tool: normalise_import, args: {"project_id": "demo_mine", "place_id": "main", "import_json": {"format": "econbal-import/1", "game": "Sample Mine (hand-written)", "truncated": false, "currencies": [{"id": "Coins", "start": 0}], "containers": {"ores": {"path": "ReplicatedStorage.Ores", "items": [{"name": "Copper", "class": "Configuration", "fields": {"Value": 5, "ItemsPerMinute": 4, "Currency": "Coins"}}, {"name": "Iron", "class": "Configuration", "fields": {"Value": 12, "ItemsPerMinute": 2, "Currency": "Coins"}}]}, "tool_stats": {"path": "ReplicatedStorage.Tools", "items": [{"name": "StarterDrill", "class": "Configuration", "fields": {"Tier": 1, "SpeedMult": 1.0}}, {"name": "SteelDrill", "class": "Configuration", "fields": {"Tier": 2, "SpeedMult": 1.5, "ValueMult": 1.0}}, {"name": "DiamondDrill", "class": "Configuration", "fields": {"Tier": 3, "SpeedMult": 2.0, "ValueMult": 1.5}}]}, "vendor_items": {"path": "ReplicatedStorage.Shop.Items", "items": [{"name": "Steel Drill", "class": "Configuration", "fields": {"Price": 200, "Tier": 2, "Category": "Drill", "Tool": "SteelDrill", "Currency": "Coins"}}, {"name": "Diamond Drill", "class": "Configuration", "fields": {"Price": 1800, "Tier": 3, "Category": "Drill", "Tool": "DiamondDrill", "Currency": "Coins"}}, {"name": "Iron Bonus", "class": "Configuration", "fields": {"Price": 120, "Tier": 1, "Category": "Drill", "Ore": "Iron", "Mult": 1.25}}]}}}}}]}
+  checks: [{type: step_ok, step: 0}, {type: less, path: steps.0.chars, than: 3400}]
+- id: budget-export-values-luau
+  input: {op: tools_seq, steps: [{tool: export_values_luau, args: {"project_id": "demo_mine", "place_id": "main", "all_values": true, "studios": [{"name": "Demo Mine Main (SYNTHETIC)", "place_id": 0, "studio_id": "s"}]}}]}
+  checks: [{type: step_ok, step: 0}, {type: less, path: steps.0.chars, than: 1500}]
+- id: budget-save-spec-version
+  input: {op: tools_seq, steps: [{tool: save_spec_version, args: {"project_id": "demo_mine", "place_id": "main", "name": "v"}}]}
+  checks: [{type: step_ok, step: 0}, {type: less, path: steps.0.chars, than: 900}]
+- id: budget-record-run
+  input: {op: tools_seq, steps: [{tool: record_run, args: {"project_id": "demo_mine", "place_id": "main", "request": "x"}}]}
+  checks: [{type: step_ok, step: 0}, {type: less, path: steps.0.chars, than: 350}]
+- id: budget-compare-specs
+  input: {op: tools_seq, steps: [{tool: compare_specs, args: {a_project_id: demo_mine, a_place_id: main, b_project_id: demo_tycoon, b_place_id: main}}]}
+  checks: [{type: step_ok, step: 0}, {type: less, path: steps.0.chars, than: 3000}]
+- id: budget-propose-rebalance
+  input: {op: tools_seq, steps: [{tool: propose_rebalance, args: {project_id: demo_tycoon, place_id: main, finding_code: under_band}}]}
+  checks: [{type: step_ok, step: 0}, {type: less, path: steps.0.chars, than: 1900}]
+- id: budget-tool-descriptions
+  title: "descriptions are loaded into every session: keep them short (total over all tools, longest single one, and the core group a client keeps when it disables 'rare')"
+  input: {op: tool_sizes}
+  checks: [{type: less, path: description_chars_total, than: 3800}, {type: less, path: max_description_chars, than: 260}, {type: less, path: core_description_chars, than: 2300}]
+- id: budget-rare-group-can-be-left-out
+  title: "ECONBAL_DISABLE_GROUPS=rare removes the rarely used tools and keeps the daily ones"
+  input: {op: tool_sizes}
+  checks: [{type: list_contains, path: rare, items: [sensitivity, compare_specs, plot_curves, emit_import_luau, normalise_import, export_values_luau, save_spec_version, suggest_band_adjustments]}, {type: list_contains, path: core, items: [check_economy, time_to_upgrade_table, flow_report, propose_rebalance, record_run, record_decision, find_past_corrections, get_style_brief]}, {type: list_excludes, path: core, items: [sensitivity, plot_curves]}]
+- id: budget-summary-comes-first
+  title: "every read-only tool's result starts with the one-line summary (the first key)"
+  input: {op: tools_seq, steps: [{tool: check_economy, args: {project_id: demo_mine, place_id: main}}]}
+  checks: [{type: text_contains, path: steps.0.result.summary, text: PASS}]
+- id: budget-detail-is-opt-in
+  title: "detail=true returns more than the default (info findings and rows are not sent unless asked)"
+  input: {op: tools_seq, steps: [{tool: check_economy, args: {project_id: demo_mine, place_id: main}}, {tool: check_economy, args: {project_id: demo_mine, place_id: main, detail: true}}]}
+  checks: [{type: greater, path: steps.1.chars, than: 1000}, {type: less, path: steps.0.chars, than: 1200}]

@@ -1,0 +1,77 @@
+# Hand-computed measurements and reader behaviour on synthetic fixtures.
+- id: measure-unit-cube
+  title: 'A unit cube read from a GLB: 12 triangles, 24 vertices, volume 1 (hand-computed), closed, one island, texel ratio sqrt(1/6)'
+  input: {op: measure, file: good_prop_crate}
+  checks:
+  - {type: equals, path: triangles, value: 12}
+  - {type: equals, path: vertices, value: 24}
+  - {type: approx, path: signed_volume_local, value: 1.0, tol: 1.0e-06}
+  - {type: equals, path: closed, value: true}
+  - {type: equals, path: islands, value: 1}
+  - {type: approx, path: texel_median, value: 0.40825, tol: 0.0005}
+  - {type: approx, path: uv_coverage, value: 1.0, tol: 0.001}
+  - type: equals
+    path: dims_world
+    value: [1.0, 1.0, 1.0]
+- id: measure-subdivided-box
+  title: A box split 40x40 per face has 19200 triangles, still closed
+  input: {op: measure, file: bad_too_many_tris}
+  checks:
+  - {type: equals, path: triangles, value: 19200}
+  - {type: equals, path: closed, value: true}
+  - {type: equals, path: islands, value: 1}
+- id: measure-4k-texture-header
+  title: The 4k PNG header is read without decoding the pixels
+  input: {op: measure, file: bad_texture_4k}
+  checks:
+  - {type: equals, path: images.0.w, value: 4096}
+  - {type: equals, path: images.0.h, value: 4096}
+  - {type: equals, path: images.0.channels, value: 3}
+- id: measure-inside-out-volume
+  title: Reversed winding gives signed volume -1
+  input: {op: measure, file: bad_inside_out}
+  checks:
+  - {type: approx, path: signed_volume_local, value: -1.0, tol: 1.0e-06}
+  - {type: equals, path: inside_out, value: true}
+- id: measure-open-mesh
+  title: Deleting the top face leaves 4 open edges and 10 triangles
+  input: {op: measure, file: bad_open_mesh}
+  checks:
+  - {type: equals, path: triangles, value: 10}
+  - {type: equals, path: boundary_edges, value: 4}
+  - {type: equals, path: closed, value: false}
+- id: measure-gltf-external
+  title: A .gltf with a data-URI buffer and external PNGs is read
+  input: {op: measure, file: good_prop_barrel}
+  checks:
+  - {type: equals, path: format, value: gltf}
+  - {type: equals, path: images.0.w, value: 256}
+- id: measure-obj
+  title: An OBJ is read with its MTL textures and no n-gons
+  input: {op: measure, file: good_prop_crate_obj}
+  checks:
+  - {type: equals, path: format, value: obj}
+  - {type: equals, path: triangles, value: 12}
+  - {type: equals, path: ngons, value: 0}
+  - {type: equals, path: images.0.w, value: 256}
+- id: measure-image-header-png
+  title: 'PNG header reading: 300x200 greyscale has one channel'
+  input: {op: image_info, w: 300, h: 200, color_type: 0}
+  checks:
+  - {type: equals, path: width, value: 300}
+  - {type: equals, path: height, value: 200}
+  - {type: equals, path: channels, value: 1}
+- id: inspect-fbx-header
+  title: inspect_export reads only the FBX header and says so
+  input: {op: inspect, file: sample_binary_header}
+  checks:
+  - {type: equals, path: fbx.version, value: 7400}
+  - {type: equals, path: geometry_measured, value: false}
+  - {type: equals, path: reader, value: fbx-header}
+- id: inspect-glb
+  title: inspect_export lists the crate, its material and images
+  input: {op: inspect, file: good_prop_crate}
+  checks:
+  - {type: equals, path: objects_total, value: 1}
+  - {type: equals, path: objects.0.tris, value: 12}
+  - {type: equals, path: materials.0.name, value: crate_mat}

@@ -1,0 +1,22 @@
+# Project registry. The three entries below are CLEARLY SYNTHETIC examples (fake ids, made-up games) so the tools and evals have something to resolve.
+# Replace them with your own games. `id` is what every tool's project_id must equal. place_id is optional for the preflight (it only checks files);
+# when given it must match the registered one, and it is recorded in reports for the upload hand-off. `profile` is the project's overrides file.
+projects:
+  - id: synthetic-mining-tycoon
+    alias: Synthetic Mining Tycoon (example, not a real game)
+    place_id: 1000000001
+    universe: 2000000001
+    profile: projects/synthetic-mining-tycoon/profiles.yaml
+    synthetic: true
+  - id: synthetic-obby
+    alias: Synthetic Obby (example, not a real game)
+    place_id: 1000000002
+    universe: 2000000002
+    profile: projects/synthetic-obby/profiles.yaml
+    synthetic: true
+  - id: synthetic-sandbox
+    alias: "Synthetic Sandbox (example with no overrides, global profiles only)"
+    place_id: 1000000003
+    universe: 2000000003
+    profile: projects/synthetic-sandbox/profiles.yaml
+    synthetic: true

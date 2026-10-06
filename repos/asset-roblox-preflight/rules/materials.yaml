@@ -1,0 +1,88 @@
+category: materials
+rules:
+  - id: MAT_COUNT
+    severity: warn
+    title: Too many materials
+    explanation: Each material becomes a separate surface; budgets stay small when materials are shared or baked into one atlas.
+    fix: "Merge materials or bake an atlas: {measured} materials in use, limit {limit}."
+    safe: false
+    limits:
+      max_materials: {default: 4, verify_against_current_docs: false, heuristic: true, note: "Profiles override."}
+  - id: MAT_UNUSED
+    severity: info
+    title: Material not used by any mesh
+    explanation: Unused materials and their textures are dead weight in the file.
+    fix: "Delete the unused material '{object}' (Blender: File > Clean Up > Purge Unused Data)."
+    safe: false
+  - id: TEX_MISSING_FILE
+    severity: error
+    title: Texture file not found
+    explanation: The export references an image file that is not at the referenced path (relative to the export or the texture folder).
+    fix: "Put '{measured}' at that path or re-export with textures embedded or copied (Blender: Path Mode = Copy)."
+    safe: false
+  - id: TEX_UNSAFE_PATH
+    severity: error
+    title: Texture path is absolute or leaves the project folder
+    explanation: Absolute or parent-directory paths work only on the author's machine and cannot be read by the preflight.
+    fix: "Re-export with relative texture paths (Blender: Path Mode = Copy or Relative); '{measured}' is not portable."
+    safe: false
+  - id: TEX_FORMAT
+    severity: error
+    title: Texture image format not accepted
+    explanation: The image is in a format outside the accepted list (or is not a readable image).
+    fix: "Convert '{object}' to one of {limit} (PNG recommended); it is {measured}."
+    safe: false
+    limits:
+      allowed_formats: {default: [png, jpeg, tga, bmp], verify_against_current_docs: true, note: "DEFAULT list, not verified against current Roblox documentation."}
+  - id: TEX_NON_POT
+    severity: warn
+    title: Texture size is not a power of two
+    explanation: Power-of-two textures mip and compress cleanly. Whether the target tolerates other sizes is a thing to verify.
+    fix: "Resize '{object}' to a power-of-two size such as 512 or 1024 (it is {measured})."
+    safe: false
+    limits:
+      require_power_of_two: {default: true, verify_against_current_docs: true, note: "DEFAULT assumption."}
+  - id: TEX_OVERSIZE
+    severity: error
+    title: Texture larger than the profile allows
+    explanation: Large textures cost memory and upload time. The limit is a DEFAULT in the profile, not an official number.
+    fix: "Downscale '{object}' to at most {limit} pixels on the long side (it is {measured})."
+    safe: false
+    limits:
+      max_dimension_px: {default: 2048, verify_against_current_docs: true, note: "DEFAULT chosen by this tool, not an official Roblox limit. Profiles override."}
+  - id: TEX_COLORSPACE
+    severity: error
+    title: Texture colour space or slot mistake
+    explanation: A normal map used as a colour (sRGB) texture, or a colour image used as a normal map, or a declared colour space that contradicts the slot. Detected from the summary's declared colour space and from pixel statistics.
+    fix: "Use '{object}' in the right slot and set its colour space (normal and data maps: Non-Color); {measured}."
+    safe: false
+    limits:
+      normal_mean_range: {default: [100, 156], verify_against_current_docs: false, heuristic: true, note: "Mean R and G of a tangent-space normal map are near 128."}
+      normal_blue_min: {default: 190, verify_against_current_docs: false, heuristic: true}
+  - id: TEX_SLOT_HEURISTIC
+    severity: warn
+    title: Texture name or look suggests the wrong slot
+    explanation: File names such as *_normal or *_n in a colour slot, or a normal slot image that does not look like a normal map, are suspicious. Name checks are guesses.
+    fix: "Check which slot '{object}' is plugged into; {measured}."
+    safe: false
+    limits:
+      normal_name_hints: {default: ["_n", "_normal", "_nrm", "_norm", "normal"], verify_against_current_docs: false, heuristic: true}
+      color_name_hints: {default: ["_albedo", "_basecolor", "_base_color", "_diffuse", "_color"], verify_against_current_docs: false, heuristic: true}
+  - id: TEX_CHANNELS
+    severity: error
+    title: Texture has the wrong number of channels for its slot
+    explanation: A normal map needs three colour channels, a packed metallic-roughness texture needs at least three. A greyscale image cannot carry either.
+    fix: "Re-export '{object}' as RGB ({measured} channels, needs {limit})."
+    safe: false
+  - id: TEX_ALPHA_UNUSED
+    severity: info
+    title: Colour texture has an alpha channel but the material is opaque
+    explanation: An unused alpha channel adds memory for nothing.
+    fix: "Save '{object}' without alpha, or set the material's alpha mode if transparency is intended."
+    safe: false
+  - id: TEX_MIME_MISMATCH
+    severity: warn
+    title: Declared image type differs from the file content
+    explanation: The glTF says one image type but the bytes are another.
+    fix: "Re-export '{object}' so the declared type matches the content ({measured})."
+    safe: false

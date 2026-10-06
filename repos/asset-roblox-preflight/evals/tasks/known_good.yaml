@@ -1,0 +1,99 @@
+# Known-good assets must pass cleanly (no errors, no warnings). All limits are DEFAULTS.
+- id: known-good-good-prop-crate
+  title: good_prop_crate passes cleanly with no errors or warnings and is ready_to_upload (on DEFAULT limits)
+  input: {op: preflight, file: good_prop_crate, profile: prop}
+  checks:
+  - {type: clean}
+  - {type: equals, path: ready, value: true}
+  - {type: equals, path: handoff_tool, value: roblox_upload_plan}
+  - {type: one_line_fixes}
+  - {type: equals, path: facts.triangles, value: 12}
+- id: known-good-good-prop-crate-with-proxy
+  title: good_prop_crate_with_proxy passes cleanly with no errors or warnings and is ready_to_upload (on DEFAULT limits)
+  input: {op: preflight, file: good_prop_crate_with_proxy, profile: prop}
+  checks:
+  - {type: clean}
+  - {type: equals, path: ready, value: true}
+  - {type: equals, path: handoff_tool, value: roblox_upload_plan}
+  - {type: one_line_fixes}
+  - {type: equals, path: facts.collision_status, value: present}
+- id: known-good-good-prop-barrel
+  title: good_prop_barrel passes cleanly with no errors or warnings and is ready_to_upload (on DEFAULT limits)
+  input: {op: preflight, file: good_prop_barrel, profile: prop}
+  checks:
+  - {type: clean}
+  - {type: equals, path: ready, value: true}
+  - {type: equals, path: handoff_tool, value: roblox_upload_plan}
+  - {type: one_line_fixes}
+  - {type: equals, path: facts.materials, value: 1}
+- id: known-good-good-tool-drill
+  title: good_tool_drill passes cleanly with no errors or warnings and is ready_to_upload (on DEFAULT limits)
+  input: {op: preflight, file: good_tool_drill, profile: tool}
+  checks:
+  - {type: clean}
+  - {type: equals, path: ready, value: true}
+  - {type: equals, path: handoff_tool, value: roblox_upload_plan}
+  - {type: one_line_fixes}
+  - {type: equals, path: facts.bones, value: 2}
+- id: known-good-good-accessory-hat
+  title: good_accessory_hat passes cleanly with no errors or warnings and is ready_to_upload (on DEFAULT limits)
+  input: {op: preflight, file: good_accessory_hat, profile: character_accessory}
+  checks:
+  - {type: clean}
+  - {type: equals, path: ready, value: true}
+  - {type: equals, path: handoff_tool, value: roblox_upload_plan}
+  - {type: one_line_fixes}
+- id: known-good-good-terrain-slab
+  title: good_terrain_slab passes cleanly with no errors or warnings and is ready_to_upload (on DEFAULT limits)
+  input: {op: preflight, file: good_terrain_slab, profile: terrain_piece}
+  checks:
+  - {type: clean}
+  - {type: equals, path: ready, value: true}
+  - {type: equals, path: handoff_tool, value: roblox_upload_plan}
+  - {type: one_line_fixes}
+  - {type: equals, path: facts.triangles, value: 192}
+- id: known-good-good-prop-crate-obj
+  title: good_prop_crate_obj passes cleanly with no errors or warnings and is ready_to_upload (on DEFAULT limits)
+  input: {op: preflight, file: good_prop_crate_obj, profile: prop}
+  checks:
+  - {type: clean}
+  - {type: equals, path: ready, value: true}
+  - {type: equals, path: handoff_tool, value: roblox_upload_plan}
+  - {type: one_line_fixes}
+  - type: list_excludes
+    path: not_checked
+    items: [n-gons]
+- id: known-good-summary-prop
+  title: A clean hub summary passes, is flagged as reported-only (info) and its texture files are still checked on disk
+  input: {op: preflight, file: good_summary_prop, profile: prop}
+  checks:
+  - {type: clean}
+  - {type: has_rule, rule: UPL_REPORTED_ONLY, severity: info}
+  - {type: equals, path: ready, value: true}
+- id: known-good-fbx-header-plus-summary
+  title: An FBX header plus a clean hub summary can be ready, but only through the summary
+  input: {op: preflight, file: sample_binary_header, profile: prop, summary_file: good_summary_prop}
+  checks:
+  - {type: equals, path: result, value: pass}
+  - {type: has_rule, rule: UPL_REPORTED_ONLY}
+  - {type: lacks_rule, rule: UPL_NOT_MEASURED}
+- id: known-good-deterministic
+  title: Running the same preflight twice gives identical findings
+  input: {op: preflight, file: bad_summary_prop, profile: prop, twice: true}
+  checks:
+  - {type: equals, path: deterministic, value: true}
+- id: known-good-report-text-shape
+  title: The text report starts with a PASS/FAIL line, names project, place and profile, and ends with the hand-off line when ready
+  input: {op: preflight, file: good_prop_crate, profile: prop}
+  checks:
+  - {type: text_has, path: text, text: 'PASS: good_prop_crate'}
+  - {type: text_has, path: text, text: project synthetic-sandbox}
+  - {type: text_has, path: text, text: place 1000000003}
+  - {type: text_has, path: text, text: roblox_upload_plan}
+  - {type: text_has, path: text, text: never uploads}
+- id: known-good-limits-flagged-as-defaults
+  title: Every report says that limits are defaults to verify
+  input: {op: preflight, file: good_prop_crate, profile: prop}
+  checks:
+  - {type: equals, path: assumptions.limits_are_defaults, value: true}
+  - {type: text_has, path: assumptions.note, text: not official Roblox limits}

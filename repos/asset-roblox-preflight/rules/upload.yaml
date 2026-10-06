@@ -1,0 +1,56 @@
+category: upload
+rules:
+  - id: UPL_NOT_MEASURED
+    severity: error
+    title: Nothing could be measured
+    explanation: The file is an FBX (only the header is read) or an empty export, and no summary was supplied. The preflight cannot say the asset is fine, so it never says ready_to_upload.
+    fix: "Re-export as GLB, or pass a hub summary of the .blend (see README, input schema preflight-summary/1): {measured}."
+    safe: false
+  - id: UPL_REPORTED_ONLY
+    severity: info
+    title: Values come from a summary, not from the file
+    explanation: Geometry-derived numbers were reported by Blender through the hub and are not independently measured here.
+    fix: "Export a GLB as well if you want the numbers measured from the file itself."
+    safe: false
+  - id: UPL_FORMAT
+    severity: warn
+    title: File format not in the accepted list
+    explanation: The accepted list is a DEFAULT; verify against the current Roblox documentation.
+    fix: "Export as one of {limit}; the file is {measured}."
+    safe: false
+    limits:
+      accepted_formats: {default: [fbx, glb, gltf, obj], verify_against_current_docs: true, note: "DEFAULT list."}
+  - id: UPL_FILE_SIZE
+    severity: error
+    title: File larger than the size limit
+    explanation: Very large files are slow or refused at upload. The limit is a DEFAULT, not an official number.
+    fix: "Reduce the file below {limit} MB (decimate, downscale textures, or split the asset); it is {measured} MB."
+    safe: false
+    limits:
+      max_mb: {default: 10, verify_against_current_docs: true, note: "DEFAULT chosen by this tool, not an official Roblox limit."}
+  - id: UPL_FILE_SIZE_LARGE
+    severity: warn
+    title: File is getting large
+    explanation: Early warning before the hard size limit.
+    fix: "Consider reducing the file size ({measured} MB, warning at {limit} MB)."
+    safe: false
+    limits:
+      warn_mb: {default: 5, verify_against_current_docs: true, note: "DEFAULT chosen by this tool."}
+  - id: UPL_TEXTURE_MEMORY
+    severity: warn
+    title: Estimated texture memory is high
+    explanation: "Estimate = width x height x 4 bytes x 1.33 (mip chain) summed over distinct images. A rough guide only."
+    fix: "Downscale or share textures ({measured} MB estimated, limit {limit} MB)."
+    safe: false
+    limits:
+      max_texture_megabytes: {default: 48, verify_against_current_docs: true, note: "DEFAULT chosen by this tool."}
+  - id: UPL_UNSUPPORTED_FEATURE
+    severity: warn
+    title: Export contains features the upload may ignore
+    explanation: Cameras, lights, morph targets, extra UV sets, vertex colours and listed glTF extensions may be dropped or mis-imported. The list is a DEFAULT and is not verified against the current importer.
+    fix: "Remove {object} from the export or confirm it is supported: {measured}."
+    safe: false
+    limits:
+      flagged_extensions: {default: [KHR_lights_punctual, KHR_materials_clearcoat, KHR_materials_transmission, KHR_materials_volume, KHR_materials_sheen, KHR_texture_transform, KHR_mesh_quantization], verify_against_current_docs: true, note: "DEFAULT list."}
+      flag_morph_targets: {default: true, verify_against_current_docs: true}
+      max_uv_sets: {default: 1, verify_against_current_docs: true, note: "DEFAULT: only UV set 0 is checked."}

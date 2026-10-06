@@ -1,0 +1,160 @@
+# Rules as data, profile and project layering, project resolution and isolation.
+- id: rules-are-data
+  title: Every rule in rules/*.yaml has code and every check has a rule; rig rules are scoped to tool and accessory
+  input: {op: rules_check}
+  checks:
+  - type: equals
+    path: rules_without_code
+    value: []
+  - type: equals
+    path: code_without_rules
+    value: []
+  - {type: at_least, path: rules, value: 60}
+  - {type: equals, path: rig_rules_scoped, value: true}
+  - {type: equals, path: every_rule_has_fix_and_explanation, value: true}
+- id: rules-categories-complete
+  title: Mesh, transform, names, uv, materials, rig, collision and upload all have rules; severities are error, warn and info
+  input: {op: rules_check}
+  checks:
+  - type: equals
+    path: categories
+    value: [collision, materials, mesh, names, rig, transform, upload, uv]
+  - type: equals
+    path: severities
+    value: [error, info, warn]
+- id: rules-limits-are-defaults
+  title: Every profile states its limits are defaults, and limits carry verify flags
+  input: {op: rules_check}
+  checks:
+  - {type: equals, path: all_profiles_say_defaults, value: true}
+  - {type: at_least, path: verify_flagged_limits, value: 15}
+- id: profiles-list-are-defaults
+  title: list_profiles lists four profiles and says the numbers are defaults
+  input:
+    op: tool_call
+    tool: list_profiles
+    args: {project_id: synthetic-sandbox}
+  checks:
+  - {type: text_has, path: result.note, text: DEFAULTS}
+  - {type: equals, path: result.profiles.0.name, value: character_accessory}
+- id: profiles-project-layer
+  title: synthetic-obby layers 4000 triangles over the global 10000 for props
+  input:
+    op: tool_call
+    tool: list_profiles
+    args: {project_id: synthetic-obby, profile: prop}
+  checks:
+  - {type: equals, path: result.profiles.0.limits.MESH_TRI_BUDGET.max_triangles, value: 4000}
+- id: project-layer-raises-budget
+  title: 10800 triangles fail globally but pass in synthetic-mining-tycoon (12000)
+  input: {op: preflight, file: bad_tris_10800, profile: prop, project_id: synthetic-mining-tycoon}
+  checks:
+  - {type: lacks_rule, rule: MESH_TRI_BUDGET}
+- id: project-layer-global-still-fails
+  title: The same file fails in the sandbox project with no overrides
+  input: {op: preflight, file: bad_tris_10800, profile: prop}
+  checks:
+  - {type: has_rule, rule: MESH_TRI_BUDGET, severity: error}
+- id: project-layer-obby-budget
+  title: synthetic-obby (4000) fails it too, with its own limit in the finding
+  input: {op: preflight, file: bad_tris_10800, profile: prop, project_id: synthetic-obby}
+  checks:
+  - {type: finding_value, rule: MESH_TRI_BUDGET, value: 4000, field: limit, tol: 0}
+- id: project-layer-naming-scheme
+  title: synthetic-obby wants an ob_ prefix, so prop_crate breaks that project's scheme but not the sandbox's
+  input: {op: preflight, file: good_prop_crate, profile: prop, project_id: synthetic-obby}
+  checks:
+  - {type: has_rule, rule: NAME_SCHEME}
+- id: project-report-names-project-and-place
+  title: Every report states its project and place
+  input: {op: preflight, file: good_prop_crate, profile: prop, project_id: synthetic-mining-tycoon}
+  checks:
+  - {type: text_has, path: text, text: 'project synthetic-mining-tycoon, place 1000000001'}
+- id: project-place-recorded-in-handoff
+  title: The upload hand-off carries project and place for roblox_upload_plan
+  input:
+    op: tool_call
+    tool: preflight_report
+    args: {project_id: synthetic-obby, path: '$file:good_prop_crate', profile: prop, verbose: true}
+  checks:
+  - {type: equals, path: result.handoff.inputs.project_id, value: synthetic-obby}
+  - {type: equals, path: result.handoff.inputs.place_id, value: 1000000002}
+- id: project-unknown-refused
+  title: An unknown project is refused and the known ones are listed
+  input:
+    op: tool_call
+    tool: preflight_report
+    args: {project_id: no-such-game, path: '$file:good_prop_crate', profile: prop}
+  checks:
+  - {type: error_contains, text: unknown project_id}
+  - {type: error_contains, text: synthetic-obby}
+- id: project-missing-refused
+  title: An empty project_id is refused with what is missing, never guessed
+  input:
+    op: tool_call
+    tool: preflight_report
+    args: {project_id: '', path: '$file:good_prop_crate', profile: prop}
+  checks:
+  - {type: error_contains, text: project_id is required}
+- id: project-place-mismatch-refused
+  title: A place_id that is not the project's registered place is refused
+  input:
+    op: tool_call
+    tool: preflight_report
+    args: {project_id: synthetic-obby, place_id: 5, path: '$file:good_prop_crate', profile: prop}
+  checks:
+  - {type: error_contains, text: does not match project}
+- id: project-feedback-refuses-unknown
+  title: Recording feedback without a resolved project is refused
+  input:
+    op: tool_call
+    tool: record_run
+    args: {project_id: ghost, request: x}
+  checks:
+  - {type: error_contains, text: unknown project_id}
+- id: project-list
+  title: list_projects shows the registry and marks the shipped ones synthetic
+  input:
+    op: tool_call
+    tool: list_projects
+    args: {}
+  checks:
+  - {type: equals, path: result.projects.0.synthetic, value: true}
+  - {type: at_least, path: result.projects.0.place_id, value: 1}
+- id: isolation-corrections-stay-in-project
+  title: A correction recorded in one project is not shown in another, unless it was marked global
+  input:
+    op: isolation
+    what: corrections
+    a: synthetic-obby
+    b: synthetic-mining-tycoon
+    request: check the drill spin bone
+    reason: spin bone must be called spin
+    corrections:
+    - {dimension: rig, note: name the spin bone spin}
+    later_request: drill spin bone rename
+  checks:
+  - {type: equals, path: a_sees, value: 1}
+  - {type: equals, path: b_sees, value: 0}
+  - {type: equals, path: b_sees_with_global, value: 1}
+  - {type: equals, path: b_sees_global_off, value: 0}
+  - type: equals
+    path: scopes_seen_by_b
+    value: [global]
+- id: isolation-override-stays-in-project
+  title: A saved override applies in its project only
+  input: {op: isolation, what: overrides, a: synthetic-sandbox, b: synthetic-obby, file: bad_too_many_tris, profile: prop, rule: MESH_TRI_BUDGET, limit_key: max_triangles, value: 30000, reason: hero crate
+      may be 30k}
+  checks:
+  - {type: equals, path: a_before, value: 1}
+  - {type: equals, path: a_after_project_override, value: 0}
+  - {type: at_least, path: b_after_project_override, value: 1}
+- id: isolation-global-override-applies-everywhere
+  title: The same override marked global applies in other projects and is listed there
+  input: {op: isolation, what: overrides, a: synthetic-sandbox, b: synthetic-obby, file: bad_too_many_tris, profile: prop, rule: MESH_TRI_BUDGET, limit_key: max_triangles, value: 30000, reason: hero crate
+      may be 30k}
+  checks:
+  - {type: equals, path: b_after_global_override, value: 0}
+  - type: list_contains
+    path: b_override_listed
+    items: [MESH_TRI_BUDGET]

@@ -1,0 +1,11 @@
+# SYNTHETIC EXAMPLE overrides for a made-up obstacle-course game: small props, its own prefix, no collision proxy for tiny assets.
+project: synthetic-obby
+profiles:
+  prop:
+    limits:
+      MESH_TRI_BUDGET: {max_triangles: 4000}
+      MESH_TRI_BUDGET_TOTAL: {max_triangles_total: 6000}
+      TEX_OVERSIZE: {max_dimension_px: 1024}
+naming:
+  mesh_patterns:
+    prop: "^ob_[a-z0-9]+(_[a-z0-9]+)*$"

@@ -1,0 +1,2749 @@
+{
+  "label": "baseline",
+  "mode": "solver",
+  "at": "2026-10-06T05:15:40+00:00",
+  "git_rev": "484ca62",
+  "python": "3.11.15",
+  "meta": {},
+  "passed": 157,
+  "total": 157,
+  "tasks": [
+    {
+      "id": "bad-flipped-normals",
+      "passed": true,
+      "checks": [
+        {
+          "check": "has_rule",
+          "passed": true,
+          "message": "expected a error MESH_FLIPPED_NORMALS finding; got rules ['MESH_FLIPPED_NORMALS']"
+        },
+        {
+          "check": "finding_value",
+          "passed": true,
+          "message": "MESH_FLIPPED_NORMALS.measured=1.0; expected 1.0 +/- 0.01"
+        },
+        {
+          "check": "rules_only",
+          "passed": true,
+          "message": "error/warn rules ['MESH_FLIPPED_NORMALS']; expected exactly ['MESH_FLIPPED_NORMALS']"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "ready == False (got False)"
+        }
+      ]
+    },
+    {
+      "id": "bad-inverted-winding",
+      "passed": true,
+      "checks": [
+        {
+          "check": "has_rule",
+          "passed": true,
+          "message": "expected a error MESH_FLIPPED_NORMALS finding; got rules ['MESH_FLIPPED_NORMALS']"
+        },
+        {
+          "check": "finding_text",
+          "passed": true,
+          "message": "MESH_FLIPPED_NORMALS.fix='On prop_crate: Edit Mode, select all, Mesh > Normals > Recalculate Outside (12 of 12 faces flipped).' should contain '12 of 12'"
+        }
+      ]
+    },
+    {
+      "id": "bad-inside-out-consistent",
+      "passed": true,
+      "checks": [
+        {
+          "check": "has_rule",
+          "passed": true,
+          "message": "expected a error MESH_FLIPPED_NORMALS finding; got rules ['MESH_FLIPPED_NORMALS']"
+        },
+        {
+          "check": "finding_text",
+          "passed": true,
+          "message": "MESH_FLIPPED_NORMALS.measured='inside out (negative volume)' should contain 'inside out'"
+        }
+      ]
+    },
+    {
+      "id": "bad-unapplied-scale",
+      "passed": true,
+      "checks": [
+        {
+          "check": "has_rule",
+          "passed": true,
+          "message": "expected a error XFM_UNAPPLIED_SCALE finding on prop_crate; got rules ['XFM_UNAPPLIED_SCALE']"
+        },
+        {
+          "check": "rules_only",
+          "passed": true,
+          "message": "error/warn rules ['XFM_UNAPPLIED_SCALE']; expected exactly ['XFM_UNAPPLIED_SCALE']"
+        },
+        {
+          "check": "finding_text",
+          "passed": true,
+          "message": "XFM_UNAPPLIED_SCALE.measured='(2, 2, 2)' should contain '(2, 2, 2)'"
+        }
+      ]
+    },
+    {
+      "id": "bad-unapplied-rotation",
+      "passed": true,
+      "checks": [
+        {
+          "check": "has_rule",
+          "passed": true,
+          "message": "expected a warn XFM_UNAPPLIED_ROTATION finding; got rules ['XFM_UNAPPLIED_ROTATION']"
+        },
+        {
+          "check": "lacks_rule",
+          "passed": true,
+          "message": "XFM_AXIS_UP must not be reported (rules: ['XFM_UNAPPLIED_ROTATION'])"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "result == 'pass' (got 'pass')"
+        }
+      ]
+    },
+    {
+      "id": "bad-negative-scale",
+      "passed": true,
+      "checks": [
+        {
+          "check": "has_rule",
+          "passed": true,
+          "message": "expected a error XFM_NEGATIVE_SCALE finding; got rules ['XFM_NEGATIVE_SCALE']"
+        },
+        {
+          "check": "lacks_rule",
+          "passed": true,
+          "message": "XFM_UNAPPLIED_SCALE must not be reported (rules: ['XFM_NEGATIVE_SCALE'])"
+        }
+      ]
+    },
+    {
+      "id": "bad-too-many-triangles",
+      "passed": true,
+      "checks": [
+        {
+          "check": "finding_value",
+          "passed": true,
+          "message": "MESH_TRI_BUDGET.measured=19200; expected 19200 +/- 0"
+        },
+        {
+          "check": "finding_value",
+          "passed": true,
+          "message": "MESH_TRI_BUDGET.limit=10000; expected 10000 +/- 0"
+        },
+        {
+          "check": "has_rule",
+          "passed": true,
+          "message": "expected a warn COL_PROXY_MISSING finding; got rules ['COL_PROXY_MISSING', 'MESH_TRI_BUDGET']"
+        }
+      ]
+    },
+    {
+      "id": "bad-open-mesh",
+      "passed": true,
+      "checks": [
+        {
+          "check": "has_rule",
+          "passed": true,
+          "message": "expected a warn MESH_NON_MANIFOLD finding; got rules ['MESH_LOOSE_GEOMETRY', 'MESH_NON_MANIFOLD']"
+        },
+        {
+          "check": "finding_value",
+          "passed": true,
+          "message": "MESH_NON_MANIFOLD.measured=4; expected 4 +/- 0"
+        }
+      ]
+    },
+    {
+      "id": "bad-loose-geometry",
+      "passed": true,
+      "checks": [
+        {
+          "check": "has_rule",
+          "passed": true,
+          "message": "expected a  MESH_LOOSE_GEOMETRY finding; got rules ['MESH_LOOSE_GEOMETRY']"
+        },
+        {
+          "check": "finding_text",
+          "passed": true,
+          "message": "MESH_LOOSE_GEOMETRY.measured='3 loose vertices, 1 degenerate triangles' should contain '3 loose vertices'"
+        },
+        {
+          "check": "lacks_rule",
+          "passed": true,
+          "message": "XFM_ORIGIN_PLACEMENT must not be reported (rules: ['MESH_LOOSE_GEOMETRY'])"
+        }
+      ]
+    },
+    {
+      "id": "bad-units-cm",
+      "passed": true,
+      "checks": [
+        {
+          "check": "has_rule",
+          "passed": true,
+          "message": "expected a  MESH_BBOX_PROFILE finding; got rules ['MESH_BBOX_PROFILE', 'XFM_UNITS_SUSPECT']"
+        },
+        {
+          "check": "has_rule",
+          "passed": true,
+          "message": "expected a  XFM_UNITS_SUSPECT finding; got rules ['MESH_BBOX_PROFILE', 'XFM_UNITS_SUSPECT']"
+        },
+        {
+          "check": "finding_text",
+          "passed": true,
+          "message": "XFM_UNITS_SUSPECT.limit='x0.01' should contain '0.01'"
+        },
+        {
+          "check": "lacks_rule",
+          "passed": true,
+          "message": "MESH_SCALE_RANGE must not be reported (rules: ['MESH_BBOX_PROFILE', 'XFM_UNITS_SUSPECT'])"
+        }
+      ]
+    },
+    {
+      "id": "bad-units-tiny",
+      "passed": true,
+      "checks": [
+        {
+          "check": "has_rule",
+          "passed": true,
+          "message": "expected a error MESH_SCALE_RANGE finding; got rules ['MESH_SCALE_RANGE', 'XFM_UNITS_SUSPECT']"
+        },
+        {
+          "check": "has_rule",
+          "passed": true,
+          "message": "expected a  XFM_UNITS_SUSPECT finding; got rules ['MESH_SCALE_RANGE', 'XFM_UNITS_SUSPECT']"
+        },
+        {
+          "check": "finding_text",
+          "passed": true,
+          "message": "XFM_UNITS_SUSPECT.limit='x1000' should contain '1000'"
+        }
+      ]
+    },
+    {
+      "id": "bad-origin-center",
+      "passed": true,
+      "checks": [
+        {
+          "check": "has_rule",
+          "passed": true,
+          "message": "expected a warn XFM_ORIGIN_PLACEMENT finding; got rules ['XFM_ORIGIN_PLACEMENT']"
+        },
+        {
+          "check": "finding_value",
+          "passed": true,
+          "message": "XFM_ORIGIN_PLACEMENT.measured=0.5; expected 0.5 +/- 0.001"
+        }
+      ]
+    },
+    {
+      "id": "bad-origin-ignored-for-tool",
+      "passed": true,
+      "checks": [
+        {
+          "check": "lacks_rule",
+          "passed": true,
+          "message": "XFM_ORIGIN_PLACEMENT must not be reported (rules: ['NAME_SCHEME'])"
+        }
+      ]
+    },
+    {
+      "id": "bad-root-offset",
+      "passed": true,
+      "checks": [
+        {
+          "check": "has_rule",
+          "passed": true,
+          "message": "expected a  XFM_ROOT_OFFSET finding; got rules ['XFM_ROOT_OFFSET']"
+        },
+        {
+          "check": "finding_value",
+          "passed": true,
+          "message": "XFM_ROOT_OFFSET.measured=50.0; expected 50 +/- 0.001"
+        }
+      ]
+    },
+    {
+      "id": "bad-axis-rotated-root",
+      "passed": true,
+      "checks": [
+        {
+          "check": "has_rule",
+          "passed": true,
+          "message": "expected a  XFM_AXIS_UP finding; got rules ['XFM_AXIS_UP']"
+        },
+        {
+          "check": "lacks_rule",
+          "passed": true,
+          "message": "XFM_UNAPPLIED_ROTATION must not be reported (rules: ['XFM_AXIS_UP'])"
+        }
+      ]
+    },
+    {
+      "id": "bad-proxy-heavy",
+      "passed": true,
+      "checks": [
+        {
+          "check": "has_rule",
+          "passed": true,
+          "message": "expected a  COL_PROXY_BUDGET finding; got rules ['COL_PROXY_BUDGET']"
+        },
+        {
+          "check": "finding_value",
+          "passed": true,
+          "message": "COL_PROXY_BUDGET.measured=1200; expected 1200 +/- 0"
+        },
+        {
+          "check": "lacks_rule",
+          "passed": true,
+          "message": "COL_PROXY_MISSING must not be reported (rules: ['COL_PROXY_BUDGET'])"
+        }
+      ]
+    },
+    {
+      "id": "bad-proxy-bounds",
+      "passed": true,
+      "checks": [
+        {
+          "check": "has_rule",
+          "passed": true,
+          "message": "expected a  COL_PROXY_BOUNDS finding; got rules ['COL_PROXY_BOUNDS']"
+        },
+        {
+          "check": "finding_value",
+          "passed": true,
+          "message": "COL_PROXY_BOUNDS.measured=0.5; expected 0.5 +/- 0.01"
+        }
+      ]
+    },
+    {
+      "id": "bad-no-geometry",
+      "passed": true,
+      "checks": [
+        {
+          "check": "has_rule",
+          "passed": true,
+          "message": "expected a error MESH_NO_GEOMETRY finding; got rules ['MESH_NO_GEOMETRY']"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "ready == False (got False)"
+        }
+      ]
+    },
+    {
+      "id": "bad-ngon-obj",
+      "passed": true,
+      "checks": [
+        {
+          "check": "has_rule",
+          "passed": true,
+          "message": "expected a  MESH_NGONS finding; got rules ['MESH_NGONS', 'MESH_NON_MANIFOLD', 'UV_MISSING_UNTEXTURED']"
+        },
+        {
+          "check": "finding_value",
+          "passed": true,
+          "message": "MESH_NGONS.measured=1; expected 1 +/- 0"
+        }
+      ]
+    },
+    {
+      "id": "bad-glb-cannot-measure-ngons",
+      "passed": true,
+      "checks": [
+        {
+          "check": "list_contains",
+          "passed": true,
+          "message": "not_checked=['n-gons']; expected to contain ['n-gons']"
+        }
+      ]
+    },
+    {
+      "id": "bad-unsupported-features",
+      "passed": true,
+      "checks": [
+        {
+          "check": "has_rule",
+          "passed": true,
+          "message": "expected a  UPL_UNSUPPORTED_FEATURE finding; got rules ['UPL_UNSUPPORTED_FEATURE']"
+        },
+        {
+          "check": "at_least",
+          "passed": true,
+          "message": "warnings=3; expected >= 3"
+        }
+      ]
+    },
+    {
+      "id": "bad-draco-refused",
+      "passed": true,
+      "checks": [
+        {
+          "check": "error_contains",
+          "passed": true,
+          "message": "error should mention 'KHR_draco_mesh_compression' (got 'geometry is compressed with KHR_draco_mesh_compression; this reader cannot decode it. Re-export without mesh compression for preflight (and for Roblox).')"
+        }
+      ]
+    },
+    {
+      "id": "bad-truncated-refused",
+      "passed": true,
+      "checks": [
+        {
+          "check": "error_contains",
+          "passed": true,
+          "message": "error should mention 'truncated' (got 'truncated GLB: header says 3380 bytes, file has 1690')"
+        }
+      ]
+    },
+    {
+      "id": "bad-fbx-header-only",
+      "passed": true,
+      "checks": [
+        {
+          "check": "has_rule",
+          "passed": true,
+          "message": "expected a error UPL_NOT_MEASURED finding; got rules ['UPL_NOT_MEASURED']"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "ready == False (got False)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "handoff == False (got False)"
+        },
+        {
+          "check": "list_contains",
+          "passed": true,
+          "message": "not_checked=['everything inside the FBX']; expected to contain ['everything inside the FBX']"
+        }
+      ]
+    },
+    {
+      "id": "bad-summary-many-problems",
+      "passed": true,
+      "checks": [
+        {
+          "check": "has_rule",
+          "passed": true,
+          "message": "expected a  MESH_TRI_BUDGET finding; got rules ['COL_PROXY_MISSING', 'MESH_FLIPPED_NORMALS', 'MESH_LOOSE_GEOMETRY', 'MESH_NGONS', 'MESH_NON_MANIFOLD', 'MESH_TRI_BUDGET', 'NAME_INVALID_CHARS', 'NAME_SCHEME', 'TEX_COLORSPACE', 'UPL_REPORTED_ONLY', 'UV_OUT_OF_RANGE', 'UV_OVERLAP', 'UV_TEXEL_SPREAD', 'UV_WASTED_SPACE', 'XFM_AXIS_UP', 'XFM_ORIGIN_PLACEMENT', 'XFM_UNAPPLIED_SCALE']"
+        },
+        {
+          "check": "has_rule",
+          "passed": true,
+          "message": "expected a  MESH_NGONS finding; got rules ['COL_PROXY_MISSING', 'MESH_FLIPPED_NORMALS', 'MESH_LOOSE_GEOMETRY', 'MESH_NGONS', 'MESH_NON_MANIFOLD', 'MESH_TRI_BUDGET', 'NAME_INVALID_CHARS', 'NAME_SCHEME', 'TEX_COLORSPACE', 'UPL_REPORTED_ONLY', 'UV_OUT_OF_RANGE', 'UV_OVERLAP', 'UV_TEXEL_SPREAD', 'UV_WASTED_SPACE', 'XFM_AXIS_UP', 'XFM_ORIGIN_PLACEMENT', 'XFM_UNAPPLIED_SCALE']"
+        },
+        {
+          "check": "has_rule",
+          "passed": true,
+          "message": "expected a  XFM_UNAPPLIED_SCALE finding; got rules ['COL_PROXY_MISSING', 'MESH_FLIPPED_NORMALS', 'MESH_LOOSE_GEOMETRY', 'MESH_NGONS', 'MESH_NON_MANIFOLD', 'MESH_TRI_BUDGET', 'NAME_INVALID_CHARS', 'NAME_SCHEME', 'TEX_COLORSPACE', 'UPL_REPORTED_ONLY', 'UV_OUT_OF_RANGE', 'UV_OVERLAP', 'UV_TEXEL_SPREAD', 'UV_WASTED_SPACE', 'XFM_AXIS_UP', 'XFM_ORIGIN_PLACEMENT', 'XFM_UNAPPLIED_SCALE']"
+        },
+        {
+          "check": "has_rule",
+          "passed": true,
+          "message": "expected a  MESH_NON_MANIFOLD finding; got rules ['COL_PROXY_MISSING', 'MESH_FLIPPED_NORMALS', 'MESH_LOOSE_GEOMETRY', 'MESH_NGONS', 'MESH_NON_MANIFOLD', 'MESH_TRI_BUDGET', 'NAME_INVALID_CHARS', 'NAME_SCHEME', 'TEX_COLORSPACE', 'UPL_REPORTED_ONLY', 'UV_OUT_OF_RANGE', 'UV_OVERLAP', 'UV_TEXEL_SPREAD', 'UV_WASTED_SPACE', 'XFM_AXIS_UP', 'XFM_ORIGIN_PLACEMENT', 'XFM_UNAPPLIED_SCALE']"
+        },
+        {
+          "check": "has_rule",
+          "passed": true,
+          "message": "expected a  MESH_LOOSE_GEOMETRY finding; got rules ['COL_PROXY_MISSING', 'MESH_FLIPPED_NORMALS', 'MESH_LOOSE_GEOMETRY', 'MESH_NGONS', 'MESH_NON_MANIFOLD', 'MESH_TRI_BUDGET', 'NAME_INVALID_CHARS', 'NAME_SCHEME', 'TEX_COLORSPACE', 'UPL_REPORTED_ONLY', 'UV_OUT_OF_RANGE', 'UV_OVERLAP', 'UV_TEXEL_SPREAD', 'UV_WASTED_SPACE', 'XFM_AXIS_UP', 'XFM_ORIGIN_PLACEMENT', 'XFM_UNAPPLIED_SCALE']"
+        },
+        {
+          "check": "has_rule",
+          "passed": true,
+          "message": "expected a  TEX_COLORSPACE finding; got rules ['COL_PROXY_MISSING', 'MESH_FLIPPED_NORMALS', 'MESH_LOOSE_GEOMETRY', 'MESH_NGONS', 'MESH_NON_MANIFOLD', 'MESH_TRI_BUDGET', 'NAME_INVALID_CHARS', 'NAME_SCHEME', 'TEX_COLORSPACE', 'UPL_REPORTED_ONLY', 'UV_OUT_OF_RANGE', 'UV_OVERLAP', 'UV_TEXEL_SPREAD', 'UV_WASTED_SPACE', 'XFM_AXIS_UP', 'XFM_ORIGIN_PLACEMENT', 'XFM_UNAPPLIED_SCALE']"
+        },
+        {
+          "check": "has_rule",
+          "passed": true,
+          "message": "expected a  XFM_AXIS_UP finding; got rules ['COL_PROXY_MISSING', 'MESH_FLIPPED_NORMALS', 'MESH_LOOSE_GEOMETRY', 'MESH_NGONS', 'MESH_NON_MANIFOLD', 'MESH_TRI_BUDGET', 'NAME_INVALID_CHARS', 'NAME_SCHEME', 'TEX_COLORSPACE', 'UPL_REPORTED_ONLY', 'UV_OUT_OF_RANGE', 'UV_OVERLAP', 'UV_TEXEL_SPREAD', 'UV_WASTED_SPACE', 'XFM_AXIS_UP', 'XFM_ORIGIN_PLACEMENT', 'XFM_UNAPPLIED_SCALE']"
+        },
+        {
+          "check": "has_rule",
+          "passed": true,
+          "message": "expected a  UV_OVERLAP finding; got rules ['COL_PROXY_MISSING', 'MESH_FLIPPED_NORMALS', 'MESH_LOOSE_GEOMETRY', 'MESH_NGONS', 'MESH_NON_MANIFOLD', 'MESH_TRI_BUDGET', 'NAME_INVALID_CHARS', 'NAME_SCHEME', 'TEX_COLORSPACE', 'UPL_REPORTED_ONLY', 'UV_OUT_OF_RANGE', 'UV_OVERLAP', 'UV_TEXEL_SPREAD', 'UV_WASTED_SPACE', 'XFM_AXIS_UP', 'XFM_ORIGIN_PLACEMENT', 'XFM_UNAPPLIED_SCALE']"
+        },
+        {
+          "check": "has_rule",
+          "passed": true,
+          "message": "expected a  NAME_INVALID_CHARS finding; got rules ['COL_PROXY_MISSING', 'MESH_FLIPPED_NORMALS', 'MESH_LOOSE_GEOMETRY', 'MESH_NGONS', 'MESH_NON_MANIFOLD', 'MESH_TRI_BUDGET', 'NAME_INVALID_CHARS', 'NAME_SCHEME', 'TEX_COLORSPACE', 'UPL_REPORTED_ONLY', 'UV_OUT_OF_RANGE', 'UV_OVERLAP', 'UV_TEXEL_SPREAD', 'UV_WASTED_SPACE', 'XFM_AXIS_UP', 'XFM_ORIGIN_PLACEMENT', 'XFM_UNAPPLIED_SCALE']"
+        },
+        {
+          "check": "one_line_fixes",
+          "passed": true,
+          "message": "every finding needs a one-line, fully filled fix; offenders: []"
+        }
+      ]
+    },
+    {
+      "id": "bad-summary-flipped-ratio",
+      "passed": true,
+      "checks": [
+        {
+          "check": "finding_value",
+          "passed": true,
+          "message": "MESH_FLIPPED_NORMALS.measured=0.021; expected 0.021 +/- 0.001"
+        }
+      ]
+    },
+    {
+      "id": "bad-spin-bone-name",
+      "passed": true,
+      "checks": [
+        {
+          "check": "has_rule",
+          "passed": true,
+          "message": "expected a error RIG_SPIN_SETUP finding on Spin_Bone; got rules ['RIG_SPIN_SETUP']"
+        },
+        {
+          "check": "finding_text",
+          "passed": true,
+          "message": "RIG_SPIN_SETUP.fix=\"Rename bone 'Spin_Bone' to 'spin' (the one bone that drives the spinning part).\" should contain \"Rename bone 'Spin_Bone' to 'spin'\""
+        },
+        {
+          "check": "lacks_rule",
+          "passed": true,
+          "message": "RIG_BONE_NAMING must not be reported (rules: ['RIG_SPIN_SETUP'])"
+        },
+        {
+          "check": "rules_only",
+          "passed": true,
+          "message": "error/warn rules ['RIG_SPIN_SETUP']; expected exactly ['RIG_SPIN_SETUP']"
+        }
+      ]
+    },
+    {
+      "id": "bad-spin-missing",
+      "passed": true,
+      "checks": [
+        {
+          "check": "has_rule",
+          "passed": true,
+          "message": "expected a error RIG_SPIN_SETUP finding; got rules ['RIG_SPIN_SETUP']"
+        },
+        {
+          "check": "finding_text",
+          "passed": true,
+          "message": "RIG_SPIN_SETUP.fix=\"Add one bone named 'spin' under the root bone and weight the spinning part fully to it.\" should contain \"Add one bone named 'spin'\""
+        }
+      ]
+    },
+    {
+      "id": "bad-spin-wrong-parent",
+      "passed": true,
+      "checks": [
+        {
+          "check": "has_rule",
+          "passed": true,
+          "message": "expected a  RIG_SPIN_SETUP finding; got rules ['RIG_SPIN_SETUP']"
+        },
+        {
+          "check": "finding_text",
+          "passed": true,
+          "message": "RIG_SPIN_SETUP.limit=\"direct child of 'root'\" should contain 'direct child'"
+        }
+      ]
+    },
+    {
+      "id": "bad-spin-blended",
+      "passed": true,
+      "checks": [
+        {
+          "check": "has_rule",
+          "passed": true,
+          "message": "expected a  RIG_SPIN_SETUP finding; got rules ['RIG_SPIN_SETUP']"
+        },
+        {
+          "check": "finding_text",
+          "passed": true,
+          "message": "RIG_SPIN_SETUP.measured='0.0% rigid' should contain '0.0% rigid'"
+        }
+      ]
+    },
+    {
+      "id": "bad-rig-two-roots",
+      "passed": true,
+      "checks": [
+        {
+          "check": "has_rule",
+          "passed": true,
+          "message": "expected a error RIG_ROOT_SINGLE finding; got rules ['RIG_ROOT_SINGLE']"
+        },
+        {
+          "check": "finding_value",
+          "passed": true,
+          "message": "RIG_ROOT_SINGLE.measured=2; expected 2 +/- 0"
+        }
+      ]
+    },
+    {
+      "id": "bad-rig-too-many-bones",
+      "passed": true,
+      "checks": [
+        {
+          "check": "has_rule",
+          "passed": true,
+          "message": "expected a  RIG_BONE_COUNT finding; got rules ['RIG_BONE_COUNT']"
+        },
+        {
+          "check": "finding_value",
+          "passed": true,
+          "message": "RIG_BONE_COUNT.measured=10; expected 10 +/- 0"
+        },
+        {
+          "check": "finding_value",
+          "passed": true,
+          "message": "RIG_BONE_COUNT.limit=8; expected 8 +/- 0"
+        }
+      ]
+    },
+    {
+      "id": "bad-rig-bone-count-project-override",
+      "passed": true,
+      "checks": [
+        {
+          "check": "lacks_rule",
+          "passed": true,
+          "message": "RIG_BONE_COUNT must not be reported (rules: [])"
+        }
+      ]
+    },
+    {
+      "id": "bad-anim-clip-name-and-fps",
+      "passed": true,
+      "checks": [
+        {
+          "check": "has_rule",
+          "passed": true,
+          "message": "expected a  RIG_ANIM_NAMES finding on Action; got rules ['RIG_ANIM_FPS', 'RIG_ANIM_NAMES']"
+        },
+        {
+          "check": "has_rule",
+          "passed": true,
+          "message": "expected a  RIG_ANIM_FPS finding; got rules ['RIG_ANIM_FPS', 'RIG_ANIM_NAMES']"
+        },
+        {
+          "check": "finding_value",
+          "passed": true,
+          "message": "RIG_ANIM_FPS.measured=12.0; expected 12 +/- 0.01"
+        }
+      ]
+    },
+    {
+      "id": "bad-rig-in-prop",
+      "passed": true,
+      "checks": [
+        {
+          "check": "has_rule",
+          "passed": true,
+          "message": "expected a  RIG_UNEXPECTED finding; got rules ['NAME_SCHEME', 'RIG_UNEXPECTED']"
+        },
+        {
+          "check": "lacks_rule",
+          "passed": true,
+          "message": "RIG_SPIN_SETUP must not be reported (rules: ['NAME_SCHEME', 'RIG_UNEXPECTED'])"
+        },
+        {
+          "check": "lacks_rule",
+          "passed": true,
+          "message": "RIG_ROOT_SINGLE must not be reported (rules: ['NAME_SCHEME', 'RIG_UNEXPECTED'])"
+        }
+      ]
+    },
+    {
+      "id": "bad-rig-tool-check-scope",
+      "passed": true,
+      "checks": [
+        {
+          "check": "has_rule",
+          "passed": true,
+          "message": "expected a  RIG_SPIN_SETUP finding; got rules ['RIG_SPIN_SETUP']"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "scope == ['rig'] (got ['rig'])"
+        },
+        {
+          "check": "is_none",
+          "passed": true,
+          "message": "ready=None; expected null"
+        }
+      ]
+    },
+    {
+      "id": "good-rig-accessory-no-rig",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "result == 'pass' (got 'pass')"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "findings == [] (got [])"
+        }
+      ]
+    },
+    {
+      "id": "measure-drill-rig",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "bones == [['root', 'spin']] (got [['root', 'spin']])"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "animations.0.name == 'spin' (got 'spin')"
+        },
+        {
+          "check": "approx",
+          "passed": true,
+          "message": "animations.0.fps=30.0; expected 30 +/- 0.01"
+        }
+      ]
+    },
+    {
+      "id": "bad-texture-4k",
+      "passed": true,
+      "checks": [
+        {
+          "check": "has_rule",
+          "passed": true,
+          "message": "expected a error TEX_OVERSIZE finding; got rules ['TEX_OVERSIZE', 'UPL_TEXTURE_MEMORY']"
+        },
+        {
+          "check": "finding_text",
+          "passed": true,
+          "message": "TEX_OVERSIZE.measured='4096x4096' should contain '4096x4096'"
+        },
+        {
+          "check": "has_rule",
+          "passed": true,
+          "message": "expected a  UPL_TEXTURE_MEMORY finding; got rules ['TEX_OVERSIZE', 'UPL_TEXTURE_MEMORY']"
+        }
+      ]
+    },
+    {
+      "id": "bad-texture-4k-under-obby",
+      "passed": true,
+      "checks": [
+        {
+          "check": "lacks_rule",
+          "passed": true,
+          "message": "TEX_OVERSIZE must not be reported (rules: ['NAME_SCHEME'])"
+        }
+      ]
+    },
+    {
+      "id": "bad-texture-non-pot",
+      "passed": true,
+      "checks": [
+        {
+          "check": "has_rule",
+          "passed": true,
+          "message": "expected a warn TEX_NON_POT finding; got rules ['TEX_NON_POT']"
+        },
+        {
+          "check": "finding_text",
+          "passed": true,
+          "message": "TEX_NON_POT.measured='300x200' should contain '300x200'"
+        }
+      ]
+    },
+    {
+      "id": "bad-missing-texture",
+      "passed": true,
+      "checks": [
+        {
+          "check": "has_rule",
+          "passed": true,
+          "message": "expected a error TEX_MISSING_FILE finding; got rules ['TEX_MISSING_FILE']"
+        },
+        {
+          "check": "finding_text",
+          "passed": true,
+          "message": "TEX_MISSING_FILE.measured='textures/missing_albedo.png' should contain 'textures/missing_albedo.png'"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "ready == False (got False)"
+        }
+      ]
+    },
+    {
+      "id": "bad-absolute-texture-path",
+      "passed": true,
+      "checks": [
+        {
+          "check": "has_rule",
+          "passed": true,
+          "message": "expected a error TEX_UNSAFE_PATH finding; got rules ['TEX_UNSAFE_PATH']"
+        },
+        {
+          "check": "lacks_rule",
+          "passed": true,
+          "message": "TEX_MISSING_FILE must not be reported (rules: ['TEX_UNSAFE_PATH'])"
+        }
+      ]
+    },
+    {
+      "id": "bad-obj-missing-texture",
+      "passed": true,
+      "checks": [
+        {
+          "check": "has_rule",
+          "passed": true,
+          "message": "expected a  TEX_MISSING_FILE finding; got rules ['TEX_MISSING_FILE']"
+        }
+      ]
+    },
+    {
+      "id": "bad-normal-as-color",
+      "passed": true,
+      "checks": [
+        {
+          "check": "has_rule",
+          "passed": true,
+          "message": "expected a error TEX_COLORSPACE finding; got rules ['TEX_COLORSPACE']"
+        },
+        {
+          "check": "rules_only",
+          "passed": true,
+          "message": "error/warn rules ['TEX_COLORSPACE']; expected exactly ['TEX_COLORSPACE']"
+        }
+      ]
+    },
+    {
+      "id": "bad-grey-normal",
+      "passed": true,
+      "checks": [
+        {
+          "check": "has_rule",
+          "passed": true,
+          "message": "expected a error TEX_CHANNELS finding; got rules ['TEX_CHANNELS', 'TEX_SLOT_HEURISTIC']"
+        },
+        {
+          "check": "has_rule",
+          "passed": true,
+          "message": "expected a warn TEX_SLOT_HEURISTIC finding; got rules ['TEX_CHANNELS', 'TEX_SLOT_HEURISTIC']"
+        }
+      ]
+    },
+    {
+      "id": "bad-summary-normal-declared-srgb",
+      "passed": true,
+      "checks": [
+        {
+          "check": "has_rule",
+          "passed": true,
+          "message": "expected a error TEX_COLORSPACE finding on textures/summary_bad_normal.png; got rules ['COL_PROXY_MISSING', 'MESH_FLIPPED_NORMALS', 'MESH_LOOSE_GEOMETRY', 'MESH_NGONS', 'MESH_NON_MANIFOLD', 'MESH_TRI_BUDGET', 'NAME_INVALID_CHARS', 'NAME_SCHEME', 'TEX_COLORSPACE', 'UPL_REPORTED_ONLY', 'UV_OUT_OF_RANGE', 'UV_OVERLAP', 'UV_TEXEL_SPREAD', 'UV_WASTED_SPACE', 'XFM_AXIS_UP', 'XFM_ORIGIN_PLACEMENT', 'XFM_UNAPPLIED_SCALE']"
+        }
+      ]
+    },
+    {
+      "id": "bad-many-materials",
+      "passed": true,
+      "checks": [
+        {
+          "check": "finding_value",
+          "passed": true,
+          "message": "MAT_COUNT.measured=6; expected 6 +/- 0"
+        },
+        {
+          "check": "finding_value",
+          "passed": true,
+          "message": "MAT_COUNT.limit=4; expected 4 +/- 0"
+        }
+      ]
+    },
+    {
+      "id": "bad-unused-material",
+      "passed": true,
+      "checks": [
+        {
+          "check": "has_rule",
+          "passed": true,
+          "message": "expected a info MAT_UNUSED finding; got rules ['MAT_UNUSED']"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "result == 'pass' (got 'pass')"
+        }
+      ]
+    },
+    {
+      "id": "bad-no-uvs",
+      "passed": true,
+      "checks": [
+        {
+          "check": "has_rule",
+          "passed": true,
+          "message": "expected a error UV_MISSING finding; got rules ['UV_MISSING']"
+        }
+      ]
+    },
+    {
+      "id": "bad-no-uvs-untextured",
+      "passed": true,
+      "checks": [
+        {
+          "check": "lacks_rule",
+          "passed": true,
+          "message": "UV_MISSING must not be reported (rules: ['NAME_DUPLICATE', 'NAME_DUPLICATE_MATERIAL'])"
+        }
+      ]
+    },
+    {
+      "id": "bad-uv-out-of-range",
+      "passed": true,
+      "checks": [
+        {
+          "check": "has_rule",
+          "passed": true,
+          "message": "expected a warn UV_OUT_OF_RANGE finding; got rules ['UV_OUT_OF_RANGE']"
+        }
+      ]
+    },
+    {
+      "id": "bad-uv-overlap",
+      "passed": true,
+      "checks": [
+        {
+          "check": "has_rule",
+          "passed": true,
+          "message": "expected a  UV_OVERLAP finding; got rules ['UV_OVERLAP', 'UV_WASTED_SPACE']"
+        },
+        {
+          "check": "has_rule",
+          "passed": true,
+          "message": "expected a info UV_WASTED_SPACE finding; got rules ['UV_OVERLAP', 'UV_WASTED_SPACE']"
+        },
+        {
+          "check": "at_least",
+          "passed": true,
+          "message": "findings.0.measured=1.0; expected >= 0"
+        }
+      ]
+    },
+    {
+      "id": "bad-uv-density",
+      "passed": true,
+      "checks": [
+        {
+          "check": "has_rule",
+          "passed": true,
+          "message": "expected a warn UV_TEXEL_SPREAD finding; got rules ['UV_TEXEL_SPREAD', 'UV_WASTED_SPACE']"
+        }
+      ]
+    },
+    {
+      "id": "bad-uv-zero-area",
+      "passed": true,
+      "checks": [
+        {
+          "check": "finding_value",
+          "passed": true,
+          "message": "UV_ZERO_AREA.measured=2; expected 2 +/- 0"
+        }
+      ]
+    },
+    {
+      "id": "surface-uvs-tool-is-partial",
+      "passed": true,
+      "checks": [
+        {
+          "check": "has_rule",
+          "passed": true,
+          "message": "expected a  UV_OVERLAP finding; got rules ['UV_OVERLAP', 'UV_WASTED_SPACE']"
+        },
+        {
+          "check": "is_none",
+          "passed": true,
+          "message": "ready=None; expected null"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "scope == ['uv'] (got ['uv'])"
+        },
+        {
+          "check": "lacks_rule",
+          "passed": true,
+          "message": "MESH_TRI_BUDGET must not be reported (rules: ['UV_OVERLAP', 'UV_WASTED_SPACE'])"
+        }
+      ]
+    },
+    {
+      "id": "surface-textures-tool-scope",
+      "passed": true,
+      "checks": [
+        {
+          "check": "has_rule",
+          "passed": true,
+          "message": "expected a  TEX_OVERSIZE finding; got rules ['TEX_OVERSIZE']"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "scope == ['materials'] (got ['materials'])"
+        },
+        {
+          "check": "lacks_rule",
+          "passed": true,
+          "message": "UPL_TEXTURE_MEMORY must not be reported (rules: ['TEX_OVERSIZE'])"
+        }
+      ]
+    },
+    {
+      "id": "surface-mesh-tool-scope",
+      "passed": true,
+      "checks": [
+        {
+          "check": "has_rule",
+          "passed": true,
+          "message": "expected a  MESH_FLIPPED_NORMALS finding; got rules ['MESH_FLIPPED_NORMALS']"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "scope == ['collision', 'mesh', 'transform'] (got ['collision', 'mesh', 'transform'])"
+        },
+        {
+          "check": "is_none",
+          "passed": true,
+          "message": "ready=None; expected null"
+        }
+      ]
+    },
+    {
+      "id": "surface-names-tool-scope",
+      "passed": true,
+      "checks": [
+        {
+          "check": "has_rule",
+          "passed": true,
+          "message": "expected a  NAME_INVALID_CHARS finding; got rules ['NAME_BLENDER_SUFFIX', 'NAME_INVALID_CHARS', 'NAME_SCHEME']"
+        },
+        {
+          "check": "has_rule",
+          "passed": true,
+          "message": "expected a  NAME_BLENDER_SUFFIX finding; got rules ['NAME_BLENDER_SUFFIX', 'NAME_INVALID_CHARS', 'NAME_SCHEME']"
+        },
+        {
+          "check": "has_rule",
+          "passed": true,
+          "message": "expected a  NAME_SCHEME finding; got rules ['NAME_BLENDER_SUFFIX', 'NAME_INVALID_CHARS', 'NAME_SCHEME']"
+        }
+      ]
+    },
+    {
+      "id": "surface-dup-names",
+      "passed": true,
+      "checks": [
+        {
+          "check": "has_rule",
+          "passed": true,
+          "message": "expected a error NAME_DUPLICATE finding on prop_crate; got rules ['NAME_DUPLICATE', 'NAME_DUPLICATE_MATERIAL']"
+        },
+        {
+          "check": "has_rule",
+          "passed": true,
+          "message": "expected a warn NAME_DUPLICATE_MATERIAL finding; got rules ['NAME_DUPLICATE', 'NAME_DUPLICATE_MATERIAL']"
+        },
+        {
+          "check": "finding_value",
+          "passed": true,
+          "message": "NAME_DUPLICATE.measured=2; expected 2 +/- 0"
+        }
+      ]
+    },
+    {
+      "id": "surface-names-spaces",
+      "passed": true,
+      "checks": [
+        {
+          "check": "finding_text",
+          "passed": true,
+          "message": "NAME_INVALID_CHARS.limit='My_Crate' should contain 'My_Crate'"
+        },
+        {
+          "check": "has_rule",
+          "passed": true,
+          "message": "expected a  NAME_BLENDER_SUFFIX finding; got rules ['NAME_BLENDER_SUFFIX', 'NAME_INVALID_CHARS', 'NAME_SCHEME']"
+        },
+        {
+          "check": "has_rule",
+          "passed": true,
+          "message": "expected a  NAME_SCHEME finding; got rules ['NAME_BLENDER_SUFFIX', 'NAME_INVALID_CHARS', 'NAME_SCHEME']"
+        }
+      ]
+    },
+    {
+      "id": "surface-size-limit",
+      "passed": true,
+      "checks": [
+        {
+          "check": "has_rule",
+          "passed": true,
+          "message": "expected a error UPL_FILE_SIZE finding; got rules ['UPL_FILE_SIZE']"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "overrides_applied.0.source == 'call' (got 'call')"
+        }
+      ]
+    },
+    {
+      "id": "surface-size-warning",
+      "passed": true,
+      "checks": [
+        {
+          "check": "has_rule",
+          "passed": true,
+          "message": "expected a warn UPL_FILE_SIZE_LARGE finding; got rules ['UPL_FILE_SIZE_LARGE']"
+        },
+        {
+          "check": "lacks_rule",
+          "passed": true,
+          "message": "UPL_FILE_SIZE must not be reported (rules: ['UPL_FILE_SIZE_LARGE'])"
+        }
+      ]
+    },
+    {
+      "id": "surface-call-limit-override",
+      "passed": true,
+      "checks": [
+        {
+          "check": "lacks_rule",
+          "passed": true,
+          "message": "MESH_TRI_BUDGET must not be reported (rules: ['COL_PROXY_MISSING', 'MESH_TRI_BUDGET_TOTAL'])"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "overrides_applied.0.value == 30000 (got 30000)"
+        }
+      ]
+    },
+    {
+      "id": "surface-collision-intent-absent",
+      "passed": true,
+      "checks": [
+        {
+          "check": "lacks_rule",
+          "passed": true,
+          "message": "COL_PROXY_MISSING must not be reported (rules: ['MESH_TRI_BUDGET'])"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "facts.collision_status == 'declared_absent' (got 'declared_absent')"
+        }
+      ]
+    },
+    {
+      "id": "surface-collision-intent-present",
+      "passed": true,
+      "checks": [
+        {
+          "check": "has_rule",
+          "passed": true,
+          "message": "expected a  COL_PROXY_MISSING finding; got rules ['COL_PROXY_MISSING']"
+        }
+      ]
+    },
+    {
+      "id": "surface-profile-terrain-budget",
+      "passed": true,
+      "checks": [
+        {
+          "check": "lacks_rule",
+          "passed": true,
+          "message": "MESH_TRI_BUDGET must not be reported (rules: ['COL_PROXY_MISSING', 'MESH_BBOX_PROFILE', 'NAME_SCHEME', 'XFM_UNITS_SUSPECT'])"
+        },
+        {
+          "check": "has_rule",
+          "passed": true,
+          "message": "expected a  COL_PROXY_MISSING finding; got rules ['COL_PROXY_MISSING', 'MESH_BBOX_PROFILE', 'NAME_SCHEME', 'XFM_UNITS_SUSPECT']"
+        }
+      ]
+    },
+    {
+      "id": "surface-unknown-profile",
+      "passed": true,
+      "checks": [
+        {
+          "check": "error_contains",
+          "passed": true,
+          "message": "error should mention 'unknown profile' (got \"unknown profile 'vehicle'. Choose one of ['character_accessory', 'prop', 'terrain_piece', 'tool']\")"
+        }
+      ]
+    },
+    {
+      "id": "known-good-good-prop-crate",
+      "passed": true,
+      "checks": [
+        {
+          "check": "clean",
+          "passed": true,
+          "message": "a known-good asset must pass with no errors or warnings; got pass []"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "ready == True (got True)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "handoff_tool == 'roblox_upload_plan' (got 'roblox_upload_plan')"
+        },
+        {
+          "check": "one_line_fixes",
+          "passed": true,
+          "message": "every finding needs a one-line, fully filled fix; offenders: []"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "facts.triangles == 12 (got 12)"
+        }
+      ]
+    },
+    {
+      "id": "known-good-good-prop-crate-with-proxy",
+      "passed": true,
+      "checks": [
+        {
+          "check": "clean",
+          "passed": true,
+          "message": "a known-good asset must pass with no errors or warnings; got pass []"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "ready == True (got True)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "handoff_tool == 'roblox_upload_plan' (got 'roblox_upload_plan')"
+        },
+        {
+          "check": "one_line_fixes",
+          "passed": true,
+          "message": "every finding needs a one-line, fully filled fix; offenders: []"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "facts.collision_status == 'present' (got 'present')"
+        }
+      ]
+    },
+    {
+      "id": "known-good-good-prop-barrel",
+      "passed": true,
+      "checks": [
+        {
+          "check": "clean",
+          "passed": true,
+          "message": "a known-good asset must pass with no errors or warnings; got pass []"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "ready == True (got True)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "handoff_tool == 'roblox_upload_plan' (got 'roblox_upload_plan')"
+        },
+        {
+          "check": "one_line_fixes",
+          "passed": true,
+          "message": "every finding needs a one-line, fully filled fix; offenders: []"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "facts.materials == 1 (got 1)"
+        }
+      ]
+    },
+    {
+      "id": "known-good-good-tool-drill",
+      "passed": true,
+      "checks": [
+        {
+          "check": "clean",
+          "passed": true,
+          "message": "a known-good asset must pass with no errors or warnings; got pass []"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "ready == True (got True)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "handoff_tool == 'roblox_upload_plan' (got 'roblox_upload_plan')"
+        },
+        {
+          "check": "one_line_fixes",
+          "passed": true,
+          "message": "every finding needs a one-line, fully filled fix; offenders: []"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "facts.bones == 2 (got 2)"
+        }
+      ]
+    },
+    {
+      "id": "known-good-good-accessory-hat",
+      "passed": true,
+      "checks": [
+        {
+          "check": "clean",
+          "passed": true,
+          "message": "a known-good asset must pass with no errors or warnings; got pass []"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "ready == True (got True)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "handoff_tool == 'roblox_upload_plan' (got 'roblox_upload_plan')"
+        },
+        {
+          "check": "one_line_fixes",
+          "passed": true,
+          "message": "every finding needs a one-line, fully filled fix; offenders: []"
+        }
+      ]
+    },
+    {
+      "id": "known-good-good-terrain-slab",
+      "passed": true,
+      "checks": [
+        {
+          "check": "clean",
+          "passed": true,
+          "message": "a known-good asset must pass with no errors or warnings; got pass []"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "ready == True (got True)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "handoff_tool == 'roblox_upload_plan' (got 'roblox_upload_plan')"
+        },
+        {
+          "check": "one_line_fixes",
+          "passed": true,
+          "message": "every finding needs a one-line, fully filled fix; offenders: []"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "facts.triangles == 192 (got 192)"
+        }
+      ]
+    },
+    {
+      "id": "known-good-good-prop-crate-obj",
+      "passed": true,
+      "checks": [
+        {
+          "check": "clean",
+          "passed": true,
+          "message": "a known-good asset must pass with no errors or warnings; got pass []"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "ready == True (got True)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "handoff_tool == 'roblox_upload_plan' (got 'roblox_upload_plan')"
+        },
+        {
+          "check": "one_line_fixes",
+          "passed": true,
+          "message": "every finding needs a one-line, fully filled fix; offenders: []"
+        },
+        {
+          "check": "list_excludes",
+          "passed": true,
+          "message": "not_checked=['units and up axis', 'rig and animation']; must not contain ['n-gons']"
+        }
+      ]
+    },
+    {
+      "id": "known-good-summary-prop",
+      "passed": true,
+      "checks": [
+        {
+          "check": "clean",
+          "passed": true,
+          "message": "a known-good asset must pass with no errors or warnings; got pass []"
+        },
+        {
+          "check": "has_rule",
+          "passed": true,
+          "message": "expected a info UPL_REPORTED_ONLY finding; got rules ['UPL_REPORTED_ONLY']"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "ready == True (got True)"
+        }
+      ]
+    },
+    {
+      "id": "known-good-fbx-header-plus-summary",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "result == 'pass' (got 'pass')"
+        },
+        {
+          "check": "has_rule",
+          "passed": true,
+          "message": "expected a  UPL_REPORTED_ONLY finding; got rules ['UPL_REPORTED_ONLY']"
+        },
+        {
+          "check": "lacks_rule",
+          "passed": true,
+          "message": "UPL_NOT_MEASURED must not be reported (rules: ['UPL_REPORTED_ONLY'])"
+        }
+      ]
+    },
+    {
+      "id": "known-good-deterministic",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "deterministic == True (got True)"
+        }
+      ]
+    },
+    {
+      "id": "known-good-report-text-shape",
+      "passed": true,
+      "checks": [
+        {
+          "check": "text_has",
+          "passed": true,
+          "message": "text should contain 'PASS: good_prop_crate'"
+        },
+        {
+          "check": "text_has",
+          "passed": true,
+          "message": "text should contain 'project synthetic-sandbox'"
+        },
+        {
+          "check": "text_has",
+          "passed": true,
+          "message": "text should contain 'place 1000000003'"
+        },
+        {
+          "check": "text_has",
+          "passed": true,
+          "message": "text should contain 'roblox_upload_plan'"
+        },
+        {
+          "check": "text_has",
+          "passed": true,
+          "message": "text should contain 'never uploads'"
+        }
+      ]
+    },
+    {
+      "id": "known-good-limits-flagged-as-defaults",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "assumptions.limits_are_defaults == True (got True)"
+        },
+        {
+          "check": "text_has",
+          "passed": true,
+          "message": "assumptions.note should contain 'not official Roblox limits'"
+        }
+      ]
+    },
+    {
+      "id": "override-flow-limit",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "before_errors == 1 (got 1)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "after_errors == 0 (got 0)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "dry_run_saved_nothing == True (got True)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "opt_out_ignores_override == True (got True)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "empty_reason_refused == True (got True)"
+        },
+        {
+          "check": "at_least",
+          "passed": true,
+          "message": "other_profile_errors=1; expected >= 1"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "suggestions == 1 (got 1)"
+        },
+        {
+          "check": "text_has",
+          "passed": true,
+          "message": "suggested_patch should contain 'projects/synthetic-sandbox/profiles.yaml'"
+        },
+        {
+          "check": "text_has",
+          "passed": true,
+          "message": "suggested_patch should contain 'max_triangles: 30000'"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "offer_in_report == True (got True)"
+        }
+      ]
+    },
+    {
+      "id": "override-flow-below-promotion-threshold",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "suggestions == 0 (got 0)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "after_errors == 0 (got 0)"
+        }
+      ]
+    },
+    {
+      "id": "override-flow-waiver",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "before_errors == 1 (got 1)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "after_errors == 0 (got 0)"
+        },
+        {
+          "check": "list_contains",
+          "passed": true,
+          "message": "after_rules=['XFM_UNAPPLIED_SCALE']; expected to contain ['XFM_UNAPPLIED_SCALE']"
+        }
+      ]
+    },
+    {
+      "id": "override-validation-unknown-rule",
+      "passed": true,
+      "checks": [
+        {
+          "check": "error_contains",
+          "passed": true,
+          "message": "error should mention 'unknown rule' (got \"unknown rule 'NOT_A_RULE'. Known rules: ['COL_PROXY_BOUNDS', 'COL_PROXY_BUDGET', 'COL_PROXY_MISSING', 'MAT_COUNT', 'MAT_UNUSED', 'MESH_BBOX_PROFILE', 'MESH_FLIPPED_NORMALS', 'MESH_LOOSE_GEOMETRY'] ...\")"
+        }
+      ]
+    },
+    {
+      "id": "override-validation-wrong-type",
+      "passed": true,
+      "checks": [
+        {
+          "check": "error_contains",
+          "passed": true,
+          "message": "error should mention 'expects a int' (got 'limit MESH_TRI_BUDGET.max_triangles expects a int, got str')"
+        }
+      ]
+    },
+    {
+      "id": "override-validation-rig-rule-for-prop",
+      "passed": true,
+      "checks": [
+        {
+          "check": "error_contains",
+          "passed": true,
+          "message": "error should mention 'does not apply' (got \"rule RIG_BONE_COUNT does not apply to the prop profile (applies to ['tool', 'character_accessory'])\")"
+        }
+      ]
+    },
+    {
+      "id": "override-dry-run-default",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "result.dry_run == True (got True)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "result.row.asset_type == 'prop' (got 'prop')"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "result.row.project_id == 'synthetic-sandbox' (got 'synthetic-sandbox')"
+        }
+      ]
+    },
+    {
+      "id": "feedback-roundtrip",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "found_run == True (got True)"
+        }
+      ]
+    },
+    {
+      "id": "compare-fixed",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "verdict == 'improved' (got 'improved')"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "fixed.0.rule == 'XFM_UNAPPLIED_SCALE' (got 'XFM_UNAPPLIED_SCALE')"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "after.ready_to_upload == True (got True)"
+        }
+      ]
+    },
+    {
+      "id": "compare-regressed",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "verdict == 'regressed' (got 'regressed')"
+        },
+        {
+          "check": "list_contains",
+          "passed": true,
+          "message": "new_errors=['MESH_FLIPPED_NORMALS (prop_crate)']; expected to contain ['MESH_FLIPPED_NORMALS (prop_crate)']"
+        }
+      ]
+    },
+    {
+      "id": "safety-path-outside-roots",
+      "passed": true,
+      "checks": [
+        {
+          "check": "error_contains",
+          "passed": true,
+          "message": "error should mention 'outside the allowed' (got \"'/etc/hostname' is outside the allowed directories (/tmp/tmpqe339lgu, /home/user/workshop/repos/asset-roblox-preflight). Set <PREFIX>_ALLOWED_PATHS to widen this deliberately.\")"
+        }
+      ]
+    },
+    {
+      "id": "safety-non-export-refused",
+      "passed": true,
+      "checks": [
+        {
+          "check": "error_contains",
+          "passed": true,
+          "message": "error should mention 'not an existing export file' (got \"'/home/user/workshop/repos/asset-roblox-preflight/examples/assets/../library/assets.jsonl' is not an existing export file (['.fbx', '.glb', '.gltf', '.json', '.obj'])\")"
+        }
+      ]
+    },
+    {
+      "id": "safety-texture-dir-must-exist",
+      "passed": true,
+      "checks": [
+        {
+          "check": "error_contains",
+          "passed": true,
+          "message": "error should mention 'is not a folder' (got \"texture_dir '/home/user/workshop/repos/asset-roblox-preflight/examples/assets/good_prop_crate.glb' is not a folder\")"
+        }
+      ]
+    },
+    {
+      "id": "explain-finding-rule",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "result.limits.max_triangles.value == 4000 (got 4000)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "result.limits.max_triangles.verify_against_current_docs == True (got True)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "result.safe == False (got False)"
+        },
+        {
+          "check": "text_has",
+          "passed": true,
+          "message": "result.explanation should contain 'budget'"
+        }
+      ]
+    },
+    {
+      "id": "explain-finding-instance",
+      "passed": true,
+      "checks": [
+        {
+          "check": "text_has",
+          "passed": true,
+          "message": "result.findings.0.message should contain '100.0% of triangles'"
+        }
+      ]
+    },
+    {
+      "id": "measure-unit-cube",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "triangles == 12 (got 12)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "vertices == 24 (got 24)"
+        },
+        {
+          "check": "approx",
+          "passed": true,
+          "message": "signed_volume_local=1.0; expected 1.0 +/- 1e-06"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "closed == True (got True)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "islands == 1 (got 1)"
+        },
+        {
+          "check": "approx",
+          "passed": true,
+          "message": "texel_median=0.40824829654723654; expected 0.40825 +/- 0.0005"
+        },
+        {
+          "check": "approx",
+          "passed": true,
+          "message": "uv_coverage=1.0; expected 1.0 +/- 0.001"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "dims_world == [1.0, 1.0, 1.0] (got [1.0, 1.0, 1.0])"
+        }
+      ]
+    },
+    {
+      "id": "measure-subdivided-box",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "triangles == 19200 (got 19200)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "closed == True (got True)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "islands == 1 (got 1)"
+        }
+      ]
+    },
+    {
+      "id": "measure-4k-texture-header",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "images.0.w == 4096 (got 4096)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "images.0.h == 4096 (got 4096)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "images.0.channels == 3 (got 3)"
+        }
+      ]
+    },
+    {
+      "id": "measure-inside-out-volume",
+      "passed": true,
+      "checks": [
+        {
+          "check": "approx",
+          "passed": true,
+          "message": "signed_volume_local=-1.0; expected -1.0 +/- 1e-06"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "inside_out == True (got True)"
+        }
+      ]
+    },
+    {
+      "id": "measure-open-mesh",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "triangles == 10 (got 10)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "boundary_edges == 4 (got 4)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "closed == False (got False)"
+        }
+      ]
+    },
+    {
+      "id": "measure-gltf-external",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "format == 'gltf' (got 'gltf')"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "images.0.w == 256 (got 256)"
+        }
+      ]
+    },
+    {
+      "id": "measure-obj",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "format == 'obj' (got 'obj')"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "triangles == 12 (got 12)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "ngons == 0 (got 0)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "images.0.w == 256 (got 256)"
+        }
+      ]
+    },
+    {
+      "id": "measure-image-header-png",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "width == 300 (got 300)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "height == 200 (got 200)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "channels == 1 (got 1)"
+        }
+      ]
+    },
+    {
+      "id": "inspect-fbx-header",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "fbx.version == 7400 (got 7400)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "geometry_measured == False (got False)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "reader == 'fbx-header' (got 'fbx-header')"
+        }
+      ]
+    },
+    {
+      "id": "inspect-glb",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "objects_total == 1 (got 1)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "objects.0.tris == 12 (got 12)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "materials.0.name == 'crate_mat' (got 'crate_mat')"
+        }
+      ]
+    },
+    {
+      "id": "rules-are-data",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "rules_without_code == [] (got [])"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "code_without_rules == [] (got [])"
+        },
+        {
+          "check": "at_least",
+          "passed": true,
+          "message": "rules=65; expected >= 60"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "rig_rules_scoped == True (got True)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "every_rule_has_fix_and_explanation == True (got True)"
+        }
+      ]
+    },
+    {
+      "id": "rules-categories-complete",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "categories == ['collision', 'materials', 'mesh', 'names', 'rig', 'transform', 'upload', 'uv'] (got ['collision', 'materials', 'mesh', 'names', 'rig', 'transform', 'upload', 'uv'])"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "severities == ['error', 'info', 'warn'] (got ['error', 'info', 'warn'])"
+        }
+      ]
+    },
+    {
+      "id": "rules-limits-are-defaults",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "all_profiles_say_defaults == True (got True)"
+        },
+        {
+          "check": "at_least",
+          "passed": true,
+          "message": "verify_flagged_limits=20; expected >= 15"
+        }
+      ]
+    },
+    {
+      "id": "profiles-list-are-defaults",
+      "passed": true,
+      "checks": [
+        {
+          "check": "text_has",
+          "passed": true,
+          "message": "result.note should contain 'DEFAULTS'"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "result.profiles.0.name == 'character_accessory' (got 'character_accessory')"
+        }
+      ]
+    },
+    {
+      "id": "profiles-project-layer",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "result.profiles.0.limits.MESH_TRI_BUDGET.max_triangles == 4000 (got 4000)"
+        }
+      ]
+    },
+    {
+      "id": "project-layer-raises-budget",
+      "passed": true,
+      "checks": [
+        {
+          "check": "lacks_rule",
+          "passed": true,
+          "message": "MESH_TRI_BUDGET must not be reported (rules: ['COL_PROXY_MISSING'])"
+        }
+      ]
+    },
+    {
+      "id": "project-layer-global-still-fails",
+      "passed": true,
+      "checks": [
+        {
+          "check": "has_rule",
+          "passed": true,
+          "message": "expected a error MESH_TRI_BUDGET finding; got rules ['COL_PROXY_MISSING', 'MESH_TRI_BUDGET']"
+        }
+      ]
+    },
+    {
+      "id": "project-layer-obby-budget",
+      "passed": true,
+      "checks": [
+        {
+          "check": "finding_value",
+          "passed": true,
+          "message": "MESH_TRI_BUDGET.limit=4000; expected 4000 +/- 0"
+        }
+      ]
+    },
+    {
+      "id": "project-layer-naming-scheme",
+      "passed": true,
+      "checks": [
+        {
+          "check": "has_rule",
+          "passed": true,
+          "message": "expected a  NAME_SCHEME finding; got rules ['NAME_SCHEME']"
+        }
+      ]
+    },
+    {
+      "id": "project-report-names-project-and-place",
+      "passed": true,
+      "checks": [
+        {
+          "check": "text_has",
+          "passed": true,
+          "message": "text should contain 'project synthetic-mining-tycoon, place 1000000001'"
+        }
+      ]
+    },
+    {
+      "id": "project-place-recorded-in-handoff",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "result.handoff.inputs.project_id == 'synthetic-obby' (got 'synthetic-obby')"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "result.handoff.inputs.place_id == 1000000002 (got 1000000002)"
+        }
+      ]
+    },
+    {
+      "id": "project-unknown-refused",
+      "passed": true,
+      "checks": [
+        {
+          "check": "error_contains",
+          "passed": true,
+          "message": "error should mention 'unknown project_id' (got \"unknown project_id 'no-such-game'. Known projects: ['synthetic-mining-tycoon', 'synthetic-obby', 'synthetic-sandbox']. Add it to projects.yaml; the tool will not guess.\")"
+        },
+        {
+          "check": "error_contains",
+          "passed": true,
+          "message": "error should mention 'synthetic-obby' (got \"unknown project_id 'no-such-game'. Known projects: ['synthetic-mining-tycoon', 'synthetic-obby', 'synthetic-sandbox']. Add it to projects.yaml; the tool will not guess.\")"
+        }
+      ]
+    },
+    {
+      "id": "project-missing-refused",
+      "passed": true,
+      "checks": [
+        {
+          "check": "error_contains",
+          "passed": true,
+          "message": "error should mention 'project_id is required' (got \"project_id is required and was not given. Known projects: ['synthetic-mining-tycoon', 'synthetic-obby', 'synthetic-sandbox'] (see list_projects, or add yours to projects.yaml)\")"
+        }
+      ]
+    },
+    {
+      "id": "project-place-mismatch-refused",
+      "passed": true,
+      "checks": [
+        {
+          "check": "error_contains",
+          "passed": true,
+          "message": "error should mention 'does not match project' (got \"place_id 5 does not match project 'synthetic-obby', which is registered with place_id 1000000002. Check the place or update projects.yaml.\")"
+        }
+      ]
+    },
+    {
+      "id": "project-feedback-refuses-unknown",
+      "passed": true,
+      "checks": [
+        {
+          "check": "error_contains",
+          "passed": true,
+          "message": "error should mention 'unknown project_id' (got \"unknown project_id 'ghost'. Known projects: ['synthetic-mining-tycoon', 'synthetic-obby', 'synthetic-sandbox']. Add it to projects.yaml; the tool will not guess.\")"
+        }
+      ]
+    },
+    {
+      "id": "project-list",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "result.projects.0.synthetic == True (got True)"
+        },
+        {
+          "check": "at_least",
+          "passed": true,
+          "message": "result.projects.0.place_id=1000000001; expected >= 1"
+        }
+      ]
+    },
+    {
+      "id": "isolation-corrections-stay-in-project",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "a_sees == 1 (got 1)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "b_sees == 0 (got 0)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "b_sees_with_global == 1 (got 1)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "b_sees_global_off == 0 (got 0)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "scopes_seen_by_b == ['global'] (got ['global'])"
+        }
+      ]
+    },
+    {
+      "id": "isolation-override-stays-in-project",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "a_before == 1 (got 1)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "a_after_project_override == 0 (got 0)"
+        },
+        {
+          "check": "at_least",
+          "passed": true,
+          "message": "b_after_project_override=1; expected >= 1"
+        }
+      ]
+    },
+    {
+      "id": "isolation-global-override-applies-everywhere",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "b_after_global_override == 0 (got 0)"
+        },
+        {
+          "check": "list_contains",
+          "passed": true,
+          "message": "b_override_listed=['MESH_TRI_BUDGET']; expected to contain ['MESH_TRI_BUDGET']"
+        }
+      ]
+    },
+    {
+      "id": "fix-spin-rename-script",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "ops == ['rename_bone'] (got ['rename_bone'])"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "renamed_bones == [['Spin_Bone', 'spin']] (got [['Spin_Bone', 'spin']])"
+        },
+        {
+          "check": "list_contains",
+          "passed": true,
+          "message": "bone_names_after=['root', 'spin']; expected to contain ['root', 'spin']"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "lint == [] (got [])"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "wrote_anything == False (got False)"
+        }
+      ]
+    },
+    {
+      "id": "fix-apply-scale-script",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "scale_applied == ['prop_crate'] (got ['prop_crate'])"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "stub.scales.prop_crate == [1.0, 1.0, 1.0] (got [1.0, 1.0, 1.0])"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "lint == [] (got [])"
+        }
+      ]
+    },
+    {
+      "id": "fix-rename-script",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "renamed_objects == [['My Crate.001', 'My_Crate']] (got [['My Crate.001', 'My_Crate']])"
+        },
+        {
+          "check": "list_contains",
+          "passed": true,
+          "message": "not_fixed=['NAME_SCHEME']; expected to contain ['NAME_SCHEME']"
+        }
+      ]
+    },
+    {
+      "id": "fix-nothing-safe",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "has_script == False (got False)"
+        },
+        {
+          "check": "list_contains",
+          "passed": true,
+          "message": "not_fixed=['MESH_FLIPPED_NORMALS']; expected to contain ['MESH_FLIPPED_NORMALS']"
+        }
+      ]
+    },
+    {
+      "id": "fix-blended-weights-not-automatic",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "has_script == False (got False)"
+        }
+      ]
+    },
+    {
+      "id": "fix-clean-asset-no-script",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "has_script == False (got False)"
+        }
+      ]
+    },
+    {
+      "id": "fix-refuses-unsafe-rule",
+      "passed": true,
+      "checks": [
+        {
+          "check": "error_contains",
+          "passed": true,
+          "message": "error should mention 'not marked safe' (got \"rule MESH_TRI_BUDGET is not marked safe: true, so apply_safe_fix will not emit a script for it. Safe rules: ['NAME_BLENDER_SUFFIX', 'NAME_DUPLICATE', 'NAME_INVALID_CHARS', 'RIG_BONE_NAMING', 'RIG_ROOT\")"
+        }
+      ]
+    },
+    {
+      "id": "fix-dry-run-writes-nothing",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "result.dry_run == True (got True)"
+        },
+        {
+          "check": "text_lacks",
+          "passed": true,
+          "message": "result.written should not contain '/'"
+        },
+        {
+          "check": "text_has",
+          "passed": true,
+          "message": "result.would_write should contain '.py'"
+        }
+      ]
+    },
+    {
+      "id": "fix-apply-writes-script-only",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "result.dry_run == False (got False)"
+        },
+        {
+          "check": "text_has",
+          "passed": true,
+          "message": "result.written should contain '.py'"
+        },
+        {
+          "check": "text_has",
+          "passed": true,
+          "message": "result.handoff should contain 'never connects to Blender'"
+        }
+      ]
+    },
+    {
+      "id": "fix-rules-registry",
+      "passed": true,
+      "checks": [
+        {
+          "check": "list_contains",
+          "passed": true,
+          "message": "safe_rules=['NAME_BLENDER_SUFFIX', 'NAME_DUPLICATE', 'NAME_INVALID_CHARS', 'RIG_BONE_NAMING', 'RIG_ROOT_NAME', 'RIG_SPIN_SETUP', 'XFM_UNAPPLIED_ROTATION', 'XFM_UNAPPLIED_SCALE']; expected to contain ['XFM_UNAPPLIED_SCALE', 'XFM_UNAPPLIED_ROTATION', 'NAME_INVALID_CHARS', 'NAME_BLENDER_SUFFIX', 'NAME_DUPLICATE', 'RIG_SPIN_SETUP']"
+        },
+        {
+          "check": "list_excludes",
+          "passed": true,
+          "message": "safe_rules=['NAME_BLENDER_SUFFIX', 'NAME_DUPLICATE', 'NAME_INVALID_CHARS', 'RIG_BONE_NAMING', 'RIG_ROOT_NAME', 'RIG_SPIN_SETUP', 'XFM_UNAPPLIED_ROTATION', 'XFM_UNAPPLIED_SCALE']; must not contain ['MESH_TRI_BUDGET', 'MESH_FLIPPED_NORMALS', 'TEX_OVERSIZE']"
+        }
+      ]
+    },
+    {
+      "id": "size-list-projects",
+      "passed": true,
+      "checks": [
+        {
+          "check": "at_most",
+          "passed": true,
+          "message": "chars=779; expected <= 1300"
+        }
+      ]
+    },
+    {
+      "id": "size-get-style-brief",
+      "passed": true,
+      "checks": [
+        {
+          "check": "at_most",
+          "passed": true,
+          "message": "chars=1687; expected <= 2400"
+        }
+      ]
+    },
+    {
+      "id": "size-find-past-corrections",
+      "passed": true,
+      "checks": [
+        {
+          "check": "at_most",
+          "passed": true,
+          "message": "chars=51; expected <= 300"
+        }
+      ]
+    },
+    {
+      "id": "size-list-profiles",
+      "passed": true,
+      "checks": [
+        {
+          "check": "at_most",
+          "passed": true,
+          "message": "chars=2569; expected <= 3000"
+        }
+      ]
+    },
+    {
+      "id": "size-list-profiles-one",
+      "passed": true,
+      "checks": [
+        {
+          "check": "at_most",
+          "passed": true,
+          "message": "chars=3084; expected <= 3600"
+        }
+      ]
+    },
+    {
+      "id": "size-inspect-crate",
+      "passed": true,
+      "checks": [
+        {
+          "check": "at_most",
+          "passed": true,
+          "message": "chars=643; expected <= 1500"
+        }
+      ]
+    },
+    {
+      "id": "size-inspect-drill",
+      "passed": true,
+      "checks": [
+        {
+          "check": "at_most",
+          "passed": true,
+          "message": "chars=768; expected <= 1800"
+        }
+      ]
+    },
+    {
+      "id": "size-check-mesh",
+      "passed": true,
+      "checks": [
+        {
+          "check": "at_most",
+          "passed": true,
+          "message": "chars=957; expected <= 1500"
+        }
+      ]
+    },
+    {
+      "id": "size-check-uvs",
+      "passed": true,
+      "checks": [
+        {
+          "check": "at_most",
+          "passed": true,
+          "message": "chars=962; expected <= 1500"
+        }
+      ]
+    },
+    {
+      "id": "size-check-textures",
+      "passed": true,
+      "checks": [
+        {
+          "check": "at_most",
+          "passed": true,
+          "message": "chars=707; expected <= 1500"
+        }
+      ]
+    },
+    {
+      "id": "size-check-rig",
+      "passed": true,
+      "checks": [
+        {
+          "check": "at_most",
+          "passed": true,
+          "message": "chars=710; expected <= 1200"
+        }
+      ]
+    },
+    {
+      "id": "size-check-names",
+      "passed": true,
+      "checks": [
+        {
+          "check": "at_most",
+          "passed": true,
+          "message": "chars=1238; expected <= 1800"
+        }
+      ]
+    },
+    {
+      "id": "size-report-clean",
+      "passed": true,
+      "checks": [
+        {
+          "check": "at_most",
+          "passed": true,
+          "message": "chars=548; expected <= 900"
+        }
+      ]
+    },
+    {
+      "id": "size-report-worst-case",
+      "passed": true,
+      "checks": [
+        {
+          "check": "at_most",
+          "passed": true,
+          "message": "chars=3557; expected <= 5200"
+        }
+      ]
+    },
+    {
+      "id": "size-explain-finding",
+      "passed": true,
+      "checks": [
+        {
+          "check": "at_most",
+          "passed": true,
+          "message": "chars=1150; expected <= 2200"
+        }
+      ]
+    },
+    {
+      "id": "size-compare-versions",
+      "passed": true,
+      "checks": [
+        {
+          "check": "at_most",
+          "passed": true,
+          "message": "chars=459; expected <= 1000"
+        }
+      ]
+    },
+    {
+      "id": "size-apply-safe-fix-dry",
+      "passed": true,
+      "checks": [
+        {
+          "check": "at_most",
+          "passed": true,
+          "message": "chars=3825; expected <= 4200"
+        }
+      ]
+    },
+    {
+      "id": "size-save-report-dry",
+      "passed": true,
+      "checks": [
+        {
+          "check": "at_most",
+          "passed": true,
+          "message": "chars=353; expected <= 700"
+        }
+      ]
+    },
+    {
+      "id": "size-record-override-dry",
+      "passed": true,
+      "checks": [
+        {
+          "check": "at_most",
+          "passed": true,
+          "message": "chars=616; expected <= 1000"
+        }
+      ]
+    },
+    {
+      "id": "size-suggest-promotions",
+      "passed": true,
+      "checks": [
+        {
+          "check": "at_most",
+          "passed": true,
+          "message": "chars=167; expected <= 400"
+        }
+      ]
+    },
+    {
+      "id": "size-search-library",
+      "passed": true,
+      "checks": [
+        {
+          "check": "at_most",
+          "passed": true,
+          "message": "chars=4765; expected <= 5500"
+        }
+      ]
+    },
+    {
+      "id": "size-record-run",
+      "passed": true,
+      "checks": [
+        {
+          "check": "at_most",
+          "passed": true,
+          "message": "chars=102; expected <= 300"
+        }
+      ]
+    },
+    {
+      "id": "size-tool-descriptions",
+      "passed": true,
+      "checks": [
+        {
+          "check": "at_most",
+          "passed": true,
+          "message": "longest=184; expected <= 300"
+        },
+        {
+          "check": "at_most",
+          "passed": true,
+          "message": "total=2723; expected <= 6500"
+        },
+        {
+          "check": "list_contains",
+          "passed": true,
+          "message": "rare=['apply_safe_fix', 'compare_versions', 'promote_run', 'record_override', 'save_report', 'search_library', 'suggest_profile_promotions']; expected to contain ['apply_safe_fix', 'save_report', 'compare_versions', 'suggest_profile_promotions', 'record_override', 'promote_run', 'search_library']"
+        },
+        {
+          "check": "at_least",
+          "passed": true,
+          "message": "tools=21; expected >= 21"
+        }
+      ]
+    }
+  ]
+}

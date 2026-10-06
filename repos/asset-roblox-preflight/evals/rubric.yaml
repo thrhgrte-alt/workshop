@@ -1,0 +1,15 @@
+# Report rubric. 'auto' criteria can be computed from a tool result; 'manual' criteria need a person (or a clearly labelled model judgment).
+# Subjective scores are judgments, never ground truth. 'required' criteria must pass.
+pass_at: 0.7
+criteria:
+  - {id: known_bad_caught,     method: auto,   weight: 3, required: true, description: "Every planted defect in a known-bad asset is reported under its rule id."}
+  - {id: known_good_clean,     method: auto,   weight: 3, required: true, description: "A known-good asset passes with no errors or warnings."}
+  - {id: ready_flag_honest,    method: auto,   weight: 3, required: true, description: "ready_to_upload is true only when no errors remain, and never for FBX without a summary or for a partial check."}
+  - {id: finding_fields,       method: auto,   weight: 2, required: true, description: "Each finding has rule id, object, measured value, limit and a one-line fix."}
+  - {id: limits_labelled,      method: auto,   weight: 2, required: true, description: "Reports and answers say limits are defaults to verify, not official Roblox limits."}
+  - {id: scope_respected,      method: auto,   weight: 2, description: "A narrow check tool reports only its own rule categories."}
+  - {id: not_checked_stated,   method: auto,   weight: 2, description: "What could not be measured (FBX geometry, n-gons in GLB, reported-only numbers) is listed."}
+  - {id: project_isolated,     method: auto,   weight: 2, required: true, description: "Overrides, corrections and reports are scoped to the named project unless marked global."}
+  - {id: output_short,         method: auto,   weight: 1, description: "Tool output stays inside its character budget."}
+  - {id: fixes_clear,          method: manual, weight: 2, description: "A person reading the one-line fix knows what to do in Blender."}
+  - {id: explanation_useful,   method: manual, weight: 1, description: "explain_finding tells the person why the rule exists, in plain terms."}

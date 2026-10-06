@@ -1,0 +1,16 @@
+# private, local data: your library, feedback, versions and generated output
+workspace/
+.env
+*.egg-info/
+__pycache__/
+.pytest_cache/
+.venv/
+dist/
+build/
+# large binaries belong in your own asset store or Git LFS, not here
+*.sbsar
+*.hip
+*.hiplc
+*.rbxl
+*.rbxlx
+*.psd

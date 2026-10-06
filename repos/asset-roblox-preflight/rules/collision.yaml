@@ -1,0 +1,27 @@
+category: collision
+rules:
+  - id: COL_PROXY_MISSING
+    severity: warn
+    title: No collision proxy for a heavy asset
+    explanation: Above the triangle threshold the visible mesh should not double as collision. Add a simple proxy mesh (name pattern in limits) or declare that collision is intentionally absent (collision_intent=absent, or extras preflight.collision = none).
+    fix: "Add a low-poly proxy named '{object}_col', or declare collision as intentionally absent ({measured} triangles, threshold {limit})."
+    safe: false
+    limits:
+      required_above_triangles: {default: 2000, verify_against_current_docs: false, heuristic: true, note: "Profiles override."}
+      name_patterns: {default: ["_col$", "^UCX_", "^collision"], verify_against_current_docs: false, heuristic: true}
+  - id: COL_PROXY_BUDGET
+    severity: warn
+    title: Collision proxy is too detailed
+    explanation: Collision proxies exist to be cheap.
+    fix: "Simplify proxy '{object}' to at most {limit} triangles (now {measured})."
+    safe: false
+    limits:
+      max_proxy_triangles: {default: 256, verify_against_current_docs: true, note: "DEFAULT chosen by this tool."}
+  - id: COL_PROXY_BOUNDS
+    severity: warn
+    title: Collision proxy does not match the visible mesh
+    explanation: A proxy much smaller or larger than the visible mesh makes players clip into it or bump into thin air.
+    fix: "Resize proxy '{object}' to the visible bounds (relative size difference {measured}, tolerance {limit})."
+    safe: false
+    limits:
+      tolerance: {default: 0.25, verify_against_current_docs: false, heuristic: true}

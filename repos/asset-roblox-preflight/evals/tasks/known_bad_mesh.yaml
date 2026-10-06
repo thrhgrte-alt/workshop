@@ -1,0 +1,178 @@
+# Known-bad mesh, transform, collision and input cases that must be caught.
+- id: bad-flipped-normals
+  title: Inward vertex normals are an error with ratio 1.0
+  input: {op: preflight, file: bad_flipped_normals, profile: prop}
+  checks:
+  - {type: has_rule, rule: MESH_FLIPPED_NORMALS, severity: error}
+  - {type: finding_value, rule: MESH_FLIPPED_NORMALS, value: 1.0}
+  - type: rules_only
+    rules: [MESH_FLIPPED_NORMALS]
+  - {type: equals, path: ready, value: false}
+- id: bad-inverted-winding
+  title: Reversed winding with outward normals is caught (normals oppose the winding)
+  input: {op: preflight, file: bad_inverted_winding, profile: prop}
+  checks:
+  - {type: has_rule, rule: MESH_FLIPPED_NORMALS, severity: error}
+  - {type: finding_text, rule: MESH_FLIPPED_NORMALS, text: 12 of 12}
+- id: bad-inside-out-consistent
+  title: Winding and normals both reversed still gives a negative-volume closed mesh, caught by the volume test
+  input: {op: preflight, file: bad_inside_out, profile: prop}
+  checks:
+  - {type: has_rule, rule: MESH_FLIPPED_NORMALS, severity: error}
+  - {type: finding_text, rule: MESH_FLIPPED_NORMALS, text: inside out, field: measured}
+- id: bad-unapplied-scale
+  title: A 0.5 m crate with object scale 2 is an error on the object, and a safe fix exists
+  input: {op: preflight, file: bad_unapplied_scale, profile: prop}
+  checks:
+  - {type: has_rule, rule: XFM_UNAPPLIED_SCALE, severity: error, object: prop_crate}
+  - type: rules_only
+    rules: [XFM_UNAPPLIED_SCALE]
+  - {type: finding_text, rule: XFM_UNAPPLIED_SCALE, text: '(2, 2, 2)', field: measured}
+- id: bad-unapplied-rotation
+  title: A 45 degree object rotation is a warning
+  input: {op: preflight, file: bad_unapplied_rotation, profile: prop}
+  checks:
+  - {type: has_rule, rule: XFM_UNAPPLIED_ROTATION, severity: warn}
+  - {type: lacks_rule, rule: XFM_AXIS_UP}
+  - {type: equals, path: result, value: pass}
+- id: bad-negative-scale
+  title: A mirrored crate is an error
+  input: {op: preflight, file: bad_negative_scale, profile: prop}
+  checks:
+  - {type: has_rule, rule: XFM_NEGATIVE_SCALE, severity: error}
+  - {type: lacks_rule, rule: XFM_UNAPPLIED_SCALE}
+- id: bad-too-many-triangles
+  title: 19200 triangles (12 x 40 x 40, hand-computed) is over the 10000 prop default and lacks a collision proxy
+  input: {op: preflight, file: bad_too_many_tris, profile: prop}
+  checks:
+  - {type: finding_value, rule: MESH_TRI_BUDGET, value: 19200, tol: 0}
+  - {type: finding_value, rule: MESH_TRI_BUDGET, value: 10000, field: limit, tol: 0}
+  - {type: has_rule, rule: COL_PROXY_MISSING, severity: warn}
+- id: bad-open-mesh
+  title: A crate missing its top face has open boundary edges
+  input: {op: preflight, file: bad_open_mesh, profile: prop}
+  checks:
+  - {type: has_rule, rule: MESH_NON_MANIFOLD, severity: warn}
+  - {type: finding_value, rule: MESH_NON_MANIFOLD, value: 4, tol: 0}
+- id: bad-loose-geometry
+  title: Three unused vertices and one zero-area triangle are reported, and the loose vertices do not stretch the origin check
+  input: {op: preflight, file: bad_loose_geometry, profile: prop}
+  checks:
+  - {type: has_rule, rule: MESH_LOOSE_GEOMETRY}
+  - {type: finding_text, rule: MESH_LOOSE_GEOMETRY, text: 3 loose vertices, field: measured}
+  - {type: lacks_rule, rule: XFM_ORIGIN_PLACEMENT}
+- id: bad-units-cm
+  title: 'A crate 100 times too big fits the profile after x0.01: a unit warning, not a sanity error'
+  input: {op: preflight, file: bad_units_cm, profile: prop}
+  checks:
+  - {type: has_rule, rule: MESH_BBOX_PROFILE}
+  - {type: has_rule, rule: XFM_UNITS_SUSPECT}
+  - {type: finding_text, rule: XFM_UNITS_SUSPECT, text: '0.01', field: limit}
+  - {type: lacks_rule, rule: MESH_SCALE_RANGE}
+- id: bad-units-tiny
+  title: A crate 1000 times too small fails the sanity range and suggests x1000
+  input: {op: preflight, file: bad_units_tiny, profile: prop}
+  checks:
+  - {type: has_rule, rule: MESH_SCALE_RANGE, severity: error}
+  - {type: has_rule, rule: XFM_UNITS_SUSPECT}
+  - {type: finding_text, rule: XFM_UNITS_SUSPECT, text: '1000', field: limit}
+- id: bad-origin-center
+  title: A prop whose origin is at its centre fails the bottom-centre origin check (offset 0.5 of the size)
+  input: {op: preflight, file: bad_origin_center, profile: prop}
+  checks:
+  - {type: has_rule, rule: XFM_ORIGIN_PLACEMENT, severity: warn}
+  - {type: finding_value, rule: XFM_ORIGIN_PLACEMENT, value: 0.5, tol: 0.001}
+- id: bad-origin-ignored-for-tool
+  title: The same centre origin is not checked for the tool profile (origin mode any)
+  input: {op: preflight, file: bad_origin_center, profile: tool}
+  checks:
+  - {type: lacks_rule, rule: XFM_ORIGIN_PLACEMENT}
+- id: bad-root-offset
+  title: A crate 50 units from the origin is flagged
+  input: {op: preflight, file: bad_root_offset, profile: prop}
+  checks:
+  - {type: has_rule, rule: XFM_ROOT_OFFSET}
+  - {type: finding_value, rule: XFM_ROOT_OFFSET, value: 50, tol: 0.001}
+- id: bad-axis-rotated-root
+  title: A -90 degree X rotation on the root is flagged as a leftover Z-up conversion, not as a plain rotation
+  input: {op: preflight, file: bad_axis_rotated_root, profile: prop}
+  checks:
+  - {type: has_rule, rule: XFM_AXIS_UP}
+  - {type: lacks_rule, rule: XFM_UNAPPLIED_ROTATION}
+- id: bad-proxy-heavy
+  title: A 1200-triangle collision proxy is over the proxy budget (12 x 10 x 10)
+  input: {op: preflight, file: bad_proxy_heavy, profile: prop}
+  checks:
+  - {type: has_rule, rule: COL_PROXY_BUDGET}
+  - {type: finding_value, rule: COL_PROXY_BUDGET, value: 1200, tol: 0}
+  - {type: lacks_rule, rule: COL_PROXY_MISSING}
+- id: bad-proxy-bounds
+  title: A proxy half the visible size is flagged (relative difference 0.5)
+  input: {op: preflight, file: bad_proxy_bounds, profile: prop}
+  checks:
+  - {type: has_rule, rule: COL_PROXY_BOUNDS}
+  - {type: finding_value, rule: COL_PROXY_BOUNDS, value: 0.5, tol: 0.01}
+- id: bad-no-geometry
+  title: A file with no meshes is an error
+  input: {op: preflight, file: bad_no_geometry, profile: prop}
+  checks:
+  - {type: has_rule, rule: MESH_NO_GEOMETRY, severity: error}
+  - {type: equals, path: ready, value: false}
+- id: bad-ngon-obj
+  title: A five-sided OBJ face is measured and reported
+  input: {op: preflight, file: bad_ngon_obj, profile: prop}
+  checks:
+  - {type: has_rule, rule: MESH_NGONS}
+  - {type: finding_value, rule: MESH_NGONS, value: 1, tol: 0}
+- id: bad-glb-cannot-measure-ngons
+  title: A GLB says plainly that n-gons cannot be measured
+  input: {op: preflight, file: good_prop_crate, profile: prop}
+  checks:
+  - type: list_contains
+    path: not_checked
+    items: [n-gons]
+- id: bad-unsupported-features
+  title: A camera, a punctual light and the light extension are flagged
+  input: {op: preflight, file: bad_unsupported_features, profile: prop}
+  checks:
+  - {type: has_rule, rule: UPL_UNSUPPORTED_FEATURE}
+  - {type: at_least, path: warnings, value: 3}
+- id: bad-draco-refused
+  title: A Draco-compressed GLB is refused with a clear message, never guessed at
+  input: {op: preflight, file: bad_draco_compressed, profile: prop}
+  checks:
+  - {type: error_contains, text: KHR_draco_mesh_compression}
+- id: bad-truncated-refused
+  title: A truncated GLB is refused
+  input: {op: preflight, file: bad_truncated, profile: prop}
+  checks:
+  - {type: error_contains, text: truncated}
+- id: bad-fbx-header-only
+  title: 'An FBX with no summary is NOT ready: only the header is read'
+  input: {op: preflight, file: sample_binary_header, profile: prop}
+  checks:
+  - {type: has_rule, rule: UPL_NOT_MEASURED, severity: error}
+  - {type: equals, path: ready, value: false}
+  - {type: equals, path: handoff, value: false}
+  - type: list_contains
+    path: not_checked
+    items: [everything inside the FBX]
+- id: bad-summary-many-problems
+  title: A summary reporting a heavy, n-gon-ridden, unscaled mesh fails with every reported problem
+  input: {op: preflight, file: bad_summary_prop, profile: prop}
+  checks:
+  - {type: has_rule, rule: MESH_TRI_BUDGET}
+  - {type: has_rule, rule: MESH_NGONS}
+  - {type: has_rule, rule: XFM_UNAPPLIED_SCALE}
+  - {type: has_rule, rule: MESH_NON_MANIFOLD}
+  - {type: has_rule, rule: MESH_LOOSE_GEOMETRY}
+  - {type: has_rule, rule: TEX_COLORSPACE}
+  - {type: has_rule, rule: XFM_AXIS_UP}
+  - {type: has_rule, rule: UV_OVERLAP}
+  - {type: has_rule, rule: NAME_INVALID_CHARS}
+  - {type: one_line_fixes}
+- id: bad-summary-flipped-ratio
+  title: 300 of 14000 flipped faces (0.0214) is over the 0.02 default
+  input: {op: preflight, file: bad_summary_prop, profile: prop}
+  checks:
+  - {type: finding_value, rule: MESH_FLIPPED_NORMALS, value: 0.021, tol: 0.001}

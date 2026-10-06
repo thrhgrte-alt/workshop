@@ -1,0 +1,134 @@
+{
+ "asset": {
+  "version": "2.0",
+  "generator": "preflight synthetic builder (not Blender)"
+ },
+ "scene": 0,
+ "scenes": [
+  {
+   "nodes": [
+    0
+   ]
+  }
+ ],
+ "nodes": [
+  {
+   "name": "prop_crate",
+   "mesh": 0
+  }
+ ],
+ "meshes": [
+  {
+   "name": "prop_crate",
+   "primitives": [
+    {
+     "attributes": {
+      "POSITION": 0,
+      "NORMAL": 1,
+      "TEXCOORD_0": 2
+     },
+     "mode": 4,
+     "indices": 3,
+     "material": 0
+    }
+   ]
+  }
+ ],
+ "materials": [
+  {
+   "name": "crate_mat",
+   "pbrMetallicRoughness": {
+    "baseColorFactor": [
+     1,
+     1,
+     1,
+     1
+    ],
+    "metallicFactor": 0.0,
+    "roughnessFactor": 1.0,
+    "baseColorTexture": {
+     "index": 0
+    }
+   }
+  }
+ ],
+ "images": [
+  {
+   "name": "missing_albedo",
+   "uri": "textures/missing_albedo.png"
+  }
+ ],
+ "textures": [
+  {
+   "source": 0
+  }
+ ],
+ "accessors": [
+  {
+   "bufferView": 0,
+   "componentType": 5126,
+   "count": 24,
+   "type": "VEC3",
+   "min": [
+    -0.5,
+    0.0,
+    -0.5
+   ],
+   "max": [
+    0.5,
+    1.0,
+    0.5
+   ]
+  },
+  {
+   "bufferView": 1,
+   "componentType": 5126,
+   "count": 24,
+   "type": "VEC3"
+  },
+  {
+   "bufferView": 2,
+   "componentType": 5126,
+   "count": 24,
+   "type": "VEC2"
+  },
+  {
+   "bufferView": 3,
+   "componentType": 5123,
+   "count": 36,
+   "type": "SCALAR"
+  }
+ ],
+ "bufferViews": [
+  {
+   "buffer": 0,
+   "byteOffset": 0,
+   "byteLength": 288,
+   "target": 34962
+  },
+  {
+   "buffer": 0,
+   "byteOffset": 288,
+   "byteLength": 288,
+   "target": 34962
+  },
+  {
+   "buffer": 0,
+   "byteOffset": 576,
+   "byteLength": 192,
+   "target": 34962
+  },
+  {
+   "buffer": 0,
+   "byteOffset": 768,
+   "byteLength": 72,
+   "target": 34963
+  }
+ ],
+ "buffers": [
+  {
+   "byteLength": 840,
+   "uri": "data:application/octet-stream;base64,AAAAPwAAAAAAAAC/AAAAPwAAgD8AAAC/AAAAPwAAAAAAAAA/AAAAPwAAgD8AAAA/AAAAvwAAAAAAAAC/AAAAvwAAAAAAAAA/AAAAvwAAgD8AAAC/AAAAvwAAgD8AAAA/AAAAvwAAgD8AAAC/AAAAvwAAgD8AAAA/AAAAPwAAgD8AAAC/AAAAPwAAgD8AAAA/AAAAvwAAAAAAAAC/AAAAPwAAAAAAAAC/AAAAvwAAAAAAAAA/AAAAPwAAAAAAAAA/AAAAvwAAAAAAAAA/AAAAPwAAAAAAAAA/AAAAvwAAgD8AAAA/AAAAPwAAgD8AAAA/AAAAvwAAAAAAAAC/AAAAvwAAgD8AAAC/AAAAPwAAAAAAAAC/AAAAPwAAgD8AAAC/AACAPwAAAAAAAAAAAACAPwAAAAAAAAAAAACAPwAAAAAAAAAAAACAPwAAAAAAAAAAAACAvwAAAAAAAAAAAACAvwAAAAAAAAAAAACAvwAAAAAAAAAAAACAvwAAAAAAAAAAAAAAAAAAgD8AAAAAAAAAAAAAgD8AAAAAAAAAAAAAgD8AAAAAAAAAAAAAgD8AAAAAAAAAAAAAgL8AAAAAAAAAAAAAgL8AAAAAAAAAAAAAgL8AAAAAAAAAAAAAgL8AAAAAAAAAAAAAAAAAAIA/AAAAAAAAAAAAAIA/AAAAAAAAAAAAAIA/AAAAAAAAAAAAAIA/AAAAAAAAAAAAAIC/AAAAAAAAAAAAAIC/AAAAAAAAAAAAAIC/AAAAAAAAAAAAAIC/AAAAAAAAAACrqqo+AAAAAAAAAAAAAAA/q6qqPgAAAD+rqqo+AAAAAKuqKj8AAAAAq6qqPgAAAD+rqio/AAAAP6uqKj8AAAAAAACAPwAAAACrqio/AAAAPwAAgD8AAAA/AAAAAAAAAD+rqqo+AAAAPwAAAAAAAIA/q6qqPgAAgD+rqqo+AAAAP6uqKj8AAAA/q6qqPgAAgD+rqio/AACAP6uqKj8AAAA/AACAPwAAAD+rqio/AACAPwAAgD8AAIA/AAABAAMAAAADAAIABAAFAAcABAAHAAYACAAJAAsACAALAAoADAANAA8ADAAPAA4AEAARABMAEAATABIAFAAVABcAFAAXABYA"
+  }
+ ]
+}

@@ -1,0 +1,72 @@
+{
+ "format": "preflight-summary/1",
+ "source": "blender_get_objects_summary (hand-written synthetic example)",
+ "file": "prop_crate.fbx",
+ "up_axis": "Y",
+ "unit_scale": 1.0,
+ "objects": [
+  {
+   "name": "prop_crate",
+   "type": "MESH",
+   "parent": null,
+   "location": [
+    0,
+    0,
+    0
+   ],
+   "rotation_euler_deg": [
+    0,
+    0,
+    0
+   ],
+   "scale": [
+    1,
+    1,
+    1
+   ],
+   "dimensions": [
+    1,
+    1,
+    1
+   ],
+   "triangles": 12,
+   "vertices": 24,
+   "ngons": 0,
+   "quads": 6,
+   "loose_vertices": 0,
+   "degenerate_faces": 0,
+   "non_manifold_edges": 0,
+   "flipped_normal_faces": 0,
+   "uv_layers": 1,
+   "uv_out_of_range_fraction": 0.0,
+   "uv_overlap_ratio": 0.0,
+   "uv_coverage": 0.95,
+   "texel_density_spread": 1.1,
+   "origin_offset": [
+    0,
+    0,
+    0
+   ],
+   "materials": [
+    "crate_mat"
+   ]
+  }
+ ],
+ "materials": [
+  {
+   "name": "crate_mat",
+   "textures": [
+    {
+     "slot": "base_color",
+     "path": "textures/summary_crate_albedo.png",
+     "colorspace": "sRGB"
+    },
+    {
+     "slot": "normal",
+     "path": "textures/summary_crate_normal.png",
+     "colorspace": "Non-Color"
+    }
+   ]
+  }
+ ]
+}

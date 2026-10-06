@@ -1,0 +1,17 @@
+# Economy review rubric. 'auto' criteria are computed from check_economy findings. 'manual' criteria need a person: whether the numbers match the game's design
+# intent is a judgment, and the target bands and archetypes are assumptions until the user confirms them. Subjective scores are never ground truth.
+pass_at: 0.7
+criteria:
+  - {id: spec_valid,            method: auto,   weight: 3, required: true, description: "The spec validates and every analysis could run."}
+  - {id: no_walls,              method: auto,   weight: 3, required: true, description: "No wall (a step beyond wall_factor x the band maximum)."}
+  - {id: no_runaway_currency,   method: auto,   weight: 3, required: true, description: "No runaway_inflation finding."}
+  - {id: locks_respected,       method: auto,   weight: 3, required: true, description: "No proposal changed a locked value (checked by propose_rebalance itself)."}
+  - {id: pacing_in_band,        method: auto,   weight: 2, description: "No over_band or under_band step for the reference archetype."}
+  - {id: smooth_curve,          method: auto,   weight: 1, description: "No cost or time cliff between consecutive steps."}
+  - {id: choices_are_real,      method: auto,   weight: 2, description: "No dominant option or dominant strategy."}
+  - {id: no_dead_options,       method: auto,   weight: 1, description: "No upgrade with an unreasonable payback."}
+  - {id: content_lasts,         method: auto,   weight: 1, description: "Content lasts at least min_content_days."}
+  - {id: monetisation_fair,     method: auto,   weight: 2, description: "No pay_to_win and no free_cliff finding."}
+  - {id: bands_confirmed,       method: manual, weight: 3, required: true, description: "The user confirmed the target pacing bands (the starter bands are placeholders)."}
+  - {id: archetypes_confirmed,  method: manual, weight: 3, required: true, description: "The user confirmed the archetype assumptions (session length, sessions per day, efficiency)."}
+  - {id: matches_design_intent, method: manual, weight: 2, description: "The pacing matches what the designer wants players to feel."}

@@ -1,0 +1,20 @@
+# Profile: a character accessory (hat, backpack, shoulder pad). ALL numbers are DEFAULTS chosen by this tool, not official Roblox limits.
+name: character_accessory
+description: A small wearable accessory. Usually static; may carry a small rig. Origin is not checked (attachment point is up to you).
+rig_checks: true
+limits_are_defaults: true
+verify_against_current_docs: true
+settings:
+  studs_per_unit: 1.0
+limits:
+  MESH_TRI_BUDGET: {max_triangles: 4000}
+  MESH_TRI_BUDGET_TOTAL: {max_triangles_total: 4000}
+  MESH_OBJECT_COUNT: {max_mesh_objects: 4}
+  MESH_BBOX_PROFILE: {min_largest_dimension_studs: 0.2, max_largest_dimension_studs: 8}
+  XFM_ORIGIN_PLACEMENT: {mode: any}
+  MAT_COUNT: {max_materials: 2}
+  TEX_OVERSIZE: {max_dimension_px: 1024}
+  COL_PROXY_MISSING: {required_above_triangles: 100000}
+  RIG_REQUIRED: {required: false}
+  RIG_BONE_COUNT: {max_bones: 16}
+  RIG_INFLUENCES: {max_influences: 4}

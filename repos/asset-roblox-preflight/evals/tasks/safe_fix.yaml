@@ -1,0 +1,103 @@
+# The safe-fix script generator, run against a fake bpy (not Blender).
+- id: fix-spin-rename-script
+  title: The safe fix for Spin_Bone is a script that renames it to spin; run on a fake bpy it does exactly that and nothing else
+  input: {op: fix_script, file: bad_spin_bone_name, profile: tool}
+  checks:
+  - type: equals
+    path: ops
+    value: [rename_bone]
+  - type: equals
+    path: renamed_bones
+    value:
+    - [Spin_Bone, spin]
+  - type: list_contains
+    path: bone_names_after
+    items: [root, spin]
+  - type: equals
+    path: lint
+    value: []
+  - {type: equals, path: wrote_anything, value: false}
+- id: fix-apply-scale-script
+  title: Unapplied scale becomes an apply-scale operation; the fake scene ends at scale 1
+  input: {op: fix_script, file: bad_unapplied_scale, profile: prop}
+  checks:
+  - type: equals
+    path: scale_applied
+    value: [prop_crate]
+  - type: equals
+    path: stub.scales.prop_crate
+    value: [1.0, 1.0, 1.0]
+  - type: equals
+    path: lint
+    value: []
+- id: fix-rename-script
+  title: '''My Crate.001'' is renamed to My_Crate; the scheme finding is NOT auto-fixed'
+  input: {op: fix_script, file: bad_names_spaces, profile: prop}
+  checks:
+  - type: equals
+    path: renamed_objects
+    value:
+    - [My Crate.001, My_Crate]
+  - type: list_contains
+    path: not_fixed
+    items: [NAME_SCHEME]
+- id: fix-nothing-safe
+  title: 'A flipped-normals file has no safe fix: no script at all'
+  input: {op: fix_script, file: bad_flipped_normals, profile: prop}
+  checks:
+  - {type: equals, path: has_script, value: false}
+  - type: list_contains
+    path: not_fixed
+    items: [MESH_FLIPPED_NORMALS]
+- id: fix-blended-weights-not-automatic
+  title: Blended spin weights have no safe fix
+  input: {op: fix_script, file: bad_spin_blended, profile: tool}
+  checks:
+  - {type: equals, path: has_script, value: false}
+- id: fix-clean-asset-no-script
+  title: A clean asset gets no script
+  input: {op: fix_script, file: good_prop_crate, profile: prop}
+  checks:
+  - {type: equals, path: has_script, value: false}
+- id: fix-refuses-unsafe-rule
+  title: Asking apply_safe_fix for a rule that is not safe is refused
+  input:
+    op: tool_call
+    tool: apply_safe_fix
+    args:
+      project_id: synthetic-sandbox
+      path: $file:bad_too_many_tris
+      profile: prop
+      rules: [MESH_TRI_BUDGET]
+  checks:
+  - {type: error_contains, text: not marked safe}
+- id: fix-dry-run-writes-nothing
+  title: apply_safe_fix defaults to dry_run and reports the file it would write
+  input:
+    op: tool_call
+    tool: apply_safe_fix
+    args: {project_id: synthetic-sandbox, path: '$file:bad_unapplied_scale', profile: prop}
+  checks:
+  - {type: equals, path: result.dry_run, value: true}
+  - {type: text_lacks, path: result.written, text: /}
+  - {type: text_has, path: result.would_write, text: .py}
+- id: fix-apply-writes-script-only
+  title: dry_run=false writes the script text, never an export
+  input:
+    op: tool_call
+    tool: apply_safe_fix
+    args: {project_id: synthetic-sandbox, path: '$file:bad_unapplied_scale', profile: prop, dry_run: false}
+  checks:
+  - {type: equals, path: result.dry_run, value: false}
+  - {type: text_has, path: result.written, text: .py}
+  - {type: text_has, path: result.handoff, text: never connects to Blender}
+- id: fix-rules-registry
+  title: 'Safe rules are exactly those declared safe: true in rules/*.yaml'
+  input: {op: rules_check}
+  checks:
+  - type: list_contains
+    path: safe_rules
+    items: [XFM_UNAPPLIED_SCALE, XFM_UNAPPLIED_ROTATION, NAME_INVALID_CHARS, NAME_BLENDER_SUFFIX, NAME_DUPLICATE, RIG_SPIN_SETUP]
+  - type: list_excludes
+    path: safe_rules
+    items: [MESH_TRI_BUDGET, MESH_FLIPPED_NORMALS, TEX_OVERSIZE]

@@ -1,0 +1,187 @@
+# Typical output size per tool, in characters, with a budget so growth is noticed.
+- id: size-list-projects
+  title: list_projects stays short (typical output under 1300 characters)
+  input:
+    op: output_size
+    tool: list_projects
+    args: {}
+  checks:
+  - {type: at_most, path: chars, value: 1300}
+- id: size-get-style-brief
+  title: get_style_brief stays short (typical output under 2400 characters)
+  input:
+    op: output_size
+    tool: get_style_brief
+    args: {project_id: synthetic-sandbox}
+  checks:
+  - {type: at_most, path: chars, value: 2400}
+- id: size-find-past-corrections
+  title: find_past_corrections stays short (typical output under 300 characters)
+  input:
+    op: output_size
+    tool: find_past_corrections
+    args: {project_id: synthetic-sandbox, request: drill spin bone}
+  checks:
+  - {type: at_most, path: chars, value: 300}
+- id: size-list-profiles
+  title: list_profiles stays short (typical output under 3000 characters)
+  input:
+    op: output_size
+    tool: list_profiles
+    args: {project_id: synthetic-sandbox}
+  checks:
+  - {type: at_most, path: chars, value: 3000}
+- id: size-list-profiles-one
+  title: list_profiles stays short (typical output under 3600 characters)
+  input:
+    op: output_size
+    tool: list_profiles
+    args: {project_id: synthetic-sandbox, profile: tool}
+  checks:
+  - {type: at_most, path: chars, value: 3600}
+- id: size-inspect-crate
+  title: inspect_export stays short (typical output under 1500 characters)
+  input:
+    op: output_size
+    tool: inspect_export
+    args: {project_id: synthetic-sandbox, path: '$file:good_prop_crate'}
+  checks:
+  - {type: at_most, path: chars, value: 1500}
+- id: size-inspect-drill
+  title: inspect_export stays short (typical output under 1800 characters)
+  input:
+    op: output_size
+    tool: inspect_export
+    args: {project_id: synthetic-sandbox, path: '$file:good_tool_drill'}
+  checks:
+  - {type: at_most, path: chars, value: 1800}
+- id: size-check-mesh
+  title: check_mesh stays short (typical output under 1500 characters)
+  input:
+    op: output_size
+    tool: check_mesh
+    args: {project_id: synthetic-sandbox, path: '$file:bad_too_many_tris', profile: prop}
+  checks:
+  - {type: at_most, path: chars, value: 1500}
+- id: size-check-uvs
+  title: check_uvs stays short (typical output under 1500 characters)
+  input:
+    op: output_size
+    tool: check_uvs
+    args: {project_id: synthetic-sandbox, path: '$file:bad_uv_overlap', profile: prop}
+  checks:
+  - {type: at_most, path: chars, value: 1500}
+- id: size-check-textures
+  title: check_textures stays short (typical output under 1500 characters)
+  input:
+    op: output_size
+    tool: check_textures
+    args: {project_id: synthetic-sandbox, path: '$file:bad_texture_4k', profile: prop}
+  checks:
+  - {type: at_most, path: chars, value: 1500}
+- id: size-check-rig
+  title: check_rig stays short (typical output under 1200 characters)
+  input:
+    op: output_size
+    tool: check_rig
+    args: {project_id: synthetic-sandbox, path: '$file:bad_spin_bone_name', profile: tool}
+  checks:
+  - {type: at_most, path: chars, value: 1200}
+- id: size-check-names
+  title: check_names stays short (typical output under 1800 characters)
+  input:
+    op: output_size
+    tool: check_names
+    args: {project_id: synthetic-sandbox, path: '$file:bad_names_spaces', profile: prop}
+  checks:
+  - {type: at_most, path: chars, value: 1800}
+- id: size-report-clean
+  title: preflight_report stays short (typical output under 900 characters)
+  input:
+    op: output_size
+    tool: preflight_report
+    args: {project_id: synthetic-sandbox, path: '$file:good_prop_crate', profile: prop}
+  checks:
+  - {type: at_most, path: chars, value: 900}
+- id: size-report-worst-case
+  title: The worst fixture (17 findings) is capped to 10 ranked findings by default
+  input:
+    op: output_size
+    tool: preflight_report
+    args: {project_id: synthetic-sandbox, path: '$file:bad_summary_prop', profile: prop}
+  checks:
+  - {type: at_most, path: chars, value: 5200}
+- id: size-explain-finding
+  title: explain_finding stays short (typical output under 2200 characters)
+  input:
+    op: output_size
+    tool: explain_finding
+    args: {project_id: synthetic-sandbox, rule: RIG_SPIN_SETUP, profile: tool}
+  checks:
+  - {type: at_most, path: chars, value: 2200}
+- id: size-compare-versions
+  title: compare_versions stays short (typical output under 1000 characters)
+  input:
+    op: output_size
+    tool: compare_versions
+    args: {project_id: synthetic-sandbox, before: '$file:bad_unapplied_scale', after: '$file:good_prop_crate', profile: prop}
+  checks:
+  - {type: at_most, path: chars, value: 1000}
+- id: size-apply-safe-fix-dry
+  title: apply_safe_fix stays short (typical output under 4200 characters)
+  input:
+    op: output_size
+    tool: apply_safe_fix
+    args: {project_id: synthetic-sandbox, path: '$file:bad_spin_bone_name', profile: tool}
+  checks:
+  - {type: at_most, path: chars, value: 4200}
+- id: size-save-report-dry
+  title: save_report stays short (typical output under 700 characters)
+  input:
+    op: output_size
+    tool: save_report
+    args: {project_id: synthetic-sandbox, path: '$file:good_prop_crate', profile: prop}
+  checks:
+  - {type: at_most, path: chars, value: 700}
+- id: size-record-override-dry
+  title: record_override stays short (typical output under 1000 characters)
+  input:
+    op: output_size
+    tool: record_override
+    args: {project_id: synthetic-sandbox, rule: MESH_TRI_BUDGET, asset_type: prop, reason: hero, value: 30000}
+  checks:
+  - {type: at_most, path: chars, value: 1000}
+- id: size-suggest-promotions
+  title: suggest_profile_promotions stays short (typical output under 400 characters)
+  input:
+    op: output_size
+    tool: suggest_profile_promotions
+    args: {project_id: synthetic-sandbox}
+  checks:
+  - {type: at_most, path: chars, value: 400}
+- id: size-search-library
+  title: search_library stays short (typical output under 5500 characters)
+  input:
+    op: output_size
+    tool: search_library
+    args: {project_id: synthetic-sandbox, query: crate}
+  checks:
+  - {type: at_most, path: chars, value: 5500}
+- id: size-record-run
+  title: record_run stays short (typical output under 300 characters)
+  input:
+    op: output_size
+    tool: record_run
+    args: {project_id: synthetic-sandbox, request: preflight crate}
+  checks:
+  - {type: at_most, path: chars, value: 300}
+- id: size-tool-descriptions
+  title: Tool descriptions are concise (each at most 300 characters; all together under a budget) and rare tools are marked
+  input: {op: descriptions}
+  checks:
+  - {type: at_most, path: longest, value: 300}
+  - {type: at_most, path: total, value: 6500}
+  - type: list_contains
+    path: rare
+    items: [apply_safe_fix, save_report, compare_versions, suggest_profile_promotions, record_override, promote_run, search_library]
+  - {type: at_least, path: tools, value: 21}

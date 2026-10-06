@@ -1,0 +1,54 @@
+category: uv
+rules:
+  - id: UV_MISSING
+    severity: error
+    title: Textured mesh has no UV coordinates
+    explanation: A mesh that uses a textured material needs UVs, otherwise the texture cannot be mapped.
+    fix: "Unwrap {object} (UV > Smart UV Project or manual seams) and re-export with UVs enabled."
+    safe: false
+  - id: UV_MISSING_UNTEXTURED
+    severity: info
+    title: Mesh has no UV coordinates (and no textures)
+    explanation: Fine for flat-colour meshes; add UVs before you ever want a texture on it.
+    fix: "Unwrap {object} if it will ever be textured."
+    safe: false
+  - id: UV_OUT_OF_RANGE
+    severity: warn
+    title: UVs outside the 0-1 square
+    explanation: UVs outside 0-1 tile or clamp the texture. Intentional tiling is allowed, but surprising on single-texture assets.
+    fix: "Move {object}'s UV islands inside 0-1 unless tiling is intended ({measured} outside 0-1, limit {limit})."
+    safe: false
+    limits:
+      max_out_of_range_fraction: {default: 0.0, verify_against_current_docs: false, heuristic: true}
+  - id: UV_OVERLAP
+    severity: warn
+    title: UV islands overlap
+    explanation: Overlapping UVs share texels, so painted detail or baked lighting repeats. Mirrored overlap is sometimes deliberate. Measured on a 128x128 grid.
+    fix: "Separate the overlapping UV islands of {object} (UV > Pack Islands) - {measured} of covered area overlaps, limit {limit}."
+    safe: false
+    limits:
+      max_overlap_ratio: {default: 0.02, verify_against_current_docs: false, heuristic: true}
+  - id: UV_TEXEL_SPREAD
+    severity: warn
+    title: Texel density varies too much between faces
+    explanation: The ratio between the 95th and 5th percentile texel density (area weighted) shows how uneven the texture resolution is across the mesh.
+    fix: "Rescale UV islands of {object} to a similar texel density (UV > Average Islands Scale); spread is {measured}, limit {limit}."
+    safe: false
+    limits:
+      max_spread_ratio: {default: 4.0, verify_against_current_docs: false, heuristic: true}
+  - id: UV_WASTED_SPACE
+    severity: info
+    title: Most of the UV square is empty
+    explanation: Low coverage wastes texture resolution. Measured as the share of a 128x128 grid covered by UV triangles.
+    fix: "Pack the UV islands of {object} tighter (UV > Pack Islands with margin); coverage is {measured}, minimum {limit}."
+    safe: false
+    limits:
+      min_coverage: {default: 0.3, verify_against_current_docs: false, heuristic: true}
+  - id: UV_ZERO_AREA
+    severity: warn
+    title: Triangles with no UV area
+    explanation: Faces collapsed to a point or line in UV space stretch the texture into streaks.
+    fix: "Re-unwrap the collapsed faces of {object} ({measured} triangles, limit {limit})."
+    safe: false
+    limits:
+      max_zero_area_triangles: {default: 0, verify_against_current_docs: false, heuristic: true}

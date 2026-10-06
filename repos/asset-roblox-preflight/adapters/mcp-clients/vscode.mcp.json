@@ -1,0 +1,15 @@
+{
+  "servers": {
+    "asset-roblox-preflight": {
+      "type": "stdio",
+      "command": "python",
+      "args": [
+        "-m",
+        "preflight.server"
+      ],
+      "env": {
+        "PREFLIGHT_ROOT": "/ABSOLUTE/PATH/TO/asset-roblox-preflight"
+      }
+    }
+  }
+}

@@ -1,0 +1,108 @@
+# Learning from saved feedback: playtest notes tune the bands, archetype observations tune assumptions, rejected rebalances suggest locks. Suggestions only, never applied.
+- id: learning-one-report-is-not-enough
+  input:
+    op: tools_seq
+    steps:
+      - {tool: record_run, args: {request: "tier 4 felt too slow", project_id: demo_mine, place_id: main}}
+      - {tool: record_decision, args: {run_id: "$ref:steps.0.result.run_id", decision: revise, project_id: demo_mine, place_id: main, corrections: [{dimension: pacing, tier: 4, felt: too_slow, note: tier 4 felt too slow}]}}
+      - {tool: suggest_band_adjustments, args: {project_id: demo_mine, place_id: main}}
+  checks: [{type: equals, path: steps.2.result.suggestions.0.type, value: need_more_reports}]
+- id: learning-too-fast-raises-the-band-minimum
+  title: "two 'too fast' reports at tier 4 (simulated 20 minutes, inside 15-45): suggest min 15 -> round(20 x 1.25) = 25"
+  input:
+    op: tools_seq
+    steps:
+      - {tool: record_run, args: {request: "a", project_id: demo_mine, place_id: main}}
+      - {tool: record_decision, args: {run_id: "$ref:steps.0.result.run_id", decision: revise, project_id: demo_mine, place_id: main, corrections: [{dimension: pacing, tier: 4, direction: more, note: tier 4 trivial}]}}
+      - {tool: record_run, args: {request: "b", project_id: demo_mine, place_id: main}}
+      - {tool: record_decision, args: {run_id: "$ref:steps.2.result.run_id", decision: revise, project_id: demo_mine, place_id: main, corrections: [{dimension: pacing, tier: 4, note: "tier 4 was too fast, instant"}]}}
+      - {tool: suggest_band_adjustments, args: {project_id: demo_mine, place_id: main}}
+  checks: [{type: equals, path: steps.4.result.suggestions.0.type, value: raise_band_min}, {type: equals, path: steps.4.result.suggestions.0.suggested, value: 25}, {type: equals, path: steps.4.result.suggestions.0.current, value: 15}, {type: equals, path: steps.4.result.applied, value: false}]
+- id: learning-complaint-the-simulator-confirms-points-at-the-economy
+  title: "hardcore bands start at 30 minutes but tier 4 simulates at 20: 'too fast' is already visible as a finding, so the advice is to fix the economy"
+  input:
+    op: tools_seq
+    steps:
+      - {tool: record_run, args: {request: "a", project_id: demo_mine, place_id: hardcore}}
+      - {tool: record_decision, args: {run_id: "$ref:steps.0.result.run_id", decision: revise, project_id: demo_mine, place_id: hardcore, corrections: [{dimension: pacing, tier: 4, felt: too_fast, note: tier 4 too fast}]}}
+      - {tool: record_run, args: {request: "b", project_id: demo_mine, place_id: hardcore}}
+      - {tool: record_decision, args: {run_id: "$ref:steps.2.result.run_id", decision: revise, project_id: demo_mine, place_id: hardcore, corrections: [{dimension: pacing, tier: 4, felt: too_fast, note: tier 4 too fast}]}}
+      - {tool: suggest_band_adjustments, args: {project_id: demo_mine, place_id: hardcore}}
+  checks: [{type: equals, path: steps.4.result.suggestions.0.type, value: fix_economy}]
+- id: learning-archetype-observations-use-the-median
+  title: "casual sessions observed at 8, 10 and 12 minutes (median 10) against the spec's 15"
+  input:
+    op: tools_seq
+    steps:
+      - {tool: record_run, args: {request: "obs", project_id: demo_mine, place_id: main}}
+      - {tool: record_decision, args: {run_id: "$ref:steps.0.result.run_id", decision: revise, project_id: demo_mine, place_id: main, corrections: [{dimension: archetype_assumption, archetype: casual, field: session_minutes, observed: 8, note: telemetry}, {dimension: archetype_assumption, archetype: casual, field: session_minutes, observed: 10, note: telemetry}, {dimension: archetype_assumption, archetype: casual, field: session_minutes, observed: 12, note: telemetry}]}}
+      - {tool: suggest_band_adjustments, args: {project_id: demo_mine, place_id: main}}
+  checks: [{type: equals, path: steps.2.result.suggestions.0.type, value: change_archetype}, {type: equals, path: steps.2.result.suggestions.0.suggested, value: 10}, {type: equals, path: steps.2.result.suggestions.0.current, value: 15}, {type: equals, path: steps.2.result.suggestions.0.path, value: archetypes.casual.session_minutes}]
+- id: learning-rejected-twice-suggests-a-lock
+  input:
+    op: tools_seq
+    steps:
+      - {tool: record_run, args: {request: "rebalance 1", project_id: demo_mine, place_id: main, constraints: {rebalance: {changes: [{path: upgrades.drill_4.cost, before: 1600, after: 1200}]}}}}
+      - {tool: record_decision, args: {run_id: "$ref:steps.0.result.run_id", decision: reject, project_id: demo_mine, place_id: main, reason: "drill_4 price is fixed by design"}}
+      - {tool: record_run, args: {request: "rebalance 2", project_id: demo_mine, place_id: main, constraints: {rebalance: {changes: [{path: upgrades.drill_4.cost, before: 1600, after: 1400}]}}}}
+      - {tool: record_decision, args: {run_id: "$ref:steps.2.result.run_id", decision: reject, project_id: demo_mine, place_id: main, reason: "still no"}}
+      - {tool: suggest_band_adjustments, args: {project_id: demo_mine, place_id: main}}
+  checks: [{type: equals, path: steps.4.result.suggestions.0.type, value: consider_locking}, {type: equals, path: steps.4.result.suggestions.0.path, value: upgrades.drill_4.cost}, {type: equals, path: steps.4.result.suggestions.0.rejected, value: 2}]
+- id: learning-an-accepted-change-prevents-the-lock-suggestion
+  input:
+    op: tools_seq
+    steps:
+      - {tool: record_run, args: {request: "rebalance 1", project_id: demo_mine, place_id: main, constraints: {rebalance: {changes: [{path: upgrades.drill_4.cost}]}}}}
+      - {tool: record_decision, args: {run_id: "$ref:steps.0.result.run_id", decision: reject, project_id: demo_mine, place_id: main, reason: no}}
+      - {tool: record_run, args: {request: "rebalance 2", project_id: demo_mine, place_id: main, constraints: {rebalance: {changes: [{path: upgrades.drill_4.cost}]}}}}
+      - {tool: record_decision, args: {run_id: "$ref:steps.2.result.run_id", decision: accept, project_id: demo_mine, place_id: main}}
+      - {tool: record_run, args: {request: "rebalance 3", project_id: demo_mine, place_id: main, constraints: {rebalance: {changes: [{path: upgrades.drill_4.cost}]}}}}
+      - {tool: record_decision, args: {run_id: "$ref:steps.4.result.run_id", decision: reject, project_id: demo_mine, place_id: main, reason: no}}
+      - {tool: suggest_band_adjustments, args: {project_id: demo_mine, place_id: main}}
+  checks: [{type: equals, path: steps.6.result.suggestions, value: []}]
+- id: learning-unreadable-notes-are-reported-not-guessed
+  input:
+    op: tools_seq
+    steps:
+      - {tool: record_run, args: {request: "odd", project_id: demo_mine, place_id: main}}
+      - {tool: record_decision, args: {run_id: "$ref:steps.0.result.run_id", decision: revise, project_id: demo_mine, place_id: main, corrections: [{dimension: pacing, note: "it felt odd"}]}}
+      - {tool: suggest_band_adjustments, args: {project_id: demo_mine, place_id: main}}
+  checks: [{type: equals, path: steps.2.result.suggestions, value: []}, {type: text_contains, path: steps.2.result.notes.0, text: ignored}]
+- id: learning-conflicting-reports-ask-for-a-split-band
+  input:
+    op: tools_seq
+    steps:
+      - {tool: record_run, args: {request: "a", project_id: demo_mine, place_id: main}}
+      - {tool: record_decision, args: {run_id: "$ref:steps.0.result.run_id", decision: revise, project_id: demo_mine, place_id: main, corrections: [{dimension: pacing, tier: 4, felt: too_slow, note: x}, {dimension: pacing, tier: 4, felt: too_slow, note: y}, {dimension: pacing, tier: 6, felt: too_fast, note: z}, {dimension: pacing, tier: 6, felt: too_fast, note: w}]}}
+      - {tool: suggest_band_adjustments, args: {project_id: demo_mine, place_id: main}}
+  checks: [{type: text_contains, path: steps.2.result.notes.0, text: split}]
+- id: learning-corrections-are-recalled-for-the-same-place
+  input:
+    op: tools_seq
+    steps:
+      - {tool: record_run, args: {request: "tune the drill prices", project_id: demo_mine, place_id: main}}
+      - {tool: record_decision, args: {run_id: "$ref:steps.0.result.run_id", decision: reject, project_id: demo_mine, place_id: main, reason: "never touch the tier 4 price", corrections: [{dimension: cost, note: tier 4 price is locked by design}]}}
+      - {tool: find_past_corrections, args: {request: "change drill prices", project_id: demo_mine, place_id: main}}
+  checks: [{type: text_contains, path: steps.2.result.corrections.0.reason, text: tier 4 price}, {type: equals, path: steps.2.result.project_id, value: demo_mine}]
+- id: learning-unknown-correction-dimension-is-refused
+  input:
+    op: tools_seq
+    steps:
+      - {tool: record_run, args: {request: "a", project_id: demo_mine, place_id: main}}
+      - {tool: record_decision, args: {run_id: "$ref:steps.0.result.run_id", decision: revise, project_id: demo_mine, place_id: main, corrections: [{dimension: vibes, note: x}]}}
+  checks: [{type: step_error_contains, step: 1, text: unknown correction dimension}]
+- id: learning-reject-needs-a-reason
+  input:
+    op: tools_seq
+    steps:
+      - {tool: record_run, args: {request: "a", project_id: demo_mine, place_id: main}}
+      - {tool: record_decision, args: {run_id: "$ref:steps.0.result.run_id", decision: reject, project_id: demo_mine, place_id: main}}
+  checks: [{type: step_error_contains, step: 1, text: needs a reason}]
+- id: learning-unknown-run-is-refused-in-another-place
+  title: "a run id saved for main cannot be decided on from hardcore"
+  input:
+    op: tools_seq
+    steps:
+      - {tool: record_run, args: {request: "a", project_id: demo_mine, place_id: main}}
+      - {tool: record_decision, args: {run_id: "$ref:steps.0.result.run_id", decision: accept, project_id: demo_mine, place_id: hardcore}}
+  checks: [{type: step_error_contains, step: 1, text: unknown run_id}]

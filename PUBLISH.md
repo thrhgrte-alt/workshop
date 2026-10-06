@@ -18,7 +18,7 @@ cd repos/<name>
 git remote add origin https://github.com/<owner>/<name>.git
 git push -u origin main
 ```
-Names: `substance-designer-ai`, `roblox-vfx-ai`, `roblox-level-design-ai`, `modular-set-dressing-ai`, `concept-art-ai`.
+Names: `substance-designer-ai`, `roblox-vfx-ai`, `roblox-level-design-ai`, `modular-set-dressing-ai`, `concept-art-ai`, `asset-roblox-preflight`, `luau-reviewer`, `roblox-economy-balancer`.
 
 ## Before you push anything
 - Everything in the repositories is synthetic or generated (see each `examples/`). Add your own references **outside Git** (`<PREFIX>_ASSET_ROOT`); `workspace/` is git-ignored.

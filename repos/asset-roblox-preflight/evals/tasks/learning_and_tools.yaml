@@ -1,0 +1,135 @@
+# Overrides and promotion, feedback, compare, safety, explain_finding.
+- id: override-flow-limit
+  title: '''This prop may be 30k tris'': dry run saves nothing, saving removes the error, opting out restores it, a reason is mandatory, three repeats offer promotion into the project profile'
+  input: {op: override_flow, file: bad_too_many_tris, profile: prop, rule: MESH_TRI_BUDGET, limit_key: max_triangles, value: 30000, reason: this hero crate is allowed to be 30k tris, times: 3, other_profile: prop,
+    other_project: synthetic-obby}
+  checks:
+  - {type: equals, path: before_errors, value: 1}
+  - {type: equals, path: after_errors, value: 0}
+  - {type: equals, path: dry_run_saved_nothing, value: true}
+  - {type: equals, path: opt_out_ignores_override, value: true}
+  - {type: equals, path: empty_reason_refused, value: true}
+  - {type: at_least, path: other_profile_errors, value: 1}
+  - {type: equals, path: suggestions, value: 1}
+  - {type: text_has, path: suggested_patch, text: projects/synthetic-sandbox/profiles.yaml}
+  - {type: text_has, path: suggested_patch, text: 'max_triangles: 30000'}
+  - {type: equals, path: offer_in_report, value: true}
+- id: override-flow-below-promotion-threshold
+  title: Two repeats are not enough to offer promotion
+  input: {op: override_flow, file: bad_too_many_tris, profile: prop, rule: MESH_TRI_BUDGET, limit_key: max_triangles, value: 30000, reason: hero crate, times: 2}
+  checks:
+  - {type: equals, path: suggestions, value: 0}
+  - {type: equals, path: after_errors, value: 0}
+- id: override-flow-waiver
+  title: 'A waiver sets a rule aside for the asset type: it stays visible as info, marked overridden'
+  input: {op: override_flow, file: bad_unapplied_scale, profile: prop, rule: XFM_UNAPPLIED_SCALE, waive: true, reason: this prop is scaled on purpose in-engine, times: 1}
+  checks:
+  - {type: equals, path: before_errors, value: 1}
+  - {type: equals, path: after_errors, value: 0}
+  - type: list_contains
+    path: after_rules
+    items: [XFM_UNAPPLIED_SCALE]
+- id: override-validation-unknown-rule
+  title: An override for an unknown rule is refused
+  input:
+    op: tool_call
+    tool: record_override
+    args: {project_id: synthetic-sandbox, rule: NOT_A_RULE, asset_type: prop, reason: x, value: 1}
+  checks:
+  - {type: error_contains, text: unknown rule}
+- id: override-validation-wrong-type
+  title: A non-numeric value for a numeric limit is refused
+  input:
+    op: tool_call
+    tool: record_override
+    args: {project_id: synthetic-sandbox, rule: MESH_TRI_BUDGET, asset_type: prop, reason: x, value: lots}
+  checks:
+  - {type: error_contains, text: expects a int}
+- id: override-validation-rig-rule-for-prop
+  title: A rig rule cannot be overridden for the prop profile
+  input:
+    op: tool_call
+    tool: record_override
+    args: {project_id: synthetic-sandbox, rule: RIG_BONE_COUNT, asset_type: prop, reason: x, value: 30}
+  checks:
+  - {type: error_contains, text: does not apply}
+- id: override-dry-run-default
+  title: record_override defaults to dry_run and returns the row it would save
+  input:
+    op: tool_call
+    tool: record_override
+    args: {project_id: synthetic-sandbox, rule: MESH_TRI_BUDGET, asset_type: prop, reason: hero, value: 30000}
+  checks:
+  - {type: equals, path: result.dry_run, value: true}
+  - {type: equals, path: result.row.asset_type, value: prop}
+  - {type: equals, path: result.row.project_id, value: synthetic-sandbox}
+- id: feedback-roundtrip
+  title: A correction recorded for one request is retrieved for a similar later request in the same project
+  input:
+    op: feedback
+    project_id: synthetic-mining-tycoon
+    request: preflight the ore drill
+    reason: the drill spin bone must be called spin
+    corrections:
+    - {dimension: rig, note: rename the spin bone}
+    later_request: drill spin bone naming
+  checks:
+  - {type: equals, path: found_run, value: true}
+- id: compare-fixed
+  title: Comparing a bad scale export with the good crate shows the finding fixed and the verdict improved
+  input: {op: compare, before: bad_unapplied_scale, after: good_prop_crate, profile: prop}
+  checks:
+  - {type: equals, path: verdict, value: improved}
+  - {type: equals, path: fixed.0.rule, value: XFM_UNAPPLIED_SCALE}
+  - {type: equals, path: after.ready_to_upload, value: true}
+- id: compare-regressed
+  title: Comparing the good crate with a flipped-normals export is a regression naming the new error
+  input: {op: compare, before: good_prop_crate, after: bad_flipped_normals, profile: prop}
+  checks:
+  - {type: equals, path: verdict, value: regressed}
+  - type: list_contains
+    path: new_errors
+    items: [MESH_FLIPPED_NORMALS (prop_crate)]
+- id: safety-path-outside-roots
+  title: A file outside the allowed folders is refused
+  input:
+    op: tool_call
+    tool: inspect_export
+    args: {project_id: synthetic-sandbox, path: /etc/hostname}
+  checks:
+  - {type: error_contains, text: outside the allowed}
+- id: safety-non-export-refused
+  title: A file type that is not an export is refused
+  input:
+    op: tool_call
+    tool: inspect_export
+    args: {project_id: synthetic-sandbox, path: '$file:../library/assets.jsonl'}
+  checks:
+  - {type: error_contains, text: not an existing export file}
+- id: safety-texture-dir-must-exist
+  title: A texture_dir that is not a folder is refused
+  input:
+    op: tool_call
+    tool: preflight_report
+    args: {project_id: synthetic-sandbox, path: '$file:good_prop_crate', profile: prop, texture_dir: '$file:good_prop_crate'}
+  checks:
+  - {type: error_contains, text: is not a folder}
+- id: explain-finding-rule
+  title: explain_finding gives the explanation, safe flag and effective limits with verify flags
+  input:
+    op: tool_call
+    tool: explain_finding
+    args: {project_id: synthetic-obby, rule: MESH_TRI_BUDGET, profile: prop}
+  checks:
+  - {type: equals, path: result.limits.max_triangles.value, value: 4000}
+  - {type: equals, path: result.limits.max_triangles.verify_against_current_docs, value: true}
+  - {type: equals, path: result.safe, value: false}
+  - {type: text_has, path: result.explanation, text: budget}
+- id: explain-finding-instance
+  title: With a file, explain_finding returns the instance message
+  input:
+    op: tool_call
+    tool: explain_finding
+    args: {project_id: synthetic-sandbox, rule: MESH_FLIPPED_NORMALS, profile: prop, path: '$file:bad_flipped_normals'}
+  checks:
+  - {type: text_has, path: result.findings.0.message, text: 100.0% of triangles}

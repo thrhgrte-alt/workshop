@@ -1,0 +1,3 @@
+# SYNTHETIC EXAMPLE with no overrides: results equal the global profiles and style.
+project: synthetic-sandbox
+profiles: {}

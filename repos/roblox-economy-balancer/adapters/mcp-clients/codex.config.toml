@@ -1,0 +1,4 @@
+[mcp_servers.roblox-economy-balancer]
+command = "python"
+args = ["-m", "econbal.server"]
+env = { ECONBAL_ROOT = "/ABSOLUTE/PATH/TO/roblox-economy-balancer" }

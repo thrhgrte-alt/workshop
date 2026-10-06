@@ -1,0 +1,18 @@
+# Profile: a static prop. ALL numbers below are DEFAULTS chosen by this tool, not official Roblox limits.
+# Verify them against the current Roblox Creator documentation and edit them before relying on a result.
+name: prop
+description: A static scene prop (crate, barrel, lamp, ore rock). No rig. Origin at the centre of the base.
+rig_checks: false
+limits_are_defaults: true
+verify_against_current_docs: true
+settings:
+  studs_per_unit: 1.0          # DEFAULT assumption: 1 export unit (metre in glTF) = 1 stud. Verify how your importer scales.
+limits:
+  MESH_TRI_BUDGET: {max_triangles: 10000}
+  MESH_TRI_BUDGET_TOTAL: {max_triangles_total: 15000}
+  MESH_OBJECT_COUNT: {max_mesh_objects: 12}
+  MESH_BBOX_PROFILE: {min_largest_dimension_studs: 0.2, max_largest_dimension_studs: 40}
+  XFM_ORIGIN_PLACEMENT: {mode: bottom_center, tolerance: 0.1}
+  MAT_COUNT: {max_materials: 4}
+  TEX_OVERSIZE: {max_dimension_px: 2048}
+  COL_PROXY_MISSING: {required_above_triangles: 2000}

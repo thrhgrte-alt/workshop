@@ -1,0 +1,94 @@
+# The four hand-built toy economies (scripts/make_examples.py): the tool must flag wall, runaway and dominant, and pass balanced cleanly.
+- id: toy-balanced-passes
+  title: "no error or warning finding on the balanced toy"
+  input: {op: check, econ: balanced}
+  checks: [{type: equals, path: verdict, value: pass}, {type: list_empty, path: codes}, {type: list_empty, path: range_flagged}]
+- id: toy-balanced-regular-steps-are-the-designed-ones
+  title: "regular gaps 10,10,10,20,30,40,60,80,100,120 minutes (designed as cost = income x wanted minutes)"
+  input: {op: simulate, econ: balanced}
+  checks:
+    - {type: equals, path: gaps.drill_1, value: 10}
+    - {type: equals, path: gaps.drill_3, value: 10}
+    - {type: equals, path: gaps.drill_4, value: 20}
+    - {type: equals, path: gaps.drill_5, value: 30}
+    - {type: equals, path: gaps.drill_6, value: 40}
+    - {type: equals, path: gaps.drill_7, value: 60}
+    - {type: equals, path: gaps.drill_8, value: 80}
+    - {type: equals, path: gaps.drill_9, value: 100}
+    - {type: equals, path: gaps.drill_10, value: 120}
+    - {type: equals, path: minutes.drill_10, value: 480}
+- id: toy-balanced-rebirth-timing
+  title: "rebirth cost 1024000 at income 10240 takes 100 minutes after minute 480: minute 580; income restarts at 15 (1 + 0.5)"
+  input: {op: simulate, econ: balanced}
+  checks: [{type: equals, path: minutes.rebirth, value: 580}, {type: equals, path: rebirths, value: 1}, {type: equals, path: exhausted_at_minute, value: null}]
+- id: toy-balanced-fits-the-placeholder-bands
+  input: {op: timing, econ: balanced}
+  checks: [{type: list_excludes, path: codes, items: [over_band, under_band, wall, gap_cliff, cost_cliff]}, {type: equals, path: status.drill_1, value: ok}, {type: equals, path: status.drill_10, value: ok}]
+- id: toy-wall-is-flagged
+  title: "drill_4 costs 32000 against 80 per minute: a 400 minute wall"
+  input: {op: check, econ: wall}
+  checks: [{type: equals, path: verdict, value: fail}, {type: list_contains, path: errors, items: [wall]}, {type: has_finding, code_or_text: drill_4}]
+- id: toy-wall-gap-and-cost-cliffs
+  input: {op: check, econ: wall}
+  checks: [{type: list_contains, path: codes, items: [cost_cliff, gap_cliff]}]
+- id: toy-wall-step-takes-400-minutes
+  input: {op: timing, econ: wall}
+  checks: [{type: equals, path: gaps.drill_4, value: 400}, {type: equals, path: status.drill_4, value: over_band}]
+- id: toy-wall-option-is-dead
+  title: "payback 32000/80 = 400 minutes for regular, 32000/120 = 266.67 for the grinder (efficiency 1.5): both over the 240 limit, so dead"
+  input: {op: dead, econ: wall}
+  checks: [{type: equals, path: status.drill_4, value: dead}, {type: approx, path: best_payback.drill_4, value: 266.6667, tol: 0.001}, {type: equals, path: status.drill_1, value: ok}]
+- id: toy-runaway-is-flagged
+  input: {op: check, econ: runaway}
+  checks: [{type: equals, path: verdict, value: fail}, {type: list_contains, path: errors, items: [runaway_inflation]}, {type: list_contains, path: codes, items: [content_exhausted, under_band]}]
+- id: toy-runaway-flow-numbers
+  title: "everything is bought within minutes, and most of the day's income is left unspent"
+  input: {op: flow, econ: runaway}
+  checks: [{type: greater, path: tail_net_share, than: 0.95}, {type: less, path: exhausted_after_days, than: 0.1}, {type: list_contains, path: codes, items: [runaway_inflation]}]
+- id: toy-runaway-steps-are-seconds-not-minutes
+  input: {op: simulate, econ: runaway}
+  checks: [{type: equals, path: gaps.drill_1, value: 1}, {type: equals, path: count, value: 3}]
+- id: toy-dominant-is-flagged
+  input: {op: check, econ: dominant}
+  checks: [{type: equals, path: verdict, value: fail}, {type: list_contains, path: codes, items: [dominant_option, dominant_strategy]}]
+- id: toy-dominant-names-the-winners
+  title: "option A repays in 10 minutes at tier 2 (200/20) and B in 20 (200/10); same at tier 3"
+  input: {op: dominant, econ: dominant}
+  checks: [{type: list_contains, path: dominant, items: [drill_2, drill_3]}, {type: list_contains, path: dominated, items: [drill_2b, drill_3b]}, {type: equals, path: strategies.speed, value: [2, 2]}, {type: approx, path: "paybacks.drill:2.drill_2", value: 10}, {type: approx, path: "paybacks.drill:2.drill_2b", value: 20}]
+- id: toy-balanced-tradeoff-is-not-dominant
+  title: "tier 4 options repay in exactly the same 20 minutes (1600/80 and 2400/120): no dominant option"
+  input: {op: dominant, econ: balanced}
+  checks: [{type: equals, path: dominant, value: []}, {type: approx, path: "paybacks.drill:4.drill_4", value: 20}, {type: approx, path: "paybacks.drill:4.drill_4b", value: 20}, {type: list_excludes, path: codes, items: [dominant_option, dominant_strategy]}]
+- id: toy-balanced-alternative-not-dead
+  input: {op: dead, econ: balanced}
+  checks: [{type: equals, path: status.drill_4b, value: ok}, {type: list_excludes, path: codes, items: [dead_option]}]
+- id: toy-balanced-monetisation-within-limits
+  title: "all boosts x2.5: drill_1 in 4 minutes instead of 10"
+  input: {op: monetisation, econ: balanced}
+  checks: [{type: approx, path: speedups.drill_1, value: 2.5}, {type: list_excludes, path: codes, items: [pay_to_win, free_cliff]}, {type: approx, path: per_boost.double_income, value: 2.0}]
+- id: toy-pay-to-win-is-flagged
+  input: {op: monetisation, econ: balanced, mutations: [{op: set, path: boosts.double_income.effects.0.mult, value: 6}]}
+  checks: [{type: list_contains, path: codes, items: [pay_to_win]}]
+- id: toy-free-player-cliff-is-flagged
+  title: "free regular waits 400 minutes at drill_4 while a x10 boost brings it to 40 (inside the band)"
+  input: {op: monetisation, econ: wall, mutations: [{op: set, path: boosts.double_income.effects.0.mult, value: 10}]}
+  checks: [{type: list_contains, path: codes, items: [free_cliff]}, {type: equals, path: gap_free.drill_4, value: 400}]
+- id: toy-balanced-flows-do-not-run-away
+  input: {op: flow, econ: balanced}
+  checks: [{type: less, path: tail_net_share, than: 0.5}, {type: list_excludes, path: codes, items: [runaway_inflation, content_exhausted]}]
+- id: toy-casual-does-not-reach-the-last-tiers
+  title: "casual plays 30 minutes a day at efficiency 0.8: tier 9 and 10 are out of reach in 14 days (info, not an error)"
+  input: {op: timing, econ: balanced, archetypes: [casual, regular]}
+  checks: [{type: list_contains, path: codes, items: [not_reached]}]
+- id: toy-bands-only-judge-the-reference-archetype
+  title: "the grinder's fast steps are not flagged as under band"
+  input: {op: timing, econ: balanced, archetypes: [grinder, regular]}
+  checks: [{type: list_excludes, path: codes, items: [under_band, over_band]}]
+- id: toy-slow-casual-days-are-flagged
+  title: "a casual who plays 5 minutes a day waits ceil(1600/32)=50 minutes (10 days) for drill_4"
+  input: {op: timing, econ: balanced, mutations: [{op: set, path: archetypes.casual.session_minutes, value: 5}, {op: set, path: archetypes.casual.sessions_per_day, value: 1}], archetypes: [casual, regular]}
+  checks: [{type: list_contains, path: codes, items: [slow_for_archetype]}]
+- id: toy-projected-wall-at-the-horizon
+  title: "a step not finished within the 14 days is still reported as a wall, with a projected time"
+  input: {op: timing, econ: balanced, mutations: [{op: set, path: upgrades.drill_9.cost, value: 90000000}]}
+  checks: [{type: list_contains, path: codes, items: [wall]}, {type: greater, path: projected.drill_9, than: 1000}]
