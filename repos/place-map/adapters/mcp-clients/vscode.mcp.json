@@ -1,0 +1,15 @@
+{
+  "servers": {
+    "place-map": {
+      "type": "stdio",
+      "command": "python",
+      "args": [
+        "-m",
+        "placemap.server"
+      ],
+      "env": {
+        "PLACEMAP_ROOT": "/ABSOLUTE/PATH/TO/place-map"
+      }
+    }
+  }
+}

@@ -1,0 +1,3 @@
+=== ServerScriptService/Plots ===
+-- Assigns plots.
+return 1

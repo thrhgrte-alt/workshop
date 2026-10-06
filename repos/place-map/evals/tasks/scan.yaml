@@ -1,0 +1,113 @@
+# Static analysis of one Luau script (domain/scan.py). Sources are written inline; expectations are derived by hand from the source text.
+- id: scan-requires-path-forms
+  tags: [scan, known-good]
+  input:
+    op: scan
+    class: Script
+    source: |
+      local RS = game:GetService("ReplicatedStorage")
+      local A = require(RS.Modules.A)
+      local B = require(RS:WaitForChild("Modules"):WaitForChild("B"))
+      local C = require(script.Parent.C)
+      local D = require(script.Parent.Parent.Sub["D"])
+  checks:
+    - {type: list_equals, path: requires_chains, items: ["@ReplicatedStorage/Modules/A", "@ReplicatedStorage/Modules/B", "script/../C", "script/../../Sub/D"]}
+
+- id: scan-require-by-asset-id-is-flagged
+  tags: [scan, known-bad]
+  input: {op: scan, class: Script, source: "local M = require(123456789)\n"}
+  checks:
+    - {type: equals, path: requires.0.asset_id, value: 123456789}
+    - {type: equals, path: requires.0.chain, value: null}
+
+- id: scan-remotes-fired-and-handled
+  tags: [scan, known-good]
+  input:
+    op: scan
+    class: Script
+    source: |
+      local Remotes = game:GetService("ReplicatedStorage"):WaitForChild("Remotes")
+      Remotes.Alpha:FireServer(1)
+      Remotes.Beta:FireClient(player, 2)
+      Remotes.Gamma:FireAllClients()
+      local v = Remotes.Delta:InvokeServer()
+      Remotes.Epsilon.OnServerEvent:Connect(function() end)
+      Remotes.Zeta.OnClientEvent:Connect(function() end)
+      Remotes.Eta.OnServerInvoke = function() return 1 end
+  checks:
+    - {type: list_equals, path: fired, items: [Alpha, Beta, Delta, Gamma]}
+    - {type: list_equals, path: handled, items: [Epsilon, Eta, Zeta]}
+
+- id: scan-ignores-comments-and-strings
+  tags: [scan, known-bad]
+  input:
+    op: scan
+    class: Script
+    source: |
+      -- Remotes.Fake:FireServer()
+      --[[ require(script.Parent.Hidden) ]]
+      local RS = game:GetService("ReplicatedStorage")
+      print("Remotes.Fake2:FireServer()")
+      local x = "require(script.Parent.Nope)"
+      RS.Remotes.Real:FireServer()
+  checks:
+    - {type: list_equals, path: fired, items: [Real]}
+    - {type: list_empty, path: requires}
+
+- id: scan-datastore-names-and-keys
+  tags: [scan, known-good]
+  input:
+    op: scan
+    class: ModuleScript
+    source: |
+      local DSS = game:GetService("DataStoreService")
+      local store = DSS:GetDataStore("PlayerData")
+      store:GetAsync("Player_" .. player.UserId)
+      store:SetAsync("settings", {})
+      store:UpdateAsync(keyVar, function(old) return old end)
+  checks:
+    - {type: list_equals, path: datastores, items: [PlayerData]}
+    - {type: list_equals, path: datastore_keys, items: ["<keyVar>", "Player_*", settings]}
+
+- id: scan-secret-looking-strings-are-not-kept
+  tags: [scan, secrets, known-bad]
+  input:
+    op: scan
+    class: Script
+    source: |
+      local key = "sk-abcdefghijklmnopqrstuvwxyz123456"
+      local pat = "ghp_ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+      print("hello")
+  checks:
+    - {type: equals, path: secret_like_strings_skipped, value: 2}
+    - {type: text_excludes, path: all_text, text: abcdefghijklmnop}
+    - {type: text_excludes, path: all_text, text: ABCDEFGHIJKLMNOP}
+
+- id: scan-resolves-local-aliases
+  tags: [scan, known-good]
+  input:
+    op: scan
+    class: Script
+    source: |
+      local RS = game:GetService("ReplicatedStorage")
+      local Remotes = RS:WaitForChild("Remotes")
+      local Buy = Remotes:WaitForChild("BuyItem")
+      Buy:FireServer(1)
+      Buy.OnClientEvent:Connect(function() end)
+  checks:
+    - {type: list_equals, path: fired, items: [BuyItem]}
+    - {type: list_equals, path: handled, items: [BuyItem]}
+
+- id: scan-summary-is-short-and-deterministic
+  tags: [scan, known-good]
+  input:
+    op: scan
+    class: Script
+    source: |
+      -- Opens the shop.
+      local RS = game:GetService("ReplicatedStorage")
+      RS.Remotes.BuyItem:FireServer()
+  checks:
+    - {type: text_contains, path: summary, text: "Opens the shop."}
+    - {type: text_contains, path: summary, text: "Fires BuyItem."}
+    - {type: less, path: lines, than: 10}

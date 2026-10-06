@@ -1,0 +1,5 @@
+# SYNTHETIC per-project synonym extension: lists are ADDED to rules/synonyms.yaml for this project only (same keys: "<role>.<feature id>"). Hints, not identities.
+version: 1
+placeholder: true
+synonyms:
+  collectible.name_matches_synonyms: [pebble]

@@ -1,0 +1,30 @@
+# Synonym lists: PLAIN PLACEHOLDER HINTS, not the identity of a role. A game with unusual names is still found through structure (interaction objects, remotes, attributes,
+# repetition). Keys are "<role>.<feature id>" as used in rules/roles.yaml (a feature with inline `tokens` does not need an entry). Extend per project in
+# projects/<project_id>/synonyms.yaml (same shape; lists are ADDED, never replaced). Matching is on lowercase tokens split at camelCase, underscores, digits and non-letters; a
+# trailing plural 's' is ignored. Keep these generic: no game-specific names belong here.
+version: 1
+placeholder: true
+synonyms:
+  vendor.name_matches_synonyms: [shop, store, vendor, merchant, seller, trader, buy, sell]
+  vendor.script_fires_purchase_remote: [purchase, buy, sell, bought, sold, trade, checkout]
+  upgradable_tool.name_matches_synonyms: [tool, weapon, gear, equipment, upgrade, tier]
+  upgradable_tool.attribute_keys_match: [level, tier, upgrade, damage, speed, power, durability, rank]
+  upgradable_tool.script_fires_equip_remote: [equip, unequip, upgrade, level, enchant, tool]
+  resource_node.name_matches_synonyms: [node, resource, harvest, gather, deposit, source, vein]
+  resource_node.attribute_keys_match: [health, hp, amount, yield, reward, value, hardness, respawn, drop]
+  resource_node.script_fires_harvest_remote: [mine, harvest, gather, hit, break, chop, extract]
+  collectible.name_matches_synonyms: [collect, collectible, pickup, pick, loot, drop, token, orb, coin, gem]
+  collectible.script_fires_collect_remote: [collect, pickup, claim, grab, award, loot]
+  collectible.attribute_keys_match: [value, amount, reward, rarity, worth]
+  spawn.name_matches_synonyms: [spawn, respawn, start, checkpoint, entrance, lobby]
+  spawn.attribute_keys_match: [spawn, checkpoint, stage, team]
+  spawn.script_refs_spawn_tokens: [spawn, respawn, checkpoint, teleport]
+  zone.name_matches_synonyms: [zone, area, region, arena, biome, boundary, hazard, safe]
+  zone.attribute_keys_match: [zone, region, area, damage, safe, rule, allow, level, requirement]
+  zone.script_refs_zone_tokens: [zone, enter, exit, leave, region, area, biome]
+  currency_display.name_matches_synonyms: [cash, coin, money, gold, gem, currency, balance, wallet, point, score, credit]
+  currency_display.attribute_keys_match: [currency, amount, balance, value]
+  currency_display.script_refs_currency_tokens: [currency, balance, cash, coin, money, update, wallet]
+  progression_gate.name_matches_synonyms: [gate, door, barrier, wall, lock, locked, requirement, unlock, portal]
+  progression_gate.attribute_keys_match: [requirement, required, unlock, level, cost, price, locked, rebirth, minimum]
+  progression_gate.script_refs_gate_tokens: [unlock, gate, require, level, rebirth, open, door, access, locked]

@@ -1,0 +1,72 @@
+# Machine-readable thresholds for the playtest checks. Human-editable companion: STYLE.md.
+#
+# !! PLACEHOLDER. The user has NOT supplied target pacing, performance budgets or timing limits. Every number below is a STARTER value
+# !! chosen only so the checks have something to compare against. Replace them (here, or per place in projects/<project>/<place>/playtest.yaml
+# !! under `overrides:`) with your game's real numbers before you trust a verdict. Nothing here is an official Roblox number, except where an
+# !! entry says `verify_against_current_docs: true` (a default that mirrors a Roblox default and must be re-checked against the current docs).
+#
+# `settings`: knobs that shape a script or a window (value, bounds, step). `ranges`: acceptance bounds a measured value must stay inside.
+# A range entry may carry `bounds` [lo, hi] and `step` (the allowed range and largest single learned change). Both are registered as named guide-core parameters (setting.<name>, threshold.<name>.<min|max>) so the improvement loop can tune them.
+version: 1
+name: Playtest QA thresholds (PLACEHOLDER - replace)
+placeholder: true
+summary: >
+  PLACEHOLDER limits for scripted Studio playtests. A check passes only when every assertion it lists holds; a failure always names the check, the
+  evidence (log lines, measured value, screenshot path) and the most likely cause. A flaky check is re-run before it is called a failure. Nothing
+  here describes a live server, and every number is a starter value, not a finding.
+traits:
+  boot: "no error lines and no warning lines in the first boot_window_seconds of the console; expected services and folders exist"
+  spawn: "the player spawns, is alive, stands on a surface that is not on the invalid list, and can move spawn_probe_distance_studs within spawn_probe_seconds"
+  reachability: "from the spawn every named area has a Success pathfinding result that ends near the area's target point"
+  remotes: "each listed remote answers a valid call, rejects bad input and raises no error"
+  economy: "each scripted step (mine, sell, buy) changes the watched values by the amount the config expects; no balance goes below economy_min_balance"
+  data: "a save and reload round trip in TEST MODE returns the values that were saved; refused unless a test-mode switch is present"
+  performance: "part count, script count, memory and frame time at the start and after N minutes stay within a percentage of the stored baseline"
+settings:
+  boot_window_seconds: {value: 10.0, min: 1.0, max: 120.0, step: 5.0, note: "seconds of console output after play starts that the boot check reads (PLACEHOLDER)"}
+  spawn_timeout_seconds: {value: 10.0, min: 1.0, max: 60.0, step: 5.0, note: "how long the spawn check waits for a character (PLACEHOLDER)"}
+  spawn_probe_distance_studs: {value: 8.0, min: 2.0, max: 50.0, step: 4.0, note: "distance of the MoveTo probe that detects a stuck character (PLACEHOLDER)"}
+  spawn_probe_seconds: {value: 3.0, min: 1.0, max: 20.0, step: 2.0, note: "time given to the MoveTo probe (PLACEHOLDER)"}
+  spawn_void_y: {value: -50.0, min: -5000.0, max: 0.0, step: 100.0, note: "a character below this Y fell out of the world; a place with a low map overrides it (PLACEHOLDER)"}
+  spawn_floor_ray_studs: {value: 20.0, min: 4.0, max: 200.0, step: 10.0, note: "length of the downward ray that finds the surface under the character (PLACEHOLDER)"}
+  reach_max_nodes: {value: 12, min: 2, max: 40, step: 4, note: "most nodes (spawn + areas) a reachability script may path between; bounds the work of the all-pairs hop mode (PLACEHOLDER)"}
+  agent_radius: {value: 2.0, min: 0.5, max: 10.0, step: 1.0, verify_against_current_docs: true, note: "pathfinding agent radius in studs; mirrors Roblox's documented default, verify against the current docs"}
+  agent_height: {value: 5.0, min: 1.0, max: 20.0, step: 1.0, verify_against_current_docs: true, note: "pathfinding agent height in studs; mirrors Roblox's documented default, verify against the current docs"}
+  remote_timeout_seconds: {value: 3.0, min: 0.5, max: 30.0, step: 1.0, note: "how long a remote call may take before it counts as not responding (PLACEHOLDER)"}
+  remote_max_probes: {value: 6, min: 1, max: 12, step: 2, note: "most generic bad-input probes sent to one remote (PLACEHOLDER)"}
+  economy_settle_seconds: {value: 0.5, min: 0.0, max: 10.0, step: 0.5, note: "pause after each scripted action before the watched values are read (PLACEHOLDER)"}
+  economy_delta_tolerance: {value: 0.0, min: 0.0, max: 100.0, step: 1.0, note: "absolute slack allowed on an exact expected delta (PLACEHOLDER; 0 = exact)"}
+  data_settle_seconds: {value: 1.0, min: 0.0, max: 10.0, step: 1.0, note: "pause after the save and the load hooks (PLACEHOLDER)"}
+  perf_default_minutes: {value: 5.0, min: 1.0, max: 60.0, step: 5.0, note: "N minutes between the start and end performance snapshots (PLACEHOLDER)"}
+  perf_frame_samples: {value: 30, min: 5, max: 600, step: 30, note: "frames averaged for the frame-time measure (PLACEHOLDER)"}
+  flaky_repeats: {value: 3, min: 2, max: 10, step: 1, note: "N: runs a flaky check gets before a failure is called (PLACEHOLDER)"}
+  flaky_confirm_fail_fraction: {value: 1.0, min: 0.5, max: 1.0, step: 0.1, note: "share of repeats that must fail for a flaky check to be called FAIL rather than FLAKY (PLACEHOLDER)"}
+  console_max_findings: {value: 10, min: 1, max: 50, step: 5, note: "cap on ranked findings (console findings and failures) in one answer (token discipline; PLACEHOLDER)"}
+ranges:
+  boot_error_lines: {max: 0, bounds: [0, 5], step: 1, severity: error, locked: true, note: "error lines in the boot window; an error at boot is never acceptable, so this is locked"}
+  boot_warning_lines: {max: 0, bounds: [0, 20], step: 1, severity: warning, note: "warning lines in the boot window (PLACEHOLDER)"}
+  spawn_min_move_fraction: {min: 0.5, bounds: [0.1, 1.0], step: 0.1, severity: error, note: "share of the probe distance the character must cover (PLACEHOLDER)"}
+  reach_min_waypoints: {min: 2, bounds: [2, 10], step: 1, severity: error, note: "a Success path with fewer waypoints than this is not a route (PLACEHOLDER)"}
+  reach_end_gap_studs: {max: 4.0, bounds: [0.5, 30.0], step: 1.0, severity: error, note: "distance from the last waypoint to the area's target point (PLACEHOLDER)"}
+  economy_max_abs_delta: {max: 1000000, bounds: [1000, 100000000], step: 100000, severity: error, note: "a single scripted step may not move a watched value by more than this (runaway guard; PLACEHOLDER)"}
+  economy_expect_gain: {min: 1, max: 1000000, bounds: [0, 100000000], step: 1000, severity: error, note: "a step marked `range: gain` must raise the value by an amount in this range (PLACEHOLDER; not the user's pacing)"}
+  economy_expect_spend: {min: -1000000, max: -1, bounds: [-100000000, 0], step: 1000, severity: error, note: "a step marked `range: spend` must change the value by an amount in this range (PLACEHOLDER; not the user's pacing)"}
+  economy_expect_unchanged: {min: 0, max: 0, bounds: [-1000, 1000], step: 1, severity: error, note: "a step marked `range: unchanged` (a refused purchase, a no-op) must change the value by an amount in this range (PLACEHOLDER)"}
+  economy_min_balance: {min: 0, bounds: [-1000, 1000], step: 10, severity: error, note: "no watched currency may go below this after any step (PLACEHOLDER)"}
+  perf_part_count_increase_pct: {max: 10.0, bounds: [0.0, 200.0], step: 5.0, severity: warning, note: "part count growth against the baseline, percent (PLACEHOLDER)"}
+  perf_script_count_increase_pct: {max: 10.0, bounds: [0.0, 200.0], step: 5.0, severity: warning, note: "script count growth against the baseline, percent (PLACEHOLDER)"}
+  perf_memory_increase_pct: {max: 25.0, bounds: [0.0, 200.0], step: 5.0, severity: warning, note: "memory growth against the baseline, percent (PLACEHOLDER)"}
+  perf_frame_ms_increase_pct: {max: 25.0, bounds: [0.0, 200.0], step: 5.0, severity: warning, note: "average frame time growth against the baseline, percent (PLACEHOLDER)"}
+  perf_memory_growth_pct_over_run: {max: 20.0, bounds: [0.0, 200.0], step: 5.0, severity: warning, note: "memory growth between the start and the end snapshot of one run, percent (PLACEHOLDER)"}
+constraints:
+  - {id: Q1, severity: must,   rule: "Playtests run only in the open Studio session on the user's place, matched to the named place first; never against live servers."}
+  - {id: Q2, severity: must,   rule: "A data check runs only in TEST MODE: the generator refuses it without a test-mode switch, and no script ever touches a live DataStore."}
+  - {id: Q3, severity: must,   rule: "Every failure report states the check, the evidence (log lines, measured value, screenshot path) and the most likely cause; a pass states exactly what was checked."}
+  - {id: Q4, severity: must,   rule: "A flaky check is re-run N times before a failure is called; fewer runs than N with a failure is inconclusive, not a fail."}
+  - {id: Q5, severity: should, rule: "State that every threshold is a placeholder until the user supplies theirs, and that the result formats are schema_unverified."}
+exclusions:
+  - claiming a pass for something that was not measured
+  - running any check against a live server or the published place
+  - writing to a real DataStore
+  - calling a flaky failure a bug before the re-runs are in
+correction_dimensions: [boot, spawn, reachability, remotes, economy, data, performance, flaky, cause, evidence, threshold, other]

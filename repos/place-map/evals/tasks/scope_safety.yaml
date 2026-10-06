@@ -1,0 +1,108 @@
+# Scope, dry-run defaults, token discipline and determinism for the whole tool set.
+- id: scope-every-tool-refuses-without-a-project
+  tags: [scope, known-bad]
+  input: {op: refuse_all, exempt: [list_places]}
+  checks:
+    - {type: list_empty, path: not_refused}
+    - {type: greater, path: checked, than: 20}
+
+- id: scope-every-read-tool-states-project-and-place-and-a-summary
+  tags: [scope, known-good]
+  input: {op: scope_stated, exempt: [list_places, diff_snapshots]}
+  checks:
+    - {type: list_empty, path: missing}
+
+- id: scope-newline-in-an-id-is-refused
+  tags: [scope, injection, known-bad]
+  input: {op: tool, tool: find_in_place, args: {query: Bob, project_id: demo_mine, place_id: "dive-and-mine\n"}}
+  checks:
+    - {type: refused, text: "not a valid registry id"}
+
+- id: scope-unknown-project-lists-the-known-ones
+  tags: [scope, known-bad]
+  input: {op: tool, tool: find_in_place, args: {query: Bob, project_id: nonexistent, place_id: main}}
+  checks:
+    - {type: refused, text: "Known projects"}
+
+- id: scope-list-places-reads-only-the-registry
+  tags: [scope, known-good]
+  input: {op: tool, tool: list_places, args: {}}
+  checks:
+    - {type: length, path: result.places, n: 4}
+    - {type: pluck_contains, path: result.places, field: place_id, items: [dive-and-mine, dive-and-mine-hardcore, role-lab, tycoon-main]}
+
+- id: safety-the-tool-set-matches-the-spec
+  tags: [tools, known-good]
+  input: {op: tools_meta}
+  checks:
+    - {type: list_contains, path: read_only, items: [find_in_place, get_path_info, who_uses, list_remotes, show_dependencies, summarize_area, diff_snapshots, find_past_corrections, find_across_places, compare_places, find_shared_code]}
+    - {type: list_contains, path: writers, items: [plan_refresh, ingest_snapshot, label_landmark, record_run, record_decision]}
+    - {type: list_excludes, path: read_only, items: [plan_refresh, ingest_snapshot, label_landmark, record_run, record_decision, undo_label, prune_snapshots]}
+
+- id: safety-every-write-tool-defaults-to-dry-run
+  tags: [tools, dry-run, known-good]
+  input: {op: tools_meta}
+  checks:
+    - {type: list_empty, path: writers_without_dry_run}
+    - {type: list_empty, path: unlabelled}
+
+- id: safety-dry-runs-write-nothing
+  tags: [tools, dry-run, known-good]
+  input:
+    op: writes_nothing
+    calls:
+      - {tool: ingest_snapshot, args: {project_id: demo_tycoon, place_id: tycoon-main, file: samples/synthetic/collect-tycoon.json}}
+      - {tool: label_landmark, args: {path: Workspace/Npcs/Carl, role: vendor, label: confirm, project_id: demo_roles, place_id: role-lab}}
+      - {tool: prune_snapshots, args: {project_id: demo_roles, place_id: role-lab}}
+      - {tool: plan_refresh, args: {project_id: demo_roles, place_id: role-lab, studios: [{name: "Role Lab (SYNTHETIC)", place_id: 0, studio_id: s1}]}}
+  checks:
+    - {type: list_empty, path: changed_files}
+    - {type: ok, path: all_ok}
+
+- id: tokens-tool-descriptions-stay-short
+  tags: [tokens, known-good]
+  input: {op: tools_meta}
+  checks:
+    - {type: less, path: max_description_chars, than: 301}
+
+- id: tokens-rarely-used-tools-sit-in-a-group-that-can-stay-disabled
+  tags: [tokens, known-good]
+  input: {op: tools_meta}
+  checks:
+    - {type: list_equals, path: rare, items: [compare_places, find_shared_code, list_roles, list_snapshots, prune_snapshots, undo_label]}
+
+- id: tokens-typical-output-sizes-stay-inside-their-budgets
+  tags: [tokens, budgets, known-good]
+  input: {op: budgets}
+  checks:
+    - {type: list_empty, path: over}
+    - {type: greater, path: tools, than: 15}
+
+- id: determinism-same-question-same-answer
+  tags: [determinism, known-good]
+  input: {op: determinism, tool: find_in_place, args: {query: vendors, role: vendor, project_id: demo_mine, place_id: dive-and-mine}}
+  checks:
+    - {type: equals, path: identical, value: true}
+    - {type: ok}
+
+- id: determinism-dependency-answers-are-stable
+  tags: [determinism, known-good]
+  input: {op: determinism, tool: who_uses, args: {path: ReplicatedStorage/Modules/Economy, project_id: demo_mine, place_id: dive-and-mine}}
+  checks:
+    - {type: equals, path: identical, value: true}
+
+- id: prune-keeps-the-latest-and-a-few-older-snapshots
+  tags: [prune, known-good]
+  input:
+    op: steps
+    steps:
+      - {tool: ingest_snapshot, args: {project_id: demo_roles, place_id: role-lab, file: examples/places/role-lab.collect.json, dry_run: false, taken_at: "2026-10-06T11:10:00+00:00"}}
+      - {tool: ingest_snapshot, args: {project_id: demo_roles, place_id: role-lab, file: examples/places/role-lab.collect.json, dry_run: false, taken_at: "2026-10-06T11:20:00+00:00"}}
+      - {tool: prune_snapshots, args: {project_id: demo_roles, place_id: role-lab, keep_older: 1}}
+      - {tool: prune_snapshots, args: {project_id: demo_roles, place_id: role-lab, keep_older: 1, dry_run: false}}
+      - {tool: list_snapshots, args: {project_id: demo_roles, place_id: role-lab}}
+  checks:
+    # base snapshot (11:00) + 11:10 + 11:20 = 3; keep the latest and 1 older -> the 11:00 one is pruned.
+    - {type: length, path: steps.2.result.would_delete, n: 1}
+    - {type: length, path: steps.3.result.deleted, n: 1}
+    - {type: text_contains, path: steps.4.result.summary, text: "2 snapshot(s)"}

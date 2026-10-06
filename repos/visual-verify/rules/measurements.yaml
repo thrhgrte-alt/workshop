@@ -1,0 +1,32 @@
+# What each tool measures, its inputs, what it cannot say, and which thresholds it reads. Documentation as data: a test checks that every measuring tool has an entry and
+# that every threshold named here exists in style/thresholds.yaml.
+version: 1
+measurements:
+  measure_image:
+    measures: [dominant colours, saturation and value, luminance histogram and contrast, 3 or 5 level value map, edge density and distribution, silhouette descriptors]
+    thresholds: [palette.distance_max, palette.k, value.contrast_min, value.level_min_share, value.dark_cut, value.light_cut, edges.density_min, edges.density_max, edges.gradient_threshold, edges.distribution_min, silhouette.bg_tolerance, silhouette.min_component_share, silhouette.centroid_offset_max, silhouette.bbox_offset_max]
+    not_measured: [taste, anatomy, perspective, whether the subject is what was asked for, mask quality on a busy background]
+  compare_to_reference:
+    measures: [silhouette IoU and offsets, palette distance, luminance histogram distance, edge density ratio]
+    thresholds: [silhouette.iou_min, silhouette.centroid_offset_max, silhouette.bbox_offset_max, palette.distance_max, value.hist_distance_max, edges.density_ratio_min, edges.density_ratio_max]
+    not_measured: [taste, anatomy, perspective, whether both images depict the same thing]
+  silhouette_iou:
+    measures: [mask extraction, IoU, Dice, centroid offset, bounding box offset]
+    thresholds: [silhouette.iou_min, silhouette.centroid_offset_max, silhouette.bbox_offset_max, silhouette.bg_tolerance]
+    not_measured: [taste, anatomy, perspective, whether the shapes are the same object]
+  palette_distance:
+    measures: [dominant colours, Lab chamfer distance to a target palette]
+    thresholds: [palette.distance_max, palette.k]
+    not_measured: [taste, anatomy, perspective, where the colours are used]
+  check_tiling:
+    measures: [seam ratio, repetition peak and lag]
+    thresholds: [tiling.seam_ratio_max, tiling.repetition_peak_max, tiling.min_lag_fraction, tiling.lobe_cut, limits.max_side_exact]
+    not_measured: [taste, anatomy, perspective, seam visibility at the scale it is used, repetition across many tiles]
+  check_pbr_ranges:
+    measures: [albedo luminance bounds, roughness and metalness grayscale and ranges, normal length and +Z, equal map sizes]
+    thresholds: [pbr.albedo_lum_min, pbr.albedo_lum_max, pbr.albedo_out_fraction_max, pbr.gray_spread_max, pbr.roughness_std_min, pbr.roughness_mean_min, pbr.roughness_mean_max, pbr.metal_mid_lo, pbr.metal_mid_hi, pbr.metal_mid_fraction_max, pbr.normal_len_tol, pbr.normal_bad_fraction_max, pbr.normal_mean_len_err_max, pbr.normal_z_neg_fraction_max]
+    not_measured: [taste, anatomy, perspective, the normal map green-channel convention, physical correctness of the values, baked lighting in the albedo]
+  diff_images:
+    measures: [MAE, RMSE, PSNR, changed pixel fraction, changed bounding box]
+    thresholds: [diff.pixel_threshold, diff.changed_fraction_max, limits.max_side_exact]
+    not_measured: [taste, anatomy, perspective, whether the change is the intended one, perceptual difference]

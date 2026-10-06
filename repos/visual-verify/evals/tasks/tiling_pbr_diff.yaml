@@ -1,0 +1,453 @@
+# Tiling, texture sanity and before/after evals on generated images.
+- id: tile-gradient-seam-ratio-255-hand
+  tags: [tiling, known-bad, hand-computed]
+  # 256x256 horizontal gradient, value = x: neighbouring columns differ by exactly 1/255, the wrap-around columns (0 and 255) by 255/255 = 1.0: ratio 1.0 / (1/255) = 255
+  # Vertically every row is identical, so that axis has ratio 0.
+  input:
+    op: engine
+    pin_defaults: true
+    tool: check_tiling
+    detail: true
+    images:
+      img: {gen: hgradient, size: [256, 256]}
+    args: {path: "@img"}
+  checks:
+    - {type: row, id: tiling.seam_ratio, passed: false, value: 255.0, tol: 0.01, limit: 1.5}
+    - {type: is, path: measured.worst_axis, value: horizontal}
+    - {type: approx, path: detail.vertical.ratio, value: 0.0}
+    - {type: approx, path: detail.horizontal.wrap_step, value: 1.0, tol: 1.0e-6}
+
+- id: tile-vertical-gradient-worst-axis-is-vertical
+  tags: [tiling, known-bad, hand-computed]
+  # the transpose of the horizontal case: 256 rows, value = y, so the rows 0 and 255 differ by 1.0 and neighbouring rows by 1/255: ratio 255, worst axis vertical
+  input:
+    op: engine
+    tool: check_tiling
+    images:
+      img: {gen: vgradient, size: [128, 256]}
+    args: {path: "@img"}
+  checks:
+    - {type: row, id: tiling.seam_ratio, passed: false, value: 255.0, tol: 0.01}
+    - {type: is, path: measured.worst_axis, value: vertical}
+
+- id: tile-seamless-smooth-noise-passes
+  tags: [tiling, known-good]
+  # circularly filtered noise wraps by construction: the wrap step looks like any other neighbouring step (ratio about 1)
+  input:
+    op: engine
+    tool: check_tiling
+    images:
+      img: {gen: smooth_tile, size: [256, 256], seed: 7, sigma: 0.03}
+    args: {path: "@img"}
+  checks:
+    - {type: row, id: tiling.seam_ratio, passed: true}
+    - {type: row_range, id: tiling.seam_ratio, min: 0.7, max: 1.4}
+    - {type: row, id: tiling.repetition_peak, passed: true}
+
+- id: tile-cropped-from-larger-image-is-seamed
+  tags: [tiling, known-bad]
+  # the same kind of smooth noise, but a crop of a larger image: it does not wrap, so the edge steps are much larger than their neighbours
+  input:
+    op: engine
+    tool: check_tiling
+    images:
+      img: {gen: smooth_crop, size: [256, 256], seed: 7, sigma: 0.03}
+    args: {path: "@img"}
+  checks:
+    - {type: row, id: tiling.seam_ratio, passed: false}
+    - {type: row_range, id: tiling.seam_ratio, min: 4.0, max: 100.0}
+    - {type: text_has, path: out.findings.0.note, text: "wrap-around edge"}
+
+- id: tile-lattice-repeats-every-64px
+  tags: [tiling, known-bad, hand-computed]
+  # dots every 64 px in a 256x256 tile: the autocorrelation is exactly 1 at lag (64, 0) and (0, 64); the shortest is reported, x first
+  input:
+    op: engine
+    pin_defaults: true
+    tool: check_tiling
+    images:
+      img: {gen: lattice, size: [256, 256], period: 64, radius: 3}
+    args: {path: "@img"}
+  checks:
+    - {type: row, id: tiling.repetition_peak, passed: false, limit: 0.6}
+    - {type: row_range, id: tiling.repetition_peak, min: 0.99, max: 1.0001}
+    - {type: is, path: measured.repeat_lag_px, value: [64, 0]}
+    - {type: row, id: tiling.seam_ratio, passed: true}
+
+- id: tile-random-noise-has-no-repetition
+  tags: [tiling, known-good]
+  input:
+    op: engine
+    tool: check_tiling
+    images:
+      img: {gen: white_noise, size: [128, 128], seed: 5}
+    args: {path: "@img"}
+  checks:
+    - {type: row, id: tiling.repetition_peak, passed: true}
+    - {type: row_range, id: tiling.repetition_peak, min: 0.0, max: 0.2}
+
+- id: tile-flat-tile-repetition-not-measurable
+  tags: [tiling, known-bad]
+  # a flat tile has no variance: seam ratio 0 (nothing steps), repetition cannot be measured (skipped, not 'passed')
+  input:
+    op: engine
+    tool: check_tiling
+    images:
+      img: {gen: solid, size: [64, 64], color: [120, 90, 60]}
+    args: {path: "@img"}
+  checks:
+    - {type: row, id: tiling.seam_ratio, passed: true, value: 0.0}
+    - {type: skipped, id: tiling.repetition_peak}
+    - {type: text_has, path: out.skipped.0, text: flat}
+
+- id: tile-too-large-is-refused-not-downscaled
+  tags: [tiling, refusal]
+  input:
+    op: tools_seq
+    images:
+      img: {gen: solid, size: [2100, 8], color: [10, 10, 10]}
+    steps:
+      - {tool: check_tiling, args: {path: "@img", project_id: demo-stylized-obby}}
+  checks:
+    - {type: step_error, step: 0, text: "full resolution"}
+
+- id: tile-under-three-pixels-is-refused
+  tags: [tiling, refusal]
+  input:
+    op: tools_seq
+    images:
+      img: {gen: solid, size: [2, 2], color: [10, 10, 10]}
+    steps:
+      - {tool: check_tiling, args: {path: "@img", project_id: demo-stylized-obby}}
+  checks:
+    - {type: step_error, step: 0, text: "at least 3 pixels"}
+
+- id: pbr-albedo-mid-gray-in-range
+  tags: [pbr, known-good, hand-computed]
+  # (128,128,128): luminance 128/255 = 0.502, inside [0.1176, 0.9412]: out-of-range fraction 0
+  input:
+    op: engine
+    tool: check_pbr_ranges
+    images:
+      albedo: {gen: solid, size: [64, 64], color: [128, 128, 128]}
+    args: {albedo: "@albedo"}
+  checks:
+    - {type: row, id: albedo.out_of_range_fraction, passed: true, value: 0.0}
+    - {type: approx, path: measured.albedo.luminance_mean, value: 0.50196, tol: 1.0e-4}
+
+- id: pbr-albedo-too-dark
+  tags: [pbr, known-bad, hand-computed]
+  # (10,10,10): luminance 0.0392 < 0.1176 everywhere: out-of-range fraction 1.0
+  input:
+    op: engine
+    pin_defaults: true
+    tool: check_pbr_ranges
+    images:
+      albedo: {gen: solid, size: [64, 64], color: [10, 10, 10]}
+    args: {albedo: "@albedo"}
+  checks:
+    - {type: row, id: albedo.out_of_range_fraction, passed: false, value: 1.0, limit: 0.05}
+    - {type: approx, path: measured.albedo.too_dark_fraction, value: 1.0}
+    - {type: text_has, path: out.findings.0.note, text: "below luminance"}
+
+- id: pbr-albedo-too-bright
+  tags: [pbr, known-bad, hand-computed]
+  # (250,250,250): luminance 0.980 > 0.9412
+  input:
+    op: engine
+    tool: check_pbr_ranges
+    images:
+      albedo: {gen: solid, size: [64, 64], color: [250, 250, 250]}
+    args: {albedo: "@albedo"}
+  checks:
+    - {type: row, id: albedo.out_of_range_fraction, passed: false, value: 1.0}
+    - {type: approx, path: measured.albedo.too_bright_fraction, value: 1.0}
+
+- id: pbr-roughness-varied-gray-passes
+  tags: [pbr, known-good]
+  # uniform noise 0.5 +/- 0.2 (seed 3): std = 0.2/sqrt(3) = 0.1155, mean 0.5, grayscale
+  input:
+    op: engine
+    tool: check_pbr_ranges
+    images:
+      rough: {gen: gray_noise, size: [64, 64], seed: 3, mean: 0.5, amp: 0.2}
+    args: {roughness: "@rough"}
+  checks:
+    - {type: row, id: roughness.gray_spread, passed: true, value: 0.0}
+    - {type: row, id: roughness.std, passed: true}
+    - {type: row_range, id: roughness.std, min: 0.105, max: 0.125}
+    - {type: row, id: roughness.mean_min, passed: true}
+    - {type: row, id: roughness.mean_max, passed: true}
+
+- id: pbr-roughness-constant-zero-fails
+  tags: [pbr, known-bad, hand-computed]
+  # an all-black roughness map: std 0 (< 0.02: constant) and mean 0 (< 0.05: mirror)
+  input:
+    op: engine
+    tool: check_pbr_ranges
+    images:
+      rough: {gen: solid, size: [32, 32], color: [0, 0, 0]}
+    args: {roughness: "@rough"}
+  checks:
+    - {type: row, id: roughness.std, passed: false, value: 0.0}
+    - {type: row, id: roughness.mean_min, passed: false, value: 0.0}
+    - {type: row, id: roughness.mean_max, passed: true}
+
+- id: pbr-metalness-binary-checker-passes
+  tags: [pbr, known-good, hand-computed]
+  # only 0 and 1 values: no intermediate pixels
+  input:
+    op: engine
+    tool: check_pbr_ranges
+    images:
+      metal: {gen: checker, size: [64, 64], cell: 16, a: [0, 0, 0], b: [255, 255, 255]}
+    args: {metalness: "@metal"}
+  checks:
+    - {type: row, id: metalness.mid_fraction, passed: true, value: 0.0}
+    - {type: approx, path: measured.metalness.mean, value: 0.5, tol: 1.0e-6}
+
+- id: pbr-metalness-gradient-mid-fraction-hand
+  tags: [pbr, known-bad, hand-computed]
+  # 256-wide gradient, value x/255. In-between (0.1 < v < 0.9) means x >= 26 and x <= 229: 204 of 256 columns = 0.796875
+  input:
+    op: engine
+    pin_defaults: true
+    tool: check_pbr_ranges
+    images:
+      metal: {gen: hgradient, size: [256, 4]}
+    args: {metalness: "@metal"}
+  checks:
+    - {type: row, id: metalness.mid_fraction, passed: false, value: 0.796875, tol: 1.0e-4, limit: 0.25}
+
+- id: pbr-metalness-coloured-fails-gray-spread
+  tags: [pbr, known-bad, hand-computed]
+  # pure red: per-pixel channel spread (max - min) = 1.0 > 0.02
+  input:
+    op: engine
+    pin_defaults: true
+    tool: check_pbr_ranges
+    images:
+      metal: {gen: solid, size: [16, 16], color: [255, 0, 0]}
+    args: {metalness: "@metal"}
+  checks:
+    - {type: row, id: metalness.gray_spread, passed: false, value: 1.0, limit: 0.02}
+    - {type: text_has, path: out.findings.0.note, text: grayscale}
+
+- id: pbr-normal-flat-is-unit-length
+  tags: [pbr, known-good, hand-computed]
+  # (128,128,255) decodes to (0.00392, 0.00392, 1.0): length 1.0000154. z is positive.
+  input:
+    op: engine
+    tool: check_pbr_ranges
+    images:
+      nrm: {gen: solid, size: [32, 32], color: [128, 128, 255]}
+    args: {normal: "@nrm"}
+  checks:
+    - {type: row, id: normal.mean_length_error, passed: true, value: 0.0, tol: 1.0e-4}
+    - {type: row, id: normal.bad_length_fraction, passed: true, value: 0.0}
+    - {type: row, id: normal.z_negative_fraction, passed: true, value: 0.0}
+
+- id: pbr-normal-valid-random-tilts-pass
+  tags: [pbr, known-good]
+  # unit-length random tilts of up to 0.3, z > 0, 8-bit quantised: length stays within about 0.01 of 1
+  input:
+    op: engine
+    tool: check_pbr_ranges
+    images:
+      nrm: {gen: normal_noisy, size: [64, 64], seed: 5, tilt: 0.3}
+    args: {normal: "@nrm"}
+  checks:
+    - {type: row, id: normal.mean_length_error, passed: true}
+    - {type: row, id: normal.bad_length_fraction, passed: true, value: 0.0}
+    - {type: row, id: normal.z_negative_fraction, passed: true, value: 0.0}
+
+- id: pbr-normal-albedo-colours-are-not-a-normal-map
+  tags: [pbr, known-bad, hand-computed]
+  # (200,100,50) decodes to (0.5686, -0.2157, -0.6078): length sqrt(0.3233 + 0.0465 + 0.3695) = 0.85984; z < 0
+  input:
+    op: engine
+    tool: check_pbr_ranges
+    detail: true
+    images:
+      nrm: {gen: solid, size: [16, 16], color: [200, 100, 50]}
+    args: {normal: "@nrm"}
+  checks:
+    - {type: approx, path: measured.normal.mean_length, value: 0.85984, tol: 1.0e-4}
+    - {type: row, id: normal.mean_length_error, passed: false, value: 0.14016, tol: 1.0e-4}
+    - {type: row, id: normal.bad_length_fraction, passed: false, value: 1.0}
+    - {type: row, id: normal.z_negative_fraction, passed: false, value: 1.0}
+
+- id: pbr-maps-of-different-sizes-fail
+  tags: [pbr, known-bad]
+  input:
+    op: engine
+    tool: check_pbr_ranges
+    images:
+      albedo: {gen: solid, size: [64, 64], color: [128, 128, 128]}
+      rough: {gen: gray_noise, size: [32, 32], seed: 1, mean: 0.5, amp: 0.2}
+    args: {albedo: "@albedo", roughness: "@rough"}
+  checks:
+    - {type: row, id: maps.distinct_sizes, passed: false, value: 2}
+    - {type: text_has, path: out.findings.0.note, text: "64x64"}
+
+- id: pbr-no-map-is-refused
+  tags: [pbr, refusal]
+  input:
+    op: tools_seq
+    steps:
+      - {tool: check_pbr_ranges, args: {project_id: demo-stylized-obby}}
+  checks:
+    - {type: step_error, step: 0, text: "at least one map path"}
+
+- id: pbr-says-what-it-cannot-measure
+  tags: [pbr, honesty]
+  input:
+    op: engine
+    tool: check_pbr_ranges
+    images:
+      nrm: {gen: solid, size: [16, 16], color: [128, 128, 255]}
+    args: {normal: "@nrm"}
+    detail: true
+  checks:
+    - {type: text_has, path: out.not_measured.3, text: "green-channel"}
+    - {type: is, path: out.verify_against_current_docs, value: true}
+
+- id: diff-identical-images
+  tags: [diff, known-good, hand-computed]
+  # identical pixels: every difference is 0, so MAE 0, MSE 0 (PSNR undefined: reported as null, never infinity), changed fraction 0
+  input:
+    op: engine
+    tool: diff_images
+    images:
+      a: {gen: solid, size: [50, 50], color: [100, 100, 100]}
+      b: {gen: solid, size: [50, 50], color: [100, 100, 100]}
+    args: {before: "@a", after: "@b"}
+  checks:
+    - {type: is, path: measured.identical, value: true}
+    - {type: is, path: measured.psnr_db, value: null}
+    - {type: row, id: diff.changed_fraction, passed: true, value: 0.0}
+    - {type: text_has, path: summary, text: "pixel-identical"}
+
+- id: diff-box-of-change-hand-numbers
+  tags: [diff, known-good, hand-computed]
+  # before: gray 100. after: a 20x20 box of 200 at (10..29). 400 of 10000 pixels change by 100/255 = 0.392157 (> 0.0314): changed fraction 0.04 (<= 0.05).
+  # MAE = 0.04 * 0.392157 = 0.0156863; RMSE = sqrt(0.04) * 0.392157 = 0.0784314; MSE = 0.0061515, PSNR = 10 log10(1/0.0061515) = 22.11 dB
+  input:
+    op: engine
+    tool: diff_images
+    images:
+      a: {gen: solid, size: [100, 100], color: [100, 100, 100]}
+      b: {gen: boxed, base: {gen: solid, size: [100, 100], color: [100, 100, 100]}, box: [10, 10, 30, 30], color: [200, 200, 200]}
+    args: {before: "@a", after: "@b"}
+  checks:
+    - {type: row, id: diff.changed_fraction, passed: true, value: 0.04}
+    - {type: approx, path: measured.mae, value: 0.015686, tol: 1.0e-4}
+    - {type: approx, path: measured.rmse, value: 0.078431, tol: 1.0e-4}
+    - {type: approx, path: measured.psnr_db, value: 22.11, tol: 0.02}
+    - {type: is, path: measured.changed_bbox, value: [10, 10, 30, 30]}
+
+- id: diff-large-change-fails-tolerance
+  tags: [diff, known-bad, hand-computed]
+  # a 50x50 box changes 2500 of 10000 pixels = 0.25 > 0.05
+  input:
+    op: engine
+    pin_defaults: true
+    tool: diff_images
+    images:
+      a: {gen: solid, size: [100, 100], color: [100, 100, 100]}
+      b: {gen: boxed, base: {gen: solid, size: [100, 100], color: [100, 100, 100]}, box: [10, 10, 60, 60], color: [200, 200, 200]}
+    args: {before: "@a", after: "@b"}
+  checks:
+    - {type: row, id: diff.changed_fraction, passed: false, value: 0.25, limit: 0.05}
+    - {type: text_has, path: out.findings.0.note, text: "2500 pixels"}
+
+- id: diff-subtle-brightness-shift-is-below-pixel-threshold
+  tags: [diff, hand-computed]
+  # every pixel +5 levels: 5/255 = 0.0196 < 0.0314, so 0 pixels count as changed, but MAE is 0.0196 and PSNR = -20 log10(0.019608) = 34.15 dB
+  input:
+    op: engine
+    tool: diff_images
+    images:
+      a: {gen: solid, size: [40, 40], color: [100, 100, 100]}
+      b: {gen: solid, size: [40, 40], color: [105, 105, 105]}
+    args: {before: "@a", after: "@b"}
+  checks:
+    - {type: row, id: diff.changed_fraction, passed: true, value: 0.0}
+    - {type: approx, path: measured.mae, value: 0.019608, tol: 1.0e-4}
+    - {type: approx, path: measured.psnr_db, value: 34.15, tol: 0.02}
+    - {type: is, path: measured.identical, value: false}
+
+- id: diff-different-sizes-are-refused
+  tags: [diff, refusal]
+  input:
+    op: tools_seq
+    images:
+      a: {gen: solid, size: [50, 50], color: [100, 100, 100]}
+      b: {gen: solid, size: [60, 50], color: [100, 100, 100]}
+    steps:
+      - {tool: diff_images, args: {before: "@a", after: "@b", project_id: demo-stylized-obby}}
+      - {tool: diff_images, args: {before: "@a", after: "@b", project_id: demo-stylized-obby, resize: true}}
+  checks:
+    - {type: step_error, step: 0, text: "different sizes"}
+    - {type: step_ok, step: 1}
+    - {type: text_has, path: steps.1.result.warnings.0, text: "resampled"}
+
+- id: cmp-identical-images-pass-everything
+  tags: [compare, known-good, hand-computed]
+  # the same image twice: IoU 1, centroid and bbox offsets 0, palette distance 0, histogram distance 0, edge-density ratio 1 (candidate / reference)
+  input:
+    op: engine
+    tool: compare_to_reference
+    images:
+      ref: {gen: rect, size: [100, 100], bg: [200, 200, 200], fg: [30, 30, 30], box: [20, 20, 60, 60]}
+      cand: {gen: rect, size: [100, 100], bg: [200, 200, 200], fg: [30, 30, 30], box: [20, 20, 60, 60]}
+    args: {candidate: "@cand", reference: "@ref"}
+  checks:
+    - {type: row, id: silhouette.iou, passed: true, value: 1.0}
+    - {type: row, id: palette.distance, passed: true, value: 0.0, tol: 1.0e-3}
+    - {type: row, id: value.hist_distance, passed: true, value: 0.0}
+    - {type: row, id: edges.density_ratio_min, passed: true, value: 1.0}
+    - {type: row, id: edges.density_ratio_max, passed: true, value: 1.0}
+
+- id: cmp-same-layout-different-colours-fails-palette
+  tags: [compare, known-bad]
+  # left half light gray, right half dark gray (reference) versus right half red (candidate): the dominant colours differ by tens of delta-E
+  input:
+    op: engine
+    pin_defaults: true
+    tool: compare_to_reference
+    images:
+      ref: {gen: bands, size: [100, 100], colors: [[200, 200, 200], [30, 30, 30]], axis: x}
+      cand: {gen: bands, size: [100, 100], colors: [[200, 200, 200], [200, 60, 60]], axis: x}
+    args: {candidate: "@cand", reference: "@ref", dimensions: [palette]}
+  checks:
+    - {type: row, id: palette.distance, passed: false, limit: 25.0}
+    - {type: row_range, id: palette.distance, min: 25.0, max: 300.0}
+
+- id: cmp-noisy-candidate-fails-edge-ratio
+  tags: [compare, known-bad]
+  # the reference has a single step edge (density 0.02); the candidate is white noise (density near 1): ratio far above 2
+  input:
+    op: engine
+    pin_defaults: true
+    tool: compare_to_reference
+    images:
+      ref: {gen: vstep, size: [64, 64], left: [0, 0, 0], right: [255, 255, 255], x: 32}
+      cand: {gen: white_noise, size: [64, 64], seed: 2}
+    args: {candidate: "@cand", reference: "@ref", dimensions: [edges]}
+  checks:
+    - {type: row, id: edges.density_ratio_max, passed: false, limit: 2.0}
+    - {type: row, id: edges.density_ratio_min, passed: true}
+
+- id: cmp-needs-exactly-one-of-reference-or-profile
+  tags: [compare, refusal]
+  input:
+    op: tools_seq
+    images:
+      img: {gen: solid, size: [16, 16], color: [10, 10, 10]}
+    steps:
+      - {tool: compare_to_reference, args: {candidate: "@img", project_id: demo-stylized-obby}}
+      - {tool: compare_to_reference, args: {candidate: "@img", reference: "@img", profile: p, project_id: demo-stylized-obby}}
+  checks:
+    - {type: step_error, step: 0, text: "exactly one of reference"}
+    - {type: step_error, step: 1, text: "exactly one of reference"}

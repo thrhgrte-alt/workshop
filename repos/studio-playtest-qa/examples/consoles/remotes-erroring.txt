@@ -1,0 +1,59 @@
+10:00:00.100  Server started
+10:00:00.400  ServerScriptService.Economy loaded 2 upgrades
+10:00:03.000  PLAYQA_MARK remotes 3 start
+10:00:03.000  PLAYQA_PROBE BuyUpgrade valid1
+10:00:03.000  ServerScriptService.Remotes.BuyUpgrade:12: attempt to index nil with 'Cost'
+10:00:03.000  Stack Begin
+10:00:03.000  Script 'ReplicatedStorage.Remotes.BuyUpgrade', Line 1
+10:00:03.000  Stack End
+10:00:03.000  PLAYQA_PROBE BuyUpgrade unknown_item
+10:00:03.000  ServerScriptService.Remotes.BuyUpgrade:12: attempt to index nil with 'Cost'
+10:00:03.000  Stack Begin
+10:00:03.000  Script 'ReplicatedStorage.Remotes.BuyUpgrade', Line 1
+10:00:03.000  Stack End
+10:00:03.000  PLAYQA_PROBE BuyUpgrade wrong_type_number
+10:00:03.000  ServerScriptService.Remotes.BuyUpgrade:12: attempt to index nil with 'Cost'
+10:00:03.000  Stack Begin
+10:00:03.000  Script 'ReplicatedStorage.Remotes.BuyUpgrade', Line 1
+10:00:03.000  Stack End
+10:00:03.000  PLAYQA_PROBE BuyUpgrade wrong_type_table
+10:00:03.000  ServerScriptService.Remotes.BuyUpgrade:12: attempt to index nil with 'Cost'
+10:00:03.000  Stack Begin
+10:00:03.000  Script 'ReplicatedStorage.Remotes.BuyUpgrade', Line 1
+10:00:03.000  Stack End
+10:00:03.000  PLAYQA_PROBE BuyUpgrade nan_number
+10:00:03.000  ServerScriptService.Remotes.BuyUpgrade:12: attempt to index nil with 'Cost'
+10:00:03.000  Stack Begin
+10:00:03.000  Script 'ReplicatedStorage.Remotes.BuyUpgrade', Line 1
+10:00:03.000  Stack End
+10:00:03.000  PLAYQA_PROBE BuyUpgrade inf_number
+10:00:03.000  ServerScriptService.Remotes.BuyUpgrade:12: attempt to index nil with 'Cost'
+10:00:03.000  Stack Begin
+10:00:03.000  Script 'ReplicatedStorage.Remotes.BuyUpgrade', Line 1
+10:00:03.000  Stack End
+10:00:03.000  PLAYQA_PROBE BuyUpgrade negative_number
+10:00:03.000  ServerScriptService.Remotes.BuyUpgrade:12: attempt to index nil with 'Cost'
+10:00:03.000  Stack Begin
+10:00:03.000  Script 'ReplicatedStorage.Remotes.BuyUpgrade', Line 1
+10:00:03.000  Stack End
+10:00:03.000  PLAYQA_PROBE BuyUpgrade huge_string
+10:00:03.000  ServerScriptService.Remotes.BuyUpgrade:12: attempt to index nil with 'Cost'
+10:00:03.000  Stack Begin
+10:00:03.000  Script 'ReplicatedStorage.Remotes.BuyUpgrade', Line 1
+10:00:03.000  Stack End
+10:00:03.000  PLAYQA_PROBE Ping valid1
+10:00:03.000  PLAYQA_PROBE Ping wrong_type_number
+10:00:03.000  PLAYQA_PROBE Ping wrong_type_table
+10:00:03.000  PLAYQA_PROBE Ping nan_number
+10:00:03.000  PLAYQA_PROBE Ping inf_number
+10:00:03.000  PLAYQA_PROBE Ping negative_number
+10:00:03.000  PLAYQA_PROBE Ping huge_string
+10:00:03.000  PLAYQA_PROBE EquipTool valid1
+10:00:03.200  PLAYQA_PROBE EquipTool wrong_type_number
+10:00:03.400  PLAYQA_PROBE EquipTool wrong_type_table
+10:00:03.600  PLAYQA_PROBE EquipTool nan_number
+10:00:03.800  PLAYQA_PROBE EquipTool inf_number
+10:00:04.000  PLAYQA_PROBE EquipTool negative_number
+10:00:04.200  PLAYQA_PROBE EquipTool huge_string
+10:00:04.900  PLAYQA_MARK remotes 3 end
+10:00:04.900  PLAYQA_RESULT {"assertions": [{"detail": "BuyUpgrade found", "expected": "RemoteFunction", "id": "remote_found", "measured": "RemoteFunction", "ok": true, "subject": "BuyUpgrade"}, {"detail": "Ping found", "expected": "RemoteFunction", "id": "remote_found", "measured": "RemoteFunction", "ok": true, "subject": "Ping"}, {"detail": "EquipTool found", "expected": "RemoteEvent", "id": "remote_found", "measured": "RemoteEvent", "ok": true, "subject": "EquipTool"}], "check_id": "remotes", "kind": "remotes", "measures": {"remotes": [{"bad": [{"error": "ServerScriptService.Remotes.BuyUpgrade:12: attempt to index nil with 'Cost'", "label": "unknown_item", "ok": false, "responded": false, "timed_out": false}, {"error": "ServerScriptService.Remotes.BuyUpgrade:12: attempt to index nil with 'Cost'", "label": "wrong_type_number", "ok": false, "responded": false, "timed_out": false}, {"error": "ServerScriptService.Remotes.BuyUpgrade:12: attempt to index nil with 'Cost'", "label": "wrong_type_table", "ok": false, "responded": false, "timed_out": false}, {"error": "ServerScriptService.Remotes.BuyUpgrade:12: attempt to index nil with 'Cost'", "label": "nan_number", "ok": false, "responded": false, "timed_out": false}, {"error": "ServerScriptService.Remotes.BuyUpgrade:12: attempt to index nil with 'Cost'", "label": "inf_number", "ok": false, "responded": false, "timed_out": false}, {"error": "ServerScriptService.Remotes.BuyUpgrade:12: attempt to index nil with 'Cost'", "label": "negative_number", "ok": false, "responded": false, "timed_out": false}, {"error": "ServerScriptService.Remotes.BuyUpgrade:12: attempt to index nil with 'Cost'", "label": "huge_string", "ok": false, "responded": false, "timed_out": false}], "class": "RemoteFunction", "class_ok": true, "found": true, "id": "BuyUpgrade", "path": "ReplicatedStorage.Remotes.BuyUpgrade", "valid": [{"error": "ServerScriptService.Remotes.BuyUpgrade:12: attempt to index nil with 'Cost'", "label": "valid1", "ok": false, "responded": false, "timed_out": false}]}, {"bad": [{"label": "wrong_type_number", "ok": true, "rejected": true, "responded": true, "timed_out": false, "value": {"kind": "boolean", "value": false}}, {"label": "wrong_type_table", "ok": true, "rejected": true, "responded": true, "timed_out": false, "value": {"kind": "boolean", "value": false}}, {"label": "nan_number", "ok": true, "rejected": true, "responded": true, "timed_out": false, "value": {"kind": "boolean", "value": false}}, {"label": "inf_number", "ok": true, "rejected": true, "responded": true, "timed_out": false, "value": {"kind": "boolean", "value": false}}, {"label": "negative_number", "ok": true, "rejected": true, "responded": true, "timed_out": false, "value": {"kind": "boolean", "value": false}}, {"label": "huge_string", "ok": true, "rejected": true, "responded": true, "timed_out": false, "value": {"kind": "boolean", "value": false}}], "class": "RemoteFunction", "class_ok": true, "found": true, "id": "Ping", "path": "ReplicatedStorage.Remotes.Ping", "valid": [{"label": "valid1", "ok": true, "rejected": false, "responded": true, "timed_out": false, "value": {"kind": "string", "value": "pong"}}]}, {"bad": [{"label": "wrong_type_number", "ok": true, "responded": false, "timed_out": false}, {"label": "wrong_type_table", "ok": true, "responded": false, "timed_out": false}, {"label": "nan_number", "ok": true, "responded": false, "timed_out": false}, {"label": "inf_number", "ok": true, "responded": false, "timed_out": false}, {"label": "negative_number", "ok": true, "responded": false, "timed_out": false}, {"label": "huge_string", "ok": true, "responded": false, "timed_out": false}], "class": "RemoteEvent", "class_ok": true, "found": true, "id": "EquipTool", "path": "ReplicatedStorage.Remotes.EquipTool", "valid": [{"label": "valid1", "ok": true, "responded": false, "timed_out": false}]}], "timeout": 3}, "place": {"name": "Demo Mine Main (SYNTHETIC)", "place_id": 0}, "repeat_no": 3, "schema": "playqa.result/1"}

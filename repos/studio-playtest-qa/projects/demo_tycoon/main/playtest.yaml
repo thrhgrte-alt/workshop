@@ -1,0 +1,19 @@
+# SYNTHETIC. This place declares a data section WITHOUT a test-mode switch on purpose: generating its data check must be refused.
+version: 1
+synthetic: true
+boot:
+  expected_services: [Workspace, ReplicatedStorage]
+  expected_paths: [Workspace.Plots]
+remotes:
+  items:
+    - {id: ClaimPlot, path: ReplicatedStorage.Remotes.ClaimPlot, class: RemoteFunction, valid_args: [[1]]}
+economy:
+  player_values:
+    cash: {path: leaderstats.Cash, currency: true}
+  steps:
+    - {id: collect, action: {kind: bindable, path: ServerScriptService.QA.Collect}, expect: {cash: {range: gain}}}
+data:
+  save_hook: ServerScriptService.QA.SaveData
+  load_hook: ServerScriptService.QA.LoadData
+  values:
+    cash: {path: leaderstats.Cash, marker: 500}

@@ -1,0 +1,181 @@
+# Silhouette evals. Images are generated (visualverify/evalgen.py); every expected number below was computed BY HAND from the generator's parameters
+# (shown in the comment of each task), not copied from the tool's output.
+- id: sil-identical-rects-perfect
+  tags: [silhouette, known-good]
+  input:
+    op: engine
+    tool: silhouette_iou
+    images:
+      ref: {gen: rect, size: [100, 100], bg: [200, 200, 200], fg: [30, 30, 30], box: [20, 20, 60, 60]}
+      cand: {gen: rect, size: [100, 100], bg: [200, 200, 200], fg: [30, 30, 30], box: [20, 20, 60, 60]}
+    args: {candidate: "@cand", reference: "@ref"}
+  checks:
+    - {type: row, id: silhouette.iou, passed: true, value: 1.0}
+    - {type: row, id: silhouette.centroid_offset, passed: true, value: 0.0}
+    - {type: row, id: silhouette.bbox_offset, passed: true, value: 0.0}
+
+- id: sil-shifted-10px-hand-iou-0.6
+  tags: [silhouette, known-bad, hand-computed]
+  # ref box x 20..59 (40x40=1600 px); candidate shifted 10 px right = x 30..69. Intersection 30x40=1200, union 1600+1600-1200=2000, IoU = 0.6.
+  # Centroid moves 10 px of a 100 px wide image = 0.1; every bounding-box x edge moves 10 px = 0.1.
+  input:
+    op: engine
+    pin_defaults: true
+    tool: silhouette_iou
+    images:
+      ref: {gen: rect, size: [100, 100], bg: [200, 200, 200], fg: [30, 30, 30], box: [20, 20, 60, 60]}
+      cand: {gen: rect, size: [100, 100], bg: [200, 200, 200], fg: [30, 30, 30], box: [30, 20, 70, 60]}
+    args: {candidate: "@cand", reference: "@ref"}
+  checks:
+    - {type: row, id: silhouette.iou, passed: false, value: 0.6, limit: 0.8}
+    - {type: row, id: silhouette.centroid_offset, passed: false, value: 0.1, limit: 0.05}
+    - {type: row, id: silhouette.bbox_offset, passed: false, value: 0.1}
+    - {type: approx, path: measured.dice, value: 0.75}
+    - {type: list_approx, path: measured.centroid_offset_px, value: [10.0, 0.0]}
+    - {type: is, path: measured.bbox_offset_px, value: [10, 0, 10, 0]}
+    - {type: text_has, path: summary, text: "FAILED 3"}
+
+- id: sil-shifted-2px-hand-iou-passes
+  tags: [silhouette, known-good, hand-computed]
+  # shift 2 px: intersection 38x40=1520, union 3200-1520=1680, IoU = 1520/1680 = 0.904762; centroid 2/100 = 0.02; bbox 0.02.
+  input:
+    op: engine
+    tool: silhouette_iou
+    images:
+      ref: {gen: rect, size: [100, 100], bg: [200, 200, 200], fg: [30, 30, 30], box: [20, 20, 60, 60]}
+      cand: {gen: rect, size: [100, 100], bg: [200, 200, 200], fg: [30, 30, 30], box: [22, 20, 62, 60]}
+    args: {candidate: "@cand", reference: "@ref"}
+  checks:
+    - {type: row, id: silhouette.iou, passed: true, value: 0.904762, tol: 1.0e-4}
+    - {type: row, id: silhouette.centroid_offset, passed: true, value: 0.02}
+    - {type: row, id: silhouette.bbox_offset, passed: true, value: 0.02}
+
+- id: sil-disjoint-boxes-zero-iou
+  tags: [silhouette, known-bad, hand-computed]
+  # boxes [10,10,30,30] and [60,60,80,80] do not overlap: IoU 0. Centroids (19.5,19.5) and (69.5,69.5): offset hypot(0.5, 0.5) = 0.707107.
+  input:
+    op: engine
+    tool: silhouette_iou
+    images:
+      ref: {gen: rect, size: [100, 100], bg: [255, 255, 255], fg: [0, 0, 0], box: [10, 10, 30, 30]}
+      cand: {gen: rect, size: [100, 100], bg: [255, 255, 255], fg: [0, 0, 0], box: [60, 60, 80, 80]}
+    args: {candidate: "@cand", reference: "@ref"}
+  checks:
+    - {type: row, id: silhouette.iou, passed: false, value: 0.0}
+    - {type: row, id: silhouette.centroid_offset, passed: false, value: 0.707107, tol: 1.0e-4}
+    - {type: row, id: silhouette.bbox_offset, passed: false, value: 0.5}
+
+- id: sil-alpha-mask-matches-background-mask
+  tags: [silhouette, known-good, hand-computed]
+  # An RGBA sprite (transparent background) and an opaque render of the same box on a plain background describe the same silhouette: IoU 1.
+  input:
+    op: engine
+    tool: silhouette_iou
+    images:
+      ref: {gen: rect, size: [100, 100], bg: [200, 200, 200], fg: [30, 30, 30], box: [20, 20, 60, 60]}
+      cand: {gen: rect, size: [100, 100], bg: [0, 0, 0], fg: [30, 30, 30], box: [20, 20, 60, 60], alpha: true}
+    args: {candidate: "@cand", reference: "@ref"}
+  checks:
+    - {type: row, id: silhouette.iou, passed: true, value: 1.0}
+    - {type: is, path: measured.candidate.method, value: alpha}
+    - {type: is, path: measured.reference.method, value: background}
+
+- id: sil-reference-is-resized-onto-candidate-grid
+  tags: [silhouette, known-good, hand-computed]
+  # The reference is 200x200 with box [40,40,120,120]; the candidate 100x100 with box [20,20,60,60]: the same shape at half size.
+  # The reference is area-averaged 2x2 onto the candidate grid, which is exact because the box edges are even: IoU 1.
+  input:
+    op: engine
+    tool: silhouette_iou
+    detail: true
+    images:
+      ref: {gen: rect, size: [200, 200], bg: [200, 200, 200], fg: [30, 30, 30], box: [40, 40, 120, 120]}
+      cand: {gen: rect, size: [100, 100], bg: [200, 200, 200], fg: [30, 30, 30], box: [20, 20, 60, 60]}
+    args: {candidate: "@cand", reference: "@ref"}
+  checks:
+    - {type: row, id: silhouette.iou, passed: true, value: 1.0}
+    - {type: is, path: detail.resized_reference, value: true}
+    - {type: is, path: measured.grid, value: [100, 100]}
+
+- id: sil-aspect-mismatch-is-warned
+  tags: [silhouette, known-bad]
+  input:
+    op: engine
+    tool: silhouette_iou
+    images:
+      ref: {gen: rect, size: [100, 50], bg: [200, 200, 200], fg: [30, 30, 30], box: [10, 10, 50, 40]}
+      cand: {gen: rect, size: [100, 100], bg: [200, 200, 200], fg: [30, 30, 30], box: [10, 10, 50, 80]}
+    args: {candidate: "@cand", reference: "@ref"}
+  checks:
+    - {type: text_has, path: warnings.0, text: "aspect ratios differ"}
+
+- id: sil-subject-fills-frame-is-warned
+  tags: [silhouette, known-bad]
+  # a box covering [1,1,99,99] of 100x100 is 0.9604 of the image (> 0.95): the tool says the mask may be unreliable
+  input:
+    op: engine
+    tool: silhouette_iou
+    images:
+      ref: {gen: rect, size: [100, 100], bg: [200, 200, 200], fg: [30, 30, 30], box: [20, 20, 60, 60]}
+      cand: {gen: rect, size: [100, 100], bg: [200, 200, 200], fg: [30, 30, 30], box: [1, 1, 99, 99]}
+    args: {candidate: "@cand", reference: "@ref"}
+  checks:
+    - {type: text_has, path: warnings.0, text: "covers 96%"}
+
+- id: sil-two-empty-masks-are-not-a-pass
+  tags: [silhouette, known-bad]
+  # two flat images: nothing differs from the background, both masks are empty, IoU is undefined: skipped, never "passed"
+  input:
+    op: engine
+    tool: silhouette_iou
+    images:
+      ref: {gen: solid, size: [64, 64], color: [90, 90, 90]}
+      cand: {gen: solid, size: [64, 64], color: [90, 90, 90]}
+    args: {candidate: "@cand", reference: "@ref"}
+  checks:
+    - {type: skipped, id: silhouette.iou}
+    - {type: text_has, path: warnings.0, text: "mask is empty"}
+    - {type: text_has, path: summary, text: "not measurable"}
+
+- id: sil-ellipse-in-box-iou-is-pi-over-4
+  tags: [silhouette, known-bad, hand-computed]
+  # an ellipse inscribed in a 60x60 box covers pi/4 = 0.7854 of the box, so its IoU with the box is about 0.785 (pixel rounding: allow +/-0.02)
+  input:
+    op: engine
+    pin_defaults: true
+    tool: silhouette_iou
+    images:
+      ref: {gen: rect, size: [100, 100], bg: [255, 255, 255], fg: [0, 0, 0], box: [20, 20, 80, 80]}
+      cand: {gen: ellipse, size: [100, 100], bg: [255, 255, 255], fg: [0, 0, 0], box: [20, 20, 79, 79]}
+    args: {candidate: "@cand", reference: "@ref"}
+  checks:
+    - {type: row_range, id: silhouette.iou, min: 0.765, max: 0.805}
+    - {type: row, id: silhouette.iou, passed: false}
+    - {type: row, id: silhouette.centroid_offset, passed: true}
+
+- id: sil-explicit-mask-image-method
+  tags: [silhouette, known-good]
+  # reference_method=mask: the reference IS a mask (white subject on black). The candidate is a dark box on a light render.
+  input:
+    op: engine
+    tool: silhouette_iou
+    images:
+      ref: {gen: rect, size: [100, 100], bg: [0, 0, 0], fg: [255, 255, 255], box: [20, 20, 60, 60]}
+      cand: {gen: rect, size: [100, 100], bg: [200, 200, 200], fg: [30, 30, 30], box: [20, 20, 60, 60]}
+    args: {candidate: "@cand", reference: "@ref", reference_method: mask}
+  checks:
+    - {type: row, id: silhouette.iou, passed: true, value: 1.0}
+
+- id: sil-luminance-method-handles-light-subject
+  tags: [silhouette, known-good]
+  # a light box on a dark background: Otsu splits the classes and the class that is not on the border is the subject
+  input:
+    op: engine
+    tool: silhouette_iou
+    images:
+      ref: {gen: rect, size: [100, 100], bg: [20, 20, 20], fg: [230, 230, 230], box: [30, 30, 70, 70]}
+      cand: {gen: rect, size: [100, 100], bg: [20, 20, 20], fg: [230, 230, 230], box: [30, 30, 70, 70]}
+    args: {candidate: "@cand", reference: "@ref", method: luminance, reference_method: luminance}
+  checks:
+    - {type: row, id: silhouette.iou, passed: true, value: 1.0}
+    - {type: is, path: measured.candidate.method, value: luminance}

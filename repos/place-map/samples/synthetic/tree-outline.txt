@@ -1,0 +1,5 @@
+# SYNTHETIC text outline (path | Class | key=value; key=value)
+Workspace | Workspace
+Workspace/Vendors | Folder
+Workspace/Vendors/Bob | Model | Price=5; Stock=2
+Workspace/Vendors/Bob/Prompt | ProximityPrompt

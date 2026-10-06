@@ -1,0 +1,469 @@
+# Scope, path confinement, dry-run behaviour, target profiles, the hub-capture parser and shipped-file facts.
+- id: scope-every-tool-refuses-without-project
+  tags: [scope, refusal]
+  input:
+    op: tools_seq
+    steps:
+      - {do: refuse_all}
+      - {do: refuse_all, with_place: true}
+  checks:
+    - {type: is, path: steps.0.result.not_refused, value: []}
+    - {type: greater, path: steps.0.result.checked, than: 15}
+    - {type: is, path: steps.1.result.not_refused, value: []}
+
+- id: scope-unknown-project-is-refused
+  tags: [scope, refusal]
+  input:
+    op: tools_seq
+    images:
+      img: {gen: solid, size: [16, 16], color: [10, 10, 10]}
+    steps:
+      - {tool: measure_image, args: {path: "@img", project_id: no-such-game}}
+      - {tool: get_style_brief, args: {project_id: no-such-game}}
+  checks:
+    - {type: step_error, step: 0, text: "unknown project_id 'no-such-game'"}
+    - {type: step_error, step: 1, text: "Known projects"}
+
+- id: scope-unknown-place-is-refused
+  tags: [scope, refusal]
+  input:
+    op: tools_seq
+    images:
+      img: {gen: solid, size: [16, 16], color: [10, 10, 10]}
+    steps:
+      - {tool: measure_image, args: {path: "@img", project_id: demo-stylized-obby, place_id: nowhere}}
+      - {tool: measure_image, args: {path: "@img", project_id: demo-stylized-obby, place_id: arena}}
+  checks:
+    - {type: step_error, step: 0, text: "does not belong to project"}
+    - {type: step_error, step: 1, text: "does not belong to project"}
+
+- id: scope-misspelt-project-gets-a-suggestion
+  tags: [scope, refusal]
+  input:
+    op: tools_seq
+    steps:
+      - {tool: get_style_brief, args: {project_id: demo-stylised-obby}}
+  checks:
+    - {type: step_error, step: 0, text: "Did you mean"}
+
+- id: scope-trailing-newline-in-project-id-is-refused
+  tags: [scope, refusal]
+  input:
+    op: tools_seq
+    steps:
+      - {tool: get_style_brief, args: {project_id: "demo-stylized-obby\n"}}
+  checks:
+    - {type: step_error, step: 0, text: "unknown project_id"}
+
+- id: scope-answers-state-project-and-place
+  tags: [scope, honesty]
+  input:
+    op: tools_seq
+    images:
+      img: {gen: vstep, size: [64, 64], left: [0, 0, 0], right: [255, 255, 255], x: 32}
+    steps:
+      - {tool: measure_image, args: {path: "@img", project_id: demo-pixel-brawler, place_id: arena}}
+      - {tool: get_style_brief, args: {project_id: demo-pixel-brawler, place_id: arena}}
+      - {tool: find_past_corrections, args: {request: edges, project_id: demo-pixel-brawler, place_id: arena}}
+  checks:
+    - {type: is, path: steps.0.result.project_id, value: demo-pixel-brawler}
+    - {type: is, path: steps.0.result.place_id, value: arena}
+    - {type: is, path: steps.0.result.synthetic_project, value: true}
+    - {type: first_key_of_step, step: 0, key: summary}
+    - {type: is, path: steps.1.result.place_id, value: arena}
+    - {type: is, path: steps.2.result.project_id, value: demo-pixel-brawler}
+
+- id: scope-image-outside-the-allowed-folders-is-refused
+  tags: [scope, refusal, paths]
+  input:
+    op: tools_seq
+    images:
+      secret: {gen: solid, size: [16, 16], color: [10, 10, 10], where: outside}
+    steps:
+      - {tool: measure_image, args: {path: "@secret", project_id: demo-stylized-obby}}
+      - {tool: check_pbr_ranges, args: {albedo: "@secret", project_id: demo-stylized-obby}}
+      - {tool: diff_images, args: {before: "@secret", after: "@secret", project_id: demo-stylized-obby}}
+  checks:
+    - {type: step_error, step: 0, text: "outside the allowed directories"}
+    - {type: step_error, step: 1, text: "outside the allowed directories"}
+    - {type: step_error, step: 2, text: "outside the allowed directories"}
+
+- id: scope-parent-traversal-is-refused
+  tags: [scope, refusal, paths]
+  input:
+    op: tools_seq
+    images:
+      tr: {gen: solid, size: [16, 16], color: [10, 10, 10], where: outside}
+    steps:
+      - {tool: measure_image, args: {path: "{td}/ws/imgs/../../outside/tr.png", project_id: demo-stylized-obby}}
+  checks:
+    - {type: step_error, step: 0, text: "outside the allowed directories"}
+
+- id: scope-other-projects-image-folder-is-refused
+  tags: [scope, refusal, paths, isolation]
+  # proj-a may read rootA, proj-b may read rootB; neither may read the other's folder
+  input:
+    op: tools_seq
+    dirs: {rootA: rootA, rootB: rootB}
+    registry:
+      version: 1
+      projects:
+        - {project_id: proj-a, image_roots: ["{td}/rootA"], places: [{place_id: main, studio_name: "A main"}]}
+        - {project_id: proj-b, image_roots: ["{td}/rootB"], places: [{place_id: main, studio_name: "B main"}]}
+    images:
+      imgA: {gen: solid, size: [16, 16], color: [10, 10, 10], where: rootA}
+      imgB: {gen: solid, size: [16, 16], color: [10, 10, 10], where: rootB}
+    steps:
+      - {tool: measure_image, args: {path: "@imgA", project_id: proj-a}}
+      - {tool: measure_image, args: {path: "@imgB", project_id: proj-a}}
+      - {tool: measure_image, args: {path: "@imgB", project_id: proj-b}}
+      - {tool: measure_image, args: {path: "@imgA", project_id: proj-b}}
+  checks:
+    - {type: step_ok, step: 0}
+    - {type: step_error, step: 1, text: "outside the allowed directories"}
+    - {type: step_ok, step: 2}
+    - {type: step_error, step: 3, text: "outside the allowed directories"}
+
+- id: scope-unsupported-file-type-is-refused
+  tags: [scope, refusal, paths]
+  input:
+    op: tools_seq
+    images:
+      notes: {gen: solid, size: [16, 16], color: [10, 10, 10], ext: txt}
+    steps:
+      - {tool: measure_image, args: {path: "@notes", project_id: demo-stylized-obby}}
+  checks:
+    - {type: step_error, step: 0, text: "unsupported file type"}
+
+- id: scope-corrupt-image-is-refused
+  tags: [scope, refusal, paths]
+  input:
+    op: tools_seq
+    images:
+      broken: {gen: garbage}
+    steps:
+      - {tool: measure_image, args: {path: "@broken", project_id: demo-stylized-obby}}
+  checks:
+    - {type: step_error, step: 0, text: "could not be decoded"}
+
+- id: scope-missing-file-is-refused
+  tags: [scope, refusal, paths]
+  input:
+    op: tools_seq
+    steps:
+      - {tool: measure_image, args: {path: "{td}/ws/imgs/nope.png", project_id: demo-stylized-obby}}
+  checks:
+    - {type: step_error, step: 0, text: "is not a file"}
+
+- id: scope-oversize-image-is-refused
+  tags: [scope, refusal, paths]
+  # limits.max_pixels lowered to 5000 for this task only: a 100x100 image (10000 pixels) is above it
+  input:
+    op: engine
+    tool: measure_image
+    expect_refusal: true
+    overrides: {limits.max_pixels: 5000}
+    images:
+      img: {gen: solid, size: [100, 100], color: [10, 10, 10]}
+    args: {path: "@img"}
+  checks:
+    - {type: refused, text: "above the limit"}
+
+- id: scope-read-only-tools-write-nothing
+  tags: [scope, dry-run]
+  input:
+    op: tools_seq
+    images:
+      a: {gen: vstep, size: [64, 64], left: [0, 0, 0], right: [255, 255, 255], x: 32}
+      b: {gen: solid, size: [64, 64], color: [128, 128, 128]}
+    steps:
+      - {tool: measure_image, args: {path: "@a", project_id: demo-stylized-obby, place_id: stage-1}}
+      - {tool: compare_to_reference, args: {candidate: "@a", reference: "@b", project_id: demo-stylized-obby}}
+      - {tool: silhouette_iou, args: {candidate: "@a", reference: "@b", project_id: demo-stylized-obby}}
+      - {tool: palette_distance, args: {path: "@a", target_palette: ["#000000"], project_id: demo-stylized-obby}}
+      - {tool: check_tiling, args: {path: "@a", project_id: demo-stylized-obby}}
+      - {tool: check_pbr_ranges, args: {albedo: "@b", project_id: demo-stylized-obby}}
+      - {tool: diff_images, args: {before: "@a", after: "@b", project_id: demo-stylized-obby}}
+      - {tool: get_style_brief, args: {project_id: demo-stylized-obby}}
+      - {tool: find_past_corrections, args: {request: x, project_id: demo-stylized-obby}}
+      - {tool: list_thresholds, args: {project_id: demo-stylized-obby}}
+      - {tool: get_target_profile, args: {project_id: demo-stylized-obby}}
+  checks:
+    - {type: is, path: n_errors, value: 0}
+    - {type: wrote_nothing}
+
+- id: scope-write-tools-default-to-dry-run
+  tags: [scope, dry-run]
+  input:
+    op: tools_seq
+    images:
+      a: {gen: vstep, size: [64, 64], left: [0, 0, 0], right: [255, 255, 255], x: 32}
+      b: {gen: solid, size: [64, 64], color: [128, 128, 128]}
+    steps:
+      - {tool: save_target_profile, args: {name: look, reference: "@a", project_id: demo-stylized-obby}}
+      - {tool: render_diff_image, args: {before: "@a", after: "@b", project_id: demo-stylized-obby}}
+      - {tool: ingest_capture, args: {path: "@a", name: shot, project_id: demo-stylized-obby}}
+  checks:
+    - {type: is, path: n_errors, value: 0}
+    - {type: is, path: steps.0.result.dry_run, value: true}
+    - {type: is, path: steps.1.result.dry_run, value: true}
+    - {type: is, path: steps.2.result.dry_run, value: true}
+    - {type: text_has, path: steps.0.result.summary, text: "DRY RUN"}
+    - {type: wrote_nothing}
+
+- id: scope-applied-writes-stay-in-the-project-folder
+  tags: [scope, dry-run]
+  input:
+    op: tools_seq
+    images:
+      a: {gen: vstep, size: [64, 64], left: [0, 0, 0], right: [255, 255, 255], x: 32}
+      b: {gen: solid, size: [64, 64], color: [128, 128, 128]}
+    steps:
+      - {tool: save_target_profile, args: {name: look, reference: "@a", project_id: demo-stylized-obby, place_id: stage-1, dry_run: false}}
+      - {tool: render_diff_image, args: {before: "@a", after: "@b", project_id: demo-stylized-obby, place_id: stage-1, dry_run: false}}
+  checks:
+    - {type: is, path: n_errors, value: 0}
+    - {type: wrote_only, prefix: "projects/demo-stylized-obby/stage-1/"}
+    - {type: text_has, path: steps.1.result.path, text: "output"}
+
+- id: profile-saved-profile-holds-numbers-not-the-image
+  tags: [profile, privacy]
+  # the profile stores palette, ranges, the reference's FILE NAME and SHA-256 prefix: never its pixels and never its folder
+  input:
+    op: tools_seq
+    images:
+      ref: {gen: bands, size: [63, 63], colors: [[240, 240, 220], [200, 30, 30], [30, 150, 30]], axis: x}
+    steps:
+      - {tool: save_target_profile, args: {name: look, reference: "@ref", project_id: demo-stylized-obby, dry_run: false}}
+      - {tool: get_target_profile, args: {project_id: demo-stylized-obby, name: look}}
+  checks:
+    - {type: is, path: n_errors, value: 0}
+    - {type: text_in_file, file_part: "profiles/look.json", text: "#c81e1e"}
+    - {type: text_in_file, file_part: "profiles/look.json", text: "ref.png"}
+    - {type: text_in_file, file_part: "profiles/look.json", text: "/imgs/", present: false}
+    - {type: is, path: steps.1.result.profile.name, value: look}
+
+- id: profile-measuring-the-reference-against-its-own-profile-passes
+  tags: [profile, known-good]
+  input:
+    op: tools_seq
+    images:
+      ref: {gen: bands, size: [63, 63], colors: [[240, 240, 220], [200, 30, 30], [30, 150, 30]], axis: x}
+    steps:
+      - {tool: save_target_profile, args: {name: look, reference: "@ref", project_id: demo-stylized-obby, dry_run: false}}
+      - {tool: measure_image, args: {path: "@ref", profile: look, project_id: demo-stylized-obby, dimensions: [palette, value]}}
+  checks:
+    - {type: is, path: steps.1.result.findings, value: []}
+    - {type: text_has, path: steps.1.result.summary, text: "none failed"}
+
+- id: profile-a-different-image-fails-the-profile-ranges
+  tags: [profile, known-bad]
+  input:
+    op: tools_seq
+    images:
+      ref: {gen: bands, size: [63, 63], colors: [[240, 240, 220], [200, 30, 30], [30, 150, 30]], axis: x}
+      other: {gen: bands, size: [64, 64], colors: [[250, 250, 250], [240, 240, 240]], axis: x}
+    steps:
+      - {tool: save_target_profile, args: {name: look, reference: "@ref", project_id: demo-stylized-obby, dry_run: false}}
+      - {tool: measure_image, args: {path: "@other", profile: look, project_id: demo-stylized-obby, dimensions: [palette, value]}}
+  checks:
+    - {type: text_has, path: steps.1.result.summary, text: "FAILED"}
+    - {type: text_has, path: steps.1.result.findings.0.check, text: "."}
+
+- id: profile-resaving-keeps-the-old-version
+  tags: [profile, versions]
+  input:
+    op: tools_seq
+    images:
+      ref: {gen: bands, size: [63, 63], colors: [[240, 240, 220], [200, 30, 30], [30, 150, 30]], axis: x}
+    steps:
+      - {tool: save_target_profile, args: {name: look, reference: "@ref", description: first, project_id: demo-stylized-obby, dry_run: false}}
+      - {tool: save_target_profile, args: {name: look, reference: "@ref", description: second, project_id: demo-stylized-obby, dry_run: false}}
+  checks:
+    - {type: is, path: versions_written, value: 2}
+    - {type: text_in_file, file_part: "profiles/look.json", text: second}
+
+- id: profile-bad-name-is-refused
+  tags: [profile, refusal]
+  input:
+    op: tools_seq
+    images:
+      ref: {gen: solid, size: [16, 16], color: [10, 10, 10]}
+    steps:
+      - {tool: save_target_profile, args: {name: "../escape", reference: "@ref", project_id: demo-stylized-obby, dry_run: false}}
+      - {tool: save_target_profile, args: {name: "look\n", reference: "@ref", project_id: demo-stylized-obby, dry_run: false}}
+  checks:
+    - {type: step_error, step: 0, text: "profile name"}
+    - {type: step_error, step: 1, text: "profile name"}
+    - {type: wrote_nothing}
+
+- id: profile-unknown-name-is-refused
+  tags: [profile, refusal]
+  input:
+    op: tools_seq
+    images:
+      img: {gen: solid, size: [16, 16], color: [10, 10, 10]}
+    steps:
+      - {tool: measure_image, args: {path: "@img", profile: nope, project_id: demo-stylized-obby}}
+  checks:
+    - {type: step_error, step: 0, text: "no target profile 'nope'"}
+
+- id: profile-needs-a-reference-or-values
+  tags: [profile, refusal]
+  input:
+    op: tools_seq
+    steps:
+      - {tool: save_target_profile, args: {name: look, project_id: demo-stylized-obby}}
+      - {tool: save_target_profile, args: {name: look, saturation_range: [0.9, 0.2], project_id: demo-stylized-obby}}
+  checks:
+    - {type: step_error, step: 0, text: "give a reference image"}
+    - {type: step_error, step: 1, text: "min <= max"}
+
+- id: profile-is-per-project
+  tags: [profile, isolation]
+  input:
+    op: tools_seq
+    images:
+      ref: {gen: bands, size: [63, 63], colors: [[240, 240, 220], [200, 30, 30], [30, 150, 30]], axis: x}
+    steps:
+      - {tool: save_target_profile, args: {name: look, reference: "@ref", project_id: demo-stylized-obby, dry_run: false}}
+      - {tool: get_target_profile, args: {project_id: demo-stylized-obby}}
+      - {tool: get_target_profile, args: {project_id: demo-pixel-brawler}}
+  checks:
+    - {type: is, path: steps.1.result.profiles, value: [look]}
+    - {type: is, path: steps.2.result.profiles, value: []}
+
+- id: hub-capture-raw-image-file
+  tags: [hub, schema-unverified]
+  input:
+    op: hubshot
+    form: raw
+    image: {gen: solid, size: [24, 16], color: [10, 200, 10]}
+  checks:
+    - {type: not_refused}
+    - {type: is, path: size, value: [24, 16]}
+    - {type: is, path: input_schema, value: schema_unverified}
+
+- id: hub-capture-mcp-image-block
+  tags: [hub, schema-unverified]
+  input:
+    op: hubshot
+    form: mcp_block
+    image: {gen: solid, size: [24, 16], color: [10, 200, 10]}
+  checks:
+    - {type: not_refused}
+    - {type: is, path: size, value: [24, 16]}
+    - {type: is, path: form, value: "MCP image content block"}
+    - {type: is, path: input_schema, value: schema_unverified}
+
+- id: hub-capture-wrapped-result
+  tags: [hub, schema-unverified]
+  input:
+    op: hubshot
+    form: wrapped_result
+    image: {gen: solid, size: [8, 8], color: [0, 0, 0]}
+  checks:
+    - {type: not_refused}
+    - {type: is, path: size, value: [8, 8]}
+
+- id: hub-capture-json-field-with-data-url
+  tags: [hub, schema-unverified]
+  input:
+    op: hubshot
+    form: "field:screenshot"
+    data_url: true
+    image: {gen: solid, size: [12, 12], color: [90, 90, 90]}
+  checks:
+    - {type: not_refused}
+    - {type: is, path: form, value: "JSON field 'screenshot'"}
+
+- id: hub-capture-unknown-json-lists-the-keys-it-saw
+  tags: [hub, schema-unverified, refusal]
+  input:
+    op: hubshot
+    form: unknown_json
+    image: {gen: solid, size: [8, 8], color: [0, 0, 0]}
+  checks:
+    - {type: refused, text: "Top-level keys: ['frames', 'status']"}
+    - {type: refused, text: schema_unverified}
+
+- id: hub-capture-bad-base64-is-refused
+  tags: [hub, refusal]
+  input:
+    op: hubshot
+    form: bad_base64
+    image: {gen: solid, size: [8, 8], color: [0, 0, 0]}
+  checks:
+    - {type: refused, text: "not valid base64"}
+
+- id: hub-capture-garbage-bytes-are-refused
+  tags: [hub, refusal]
+  input:
+    op: hubshot
+    form: garbage
+    image: {gen: solid, size: [8, 8], color: [0, 0, 0]}
+  checks:
+    - {type: refused, text: "could not be decoded"}
+
+- id: hub-capture-broken-json-is-refused
+  tags: [hub, refusal]
+  input:
+    op: hubshot
+    form: broken_json
+    image: {gen: solid, size: [8, 8], color: [0, 0, 0]}
+  checks:
+    - {type: refused, text: "neither an image nor JSON"}
+
+- id: hub-capture-base64-of-something-else-is-refused
+  tags: [hub, refusal]
+  input:
+    op: hubshot
+    form: not_an_image_b64
+    image: {gen: solid, size: [8, 8], color: [0, 0, 0]}
+  checks:
+    - {type: refused, text: "could not be decoded"}
+
+- id: hub-capture-too-many-pixels-is-refused
+  tags: [hub, refusal]
+  input:
+    op: hubshot
+    form: raw
+    max_pixels: 100
+    image: {gen: solid, size: [24, 16], color: [10, 200, 10]}
+  checks:
+    - {type: refused, text: "above the limit"}
+
+- id: hub-ingest-dry-run-then-apply-gives-a-measurable-image
+  tags: [hub, schema-unverified]
+  input:
+    op: tools_seq
+    images:
+      cap: {gen: vstep, size: [64, 64], left: [0, 0, 0], right: [255, 255, 255], x: 32}
+    steps:
+      - {tool: ingest_capture, args: {path: "@cap", name: shot1, project_id: demo-stylized-obby, place_id: stage-1}}
+      - {tool: ingest_capture, args: {path: "@cap", name: shot1, project_id: demo-stylized-obby, place_id: stage-1, dry_run: false}}
+      - {tool: measure_image, args: {path: "$ref:steps.1.result.image_path", project_id: demo-stylized-obby, place_id: stage-1, dimensions: [edges]}}
+  checks:
+    - {type: is, path: steps.0.result.input_schema, value: schema_unverified}
+    - {type: text_has, path: steps.0.result.warnings.0, text: schema_unverified}
+    - {type: step_ok, step: 2}
+    - {type: wrote_only, prefix: "projects/demo-stylized-obby/stage-1/"}
+
+- id: files-thresholds-are-named-params-and-placeholders
+  tags: [params, honesty]
+  input: {op: files}
+  checks:
+    - {type: is, path: all_registered, value: true}
+    - {type: is, path: all_defaults_equal, value: true}
+    - {type: is, path: placeholder_flag, value: true}
+    - {type: is, path: checks_have_op, value: true}
+    - {type: greater, path: n_thresholds, than: 40}
+    - {type: set_has, path: dimensions, items: [silhouette, palette, value, edges, tiling, texture, diff, limits]}
+
+- id: files-safety-limits-are-locked-and-roblox-conventions-are-flagged
+  tags: [params, honesty]
+  input: {op: files}
+  checks:
+    - {type: set_has, path: locked, items: [limits.max_file_bytes, limits.max_pixels, limits.max_side_exact, limits.analysis_max_side, limits.findings_cap]}
+    - {type: is, path: unlocked_limits, value: []}
+    - {type: set_has, path: verify_flagged, items: [pbr.albedo_lum_min, pbr.albedo_lum_max]}

@@ -1,0 +1,36 @@
+version: 1
+checks:
+  - id: remotes
+    kind: remotes
+    title: "Remotes: each listed remote responds, rejects bad input and raises no error"
+    context: client
+    session: shared
+    flaky: true
+    config_section: remotes
+    settings: [remote_timeout_seconds, remote_max_probes]
+    ranges: []
+    assertions:
+      - {id: remote_found, title: "the remote exists at its path and has the declared class", source: script}
+      - {id: valid_call_responds, title: "a valid call returns within the timeout (RemoteFunction only)", source: tool}
+      - {id: valid_call_no_error, title: "a valid call raises no error and leaves no error line in the console", source: tool}
+      - {id: bad_input_rejected, title: "each bad-input probe is rejected: falsey or {ok=false} result (RemoteFunction only)", source: tool}
+      - {id: bad_input_no_error, title: "no bad-input probe raises an error or leaves an error line in the console", source: tool}
+    not_checked:
+      - "what the server did with an accepted call beyond the return value"
+      - "RemoteEvent handlers' effects (only that no error line follows)"
+      - "rate limits, exploit resistance beyond the listed probes, or authorisation"
+    verify_against_current_docs: true
+    notes: "Assumes the script runs in a client context so that InvokeServer/FireServer are callable; where the hub's execute_luau runs only on the server this check cannot run as written (schema_unverified)."
+# Generic bad-input probes sent to EVERY listed remote (in this order, at most remote_max_probes of them), unless the remote sets generic_probes: false.
+# Values use the same JSON form as playtest.yaml args: {$repeat, times} is a repeated string, {$number: nan|inf|-inf} a special number.
+probes:
+  - {label: wrong_type_number, args: [12345]}
+  - {label: wrong_type_table, args: [{}]}
+  - {label: nan_number, args: [{"$number": nan}]}
+  - {label: inf_number, args: [{"$number": inf}]}
+  - {label: negative_number, args: [-1]}
+  - {label: huge_string, args: [{"$repeat": x, times: 5000}]}
+  - {label: empty_string, args: [""]}
+  - {label: boolean_true, args: [true]}
+  - {label: no_arguments, args: []}
+  - {label: nested_table, args: [{a: {b: {c: 1}}}]}

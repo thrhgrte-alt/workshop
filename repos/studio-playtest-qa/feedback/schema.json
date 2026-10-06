@@ -1,0 +1,134 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Feedback records written by guide_core.feedback (one JSON object per line)",
+  "$defs": {
+    "run": {
+      "type": "object",
+      "required": [
+        "run_id",
+        "at",
+        "request",
+        "retrieved",
+        "outputs"
+      ],
+      "properties": {
+        "run_id": {
+          "type": "string",
+          "pattern": "^run-[0-9]{8}-[0-9]{6}-[0-9a-f]{6}$"
+        },
+        "at": {
+          "type": "string"
+        },
+        "request": {
+          "type": "string",
+          "minLength": 1
+        },
+        "constraints": {
+          "type": "object"
+        },
+        "retrieved": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "tools": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "recipes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "outputs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "preview": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "model": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "extra": {
+          "type": "object"
+        }
+      }
+    },
+    "decision": {
+      "type": "object",
+      "required": [
+        "run_id",
+        "at",
+        "decision",
+        "corrections"
+      ],
+      "properties": {
+        "run_id": {
+          "type": "string"
+        },
+        "at": {
+          "type": "string"
+        },
+        "decision": {
+          "enum": [
+            "accept",
+            "reject",
+            "revise"
+          ]
+        },
+        "reason": {
+          "type": "string"
+        },
+        "corrections": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "dimension",
+              "note"
+            ],
+            "properties": {
+              "dimension": {
+                "type": "string"
+              },
+              "direction": {
+                "enum": [
+                  "more",
+                  "less",
+                  "change"
+                ]
+              },
+              "note": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "rating": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "maximum": 5
+        },
+        "promote_requested": {
+          "type": "boolean"
+        }
+      }
+    }
+  }
+}

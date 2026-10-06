@@ -1,0 +1,2808 @@
+{
+  "label": "baseline",
+  "mode": "solver",
+  "at": "2026-10-06T08:40:21+00:00",
+  "git_rev": "unknown",
+  "python": "3.11.15",
+  "meta": {},
+  "passed": 146,
+  "total": 146,
+  "tasks": [
+    {
+      "id": "budget-measure-image",
+      "passed": true,
+      "checks": [
+        {
+          "check": "step_ok",
+          "passed": true,
+          "message": "step 0 should succeed (got None)"
+        },
+        {
+          "check": "budget",
+          "passed": true,
+          "message": "output is 1603 characters; budget 2100"
+        }
+      ]
+    },
+    {
+      "id": "budget-compare-to-reference",
+      "passed": true,
+      "checks": [
+        {
+          "check": "step_ok",
+          "passed": true,
+          "message": "step 0 should succeed (got None)"
+        },
+        {
+          "check": "budget",
+          "passed": true,
+          "message": "output is 2059 characters; budget 2700"
+        }
+      ]
+    },
+    {
+      "id": "budget-silhouette-iou",
+      "passed": true,
+      "checks": [
+        {
+          "check": "step_ok",
+          "passed": true,
+          "message": "step 0 should succeed (got None)"
+        },
+        {
+          "check": "budget",
+          "passed": true,
+          "message": "output is 1592 characters; budget 2100"
+        }
+      ]
+    },
+    {
+      "id": "budget-palette-distance",
+      "passed": true,
+      "checks": [
+        {
+          "check": "step_ok",
+          "passed": true,
+          "message": "step 0 should succeed (got None)"
+        },
+        {
+          "check": "budget",
+          "passed": true,
+          "message": "output is 821 characters; budget 1100"
+        }
+      ]
+    },
+    {
+      "id": "budget-check-tiling",
+      "passed": true,
+      "checks": [
+        {
+          "check": "step_ok",
+          "passed": true,
+          "message": "step 0 should succeed (got None)"
+        },
+        {
+          "check": "budget",
+          "passed": true,
+          "message": "output is 759 characters; budget 1000"
+        }
+      ]
+    },
+    {
+      "id": "budget-check-pbr-ranges",
+      "passed": true,
+      "checks": [
+        {
+          "check": "step_ok",
+          "passed": true,
+          "message": "step 0 should succeed (got None)"
+        },
+        {
+          "check": "budget",
+          "passed": true,
+          "message": "output is 1969 characters; budget 2600"
+        }
+      ]
+    },
+    {
+      "id": "budget-diff-images",
+      "passed": true,
+      "checks": [
+        {
+          "check": "step_ok",
+          "passed": true,
+          "message": "step 0 should succeed (got None)"
+        },
+        {
+          "check": "budget",
+          "passed": true,
+          "message": "output is 901 characters; budget 1200"
+        }
+      ]
+    },
+    {
+      "id": "budget-get-style-brief",
+      "passed": true,
+      "checks": [
+        {
+          "check": "step_ok",
+          "passed": true,
+          "message": "step 0 should succeed (got None)"
+        },
+        {
+          "check": "budget",
+          "passed": true,
+          "message": "output is 2678 characters; budget 3500"
+        }
+      ]
+    },
+    {
+      "id": "budget-find-past-corrections",
+      "passed": true,
+      "checks": [
+        {
+          "check": "step_ok",
+          "passed": true,
+          "message": "step 0 should succeed (got None)"
+        },
+        {
+          "check": "budget",
+          "passed": true,
+          "message": "output is 144 characters; budget 200"
+        }
+      ]
+    },
+    {
+      "id": "budget-get-target-profile",
+      "passed": true,
+      "checks": [
+        {
+          "check": "step_ok",
+          "passed": true,
+          "message": "step 0 should succeed (got None)"
+        },
+        {
+          "check": "budget",
+          "passed": true,
+          "message": "output is 145 characters; budget 200"
+        }
+      ]
+    },
+    {
+      "id": "budget-list-thresholds",
+      "passed": true,
+      "checks": [
+        {
+          "check": "step_ok",
+          "passed": true,
+          "message": "step 0 should succeed (got None)"
+        },
+        {
+          "check": "budget",
+          "passed": true,
+          "message": "output is 3068 characters; budget 4000"
+        }
+      ]
+    },
+    {
+      "id": "budget-save-target-profile",
+      "passed": true,
+      "checks": [
+        {
+          "check": "step_ok",
+          "passed": true,
+          "message": "step 0 should succeed (got None)"
+        },
+        {
+          "check": "budget",
+          "passed": true,
+          "message": "output is 901 characters; budget 1200"
+        }
+      ]
+    },
+    {
+      "id": "budget-render-diff-image",
+      "passed": true,
+      "checks": [
+        {
+          "check": "step_ok",
+          "passed": true,
+          "message": "step 0 should succeed (got None)"
+        },
+        {
+          "check": "budget",
+          "passed": true,
+          "message": "output is 1167 characters; budget 1550"
+        }
+      ]
+    },
+    {
+      "id": "budget-ingest-capture",
+      "passed": true,
+      "checks": [
+        {
+          "check": "step_ok",
+          "passed": true,
+          "message": "step 0 should succeed (got None)"
+        },
+        {
+          "check": "budget",
+          "passed": true,
+          "message": "output is 519 characters; budget 700"
+        }
+      ]
+    },
+    {
+      "id": "budget-record-run",
+      "passed": true,
+      "checks": [
+        {
+          "check": "step_ok",
+          "passed": true,
+          "message": "step 0 should succeed (got None)"
+        },
+        {
+          "check": "budget",
+          "passed": true,
+          "message": "output is 211 characters; budget 300"
+        }
+      ]
+    },
+    {
+      "id": "budget-record-decision",
+      "passed": true,
+      "checks": [
+        {
+          "check": "step_ok",
+          "passed": true,
+          "message": "step 1 should succeed (got None)"
+        },
+        {
+          "check": "budget",
+          "passed": true,
+          "message": "output is 336 characters; budget 450"
+        }
+      ]
+    },
+    {
+      "id": "budget-promote-run",
+      "passed": true,
+      "checks": [
+        {
+          "check": "step_ok",
+          "passed": true,
+          "message": "step 1 should succeed (got None)"
+        },
+        {
+          "check": "budget",
+          "passed": true,
+          "message": "output is 201 characters; budget 300"
+        }
+      ]
+    },
+    {
+      "id": "honest-measure-image-wording",
+      "passed": true,
+      "checks": [
+        {
+          "check": "no_verdict_words",
+          "passed": true,
+          "message": "text must not praise or judge the image; found []"
+        },
+        {
+          "check": "first_key",
+          "passed": true,
+          "message": "first key is 'summary', expected 'summary'"
+        },
+        {
+          "check": "set_has",
+          "passed": true,
+          "message": "out.not_measured=['anatomy', 'mask quality on a busy background', 'perspective', 'taste', 'whether the subject is what was asked for']; expected to contain ['taste', 'anatomy', 'perspective']"
+        },
+        {
+          "check": "text_has",
+          "passed": true,
+          "message": "summary should mention 'placeholder' (got 'measure_image: 5 of 6 checks passed, 1 not measurable; none failed. Thresholds are placeholder defaults unless stated. Measured numbers only: taste, anatomy and perspective are not measured. [eval]')"
+        },
+        {
+          "check": "text_has",
+          "passed": true,
+          "message": "summary should mention 'not measured' (got 'measure_image: 5 of 6 checks passed, 1 not measurable; none failed. Thresholds are placeholder defaults unless stated. Measured numbers only: taste, anatomy and perspective are not measured. [eval]')"
+        }
+      ]
+    },
+    {
+      "id": "honest-compare-wording",
+      "passed": true,
+      "checks": [
+        {
+          "check": "no_verdict_words",
+          "passed": true,
+          "message": "text must not praise or judge the image; found []"
+        },
+        {
+          "check": "first_key",
+          "passed": true,
+          "message": "first key is 'summary', expected 'summary'"
+        },
+        {
+          "check": "set_has",
+          "passed": true,
+          "message": "out.not_measured=['anatomy', 'mask quality on a busy background', 'perspective', 'taste', 'whether the candidate and reference depict the same thing']; expected to contain ['taste', 'anatomy', 'perspective']"
+        },
+        {
+          "check": "text_has",
+          "passed": true,
+          "message": "summary should mention 'none failed' (got 'compare_to_reference: 7 of 7 checks passed; none failed. Thresholds are placeholder defaults unless stated. Measured numbers only: taste, anatomy and perspective are not measured. [eval]')"
+        }
+      ]
+    },
+    {
+      "id": "honest-silhouette-wording",
+      "passed": true,
+      "checks": [
+        {
+          "check": "no_verdict_words",
+          "passed": true,
+          "message": "text must not praise or judge the image; found []"
+        },
+        {
+          "check": "first_key",
+          "passed": true,
+          "message": "first key is 'summary', expected 'summary'"
+        },
+        {
+          "check": "set_has",
+          "passed": true,
+          "message": "out.not_measured=['anatomy', 'mask quality on a busy background (masks assume a plain background or alpha)', 'perspective', 'taste', 'whether the shapes are the same OBJECT']; expected to contain ['taste', 'anatomy', 'perspective']"
+        },
+        {
+          "check": "text_has",
+          "passed": true,
+          "message": "out.not_measured.4 should mention 'plain background' (got 'mask quality on a busy background (masks assume a plain background or alpha)')"
+        }
+      ]
+    },
+    {
+      "id": "honest-tiling-wording",
+      "passed": true,
+      "checks": [
+        {
+          "check": "no_verdict_words",
+          "passed": true,
+          "message": "text must not praise or judge the image; found []"
+        },
+        {
+          "check": "first_key",
+          "passed": true,
+          "message": "first key is 'summary', expected 'summary'"
+        },
+        {
+          "check": "set_has",
+          "passed": true,
+          "message": "out.not_measured=['anatomy', 'pattern repetition across MANY tiles (only inside this one tile)', 'perspective', 'taste', 'whether a seam is visible at the scale it is used']; expected to contain ['taste', 'anatomy', 'perspective']"
+        }
+      ]
+    },
+    {
+      "id": "honest-pbr-wording",
+      "passed": true,
+      "checks": [
+        {
+          "check": "no_verdict_words",
+          "passed": true,
+          "message": "text must not praise or judge the image; found []"
+        },
+        {
+          "check": "first_key",
+          "passed": true,
+          "message": "first key is 'summary', expected 'summary'"
+        },
+        {
+          "check": "set_has",
+          "passed": true,
+          "message": "out.not_measured=['anatomy', 'normal-map green-channel convention (OpenGL vs DirectX: not determinable from pixels)', 'perspective', 'taste', 'whether the values are physically right for the material']; expected to contain ['taste', 'anatomy', 'perspective']"
+        }
+      ]
+    },
+    {
+      "id": "honest-diff-wording",
+      "passed": true,
+      "checks": [
+        {
+          "check": "no_verdict_words",
+          "passed": true,
+          "message": "text must not praise or judge the image; found []"
+        },
+        {
+          "check": "first_key",
+          "passed": true,
+          "message": "first key is 'summary', expected 'summary'"
+        },
+        {
+          "check": "set_has",
+          "passed": true,
+          "message": "out.not_measured=['anatomy', 'perceptual difference (these are pixel differences, not SSIM or a vision model)', 'perspective', 'taste', 'whether the change is the intended change']; expected to contain ['taste', 'anatomy', 'perspective']"
+        }
+      ]
+    },
+    {
+      "id": "honest-palette-wording",
+      "passed": true,
+      "checks": [
+        {
+          "check": "no_verdict_words",
+          "passed": true,
+          "message": "text must not praise or judge the image; found []"
+        },
+        {
+          "check": "first_key",
+          "passed": true,
+          "message": "first key is 'summary', expected 'summary'"
+        },
+        {
+          "check": "set_has",
+          "passed": true,
+          "message": "out.not_measured=['anatomy', 'colour harmony as a person sees it', 'perspective', 'taste', 'whether the colours are used in the right places']; expected to contain ['taste', 'anatomy', 'perspective']"
+        }
+      ]
+    },
+    {
+      "id": "honest-findings-are-capped-at-the-limit",
+      "passed": true,
+      "checks": [
+        {
+          "check": "is",
+          "passed": true,
+          "message": "out.findings.1.check='normal.bad_length_fraction'; expected 'normal.bad_length_fraction'"
+        },
+        {
+          "check": "len_at_most",
+          "passed": true,
+          "message": "len(out.findings)=2 should be <= 2"
+        },
+        {
+          "check": "is",
+          "passed": true,
+          "message": "out.more_findings=1; expected 1"
+        }
+      ]
+    },
+    {
+      "id": "det-measure-image-twice-is-identical",
+      "passed": true,
+      "checks": [
+        {
+          "check": "is",
+          "passed": true,
+          "message": "identical=True; expected True"
+        }
+      ]
+    },
+    {
+      "id": "det-compare-twice-is-identical",
+      "passed": true,
+      "checks": [
+        {
+          "check": "is",
+          "passed": true,
+          "message": "identical=True; expected True"
+        }
+      ]
+    },
+    {
+      "id": "det-tiling-twice-is-identical",
+      "passed": true,
+      "checks": [
+        {
+          "check": "is",
+          "passed": true,
+          "message": "identical=True; expected True"
+        }
+      ]
+    },
+    {
+      "id": "det-pbr-twice-is-identical",
+      "passed": true,
+      "checks": [
+        {
+          "check": "is",
+          "passed": true,
+          "message": "identical=True; expected True"
+        }
+      ]
+    },
+    {
+      "id": "det-diff-twice-is-identical",
+      "passed": true,
+      "checks": [
+        {
+          "check": "is",
+          "passed": true,
+          "message": "identical=True; expected True"
+        }
+      ]
+    },
+    {
+      "id": "det-seeded-generators-differ-by-seed-only",
+      "passed": true,
+      "checks": [
+        {
+          "check": "row_range",
+          "passed": true,
+          "message": "value.contrast.value=0.9014 expected in [0.8, 1.0]"
+        }
+      ]
+    },
+    {
+      "id": "tools-names-labels-and-no-unscoped-search",
+      "passed": true,
+      "checks": [
+        {
+          "check": "set_has",
+          "passed": true,
+          "message": "read_only=['check_pbr_ranges', 'check_tiling', 'compare_to_reference', 'diff_images', 'find_past_corrections', 'get_style_brief', 'get_target_profile', 'list_thresholds', 'measure_image', 'palette_distance', 'silhouette_iou']; expected to contain ['measure_image', 'compare_to_reference', 'silhouette_iou', 'palette_distance', 'check_tiling', 'check_pbr_ranges', 'diff_images', 'get_style_brief', 'find_past_corrections']"
+        },
+        {
+          "check": "set_has",
+          "passed": true,
+          "message": "writers=['ingest_capture', 'promote_run', 'record_decision', 'record_run', 'render_diff_image', 'save_target_profile']; expected to contain ['save_target_profile', 'render_diff_image', 'record_run', 'record_decision', 'promote_run', 'ingest_capture']"
+        },
+        {
+          "check": "set_lacks",
+          "passed": true,
+          "message": "tool_names=['check_pbr_ranges', 'check_tiling', 'compare_to_reference', 'diff_images', 'find_past_corrections', 'get_style_brief', 'get_target_profile', 'ingest_capture', 'list_thresholds', 'measure_image', 'palette_distance', 'promote_run', 'record_decision', 'record_run', 'render_diff_image', 'save_target_profile', 'silhouette_iou']; must not contain ['search_library']"
+        },
+        {
+          "check": "set_lacks",
+          "passed": true,
+          "message": "read_only=['check_pbr_ranges', 'check_tiling', 'compare_to_reference', 'diff_images', 'find_past_corrections', 'get_style_brief', 'get_target_profile', 'list_thresholds', 'measure_image', 'palette_distance', 'silhouette_iou']; must not contain ['save_target_profile', 'render_diff_image', 'record_run', 'record_decision', 'promote_run', 'ingest_capture']"
+        }
+      ]
+    },
+    {
+      "id": "learn-three-accepts-of-a-failing-check-propose-relaxing-it",
+      "passed": true,
+      "checks": [
+        {
+          "check": "is",
+          "passed": true,
+          "message": "steps.1.result.signals.0.target='param:silhouette.iou_min'; expected 'param:silhouette.iou_min'"
+        },
+        {
+          "check": "is",
+          "passed": true,
+          "message": "steps.1.result.signals.0.direction='down'; expected 'down'"
+        },
+        {
+          "check": "is",
+          "passed": true,
+          "message": "steps.1.result.regression_case_kept=True; expected True"
+        },
+        {
+          "check": "proposal_has",
+          "passed": true,
+          "message": "steps.6.result.proposals should hold a proposal silhouette.iou_min 0.8 -> 0.75; has [('silhouette.iou_min', 0.8, 0.75)]"
+        },
+        {
+          "check": "no_proposal_for",
+          "passed": true,
+          "message": "steps.6.result.proposals must hold no proposal for silhouette.centroid_offset_max; has ['silhouette.iou_min']"
+        },
+        {
+          "check": "is",
+          "passed": true,
+          "message": "steps.7.result.value=0.8; expected 0.8"
+        },
+        {
+          "check": "is",
+          "passed": true,
+          "message": "steps.7.result.source='default'; expected 'default'"
+        },
+        {
+          "check": "text_has",
+          "passed": true,
+          "message": "steps.6.result.proposals.0.evidence should mention '3 of 3 runs' (got '3 of 3 runs (100%)')"
+        }
+      ]
+    },
+    {
+      "id": "learn-two-runs-are-not-enough-evidence",
+      "passed": true,
+      "checks": [
+        {
+          "check": "is",
+          "passed": true,
+          "message": "steps.4.result.proposals=[]; expected []"
+        },
+        {
+          "check": "is",
+          "passed": true,
+          "message": "steps.4.result.runs_considered=2; expected 2"
+        }
+      ]
+    },
+    {
+      "id": "learn-accepting-a-passing-result-is-no-signal",
+      "passed": true,
+      "checks": [
+        {
+          "check": "is",
+          "passed": true,
+          "message": "steps.1.result.signals=[]; expected []"
+        },
+        {
+          "check": "is",
+          "passed": true,
+          "message": "steps.6.result.proposals=[]; expected []"
+        }
+      ]
+    },
+    {
+      "id": "learn-rejecting-a-passing-result-tightens-the-narrowest-check",
+      "passed": true,
+      "checks": [
+        {
+          "check": "is",
+          "passed": true,
+          "message": "steps.1.result.signals.0.target='param:silhouette.bbox_offset_max'; expected 'param:silhouette.bbox_offset_max'"
+        },
+        {
+          "check": "is",
+          "passed": true,
+          "message": "steps.1.result.signals.0.direction='down'; expected 'down'"
+        },
+        {
+          "check": "proposal_has",
+          "passed": true,
+          "message": "steps.6.result.proposals should hold a proposal silhouette.bbox_offset_max 0.05 -> 0.04; has [('silhouette.bbox_offset_max', 0.05, 0.04)]"
+        },
+        {
+          "check": "no_proposal_for",
+          "passed": true,
+          "message": "steps.6.result.proposals must hold no proposal for silhouette.iou_min; has ['silhouette.bbox_offset_max']"
+        }
+      ]
+    },
+    {
+      "id": "learn-a-reject-without-a-dimension-gives-no-signal",
+      "passed": true,
+      "checks": [
+        {
+          "check": "is",
+          "passed": true,
+          "message": "steps.1.result.signals=[]; expected []"
+        },
+        {
+          "check": "is",
+          "passed": true,
+          "message": "steps.6.result.proposals=[]; expected []"
+        }
+      ]
+    },
+    {
+      "id": "learn-contradicting-evidence-is-surfaced-not-merged",
+      "passed": true,
+      "checks": [
+        {
+          "check": "no_proposal_for",
+          "passed": true,
+          "message": "steps.12.result.proposals must hold no proposal for silhouette.iou_min; has []"
+        },
+        {
+          "check": "text_has",
+          "passed": true,
+          "message": "steps.12.result.skipped.0.reason should mention 'contradicting' (got 'contradicting evidence (surfaced, not merged)')"
+        }
+      ]
+    },
+    {
+      "id": "learn-gate-then-approved-promotion-then-rollback",
+      "passed": true,
+      "checks": [
+        {
+          "check": "is",
+          "passed": true,
+          "message": "steps.7.result.verdict='pass'; expected 'pass'"
+        },
+        {
+          "check": "is",
+          "passed": true,
+          "message": "steps.7.result.regressions=[]; expected []"
+        },
+        {
+          "check": "greater",
+          "passed": true,
+          "message": "steps.7.result.cases_run=137 should be > 40"
+        },
+        {
+          "check": "step_error",
+          "passed": true,
+          "message": "step 8 should be refused mentioning 'confirm' (got 'promoting a proposal needs confirm=True after the user has said yes; without it nothing is changed')"
+        },
+        {
+          "check": "step_error",
+          "passed": true,
+          "message": "step 9 should be refused mentioning 'approved_by' (got 'promotion needs approved_by: the name of the person who approved it (automatic approval is not allowed)')"
+        },
+        {
+          "check": "step_ok",
+          "passed": true,
+          "message": "step 10 should succeed (got None)"
+        },
+        {
+          "check": "is",
+          "passed": true,
+          "message": "steps.11.result.value=0.75; expected 0.75"
+        },
+        {
+          "check": "is",
+          "passed": true,
+          "message": "steps.11.result.source='project'; expected 'project'"
+        },
+        {
+          "check": "is",
+          "passed": true,
+          "message": "steps.12.result.value=0.8; expected 0.8"
+        },
+        {
+          "check": "is",
+          "passed": true,
+          "message": "steps.13.result.value=0.8; expected 0.8"
+        },
+        {
+          "check": "is",
+          "passed": true,
+          "message": "steps.15.result.value=0.8; expected 0.8"
+        },
+        {
+          "check": "is",
+          "passed": true,
+          "message": "steps.15.result.source='default'; expected 'default'"
+        }
+      ]
+    },
+    {
+      "id": "learn-gate-rejects-a-proposal-that-undoes-a-revise",
+      "passed": true,
+      "checks": [
+        {
+          "check": "proposal_has",
+          "passed": true,
+          "message": "steps.8.result.proposals should hold a proposal silhouette.iou_min 0.8 -> 0.75; has [('silhouette.iou_min', 0.8, 0.75)]"
+        },
+        {
+          "check": "is",
+          "passed": true,
+          "message": "steps.9.result.verdict='reject'; expected 'reject'"
+        },
+        {
+          "check": "is",
+          "passed": true,
+          "message": "steps.9.result.regressions.0.suite='corrections'; expected 'corrections'"
+        },
+        {
+          "check": "text_has",
+          "passed": true,
+          "message": "steps.9.result.notes should mention 'rejected automatically' (got '[\"suite \\'real\\' has no cases (no real examples have been supplied yet)\", \\'rejected automatically: 1 previously passing case(s) now fail\\']')"
+        },
+        {
+          "check": "step_error",
+          "passed": true,
+          "message": "step 10 should be refused mentioning 'rejected automatically' (got \"proposal prop-6e083fb257a3 is 'gate_rejected': only a proposal that passed the eval gate can be promoted (it was rejected automatically)\")"
+        }
+      ]
+    },
+    {
+      "id": "learn-a-decision-cannot-cross-projects",
+      "passed": true,
+      "checks": [
+        {
+          "check": "step_error",
+          "passed": true,
+          "message": "step 1 should be refused mentioning 'belongs to demo-stylized-obby/stage-1' (got 'run run-20261006-084020-c9e015 belongs to demo-stylized-obby/stage-1, not demo-pixel-brawler/arena: a decision cannot be recorded across projects or places')"
+        },
+        {
+          "check": "step_ok",
+          "passed": true,
+          "message": "step 2 should succeed (got None)"
+        }
+      ]
+    },
+    {
+      "id": "learn-decision-validation",
+      "passed": true,
+      "checks": [
+        {
+          "check": "step_error",
+          "passed": true,
+          "message": "step 1 should be refused mentioning 'unknown correction dimension' (got \"unknown correction dimension 'vibes'. Allowed: ['silhouette', 'palette', 'value', 'edges', 'tiling', 'texture', 'diff', 'other']\")"
+        },
+        {
+          "check": "step_error",
+          "passed": true,
+          "message": "step 2 should be refused mentioning 'reason or at least one correction' (got 'a reject/revise decision needs a reason or at least one correction')"
+        },
+        {
+          "check": "step_error",
+          "passed": true,
+          "message": "step 3 should be refused mentioning 'unknown run_id' (got \"unknown run_id 'run-nope'\")"
+        },
+        {
+          "check": "step_error",
+          "passed": true,
+          "message": "step 4 should be refused mentioning 'measure.tool must be one of' (got \"measure.tool must be one of ['measure_image', 'compare_to_reference', 'silhouette_iou', 'palette_distance', 'check_tiling', 'check_pbr_ranges', 'diff_images']\")"
+        },
+        {
+          "check": "step_error",
+          "passed": true,
+          "message": "step 5 should be refused mentioning 'decision must be one of' (got \"decision must be one of ('accept', 'reject', 'revise')\")"
+        }
+      ]
+    },
+    {
+      "id": "learn-a-recorded-run-stores-numbers-not-paths",
+      "passed": true,
+      "checks": [
+        {
+          "check": "step_ok",
+          "passed": true,
+          "message": "step 0 should succeed (got None)"
+        },
+        {
+          "check": "text_in_file",
+          "passed": true,
+          "message": "files matching 'feedback/runs.jsonl': 1; contains 'silhouette.iou': True"
+        },
+        {
+          "check": "text_in_file",
+          "passed": true,
+          "message": "files matching 'feedback/runs.jsonl': 1; contains 'cand5.png': True"
+        },
+        {
+          "check": "text_in_file",
+          "passed": true,
+          "message": "files matching 'feedback/runs.jsonl': 1; lacks '/imgs/': True"
+        },
+        {
+          "check": "text_has",
+          "passed": true,
+          "message": "steps.0.result.summary should mention '3 measured check' (got 'saved run run-20261006-084020-7b5f9a for demo-stylized-obby/stage-1 with 3 measured check(s)')"
+        }
+      ]
+    },
+    {
+      "id": "learn-corrections-are-per-project-unless-marked-global",
+      "passed": true,
+      "checks": [
+        {
+          "check": "greater",
+          "passed": true,
+          "message": "steps.4.result.corrections.0.score=2.749 should be > 0"
+        },
+        {
+          "check": "is",
+          "passed": true,
+          "message": "steps.5.result.corrections=[]; expected []"
+        },
+        {
+          "check": "text_has",
+          "passed": true,
+          "message": "steps.6.result.corrections.0.corrections.0.note should mention 'cool' (got 'keep the palette cool')"
+        }
+      ]
+    },
+    {
+      "id": "pal-identical-colours-distance-zero",
+      "passed": true,
+      "checks": [
+        {
+          "check": "row",
+          "passed": true,
+          "message": "palette.distance: passed=True (expected True); value=0.0 (expected 0.0 +/- 0.001)"
+        },
+        {
+          "check": "is",
+          "passed": true,
+          "message": "measured.dominant=['#1e1ec8 0.500', '#c81e1e 0.500']; expected ['#1e1ec8 0.500', '#c81e1e 0.500']"
+        }
+      ]
+    },
+    {
+      "id": "pal-near-colours-pass",
+      "passed": true,
+      "checks": [
+        {
+          "check": "row",
+          "passed": true,
+          "message": "palette.distance: passed=True (expected True)"
+        },
+        {
+          "check": "row_range",
+          "passed": true,
+          "message": "palette.distance.value=3.6764 expected in [0.5, 6.0]"
+        }
+      ]
+    },
+    {
+      "id": "pal-far-colours-fail",
+      "passed": true,
+      "checks": [
+        {
+          "check": "row",
+          "passed": true,
+          "message": "palette.distance: passed=False (expected False); limit=25.0 (expected 25.0)"
+        },
+        {
+          "check": "row_range",
+          "passed": true,
+          "message": "palette.distance.value=126.3906 expected in [50.0, 300.0]"
+        },
+        {
+          "check": "text_has",
+          "passed": true,
+          "message": "summary should mention 'FAILED 1' (got 'palette_distance: 0 of 1 checks passed; FAILED 1: palette.distance 126.3906 > 25.0. Thresholds are placeholder defaults unless stated. Measured numbers only: taste, anatomy and perspective are not mea')"
+        }
+      ]
+    },
+    {
+      "id": "pal-red-vs-blue-is-delta-e-176.31",
+      "passed": true,
+      "checks": [
+        {
+          "check": "row",
+          "passed": true,
+          "message": "palette.distance: passed=False (expected False); value=176.314 (expected 176.314 +/- 0.05)"
+        },
+        {
+          "check": "approx",
+          "passed": true,
+          "message": "measured.image_to_target=176.31; expected 176.31 +/- 0.05"
+        },
+        {
+          "check": "approx",
+          "passed": true,
+          "message": "measured.target_to_image=176.31; expected 176.31 +/- 0.05"
+        }
+      ]
+    },
+    {
+      "id": "pal-target-weights-change-the-answer",
+      "passed": true,
+      "checks": [
+        {
+          "check": "approx",
+          "passed": true,
+          "message": "measured.target_to_image=0.0; expected 0.0 +/- 0.01"
+        },
+        {
+          "check": "approx",
+          "passed": true,
+          "message": "measured.image_to_target=88.16; expected 88.157 +/- 0.05"
+        },
+        {
+          "check": "row",
+          "passed": true,
+          "message": "palette.distance: passed=False (expected False); value=44.0785 (expected 44.08 +/- 0.05)"
+        }
+      ]
+    },
+    {
+      "id": "pal-bad-hex-is-refused",
+      "passed": true,
+      "checks": [
+        {
+          "check": "step_error",
+          "passed": true,
+          "message": "step 0 should be refused mentioning 'not a hex colour' (got \"'#12345' is not a hex colour like #a1b2c3\")"
+        }
+      ]
+    },
+    {
+      "id": "pal-needs-exactly-one-target",
+      "passed": true,
+      "checks": [
+        {
+          "check": "step_error",
+          "passed": true,
+          "message": "step 0 should be refused mentioning 'exactly one of target_palette' (got 'give exactly one of target_palette (hex colours) or profile (a saved target profile name)')"
+        },
+        {
+          "check": "step_error",
+          "passed": true,
+          "message": "step 1 should be refused mentioning 'exactly one of target_palette' (got 'give exactly one of target_palette (hex colours) or profile (a saved target profile name)')"
+        }
+      ]
+    },
+    {
+      "id": "pal-shares-of-four-equal-bands",
+      "passed": true,
+      "checks": [
+        {
+          "check": "len_at_most",
+          "passed": true,
+          "message": "len(detail.dominant)=4 should be <= 4"
+        },
+        {
+          "check": "is",
+          "passed": true,
+          "message": "detail.dominant.0.share=0.25; expected 0.25"
+        },
+        {
+          "check": "is",
+          "passed": true,
+          "message": "detail.dominant.3.share=0.25; expected 0.25"
+        },
+        {
+          "check": "is",
+          "passed": true,
+          "message": "measured.saturation.mean=1.0; expected 1.0"
+        }
+      ]
+    },
+    {
+      "id": "pal-saturation-and-value-of-solid-colour",
+      "passed": true,
+      "checks": [
+        {
+          "check": "approx",
+          "passed": true,
+          "message": "measured.saturation.mean=0.75; expected 0.75 +/- 0.0001"
+        },
+        {
+          "check": "approx",
+          "passed": true,
+          "message": "measured.value.mean=0.7843; expected 0.784314 +/- 0.0001"
+        }
+      ]
+    },
+    {
+      "id": "val-three-equal-bands-fill-all-levels",
+      "passed": true,
+      "checks": [
+        {
+          "check": "approx",
+          "passed": true,
+          "message": "measured.levels3.dark=0.3333; expected 0.333333 +/- 0.0001"
+        },
+        {
+          "check": "approx",
+          "passed": true,
+          "message": "measured.levels3.mid=0.3333; expected 0.333333 +/- 0.0001"
+        },
+        {
+          "check": "approx",
+          "passed": true,
+          "message": "measured.levels3.light=0.3333; expected 0.333333 +/- 0.0001"
+        },
+        {
+          "check": "row",
+          "passed": true,
+          "message": "value.contrast: passed=True (expected True); value=1.0 (expected 1.0 +/- 1e-06)"
+        },
+        {
+          "check": "row",
+          "passed": true,
+          "message": "value.level_min_share: passed=True (expected True)"
+        }
+      ]
+    },
+    {
+      "id": "val-low-contrast-halves-fail",
+      "passed": true,
+      "checks": [
+        {
+          "check": "row",
+          "passed": true,
+          "message": "value.contrast: passed=False (expected False); value=0.0784 (expected 0.078431 +/- 0.0001); limit=0.35 (expected 0.35)"
+        },
+        {
+          "check": "row",
+          "passed": true,
+          "message": "value.level_min_share: passed=False (expected False); value=0.0 (expected 0.0 +/- 1e-06)"
+        }
+      ]
+    },
+    {
+      "id": "val-two-levels-only-fails-level-share",
+      "passed": true,
+      "checks": [
+        {
+          "check": "row",
+          "passed": true,
+          "message": "value.contrast: passed=True (expected True)"
+        },
+        {
+          "check": "row",
+          "passed": true,
+          "message": "value.level_min_share: passed=False (expected False); value=0.0 (expected 0.0 +/- 1e-06); limit=0.05 (expected 0.05)"
+        },
+        {
+          "check": "text_has",
+          "passed": true,
+          "message": "out.findings.0.note should mention \"'mid' level holds 0.0%\" (got \"the 'mid' level holds 0.0% of pixels\")"
+        }
+      ]
+    },
+    {
+      "id": "val-five-level-map-equal-bands",
+      "passed": true,
+      "checks": [
+        {
+          "check": "list_approx",
+          "passed": true,
+          "message": "measured.levels5=[0.2, 0.2, 0.2, 0.2, 0.2]; expected [0.2, 0.2, 0.2, 0.2, 0.2] +/- 1e-06"
+        }
+      ]
+    },
+    {
+      "id": "val-levels-must-be-3-or-5",
+      "passed": true,
+      "checks": [
+        {
+          "check": "step_error",
+          "passed": true,
+          "message": "step 0 should be refused mentioning 'levels must be 3 or 5' (got 'levels must be 3 or 5')"
+        }
+      ]
+    },
+    {
+      "id": "val-transparent-pixels-are-excluded",
+      "passed": true,
+      "checks": [
+        {
+          "check": "approx",
+          "passed": true,
+          "message": "measured.luminance.mean=0.7843; expected 0.784314 +/- 0.0001"
+        },
+        {
+          "check": "approx",
+          "passed": true,
+          "message": "measured.transparent_fraction=0.84; expected 0.84 +/- 1e-06"
+        },
+        {
+          "check": "text_has",
+          "passed": true,
+          "message": "warnings.0 should mention 'transparent' (got '84.0% of pixels are transparent: colour and value statistics use only the opaque pixels; edges are measured over mid gray')"
+        }
+      ]
+    },
+    {
+      "id": "edge-vertical-step-density-0.02",
+      "passed": true,
+      "checks": [
+        {
+          "check": "row",
+          "passed": true,
+          "message": "edges.density_min: passed=True (expected True); value=0.02 (expected 0.02 +/- 1e-06)"
+        },
+        {
+          "check": "row",
+          "passed": true,
+          "message": "edges.density_max: passed=True (expected True); value=0.02 (expected 0.02 +/- 1e-06)"
+        },
+        {
+          "check": "row",
+          "passed": true,
+          "message": "edges.distribution: passed=True (expected True); value=0.75 (expected 0.75 +/- 1e-06)"
+        }
+      ]
+    },
+    {
+      "id": "edge-flat-image-is-too-flat",
+      "passed": true,
+      "checks": [
+        {
+          "check": "row",
+          "passed": true,
+          "message": "edges.density_min: passed=False (expected False); value=0.0 (expected 0.0 +/- 1e-06)"
+        },
+        {
+          "check": "row",
+          "passed": true,
+          "message": "edges.density_max: passed=True (expected True)"
+        },
+        {
+          "check": "skipped",
+          "passed": true,
+          "message": "edges.distribution skipped (got {'id': 'edges.distribution', 'op': '>=', 'limit': 0.4, 'dimension': 'edges', 'param': 'edges.distribution_min', 'value': None, 'passed': None, 'skipped': 'no edge pixels to distribute'})"
+        },
+        {
+          "check": "text_has",
+          "passed": true,
+          "message": "rows.0.note should mention 'too flat' (got 'too flat: few edge pixels')"
+        }
+      ]
+    },
+    {
+      "id": "edge-white-noise-is-too-noisy",
+      "passed": true,
+      "checks": [
+        {
+          "check": "row",
+          "passed": true,
+          "message": "edges.density_max: passed=False (expected False); limit=0.35 (expected 0.35)"
+        },
+        {
+          "check": "row_range",
+          "passed": true,
+          "message": "edges.density_max.value=0.9329 expected in [0.8, 1.0]"
+        }
+      ]
+    },
+    {
+      "id": "edge-detail-in-one-corner-has-zero-distribution",
+      "passed": true,
+      "checks": [
+        {
+          "check": "row",
+          "passed": true,
+          "message": "edges.distribution: passed=False (expected False); value=-0.0 (expected 0.0 +/- 1e-06); limit=0.4 (expected 0.4)"
+        },
+        {
+          "check": "row",
+          "passed": true,
+          "message": "edges.density_min: passed=False (expected False); value=0.0044 (expected 0.0044 +/- 1e-06)"
+        }
+      ]
+    },
+    {
+      "id": "edge-profile-range-replaces-thresholds",
+      "passed": true,
+      "checks": [
+        {
+          "check": "row",
+          "passed": true,
+          "message": "edges.density: passed=True (expected True); value=0.02 (expected 0.02 +/- 1e-06)"
+        }
+      ]
+    },
+    {
+      "id": "edge-profile-range-out-of-range-fails",
+      "passed": true,
+      "checks": [
+        {
+          "check": "row",
+          "passed": true,
+          "message": "edges.density: passed=False (expected False); value=0.02 (expected 0.02 +/- 1e-06)"
+        },
+        {
+          "check": "text_has",
+          "passed": true,
+          "message": "rows.0.note should mention 'too flat' (got 'too flat')"
+        },
+        {
+          "check": "text_has",
+          "passed": true,
+          "message": "out.findings.0.check should mention 'edges.density' (got 'edges.density')"
+        }
+      ]
+    },
+    {
+      "id": "scope-every-tool-refuses-without-project",
+      "passed": true,
+      "checks": [
+        {
+          "check": "is",
+          "passed": true,
+          "message": "steps.0.result.not_refused=[]; expected []"
+        },
+        {
+          "check": "greater",
+          "passed": true,
+          "message": "steps.0.result.checked=17 should be > 15"
+        },
+        {
+          "check": "is",
+          "passed": true,
+          "message": "steps.1.result.not_refused=[]; expected []"
+        }
+      ]
+    },
+    {
+      "id": "scope-unknown-project-is-refused",
+      "passed": true,
+      "checks": [
+        {
+          "check": "step_error",
+          "passed": true,
+          "message": "step 0 should be refused mentioning \"unknown project_id 'no-such-game'\" (got \"unknown project_id 'no-such-game'. Known projects: ['demo-pixel-brawler', 'demo-realistic-tycoon', 'demo-stylized-obby']. Add it to projects.yaml first; the tool will not guess.\")"
+        },
+        {
+          "check": "step_error",
+          "passed": true,
+          "message": "step 1 should be refused mentioning 'Known projects' (got \"unknown project_id 'no-such-game'. Known projects: ['demo-pixel-brawler', 'demo-realistic-tycoon', 'demo-stylized-obby']. Add it to projects.yaml first; the tool will not guess.\")"
+        }
+      ]
+    },
+    {
+      "id": "scope-unknown-place-is-refused",
+      "passed": true,
+      "checks": [
+        {
+          "check": "step_error",
+          "passed": true,
+          "message": "step 0 should be refused mentioning 'does not belong to project' (got \"place 'nowhere' does not belong to project 'demo-stylized-obby'. Its places: ['stage-1']\")"
+        },
+        {
+          "check": "step_error",
+          "passed": true,
+          "message": "step 1 should be refused mentioning 'does not belong to project' (got \"place 'arena' does not belong to project 'demo-stylized-obby'. Its places: ['stage-1']\")"
+        }
+      ]
+    },
+    {
+      "id": "scope-misspelt-project-gets-a-suggestion",
+      "passed": true,
+      "checks": [
+        {
+          "check": "step_error",
+          "passed": true,
+          "message": "step 0 should be refused mentioning 'Did you mean' (got \"unknown project_id 'demo-stylised-obby'. Known projects: ['demo-pixel-brawler', 'demo-realistic-tycoon', 'demo-stylized-obby']. Did you mean ['demo-stylized-obby', 'demo-realistic-tycoon']? Add it to \")"
+        }
+      ]
+    },
+    {
+      "id": "scope-trailing-newline-in-project-id-is-refused",
+      "passed": true,
+      "checks": [
+        {
+          "check": "step_error",
+          "passed": true,
+          "message": "step 0 should be refused mentioning 'unknown project_id' (got \"unknown project_id 'demo-stylized-obby\\n'. Known projects: ['demo-pixel-brawler', 'demo-realistic-tycoon', 'demo-stylized-obby']. Did you mean ['demo-stylized-obby']? Add it to projects.yaml first; the\")"
+        }
+      ]
+    },
+    {
+      "id": "scope-answers-state-project-and-place",
+      "passed": true,
+      "checks": [
+        {
+          "check": "is",
+          "passed": true,
+          "message": "steps.0.result.project_id='demo-pixel-brawler'; expected 'demo-pixel-brawler'"
+        },
+        {
+          "check": "is",
+          "passed": true,
+          "message": "steps.0.result.place_id='arena'; expected 'arena'"
+        },
+        {
+          "check": "is",
+          "passed": true,
+          "message": "steps.0.result.synthetic_project=True; expected True"
+        },
+        {
+          "check": "first_key_of_step",
+          "passed": true,
+          "message": "first key of step 0 is 'summary', expected 'summary'"
+        },
+        {
+          "check": "is",
+          "passed": true,
+          "message": "steps.1.result.place_id='arena'; expected 'arena'"
+        },
+        {
+          "check": "is",
+          "passed": true,
+          "message": "steps.2.result.project_id='demo-pixel-brawler'; expected 'demo-pixel-brawler'"
+        }
+      ]
+    },
+    {
+      "id": "scope-image-outside-the-allowed-folders-is-refused",
+      "passed": true,
+      "checks": [
+        {
+          "check": "step_error",
+          "passed": true,
+          "message": "step 0 should be refused mentioning 'outside the allowed directories' (got \"'/tmp/tmp2ddq41go/outside/secret.png' is outside the allowed directories (/tmp/tmp2ddq41go/ws, /home/user/workshop/repos/visual-verify/examples/shared, /home/user/workshop/repos/visual-verify/samples,\")"
+        },
+        {
+          "check": "step_error",
+          "passed": true,
+          "message": "step 1 should be refused mentioning 'outside the allowed directories' (got \"'/tmp/tmp2ddq41go/outside/secret.png' is outside the allowed directories (/tmp/tmp2ddq41go/ws, /home/user/workshop/repos/visual-verify/examples/shared, /home/user/workshop/repos/visual-verify/samples,\")"
+        },
+        {
+          "check": "step_error",
+          "passed": true,
+          "message": "step 2 should be refused mentioning 'outside the allowed directories' (got \"'/tmp/tmp2ddq41go/outside/secret.png' is outside the allowed directories (/tmp/tmp2ddq41go/ws, /home/user/workshop/repos/visual-verify/examples/shared, /home/user/workshop/repos/visual-verify/samples,\")"
+        }
+      ]
+    },
+    {
+      "id": "scope-parent-traversal-is-refused",
+      "passed": true,
+      "checks": [
+        {
+          "check": "step_error",
+          "passed": true,
+          "message": "step 0 should be refused mentioning 'outside the allowed directories' (got \"'/tmp/tmp61w_7a5c/ws/imgs/../../outside/tr.png' is outside the allowed directories (/tmp/tmp61w_7a5c/ws, /home/user/workshop/repos/visual-verify/examples/shared, /home/user/workshop/repos/visual-verif\")"
+        }
+      ]
+    },
+    {
+      "id": "scope-other-projects-image-folder-is-refused",
+      "passed": true,
+      "checks": [
+        {
+          "check": "step_ok",
+          "passed": true,
+          "message": "step 0 should succeed (got None)"
+        },
+        {
+          "check": "step_error",
+          "passed": true,
+          "message": "step 1 should be refused mentioning 'outside the allowed directories' (got \"'/tmp/tmpwrb19mlj/rootB/imgB.png' is outside the allowed directories (/tmp/tmpwrb19mlj/ws, /home/user/workshop/repos/visual-verify/examples/shared, /home/user/workshop/repos/visual-verify/samples, /tm\")"
+        },
+        {
+          "check": "step_ok",
+          "passed": true,
+          "message": "step 2 should succeed (got None)"
+        },
+        {
+          "check": "step_error",
+          "passed": true,
+          "message": "step 3 should be refused mentioning 'outside the allowed directories' (got \"'/tmp/tmpwrb19mlj/rootA/imgA.png' is outside the allowed directories (/tmp/tmpwrb19mlj/ws, /home/user/workshop/repos/visual-verify/examples/shared, /home/user/workshop/repos/visual-verify/samples, /tm\")"
+        }
+      ]
+    },
+    {
+      "id": "scope-unsupported-file-type-is-refused",
+      "passed": true,
+      "checks": [
+        {
+          "check": "step_error",
+          "passed": true,
+          "message": "step 0 should be refused mentioning 'unsupported file type' (got \"unsupported file type '.txt'. Supported: .bmp, .jpeg, .jpg, .png, .tga, .tif, .tiff, .webp\")"
+        }
+      ]
+    },
+    {
+      "id": "scope-corrupt-image-is-refused",
+      "passed": true,
+      "checks": [
+        {
+          "check": "step_error",
+          "passed": true,
+          "message": "step 0 should be refused mentioning 'could not be decoded' (got \"'broken.png' could not be decoded as an image: UnidentifiedImageError\")"
+        }
+      ]
+    },
+    {
+      "id": "scope-missing-file-is-refused",
+      "passed": true,
+      "checks": [
+        {
+          "check": "step_error",
+          "passed": true,
+          "message": "step 0 should be refused mentioning 'is not a file' (got \"'nope.png' is not a file inside the allowed folders\")"
+        }
+      ]
+    },
+    {
+      "id": "scope-oversize-image-is-refused",
+      "passed": true,
+      "checks": [
+        {
+          "check": "refused",
+          "passed": true,
+          "message": "refused with 'above the limit' (got \"'img.png' has 10000 pixels, above the limit 5000 (limits.max_pixels)\")"
+        }
+      ]
+    },
+    {
+      "id": "scope-read-only-tools-write-nothing",
+      "passed": true,
+      "checks": [
+        {
+          "check": "is",
+          "passed": true,
+          "message": "n_errors=0; expected 0"
+        },
+        {
+          "check": "wrote_nothing",
+          "passed": true,
+          "message": "wrote []"
+        }
+      ]
+    },
+    {
+      "id": "scope-write-tools-default-to-dry-run",
+      "passed": true,
+      "checks": [
+        {
+          "check": "is",
+          "passed": true,
+          "message": "n_errors=0; expected 0"
+        },
+        {
+          "check": "is",
+          "passed": true,
+          "message": "steps.0.result.dry_run=True; expected True"
+        },
+        {
+          "check": "is",
+          "passed": true,
+          "message": "steps.1.result.dry_run=True; expected True"
+        },
+        {
+          "check": "is",
+          "passed": true,
+          "message": "steps.2.result.dry_run=True; expected True"
+        },
+        {
+          "check": "text_has",
+          "passed": true,
+          "message": "steps.0.result.summary should mention 'DRY RUN' (got \"DRY RUN: would save target profile 'look' for demo-stylized-obby\")"
+        },
+        {
+          "check": "wrote_nothing",
+          "passed": true,
+          "message": "wrote []"
+        }
+      ]
+    },
+    {
+      "id": "scope-applied-writes-stay-in-the-project-folder",
+      "passed": true,
+      "checks": [
+        {
+          "check": "is",
+          "passed": true,
+          "message": "n_errors=0; expected 0"
+        },
+        {
+          "check": "wrote_only",
+          "passed": true,
+          "message": "wrote ['projects/demo-stylized-obby/stage-1/journal.jsonl', 'projects/demo-stylized-obby/stage-1/output/diffs/diff-1a0d2419-7d48f8df-side_by_side.png', 'projects/demo-stylized-obby/stage-1/profiles/look.json', 'projects/demo-stylized-obby/stage-1/versions/profile-look/index.json', 'projects/demo-stylized-obby/stage-1/versions/profile-look/v0001-e956b1a76f56.json']; expected all under 'projects/demo-stylized-obby/stage-1/'"
+        },
+        {
+          "check": "text_has",
+          "passed": true,
+          "message": "steps.1.result.path should mention 'output' (got '/tmp/tmpd7n3mle9/ws/projects/demo-stylized-obby/stage-1/output/diffs/diff-1a0d2419-7d48f8df-side_by_side.png')"
+        }
+      ]
+    },
+    {
+      "id": "profile-saved-profile-holds-numbers-not-the-image",
+      "passed": true,
+      "checks": [
+        {
+          "check": "is",
+          "passed": true,
+          "message": "n_errors=0; expected 0"
+        },
+        {
+          "check": "text_in_file",
+          "passed": true,
+          "message": "files matching 'profiles/look.json': 1; contains '#c81e1e': True"
+        },
+        {
+          "check": "text_in_file",
+          "passed": true,
+          "message": "files matching 'profiles/look.json': 1; contains 'ref.png': True"
+        },
+        {
+          "check": "text_in_file",
+          "passed": true,
+          "message": "files matching 'profiles/look.json': 1; lacks '/imgs/': True"
+        },
+        {
+          "check": "is",
+          "passed": true,
+          "message": "steps.1.result.profile.name='look'; expected 'look'"
+        }
+      ]
+    },
+    {
+      "id": "profile-measuring-the-reference-against-its-own-profile-passes",
+      "passed": true,
+      "checks": [
+        {
+          "check": "is",
+          "passed": true,
+          "message": "steps.1.result.findings=[]; expected []"
+        },
+        {
+          "check": "text_has",
+          "passed": true,
+          "message": "steps.1.result.summary should mention 'none failed' (got 'measure_image: 6 of 6 checks passed; none failed. Thresholds are placeholder defaults unless stated. Measured numbers only: taste, anatomy and perspective are not measured. [demo-stylized-obby]')"
+        }
+      ]
+    },
+    {
+      "id": "profile-a-different-image-fails-the-profile-ranges",
+      "passed": true,
+      "checks": [
+        {
+          "check": "text_has",
+          "passed": true,
+          "message": "steps.1.result.summary should mention 'FAILED' (got 'measure_image: 0 of 6 checks passed; FAILED 6: palette.saturation_mean 0.0 outside [0.4778, 0.6778]; value.level_min_share 0.0 < 0.05; value.contrast 0.0392 < 0.5761 .... Thresholds are placeholder de')"
+        },
+        {
+          "check": "text_has",
+          "passed": true,
+          "message": "steps.1.result.findings.0.check should mention '.' (got 'palette.saturation_mean')"
+        }
+      ]
+    },
+    {
+      "id": "profile-resaving-keeps-the-old-version",
+      "passed": true,
+      "checks": [
+        {
+          "check": "is",
+          "passed": true,
+          "message": "versions_written=2; expected 2"
+        },
+        {
+          "check": "text_in_file",
+          "passed": true,
+          "message": "files matching 'profiles/look.json': 1; contains 'second': True"
+        }
+      ]
+    },
+    {
+      "id": "profile-bad-name-is-refused",
+      "passed": true,
+      "checks": [
+        {
+          "check": "step_error",
+          "passed": true,
+          "message": "step 0 should be refused mentioning 'profile name' (got \"a profile name is 1-40 characters: lowercase letters, digits, '-' and '_', starting with a letter or digit\")"
+        },
+        {
+          "check": "step_error",
+          "passed": true,
+          "message": "step 1 should be refused mentioning 'profile name' (got \"a profile name is 1-40 characters: lowercase letters, digits, '-' and '_', starting with a letter or digit\")"
+        },
+        {
+          "check": "wrote_nothing",
+          "passed": true,
+          "message": "wrote []"
+        }
+      ]
+    },
+    {
+      "id": "profile-unknown-name-is-refused",
+      "passed": true,
+      "checks": [
+        {
+          "check": "step_error",
+          "passed": true,
+          "message": "step 0 should be refused mentioning \"no target profile 'nope'\" (got \"no target profile 'nope' for demo-stylized-obby (or its project). Save one with save_target_profile; saved: []\")"
+        }
+      ]
+    },
+    {
+      "id": "profile-needs-a-reference-or-values",
+      "passed": true,
+      "checks": [
+        {
+          "check": "step_error",
+          "passed": true,
+          "message": "step 0 should be refused mentioning 'give a reference image' (got 'give a reference image and/or explicit values (palette, saturation_range, value_range, luminance_range, edge_density_range, contrast_min)')"
+        },
+        {
+          "check": "step_error",
+          "passed": true,
+          "message": "step 1 should be refused mentioning 'min <= max' (got 'ranges.saturation_mean must satisfy 0.0 <= min <= max <= 1.0 (got 0.9, 0.2)')"
+        }
+      ]
+    },
+    {
+      "id": "profile-is-per-project",
+      "passed": true,
+      "checks": [
+        {
+          "check": "is",
+          "passed": true,
+          "message": "steps.1.result.profiles=['look']; expected ['look']"
+        },
+        {
+          "check": "is",
+          "passed": true,
+          "message": "steps.2.result.profiles=[]; expected []"
+        }
+      ]
+    },
+    {
+      "id": "hub-capture-raw-image-file",
+      "passed": true,
+      "checks": [
+        {
+          "check": "not_refused",
+          "passed": true,
+          "message": "not refused (got {'refused': False, 'size': [24, 16], 'input_schema': 'schema_unverified', 'form': 'raw image file'})"
+        },
+        {
+          "check": "is",
+          "passed": true,
+          "message": "size=[24, 16]; expected [24, 16]"
+        },
+        {
+          "check": "is",
+          "passed": true,
+          "message": "input_schema='schema_unverified'; expected 'schema_unverified'"
+        }
+      ]
+    },
+    {
+      "id": "hub-capture-mcp-image-block",
+      "passed": true,
+      "checks": [
+        {
+          "check": "not_refused",
+          "passed": true,
+          "message": "not refused (got {'refused': False, 'size': [24, 16], 'input_schema': 'schema_unverified', 'form': 'MCP image content block'})"
+        },
+        {
+          "check": "is",
+          "passed": true,
+          "message": "size=[24, 16]; expected [24, 16]"
+        },
+        {
+          "check": "is",
+          "passed": true,
+          "message": "form='MCP image content block'; expected 'MCP image content block'"
+        },
+        {
+          "check": "is",
+          "passed": true,
+          "message": "input_schema='schema_unverified'; expected 'schema_unverified'"
+        }
+      ]
+    },
+    {
+      "id": "hub-capture-wrapped-result",
+      "passed": true,
+      "checks": [
+        {
+          "check": "not_refused",
+          "passed": true,
+          "message": "not refused (got {'refused': False, 'size': [8, 8], 'input_schema': 'schema_unverified', 'form': 'MCP image content block'})"
+        },
+        {
+          "check": "is",
+          "passed": true,
+          "message": "size=[8, 8]; expected [8, 8]"
+        }
+      ]
+    },
+    {
+      "id": "hub-capture-json-field-with-data-url",
+      "passed": true,
+      "checks": [
+        {
+          "check": "not_refused",
+          "passed": true,
+          "message": "not refused (got {'refused': False, 'size': [12, 12], 'input_schema': 'schema_unverified', 'form': \"JSON field 'screenshot'\"})"
+        },
+        {
+          "check": "is",
+          "passed": true,
+          "message": "form=\"JSON field 'screenshot'\"; expected \"JSON field 'screenshot'\""
+        }
+      ]
+    },
+    {
+      "id": "hub-capture-unknown-json-lists-the-keys-it-saw",
+      "passed": true,
+      "checks": [
+        {
+          "check": "refused",
+          "passed": true,
+          "message": "refused with \"Top-level keys: ['frames', 'status']\" (got \"no image found in the saved result (schema_unverified). Top-level keys: ['frames', 'status']. Save the hub's full screen_capture result as described in samples/README.md\")"
+        },
+        {
+          "check": "refused",
+          "passed": true,
+          "message": "refused with 'schema_unverified' (got \"no image found in the saved result (schema_unverified). Top-level keys: ['frames', 'status']. Save the hub's full screen_capture result as described in samples/README.md\")"
+        }
+      ]
+    },
+    {
+      "id": "hub-capture-bad-base64-is-refused",
+      "passed": true,
+      "checks": [
+        {
+          "check": "refused",
+          "passed": true,
+          "message": "refused with 'not valid base64' (got 'the image field is not valid base64')"
+        }
+      ]
+    },
+    {
+      "id": "hub-capture-garbage-bytes-are-refused",
+      "passed": true,
+      "checks": [
+        {
+          "check": "refused",
+          "passed": true,
+          "message": "refused with 'could not be decoded' (got 'the image data could not be decoded: UnidentifiedImageError')"
+        }
+      ]
+    },
+    {
+      "id": "hub-capture-broken-json-is-refused",
+      "passed": true,
+      "checks": [
+        {
+          "check": "refused",
+          "passed": true,
+          "message": "refused with 'neither an image nor JSON' (got 'the file is neither an image nor JSON')"
+        }
+      ]
+    },
+    {
+      "id": "hub-capture-base64-of-something-else-is-refused",
+      "passed": true,
+      "checks": [
+        {
+          "check": "refused",
+          "passed": true,
+          "message": "refused with 'could not be decoded' (got 'the image data could not be decoded: UnidentifiedImageError')"
+        }
+      ]
+    },
+    {
+      "id": "hub-capture-too-many-pixels-is-refused",
+      "passed": true,
+      "checks": [
+        {
+          "check": "refused",
+          "passed": true,
+          "message": "refused with 'above the limit' (got 'the image has 384 pixels, above the limit 100')"
+        }
+      ]
+    },
+    {
+      "id": "hub-ingest-dry-run-then-apply-gives-a-measurable-image",
+      "passed": true,
+      "checks": [
+        {
+          "check": "is",
+          "passed": true,
+          "message": "steps.0.result.input_schema='schema_unverified'; expected 'schema_unverified'"
+        },
+        {
+          "check": "text_has",
+          "passed": true,
+          "message": "steps.0.result.warnings.0 should mention 'schema_unverified' (got 'input_schema is schema_unverified: no real screen_capture result was available when the parser was written')"
+        },
+        {
+          "check": "step_ok",
+          "passed": true,
+          "message": "step 2 should succeed (got None)"
+        },
+        {
+          "check": "wrote_only",
+          "passed": true,
+          "message": "wrote ['projects/demo-stylized-obby/stage-1/captures/shot1.png', 'projects/demo-stylized-obby/stage-1/journal.jsonl']; expected all under 'projects/demo-stylized-obby/stage-1/'"
+        }
+      ]
+    },
+    {
+      "id": "files-thresholds-are-named-params-and-placeholders",
+      "passed": true,
+      "checks": [
+        {
+          "check": "is",
+          "passed": true,
+          "message": "all_registered=True; expected True"
+        },
+        {
+          "check": "is",
+          "passed": true,
+          "message": "all_defaults_equal=True; expected True"
+        },
+        {
+          "check": "is",
+          "passed": true,
+          "message": "placeholder_flag=True; expected True"
+        },
+        {
+          "check": "is",
+          "passed": true,
+          "message": "checks_have_op=True; expected True"
+        },
+        {
+          "check": "greater",
+          "passed": true,
+          "message": "n_thresholds=44 should be > 40"
+        },
+        {
+          "check": "set_has",
+          "passed": true,
+          "message": "dimensions=['diff', 'edges', 'limits', 'palette', 'silhouette', 'texture', 'tiling', 'value']; expected to contain ['silhouette', 'palette', 'value', 'edges', 'tiling', 'texture', 'diff', 'limits']"
+        }
+      ]
+    },
+    {
+      "id": "files-safety-limits-are-locked-and-roblox-conventions-are-flagged",
+      "passed": true,
+      "checks": [
+        {
+          "check": "set_has",
+          "passed": true,
+          "message": "locked=['limits.analysis_max_side', 'limits.findings_cap', 'limits.max_file_bytes', 'limits.max_pixels', 'limits.max_side_exact']; expected to contain ['limits.max_file_bytes', 'limits.max_pixels', 'limits.max_side_exact', 'limits.analysis_max_side', 'limits.findings_cap']"
+        },
+        {
+          "check": "is",
+          "passed": true,
+          "message": "unlocked_limits=[]; expected []"
+        },
+        {
+          "check": "set_has",
+          "passed": true,
+          "message": "verify_flagged=['pbr.albedo_lum_max', 'pbr.albedo_lum_min']; expected to contain ['pbr.albedo_lum_min', 'pbr.albedo_lum_max']"
+        }
+      ]
+    },
+    {
+      "id": "sil-identical-rects-perfect",
+      "passed": true,
+      "checks": [
+        {
+          "check": "row",
+          "passed": true,
+          "message": "silhouette.iou: passed=True (expected True); value=1.0 (expected 1.0 +/- 1e-06)"
+        },
+        {
+          "check": "row",
+          "passed": true,
+          "message": "silhouette.centroid_offset: passed=True (expected True); value=0.0 (expected 0.0 +/- 1e-06)"
+        },
+        {
+          "check": "row",
+          "passed": true,
+          "message": "silhouette.bbox_offset: passed=True (expected True); value=0.0 (expected 0.0 +/- 1e-06)"
+        }
+      ]
+    },
+    {
+      "id": "sil-shifted-10px-hand-iou-0.6",
+      "passed": true,
+      "checks": [
+        {
+          "check": "row",
+          "passed": true,
+          "message": "silhouette.iou: passed=False (expected False); value=0.6 (expected 0.6 +/- 1e-06); limit=0.8 (expected 0.8)"
+        },
+        {
+          "check": "row",
+          "passed": true,
+          "message": "silhouette.centroid_offset: passed=False (expected False); value=0.1 (expected 0.1 +/- 1e-06); limit=0.05 (expected 0.05)"
+        },
+        {
+          "check": "row",
+          "passed": true,
+          "message": "silhouette.bbox_offset: passed=False (expected False); value=0.1 (expected 0.1 +/- 1e-06)"
+        },
+        {
+          "check": "approx",
+          "passed": true,
+          "message": "measured.dice=0.75; expected 0.75 +/- 1e-06"
+        },
+        {
+          "check": "list_approx",
+          "passed": true,
+          "message": "measured.centroid_offset_px=[10.0, 0.0]; expected [10.0, 0.0] +/- 1e-06"
+        },
+        {
+          "check": "is",
+          "passed": true,
+          "message": "measured.bbox_offset_px=[10, 0, 10, 0]; expected [10, 0, 10, 0]"
+        },
+        {
+          "check": "text_has",
+          "passed": true,
+          "message": "summary should mention 'FAILED 3' (got 'silhouette_iou: 0 of 3 checks passed; FAILED 3: silhouette.bbox_offset 0.1 > 0.05; silhouette.centroid_offset 0.1 > 0.05; silhouette.iou 0.6 < 0.8. Thresholds are placeholder defaults unless stated. M')"
+        }
+      ]
+    },
+    {
+      "id": "sil-shifted-2px-hand-iou-passes",
+      "passed": true,
+      "checks": [
+        {
+          "check": "row",
+          "passed": true,
+          "message": "silhouette.iou: passed=True (expected True); value=0.9048 (expected 0.904762 +/- 0.0001)"
+        },
+        {
+          "check": "row",
+          "passed": true,
+          "message": "silhouette.centroid_offset: passed=True (expected True); value=0.02 (expected 0.02 +/- 1e-06)"
+        },
+        {
+          "check": "row",
+          "passed": true,
+          "message": "silhouette.bbox_offset: passed=True (expected True); value=0.02 (expected 0.02 +/- 1e-06)"
+        }
+      ]
+    },
+    {
+      "id": "sil-disjoint-boxes-zero-iou",
+      "passed": true,
+      "checks": [
+        {
+          "check": "row",
+          "passed": true,
+          "message": "silhouette.iou: passed=False (expected False); value=0.0 (expected 0.0 +/- 1e-06)"
+        },
+        {
+          "check": "row",
+          "passed": true,
+          "message": "silhouette.centroid_offset: passed=False (expected False); value=0.7071 (expected 0.707107 +/- 0.0001)"
+        },
+        {
+          "check": "row",
+          "passed": true,
+          "message": "silhouette.bbox_offset: passed=False (expected False); value=0.5 (expected 0.5 +/- 1e-06)"
+        }
+      ]
+    },
+    {
+      "id": "sil-alpha-mask-matches-background-mask",
+      "passed": true,
+      "checks": [
+        {
+          "check": "row",
+          "passed": true,
+          "message": "silhouette.iou: passed=True (expected True); value=1.0 (expected 1.0 +/- 1e-06)"
+        },
+        {
+          "check": "is",
+          "passed": true,
+          "message": "measured.candidate.method='alpha'; expected 'alpha'"
+        },
+        {
+          "check": "is",
+          "passed": true,
+          "message": "measured.reference.method='background'; expected 'background'"
+        }
+      ]
+    },
+    {
+      "id": "sil-reference-is-resized-onto-candidate-grid",
+      "passed": true,
+      "checks": [
+        {
+          "check": "row",
+          "passed": true,
+          "message": "silhouette.iou: passed=True (expected True); value=1.0 (expected 1.0 +/- 1e-06)"
+        },
+        {
+          "check": "is",
+          "passed": true,
+          "message": "detail.resized_reference=True; expected True"
+        },
+        {
+          "check": "is",
+          "passed": true,
+          "message": "measured.grid=[100, 100]; expected [100, 100]"
+        }
+      ]
+    },
+    {
+      "id": "sil-aspect-mismatch-is-warned",
+      "passed": true,
+      "checks": [
+        {
+          "check": "text_has",
+          "passed": true,
+          "message": "warnings.0 should mention 'aspect ratios differ' (got \"aspect ratios differ (100x100 vs 100x50): the reference was stretched onto the candidate's grid, so overlap numbers mix framing with shape\")"
+        }
+      ]
+    },
+    {
+      "id": "sil-subject-fills-frame-is-warned",
+      "passed": true,
+      "checks": [
+        {
+          "check": "text_has",
+          "passed": true,
+          "message": "warnings.0 should mention 'covers 96%' (got 'candidate: the mask covers 96% of the image: the subject may fill the frame or the background was not found')"
+        }
+      ]
+    },
+    {
+      "id": "sil-two-empty-masks-are-not-a-pass",
+      "passed": true,
+      "checks": [
+        {
+          "check": "skipped",
+          "passed": true,
+          "message": "silhouette.iou skipped (got {'id': 'silhouette.iou', 'op': '>=', 'limit': 0.8, 'dimension': 'silhouette', 'param': 'silhouette.iou_min', 'value': None, 'passed': None, 'skipped': 'both masks are empty'})"
+        },
+        {
+          "check": "text_has",
+          "passed": true,
+          "message": "warnings.0 should mention 'mask is empty' (got 'candidate: the mask is empty (nothing differs from the background): the background may be busy or the subject the same colour as it')"
+        },
+        {
+          "check": "text_has",
+          "passed": true,
+          "message": "summary should mention 'not measurable' (got 'silhouette_iou: 0 of 3 checks passed, 3 not measurable; none failed. Thresholds are placeholder defaults unless stated. Measured numbers only: taste, anatomy and perspective are not measured. [eval]')"
+        }
+      ]
+    },
+    {
+      "id": "sil-ellipse-in-box-iou-is-pi-over-4",
+      "passed": true,
+      "checks": [
+        {
+          "check": "row_range",
+          "passed": true,
+          "message": "silhouette.iou.value=0.7833 expected in [0.765, 0.805]"
+        },
+        {
+          "check": "row",
+          "passed": true,
+          "message": "silhouette.iou: passed=False (expected False)"
+        },
+        {
+          "check": "row",
+          "passed": true,
+          "message": "silhouette.centroid_offset: passed=True (expected True)"
+        }
+      ]
+    },
+    {
+      "id": "sil-explicit-mask-image-method",
+      "passed": true,
+      "checks": [
+        {
+          "check": "row",
+          "passed": true,
+          "message": "silhouette.iou: passed=True (expected True); value=1.0 (expected 1.0 +/- 1e-06)"
+        }
+      ]
+    },
+    {
+      "id": "sil-luminance-method-handles-light-subject",
+      "passed": true,
+      "checks": [
+        {
+          "check": "row",
+          "passed": true,
+          "message": "silhouette.iou: passed=True (expected True); value=1.0 (expected 1.0 +/- 1e-06)"
+        },
+        {
+          "check": "is",
+          "passed": true,
+          "message": "measured.candidate.method='luminance'; expected 'luminance'"
+        }
+      ]
+    },
+    {
+      "id": "tile-gradient-seam-ratio-255-hand",
+      "passed": true,
+      "checks": [
+        {
+          "check": "row",
+          "passed": true,
+          "message": "tiling.seam_ratio: passed=False (expected False); value=255.0 (expected 255.0 +/- 0.01); limit=1.5 (expected 1.5)"
+        },
+        {
+          "check": "is",
+          "passed": true,
+          "message": "measured.worst_axis='horizontal'; expected 'horizontal'"
+        },
+        {
+          "check": "approx",
+          "passed": true,
+          "message": "detail.vertical.ratio=0.0; expected 0.0 +/- 1e-06"
+        },
+        {
+          "check": "approx",
+          "passed": true,
+          "message": "detail.horizontal.wrap_step=1.0; expected 1.0 +/- 1e-06"
+        }
+      ]
+    },
+    {
+      "id": "tile-vertical-gradient-worst-axis-is-vertical",
+      "passed": true,
+      "checks": [
+        {
+          "check": "row",
+          "passed": true,
+          "message": "tiling.seam_ratio: passed=False (expected False); value=255.0 (expected 255.0 +/- 0.01)"
+        },
+        {
+          "check": "is",
+          "passed": true,
+          "message": "measured.worst_axis='vertical'; expected 'vertical'"
+        }
+      ]
+    },
+    {
+      "id": "tile-seamless-smooth-noise-passes",
+      "passed": true,
+      "checks": [
+        {
+          "check": "row",
+          "passed": true,
+          "message": "tiling.seam_ratio: passed=True (expected True)"
+        },
+        {
+          "check": "row_range",
+          "passed": true,
+          "message": "tiling.seam_ratio.value=1.0232 expected in [0.7, 1.4]"
+        },
+        {
+          "check": "row",
+          "passed": true,
+          "message": "tiling.repetition_peak: passed=True (expected True)"
+        }
+      ]
+    },
+    {
+      "id": "tile-cropped-from-larger-image-is-seamed",
+      "passed": true,
+      "checks": [
+        {
+          "check": "row",
+          "passed": true,
+          "message": "tiling.seam_ratio: passed=False (expected False)"
+        },
+        {
+          "check": "row_range",
+          "passed": true,
+          "message": "tiling.seam_ratio.value=14.0422 expected in [4.0, 100.0]"
+        },
+        {
+          "check": "text_has",
+          "passed": true,
+          "message": "out.findings.0.note should mention 'wrap-around edge' (got 'the horizontal wrap-around edge steps 14.0x more than its neighbours')"
+        }
+      ]
+    },
+    {
+      "id": "tile-lattice-repeats-every-64px",
+      "passed": true,
+      "checks": [
+        {
+          "check": "row",
+          "passed": true,
+          "message": "tiling.repetition_peak: passed=False (expected False); limit=0.6 (expected 0.6)"
+        },
+        {
+          "check": "row_range",
+          "passed": true,
+          "message": "tiling.repetition_peak.value=1.0 expected in [0.99, 1.0001]"
+        },
+        {
+          "check": "is",
+          "passed": true,
+          "message": "measured.repeat_lag_px=[64, 0]; expected [64, 0]"
+        },
+        {
+          "check": "row",
+          "passed": true,
+          "message": "tiling.seam_ratio: passed=True (expected True)"
+        }
+      ]
+    },
+    {
+      "id": "tile-random-noise-has-no-repetition",
+      "passed": true,
+      "checks": [
+        {
+          "check": "row",
+          "passed": true,
+          "message": "tiling.repetition_peak: passed=True (expected True)"
+        },
+        {
+          "check": "row_range",
+          "passed": true,
+          "message": "tiling.repetition_peak.value=0.027 expected in [0.0, 0.2]"
+        }
+      ]
+    },
+    {
+      "id": "tile-flat-tile-repetition-not-measurable",
+      "passed": true,
+      "checks": [
+        {
+          "check": "row",
+          "passed": true,
+          "message": "tiling.seam_ratio: passed=True (expected True); value=0.0 (expected 0.0 +/- 1e-06)"
+        },
+        {
+          "check": "skipped",
+          "passed": true,
+          "message": "tiling.repetition_peak skipped (got {'id': 'tiling.repetition_peak', 'op': '<=', 'limit': 0.6, 'dimension': 'tiling', 'param': 'tiling.repetition_peak_max', 'value': None, 'passed': None, 'skipped': 'the tile is flat (no variance)'})"
+        },
+        {
+          "check": "text_has",
+          "passed": true,
+          "message": "out.skipped.0 should mention 'flat' (got 'tiling.repetition_peak: the tile is flat (no variance)')"
+        }
+      ]
+    },
+    {
+      "id": "tile-too-large-is-refused-not-downscaled",
+      "passed": true,
+      "checks": [
+        {
+          "check": "step_error",
+          "passed": true,
+          "message": "step 0 should be refused mentioning 'full resolution' (got \"'img.png' is 2100x8: this check works at full resolution and accepts at most 2048 px per side (limits.max_side_exact). Crop or resize it yourself first; it is not downscaled silently.\")"
+        }
+      ]
+    },
+    {
+      "id": "tile-under-three-pixels-is-refused",
+      "passed": true,
+      "checks": [
+        {
+          "check": "step_error",
+          "passed": true,
+          "message": "step 0 should be refused mentioning 'at least 3 pixels' (got 'a tile needs at least 3 pixels along each axis to measure a seam')"
+        }
+      ]
+    },
+    {
+      "id": "pbr-albedo-mid-gray-in-range",
+      "passed": true,
+      "checks": [
+        {
+          "check": "row",
+          "passed": true,
+          "message": "albedo.out_of_range_fraction: passed=True (expected True); value=0.0 (expected 0.0 +/- 1e-06)"
+        },
+        {
+          "check": "approx",
+          "passed": true,
+          "message": "measured.albedo.luminance_mean=0.502; expected 0.50196 +/- 0.0001"
+        }
+      ]
+    },
+    {
+      "id": "pbr-albedo-too-dark",
+      "passed": true,
+      "checks": [
+        {
+          "check": "row",
+          "passed": true,
+          "message": "albedo.out_of_range_fraction: passed=False (expected False); value=1.0 (expected 1.0 +/- 1e-06); limit=0.05 (expected 0.05)"
+        },
+        {
+          "check": "approx",
+          "passed": true,
+          "message": "measured.albedo.too_dark_fraction=1.0; expected 1.0 +/- 1e-06"
+        },
+        {
+          "check": "text_has",
+          "passed": true,
+          "message": "out.findings.0.note should mention 'below luminance' (got '100.0% of pixels below luminance 0.118, 0.0% above 0.941')"
+        }
+      ]
+    },
+    {
+      "id": "pbr-albedo-too-bright",
+      "passed": true,
+      "checks": [
+        {
+          "check": "row",
+          "passed": true,
+          "message": "albedo.out_of_range_fraction: passed=False (expected False); value=1.0 (expected 1.0 +/- 1e-06)"
+        },
+        {
+          "check": "approx",
+          "passed": true,
+          "message": "measured.albedo.too_bright_fraction=1.0; expected 1.0 +/- 1e-06"
+        }
+      ]
+    },
+    {
+      "id": "pbr-roughness-varied-gray-passes",
+      "passed": true,
+      "checks": [
+        {
+          "check": "row",
+          "passed": true,
+          "message": "roughness.gray_spread: passed=True (expected True); value=0.0 (expected 0.0 +/- 1e-06)"
+        },
+        {
+          "check": "row",
+          "passed": true,
+          "message": "roughness.std: passed=True (expected True)"
+        },
+        {
+          "check": "row_range",
+          "passed": true,
+          "message": "roughness.std.value=0.115 expected in [0.105, 0.125]"
+        },
+        {
+          "check": "row",
+          "passed": true,
+          "message": "roughness.mean_min: passed=True (expected True)"
+        },
+        {
+          "check": "row",
+          "passed": true,
+          "message": "roughness.mean_max: passed=True (expected True)"
+        }
+      ]
+    },
+    {
+      "id": "pbr-roughness-constant-zero-fails",
+      "passed": true,
+      "checks": [
+        {
+          "check": "row",
+          "passed": true,
+          "message": "roughness.std: passed=False (expected False); value=0.0 (expected 0.0 +/- 1e-06)"
+        },
+        {
+          "check": "row",
+          "passed": true,
+          "message": "roughness.mean_min: passed=False (expected False); value=0.0 (expected 0.0 +/- 1e-06)"
+        },
+        {
+          "check": "row",
+          "passed": true,
+          "message": "roughness.mean_max: passed=True (expected True)"
+        }
+      ]
+    },
+    {
+      "id": "pbr-metalness-binary-checker-passes",
+      "passed": true,
+      "checks": [
+        {
+          "check": "row",
+          "passed": true,
+          "message": "metalness.mid_fraction: passed=True (expected True); value=0.0 (expected 0.0 +/- 1e-06)"
+        },
+        {
+          "check": "approx",
+          "passed": true,
+          "message": "measured.metalness.mean=0.5; expected 0.5 +/- 1e-06"
+        }
+      ]
+    },
+    {
+      "id": "pbr-metalness-gradient-mid-fraction-hand",
+      "passed": true,
+      "checks": [
+        {
+          "check": "row",
+          "passed": true,
+          "message": "metalness.mid_fraction: passed=False (expected False); value=0.7969 (expected 0.796875 +/- 0.0001); limit=0.25 (expected 0.25)"
+        }
+      ]
+    },
+    {
+      "id": "pbr-metalness-coloured-fails-gray-spread",
+      "passed": true,
+      "checks": [
+        {
+          "check": "row",
+          "passed": true,
+          "message": "metalness.gray_spread: passed=False (expected False); value=1.0 (expected 1.0 +/- 1e-06); limit=0.02 (expected 0.02)"
+        },
+        {
+          "check": "text_has",
+          "passed": true,
+          "message": "out.findings.0.note should mention 'grayscale' (got 'the map has colour: it should be grayscale (channels are averaged for the other numbers)')"
+        }
+      ]
+    },
+    {
+      "id": "pbr-normal-flat-is-unit-length",
+      "passed": true,
+      "checks": [
+        {
+          "check": "row",
+          "passed": true,
+          "message": "normal.mean_length_error: passed=True (expected True); value=0.0 (expected 0.0 +/- 0.0001)"
+        },
+        {
+          "check": "row",
+          "passed": true,
+          "message": "normal.bad_length_fraction: passed=True (expected True); value=0.0 (expected 0.0 +/- 1e-06)"
+        },
+        {
+          "check": "row",
+          "passed": true,
+          "message": "normal.z_negative_fraction: passed=True (expected True); value=0.0 (expected 0.0 +/- 1e-06)"
+        }
+      ]
+    },
+    {
+      "id": "pbr-normal-valid-random-tilts-pass",
+      "passed": true,
+      "checks": [
+        {
+          "check": "row",
+          "passed": true,
+          "message": "normal.mean_length_error: passed=True (expected True)"
+        },
+        {
+          "check": "row",
+          "passed": true,
+          "message": "normal.bad_length_fraction: passed=True (expected True); value=0.0 (expected 0.0 +/- 1e-06)"
+        },
+        {
+          "check": "row",
+          "passed": true,
+          "message": "normal.z_negative_fraction: passed=True (expected True); value=0.0 (expected 0.0 +/- 1e-06)"
+        }
+      ]
+    },
+    {
+      "id": "pbr-normal-albedo-colours-are-not-a-normal-map",
+      "passed": true,
+      "checks": [
+        {
+          "check": "approx",
+          "passed": true,
+          "message": "measured.normal.mean_length=0.8598; expected 0.85984 +/- 0.0001"
+        },
+        {
+          "check": "row",
+          "passed": true,
+          "message": "normal.mean_length_error: passed=False (expected False); value=0.1402 (expected 0.14016 +/- 0.0001)"
+        },
+        {
+          "check": "row",
+          "passed": true,
+          "message": "normal.bad_length_fraction: passed=False (expected False); value=1.0 (expected 1.0 +/- 1e-06)"
+        },
+        {
+          "check": "row",
+          "passed": true,
+          "message": "normal.z_negative_fraction: passed=False (expected False); value=1.0 (expected 1.0 +/- 1e-06)"
+        }
+      ]
+    },
+    {
+      "id": "pbr-maps-of-different-sizes-fail",
+      "passed": true,
+      "checks": [
+        {
+          "check": "row",
+          "passed": true,
+          "message": "maps.distinct_sizes: passed=False (expected False); value=2 (expected 2 +/- 1e-06)"
+        },
+        {
+          "check": "text_has",
+          "passed": true,
+          "message": "out.findings.0.note should mention '64x64' (got 'the maps have different sizes: albedo 64x64, roughness 32x32')"
+        }
+      ]
+    },
+    {
+      "id": "pbr-no-map-is-refused",
+      "passed": true,
+      "checks": [
+        {
+          "check": "step_error",
+          "passed": true,
+          "message": "step 0 should be refused mentioning 'at least one map path' (got 'give at least one map path: albedo, roughness, metalness or normal')"
+        }
+      ]
+    },
+    {
+      "id": "pbr-says-what-it-cannot-measure",
+      "passed": true,
+      "checks": [
+        {
+          "check": "text_has",
+          "passed": true,
+          "message": "out.not_measured.3 should mention 'green-channel' (got 'normal-map green-channel convention (OpenGL vs DirectX: not determinable from pixels)')"
+        },
+        {
+          "check": "is",
+          "passed": true,
+          "message": "out.verify_against_current_docs=True; expected True"
+        }
+      ]
+    },
+    {
+      "id": "diff-identical-images",
+      "passed": true,
+      "checks": [
+        {
+          "check": "is",
+          "passed": true,
+          "message": "measured.identical=True; expected True"
+        },
+        {
+          "check": "is",
+          "passed": true,
+          "message": "measured.psnr_db=None; expected None"
+        },
+        {
+          "check": "row",
+          "passed": true,
+          "message": "diff.changed_fraction: passed=True (expected True); value=0.0 (expected 0.0 +/- 1e-06)"
+        },
+        {
+          "check": "text_has",
+          "passed": true,
+          "message": "summary should mention 'pixel-identical' (got 'diff_images: 1 of 1 checks passed; none failed. Thresholds are placeholder defaults unless stated. Measured numbers only: taste, anatomy and perspective are not measured. [eval] the images are pixel-i')"
+        }
+      ]
+    },
+    {
+      "id": "diff-box-of-change-hand-numbers",
+      "passed": true,
+      "checks": [
+        {
+          "check": "row",
+          "passed": true,
+          "message": "diff.changed_fraction: passed=True (expected True); value=0.04 (expected 0.04 +/- 1e-06)"
+        },
+        {
+          "check": "approx",
+          "passed": true,
+          "message": "measured.mae=0.0157; expected 0.015686 +/- 0.0001"
+        },
+        {
+          "check": "approx",
+          "passed": true,
+          "message": "measured.rmse=0.0784; expected 0.078431 +/- 0.0001"
+        },
+        {
+          "check": "approx",
+          "passed": true,
+          "message": "measured.psnr_db=22.1102; expected 22.11 +/- 0.02"
+        },
+        {
+          "check": "is",
+          "passed": true,
+          "message": "measured.changed_bbox=[10, 10, 30, 30]; expected [10, 10, 30, 30]"
+        }
+      ]
+    },
+    {
+      "id": "diff-large-change-fails-tolerance",
+      "passed": true,
+      "checks": [
+        {
+          "check": "row",
+          "passed": true,
+          "message": "diff.changed_fraction: passed=False (expected False); value=0.25 (expected 0.25 +/- 1e-06); limit=0.05 (expected 0.05)"
+        },
+        {
+          "check": "text_has",
+          "passed": true,
+          "message": "out.findings.0.note should mention '2500 pixels' (got '2500 pixels changed by more than 0.0314')"
+        }
+      ]
+    },
+    {
+      "id": "diff-subtle-brightness-shift-is-below-pixel-threshold",
+      "passed": true,
+      "checks": [
+        {
+          "check": "row",
+          "passed": true,
+          "message": "diff.changed_fraction: passed=True (expected True); value=0.0 (expected 0.0 +/- 1e-06)"
+        },
+        {
+          "check": "approx",
+          "passed": true,
+          "message": "measured.mae=0.0196; expected 0.019608 +/- 0.0001"
+        },
+        {
+          "check": "approx",
+          "passed": true,
+          "message": "measured.psnr_db=34.1514; expected 34.15 +/- 0.02"
+        },
+        {
+          "check": "is",
+          "passed": true,
+          "message": "measured.identical=False; expected False"
+        }
+      ]
+    },
+    {
+      "id": "diff-different-sizes-are-refused",
+      "passed": true,
+      "checks": [
+        {
+          "check": "step_error",
+          "passed": true,
+          "message": "step 0 should be refused mentioning 'different sizes' (got \"the images have different sizes (50x50 vs 60x50): pass resize=true to resample 'after' onto 'before', or crop them to match\")"
+        },
+        {
+          "check": "step_ok",
+          "passed": true,
+          "message": "step 1 should succeed (got None)"
+        },
+        {
+          "check": "text_has",
+          "passed": true,
+          "message": "steps.1.result.warnings.0 should mention 'resampled' (got \"'after' was resampled onto the size of 'before': differences include resampling error\")"
+        }
+      ]
+    },
+    {
+      "id": "cmp-identical-images-pass-everything",
+      "passed": true,
+      "checks": [
+        {
+          "check": "row",
+          "passed": true,
+          "message": "silhouette.iou: passed=True (expected True); value=1.0 (expected 1.0 +/- 1e-06)"
+        },
+        {
+          "check": "row",
+          "passed": true,
+          "message": "palette.distance: passed=True (expected True); value=0.0 (expected 0.0 +/- 0.001)"
+        },
+        {
+          "check": "row",
+          "passed": true,
+          "message": "value.hist_distance: passed=True (expected True); value=0.0 (expected 0.0 +/- 1e-06)"
+        },
+        {
+          "check": "row",
+          "passed": true,
+          "message": "edges.density_ratio_min: passed=True (expected True); value=1.0 (expected 1.0 +/- 1e-06)"
+        },
+        {
+          "check": "row",
+          "passed": true,
+          "message": "edges.density_ratio_max: passed=True (expected True); value=1.0 (expected 1.0 +/- 1e-06)"
+        }
+      ]
+    },
+    {
+      "id": "cmp-same-layout-different-colours-fails-palette",
+      "passed": true,
+      "checks": [
+        {
+          "check": "row",
+          "passed": true,
+          "message": "palette.distance: passed=False (expected False); limit=25.0 (expected 25.0)"
+        },
+        {
+          "check": "row_range",
+          "passed": true,
+          "message": "palette.distance.value=35.4052 expected in [25.0, 300.0]"
+        }
+      ]
+    },
+    {
+      "id": "cmp-noisy-candidate-fails-edge-ratio",
+      "passed": true,
+      "checks": [
+        {
+          "check": "row",
+          "passed": true,
+          "message": "edges.density_ratio_max: passed=False (expected False); limit=2.0 (expected 2.0)"
+        },
+        {
+          "check": "row",
+          "passed": true,
+          "message": "edges.density_ratio_min: passed=True (expected True)"
+        }
+      ]
+    },
+    {
+      "id": "cmp-needs-exactly-one-of-reference-or-profile",
+      "passed": true,
+      "checks": [
+        {
+          "check": "step_error",
+          "passed": true,
+          "message": "step 0 should be refused mentioning 'exactly one of reference' (got 'give exactly one of reference (an image) or profile (a saved target profile name)')"
+        },
+        {
+          "check": "step_error",
+          "passed": true,
+          "message": "step 1 should be refused mentioning 'exactly one of reference' (got 'give exactly one of reference (an image) or profile (a saved target profile name)')"
+        }
+      ]
+    }
+  ]
+}

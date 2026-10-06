@@ -1,0 +1,27 @@
+{
+ "result": {
+  "Name": "Workspace",
+  "ClassName": "Workspace",
+  "Children": [
+   {
+    "Name": "Vendors",
+    "ClassName": "Folder",
+    "Children": [
+     {
+      "Name": "Bob",
+      "ClassName": "Model",
+      "Attributes": {
+       "Price": 5
+      },
+      "Children": [
+       {
+        "Name": "Prompt",
+        "ClassName": "ProximityPrompt"
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ }
+}

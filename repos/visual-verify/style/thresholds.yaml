@@ -1,0 +1,102 @@
+# Every number a verdict depends on lives here. They are registered as named, versioned parameters (visualverify/learning_params.py) with the
+# default, range and largest single step below; the user's accept/reject decisions can move them only through guide-core's propose -> gate -> approve path.
+#
+# EVERY default is a PLACEHOLDER: a starting point chosen by the builder, not a measured result and not an official Roblox number. Replace them with values
+# that match YOUR art direction (save a target profile from a reference you approve, or accept/reject results so the proposals have evidence).
+# Values marked verify_against_current_docs come from engine/format conventions that should be checked against current Roblox documentation; none of the
+# numbers was verified against it in this repository (no Roblox documentation was read while building these values).
+#
+# Fields: default, min, max, step (largest single change), op (how a check compares the measured value with the limit: ">=" means measured >= limit passes),
+# dimension (what a person can say in a correction: used by learning), kind (check = pass/fail limit; setting = changes how a number is measured, never judged),
+# locked (safety rail: learning can never change it), what (one line).
+version: 1
+placeholder: true
+thresholds:
+  silhouette.iou_min:
+    {default: 0.80, min: 0.30, max: 0.99, step: 0.05, op: ">=", dimension: silhouette, kind: check, what: "Intersection over union of the two silhouette masks (1.0 = identical shape and place)"}
+  silhouette.centroid_offset_max:
+    {default: 0.05, min: 0.005, max: 0.50, step: 0.01, op: "<=", dimension: silhouette, kind: check, what: "Centroid distance as a fraction of image size: hypot(dx/width, dy/height)"}
+  silhouette.bbox_offset_max:
+    {default: 0.05, min: 0.005, max: 0.50, step: 0.01, op: "<=", dimension: silhouette, kind: check, what: "Largest bounding-box edge shift as a fraction of the image width (x edges) or height (y edges)"}
+  silhouette.bg_tolerance:
+    {default: 0.12, min: 0.02, max: 0.50, step: 0.02, kind: setting, dimension: silhouette, what: "Background-distance mask: a pixel is subject when its RGB distance from the border colour (0-1 scale) is above this"}
+  silhouette.min_component_share:
+    {default: 0.005, min: 0.0005, max: 0.05, step: 0.0025, kind: setting, dimension: silhouette, what: "Mask components smaller than this share of the image are not counted as separate pieces"}
+  palette.distance_max:
+    {default: 25.0, min: 5.0, max: 80.0, step: 5.0, op: "<=", dimension: palette, kind: check, what: "Mean CIE76 delta-E (Lab, D65) between dominant colours and the target palette, both directions"}
+  palette.k:
+    {default: 5, min: 2, max: 8, step: 1, kind: setting, dimension: palette, what: "Number of dominant colours extracted by the deterministic k-means"}
+  palette.profile_margin:
+    {default: 0.10, min: 0.02, max: 0.40, step: 0.02, kind: setting, dimension: palette, what: "Half-width added around a measured value when a target profile is built from a reference image"}
+  value.contrast_min:
+    {default: 0.35, min: 0.05, max: 0.90, step: 0.05, op: ">=", dimension: value, kind: check, what: "Luminance contrast: 95th minus 5th percentile (0-1, on sRGB-encoded luminance)"}
+  value.level_min_share:
+    {default: 0.05, min: 0.0, max: 0.30, step: 0.01, op: ">=", dimension: value, kind: check, what: "Smallest share of pixels in any of the three value levels (dark, mid, light)"}
+  value.dark_cut:
+    {default: 0.33, min: 0.10, max: 0.45, step: 0.02, kind: setting, dimension: value, what: "Luminance below this is the dark level of the 3-level map"}
+  value.light_cut:
+    {default: 0.66, min: 0.55, max: 0.90, step: 0.02, kind: setting, dimension: value, what: "Luminance above this is the light level of the 3-level map"}
+  value.hist_distance_max:
+    {default: 0.15, min: 0.02, max: 0.60, step: 0.02, op: "<=", dimension: value, kind: check, what: "Earth-mover distance between the two 32-bin luminance histograms, in luminance units (0-1)"}
+  edges.density_min:
+    {default: 0.01, min: 0.0, max: 0.20, step: 0.005, op: ">=", dimension: edges, kind: check, what: "Edge pixel fraction below this is too flat"}
+  edges.density_max:
+    {default: 0.35, min: 0.10, max: 0.90, step: 0.025, op: "<=", dimension: edges, kind: check, what: "Edge pixel fraction above this is too noisy"}
+  edges.gradient_threshold:
+    {default: 0.08, min: 0.02, max: 0.30, step: 0.01, kind: setting, dimension: edges, what: "Luminance gradient magnitude (central differences) above this counts as an edge pixel"}
+  edges.distribution_min:
+    {default: 0.40, min: 0.0, max: 0.95, step: 0.05, op: ">=", dimension: edges, kind: check, what: "Normalised entropy (0-1) of the edge pixels over a 4x4 grid: low = all detail in a few cells"}
+  edges.density_ratio_min:
+    {default: 0.50, min: 0.10, max: 1.0, step: 0.05, op: ">=", dimension: edges, kind: check, what: "Candidate edge density divided by reference edge density"}
+  edges.density_ratio_max:
+    {default: 2.0, min: 1.0, max: 6.0, step: 0.25, op: "<=", dimension: edges, kind: check, what: "Candidate edge density divided by reference edge density"}
+  tiling.seam_ratio_max:
+    {default: 1.5, min: 1.0, max: 4.0, step: 0.25, op: "<=", dimension: tiling, kind: check, what: "Colour step across the wrap-around edge divided by the steps just inside it (1.0 = continuous), worst axis"}
+  tiling.repetition_peak_max:
+    {default: 0.60, min: 0.20, max: 0.98, step: 0.05, op: "<=", dimension: tiling, kind: check, what: "Highest normalised autocorrelation outside the main lobe (1.0 = an exact repeat inside the tile)"}
+  tiling.min_lag_fraction:
+    {default: 0.08, min: 0.02, max: 0.30, step: 0.02, kind: setting, dimension: tiling, what: "Smallest repeat distance considered, as a fraction of the shorter tile side"}
+  tiling.lobe_cut:
+    {default: 0.25, min: 0.05, max: 0.80, step: 0.05, kind: setting, dimension: tiling, what: "The main autocorrelation lobe ends where the ring mean falls below this"}
+  pbr.albedo_lum_min:
+    {default: 0.1176, min: 0.0, max: 0.30, step: 0.02, kind: setting, verify_against_current_docs: true, dimension: texture, what: "Albedo luminance lower bound (30/255): darker pixels are counted as too dark for a base colour"}
+  pbr.albedo_lum_max:
+    {default: 0.9412, min: 0.70, max: 1.0, step: 0.02, kind: setting, verify_against_current_docs: true, dimension: texture, what: "Albedo luminance upper bound (240/255): brighter pixels are counted as too bright for a base colour"}
+  pbr.albedo_out_fraction_max:
+    {default: 0.05, min: 0.0, max: 0.50, step: 0.01, op: "<=", dimension: texture, kind: check, what: "Share of albedo pixels outside the luminance bounds"}
+  pbr.gray_spread_max:
+    {default: 0.02, min: 0.0, max: 0.20, step: 0.01, op: "<=", dimension: texture, kind: check, what: "Roughness and metalness maps should be grayscale: largest per-pixel difference between channels, averaged"}
+  pbr.roughness_std_min:
+    {default: 0.02, min: 0.0, max: 0.20, step: 0.01, op: ">=", dimension: texture, kind: check, what: "Standard deviation of roughness below this means a constant map"}
+  pbr.roughness_mean_min:
+    {default: 0.05, min: 0.0, max: 0.40, step: 0.025, op: ">=", dimension: texture, kind: check, what: "Mean roughness (0 = mirror) below this"}
+  pbr.roughness_mean_max:
+    {default: 0.98, min: 0.60, max: 1.0, step: 0.02, op: "<=", dimension: texture, kind: check, what: "Mean roughness above this"}
+  pbr.metal_mid_lo:
+    {default: 0.10, min: 0.02, max: 0.40, step: 0.02, kind: setting, dimension: texture, what: "Metalness values between lo and hi count as intermediate (metal is mostly 0 or 1)"}
+  pbr.metal_mid_hi:
+    {default: 0.90, min: 0.60, max: 0.98, step: 0.02, kind: setting, dimension: texture, what: "Upper end of the intermediate metalness band"}
+  pbr.metal_mid_fraction_max:
+    {default: 0.25, min: 0.0, max: 1.0, step: 0.05, op: "<=", dimension: texture, kind: check, what: "Share of intermediate metalness pixels"}
+  pbr.normal_len_tol:
+    {default: 0.10, min: 0.01, max: 0.40, step: 0.02, kind: setting, dimension: texture, what: "A normal vector whose length differs from 1 by more than this is a bad pixel"}
+  pbr.normal_bad_fraction_max:
+    {default: 0.02, min: 0.0, max: 0.50, step: 0.01, op: "<=", dimension: texture, kind: check, what: "Share of bad-length normal pixels"}
+  pbr.normal_mean_len_err_max:
+    {default: 0.03, min: 0.005, max: 0.30, step: 0.01, op: "<=", dimension: texture, kind: check, what: "Absolute difference between the mean normal length and 1"}
+  pbr.normal_z_neg_fraction_max:
+    {default: 0.01, min: 0.0, max: 0.50, step: 0.01, op: "<=", dimension: texture, kind: check, what: "Share of pixels whose decoded z is below 0 (a tangent-space normal map points out of the surface)"}
+  diff.pixel_threshold:
+    {default: 0.0314, min: 0.004, max: 0.20, step: 0.01, kind: setting, dimension: diff, what: "A pixel counts as changed when its largest channel difference (0-1 scale) is above this (8/255)"}
+  diff.changed_fraction_max:
+    {default: 0.05, min: 0.0, max: 1.0, step: 0.01, op: "<=", dimension: diff, kind: check, what: "Share of changed pixels allowed before before/after is reported as different"}
+  limits.max_file_bytes:
+    {default: 67108864, min: 1048576, max: 268435456, step: 1048576, locked: true, kind: setting, dimension: limits, what: "Largest image file read (64 MiB): a safety rail"}
+  limits.max_pixels:
+    {default: 40000000, min: 1000000, max: 200000000, step: 1000000, locked: true, kind: setting, dimension: limits, what: "Largest image read, in pixels (a decompression-bomb guard)"}
+  limits.max_side_exact:
+    {default: 2048, min: 64, max: 8192, step: 256, locked: true, kind: setting, dimension: limits, what: "Longest side accepted by tiling and PBR checks, which are exact and are never downscaled"}
+  limits.analysis_max_side:
+    {default: 512, min: 64, max: 2048, step: 64, locked: true, kind: setting, dimension: limits, what: "Longest side used for the other measurements (area-averaged downscale, never upscaled)"}
+  limits.findings_cap:
+    {default: 10, min: 1, max: 50, step: 1, locked: true, kind: setting, dimension: limits, what: "Most findings returned (token discipline)"}

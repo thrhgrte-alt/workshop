@@ -1,0 +1,242 @@
+# Generic landmark roles. Part 1: the formula and the six generic feature functions on tiny inline trees, expectations computed by hand (arithmetic in the comments).
+- id: roles-formula-clamps-and-counts-negative-weights-against
+  tags: [roles, formula, known-good]
+  # weights a=3, b=-1: (3*1 + -1*1)/4 = 0.5 ; (3*1)/4 = 0.75 ; (3*0 + -1*1)/4 = -0.25 -> clamped to 0
+  input: {op: formula, weights: {a: 3.0, b: -1.0}, f: {a: 1.0, b: 1.0}}
+  checks:
+    - {type: approx, path: score, value: 0.5}
+
+- id: roles-formula-without-the-negative-feature
+  tags: [roles, formula, known-good]
+  input: {op: formula, weights: {a: 3.0, b: -1.0}, f: {a: 1.0, b: 0.0}}
+  checks:
+    - {type: approx, path: score, value: 0.75}
+
+- id: roles-formula-never-goes-below-zero
+  tags: [roles, formula, known-bad]
+  input: {op: formula, weights: {a: 3.0, b: -1.0}, f: {a: 0.0, b: 1.0}}
+  checks:
+    - {type: equals, path: score, value: 0.0}
+
+- id: roles-feature-token-match-saturates-with-k
+  tags: [roles, feature, known-good]
+  # vendor.attribute_keys_match has tokens [price, cost, stock, item] and k=2: one matching key gives 1/min(4,2) = 0.5, two give 1.0. The name 'X' matches nothing.
+  input:
+    op: feature
+    role: vendor
+    path: Workspace/X
+    nodes:
+      - {p: Workspace, c: Workspace, n: 1}
+      - {p: Workspace/X, c: Model, n: 0, a: {Price: 1}}
+  checks:
+    - {type: approx, path: features.attribute_keys_match, value: 0.5}
+    - {type: equals, path: features.name_matches_synonyms, value: 0.0}
+
+- id: roles-feature-token-match-splits-camel-case-and-plurals
+  tags: [roles, feature, known-good]
+  # 'ShopNPC' -> tokens shop, npc; 'shop' is a vendor synonym, k=1 -> 1.0. 'Shops' also matches (plural ignored).
+  input:
+    op: feature
+    role: vendor
+    path: Workspace/ShopNPC
+    nodes:
+      - {p: Workspace, c: Workspace, n: 1}
+      - {p: Workspace/ShopNPC, c: Model, n: 0}
+  checks:
+    - {type: equals, path: features.name_matches_synonyms, value: 1.0}
+
+- id: roles-feature-class-presence-looks-at-descendants
+  tags: [roles, feature, known-good]
+  input:
+    op: feature
+    role: vendor
+    path: Workspace/Stall
+    nodes:
+      - {p: Workspace, c: Workspace, n: 1}
+      - {p: Workspace/Stall, c: Model, n: 1}
+      - {p: Workspace/Stall/Counter, c: Part, n: 1}
+      - {p: Workspace/Stall/Counter/Prompt, c: ProximityPrompt, n: 0}
+  checks:
+    - {type: equals, path: features.has_interaction, value: 1.0}
+    - {type: equals, path: features.has_humanoid_or_model, value: 1.0}
+
+- id: roles-feature-class-presence-is-zero-without-the-class
+  tags: [roles, feature, known-bad]
+  input:
+    op: feature
+    role: vendor
+    path: Workspace/Sign
+    nodes:
+      - {p: Workspace, c: Workspace, n: 1}
+      - {p: Workspace/Sign, c: Part, n: 0}
+  checks:
+    - {type: equals, path: features.has_interaction, value: 0.0}
+    - {type: equals, path: features.has_humanoid_or_model, value: 0.0}
+
+- id: roles-feature-repetition-uses-the-damping-constant
+  tags: [roles, feature, known-good]
+  # Coin1..Coin4 are similar siblings: for Coin1 n_similar = 3 and f = 3 / (3 + c) = 3/6 = 0.5 with c = 3. Coin5 has a child (different class signature) and 'Rock' has another name: neither counts.
+  input:
+    op: feature
+    role: collectible
+    path: Workspace/Coin1
+    nodes:
+      - {p: Workspace, c: Workspace, n: 6}
+      - {p: Workspace/Coin1, c: Part, n: 0}
+      - {p: Workspace/Coin2, c: Part, n: 0}
+      - {p: Workspace/Coin3, c: Part, n: 0}
+      - {p: Workspace/Coin4, c: Part, n: 0}
+      - {p: Workspace/Coin5, c: Part, n: 1}
+      - {p: Workspace/Coin5/Click, c: ClickDetector, n: 0}
+      - {p: Workspace/Rock, c: Part, n: 0}
+  checks:
+    - {type: approx, path: features.repeated_siblings, value: 0.5}
+
+- id: roles-feature-repetition-needs-name-similarity-above-the-threshold
+  tags: [roles, feature, known-bad]
+  # GoldCoin vs SilverCoin: tokens {gold, coin} and {silver, coin}: Jaccard 1/3 which is below 0.6, so they are not similar.
+  input:
+    op: feature
+    role: collectible
+    path: Workspace/GoldCoin
+    nodes:
+      - {p: Workspace, c: Workspace, n: 2}
+      - {p: Workspace/GoldCoin, c: Part, n: 0}
+      - {p: Workspace/SilverCoin, c: Part, n: 0}
+  checks:
+    - {type: equals, path: features.repeated_siblings, value: 0.0}
+
+- id: roles-feature-remote-refs-need-a-script-that-references-the-instance
+  tags: [roles, feature, known-good]
+  # The Script inside Bob fires the remote BuyItem: remote tokens {buy, item}; vendor purchase tokens include 'buy'; k=1 -> 1.0.
+  input:
+    op: feature
+    role: vendor
+    path: Workspace/Bob
+    nodes:
+      - {p: Workspace, c: Workspace, n: 1}
+      - {p: Workspace/Bob, c: Model, n: 1}
+      - p: Workspace/Bob/Logic
+        c: Script
+        n: 0
+        s: {src: "game.ReplicatedStorage.Remotes.BuyItem:FireServer()\n", len: 49}
+  checks:
+    - {type: equals, path: features.script_fires_purchase_remote, value: 1.0}
+
+- id: roles-feature-remote-refs-ignore-unrelated-remotes
+  tags: [roles, feature, known-bad]
+  input:
+    op: feature
+    role: vendor
+    path: Workspace/Door
+    nodes:
+      - {p: Workspace, c: Workspace, n: 1}
+      - {p: Workspace/Door, c: Model, n: 1}
+      - p: Workspace/Door/Logic
+        c: Script
+        n: 0
+        s: {src: "game.ReplicatedStorage.Remotes.OpenDoor:FireServer()\n", len: 50}
+  checks:
+    - {type: equals, path: features.script_fires_purchase_remote, value: 0.0}
+
+- id: roles-feature-reference-density-is-normalised-by-the-median
+  tags: [roles, feature, known-good]
+  # Scripts S1 mentions Alpha and Gamma; S2 mentions Beta and Gamma. Counts: Alpha 1, Beta 1, Gamma 2; median of the referenced counts = 1.
+  # f = r / (1 + r) with r = count / median: Gamma r=2 -> 0.6667, Alpha r=1 -> 0.5.
+  input:
+    op: feature
+    role: upgradable_tool
+    path: Workspace/Gamma
+    nodes:
+      - {p: Workspace, c: Workspace, n: 3}
+      - {p: Workspace/Alpha, c: Model, n: 0}
+      - {p: Workspace/Beta, c: Model, n: 0}
+      - {p: Workspace/Gamma, c: Model, n: 0}
+      - {p: ServerScriptService, c: ServerScriptService, n: 2}
+      - p: ServerScriptService/S1
+        c: Script
+        n: 0
+        s: {src: "workspace:WaitForChild(\"Alpha\")\nworkspace:WaitForChild(\"Gamma\")\n", len: 1}
+      - p: ServerScriptService/S2
+        c: Script
+        n: 0
+        s: {src: "workspace:WaitForChild(\"Beta\")\nworkspace:WaitForChild(\"Gamma\")\n", len: 1}
+  checks:
+    - {type: approx, path: features.reference_density, value: 0.6667, tol: 0.0001}
+
+- id: roles-feature-reference-density-is-zero-when-nothing-mentions-it
+  tags: [roles, feature, known-bad]
+  input:
+    op: feature
+    role: upgradable_tool
+    path: Workspace/Lonely
+    nodes:
+      - {p: Workspace, c: Workspace, n: 1}
+      - {p: Workspace/Lonely, c: Model, n: 0}
+  checks:
+    - {type: equals, path: features.reference_density, value: 0.0}
+
+- id: roles-feature-proximity-uses-a-confident-landmark-of-another-role
+  tags: [roles, feature, known-good]
+  # Bob is a confident vendor (0.7619, see roles-weird-names...). The spawn is 30 studs away and the distance parameter is 50: f = 1 - 30/50 = 0.4.
+  input:
+    op: feature
+    role: spawn
+    path: Workspace/NearPad
+    nodes:
+      - {p: Workspace, c: Workspace, n: 3}
+      - {p: Workspace/Bob, c: Model, n: 3, v: [0, 0, 0], a: {Price: 1, Stock: 2}}
+      - {p: Workspace/Bob/Humanoid, c: Humanoid, n: 0}
+      - {p: Workspace/Bob/Prompt, c: ProximityPrompt, n: 0}
+      - p: Workspace/Bob/Logic
+        c: Script
+        n: 0
+        s: {src: "game.ReplicatedStorage.Remotes.BuyItem:FireServer()\n", len: 49}
+      - {p: Workspace/NearPad, c: SpawnLocation, n: 0, v: [30, 0, 0]}
+  checks:
+    - {type: approx, path: features.near_other_landmark, value: 0.4, tol: 0.001}
+
+- id: roles-feature-proximity-is-zero-beyond-the-distance
+  tags: [roles, feature, known-bad]
+  input:
+    op: feature
+    role: spawn
+    path: Workspace/FarPad
+    nodes:
+      - {p: Workspace, c: Workspace, n: 3}
+      - {p: Workspace/Bob, c: Model, n: 3, v: [0, 0, 0], a: {Price: 1, Stock: 2}}
+      - {p: Workspace/Bob/Humanoid, c: Humanoid, n: 0}
+      - {p: Workspace/Bob/Prompt, c: ProximityPrompt, n: 0}
+      - p: Workspace/Bob/Logic
+        c: Script
+        n: 0
+        s: {src: "game.ReplicatedStorage.Remotes.BuyItem:FireServer()\n", len: 49}
+      - {p: Workspace/FarPad, c: SpawnLocation, n: 0, v: [200, 0, 0]}
+  checks:
+    - {type: equals, path: features.near_other_landmark, value: 0.0}
+
+- id: roles-per-project-synonyms-extend-the-defaults
+  tags: [roles, synonyms, known-good]
+  # projects/demo_roles/synonyms.yaml adds 'pebble' to collectible.name_matches_synonyms for that project only.
+  input:
+    op: feature
+    role: collectible
+    path: Workspace/Pebble1
+    synonyms_project: demo_roles
+    nodes:
+      - {p: Workspace, c: Workspace, n: 1}
+      - {p: Workspace/Pebble1, c: Part, n: 0}
+  checks:
+    - {type: equals, path: features.name_matches_synonyms, value: 1.0}
+
+- id: roles-without-the-project-synonyms-the-name-does-not-match
+  tags: [roles, synonyms, known-bad]
+  input:
+    op: feature
+    role: collectible
+    path: Workspace/Pebble1
+    nodes:
+      - {p: Workspace, c: Workspace, n: 1}
+      - {p: Workspace/Pebble1, c: Part, n: 0}
+  checks:
+    - {type: equals, path: features.name_matches_synonyms, value: 0.0}

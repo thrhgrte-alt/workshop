@@ -1,0 +1,166 @@
+# Scope and open-Studio refusals, learning isolation between places, dry-run behaviour. Registry: demo_mine/main (unpublished, matched by name), demo_tycoon/main (place id 9000000001),
+# demo_obby/main (boot, spawn, reachability only). Nothing is guessed; every refusal leaves nothing written.
+- id: scope-missing-both-is-refused
+  tags: [scope, refusal]
+  input: {op: tools_seq, steps: [{tool: list_checks, args: {}}]}
+  checks:
+    - {type: step_error_contains, step: 0, text: "missing project_id and place_id"}
+    - {type: step_error_contains, step: 0, text: "demo_mine/main"}
+- id: scope-missing-place-is-refused
+  tags: [scope, refusal]
+  input: {op: tools_seq, steps: [{tool: list_checks, args: {project_id: demo_mine}}]}
+  checks: [{type: step_error_contains, step: 0, text: "missing place_id"}, {type: step_error_contains, step: 0, text: "will not guess"}]
+- id: scope-missing-project-is-refused
+  tags: [scope, refusal]
+  input: {op: tools_seq, steps: [{tool: list_checks, args: {place_id: main}}]}
+  checks: [{type: step_error_contains, step: 0, text: "missing project_id"}]
+- id: scope-unknown-place-is-refused
+  tags: [scope, refusal]
+  input: {op: tools_seq, steps: [{tool: list_checks, args: {project_id: demo_mine, place_id: nowhere}}]}
+  checks: [{type: step_error_contains, step: 0, text: "does not belong to project 'demo_mine'"}]
+- id: scope-unknown-project-is-refused
+  tags: [scope, refusal]
+  input: {op: tools_seq, steps: [{tool: list_checks, args: {project_id: ghost_game, place_id: main}}]}
+  checks: [{type: step_error_contains, step: 0, text: "Known projects"}, {type: step_error_contains, step: 0, text: "demo_mine"}]
+- id: scope-path-tricks-are-just-unknown-projects
+  tags: [scope, refusal, injection]
+  input: {op: tools_seq, steps: [{tool: record_run, args: {request: x, project_id: "../../etc", place_id: passwd, dry_run: false}}]}
+  checks: [{type: step_error_contains, step: 0, text: "unknown project_id"}, {type: list_empty, path: wrote}]
+- id: scope-every-tool-refuses-without-scope
+  tags: [scope, refusal]
+  title: "all 12 tools (read and write) refuse when project_id and place_id are missing"
+  input: {op: refuse_all}
+  checks: [{type: list_empty, path: not_refused}, {type: equals, path: checked, value: 12}]
+- id: scope-every-report-states-project-and-place
+  tags: [scope, token-discipline]
+  title: "every tool that answers for demo_mine/main starts with a one-line summary and names the project and place"
+  input: {op: scope_stated}
+  checks: [{type: list_empty, path: missing}]
+- id: studio-wrong-open-place-refuses-the-plan
+  tags: [studio, refusal]
+  input: {op: tools_seq, steps: [{tool: plan_playtest, args: {project_id: demo_mine, place_id: main, studios: [{name: "Demo Tycoon (SYNTHETIC)", place_id: 9000000001, studio_id: s}]}}]}
+  checks: [{type: step_error_contains, step: 0, text: "refusing: the open Studio instance(s)"}, {type: step_error_contains, step: 0, text: "are not place 'demo_mine/main'"}, {type: list_empty, path: wrote}]
+- id: studio-wrong-open-place-refuses-the-script
+  tags: [studio, refusal]
+  input: {op: tools_seq, steps: [{tool: generate_check_script, args: {project_id: demo_mine, place_id: main, check_id: boot, dry_run: false, studios: [{name: "Some Other Game", place_id: 5, studio_id: s}]}}]}
+  checks: [{type: step_error_contains, step: 0, text: "Nothing was generated"}, {type: list_empty, path: wrote}]
+- id: studio-missing-list-is-refused
+  tags: [studio, refusal]
+  title: "no list_roblox_studios output: the tool does not assume the right place is open"
+  input: {op: tools_seq, steps: [{tool: plan_playtest, args: {project_id: demo_mine, place_id: main}}, {tool: generate_check_script, args: {project_id: demo_mine, place_id: main, check_id: boot, studios: []}}]}
+  checks: [{type: step_error_contains, step: 0, text: "cannot confirm the open Studio place"}, {type: step_error_contains, step: 1, text: "cannot confirm the open Studio place"}]
+- id: studio-two-matching-instances-are-refused
+  tags: [studio, refusal]
+  input: {op: tools_seq, steps: [{tool: plan_playtest, args: {project_id: demo_mine, place_id: main, studios: [{name: "Demo Mine Main (SYNTHETIC)", place_id: 0, studio_id: a}, {name: "Demo Mine Main (SYNTHETIC)", place_id: 0, studio_id: b}]}}]}
+  checks: [{type: step_error_contains, step: 0, text: "2 open Studio instances match"}]
+- id: studio-published-place-is-matched-by-id-not-by-title
+  tags: [studio, known-good]
+  title: "demo_tycoon has Roblox place id 9000000001: an open place with another title but that id matches; 3 checks run (boot, remotes, economy_smoke), data is skipped"
+  input: {op: tools_seq, steps: [{tool: plan_playtest, args: {project_id: demo_tycoon, place_id: main, studios: [{name: "Renamed in Studio", place_id: 9000000001, studio_id: s}]}}]}
+  checks:
+    - {type: step_ok, step: 0}
+    - {type: equals, path: steps.0.result.studio.matched_by, value: place_id}
+    - {type: text_contains, path: steps.0.result.summary, text: "plan: 3 check(s)"}
+    - {type: equals, path: steps.0.result.skipped.0.check, value: data_roundtrip}
+- id: data-check-without-test-mode-switch-is-refused
+  tags: [data, refusal]
+  title: "demo_tycoon declares data hooks but no test-mode switch: the generator refuses and generates nothing"
+  input: {op: tools_seq, steps: [{tool: generate_check_script, args: {project_id: demo_tycoon, place_id: main, check_id: data_roundtrip, dry_run: false, studios: [{name: x, place_id: 9000000001, studio_id: s}]}}]}
+  checks: [{type: step_error_contains, step: 0, text: "refusing to generate a data check"}, {type: step_error_contains, step: 0, text: "test-mode switch"}, {type: list_empty, path: wrote}]
+- id: data-check-named-in-a-plan-without-switch-is-refused
+  tags: [data, refusal]
+  input: {op: tools_seq, steps: [{tool: plan_playtest, args: {project_id: demo_tycoon, place_id: main, check_ids: [data_roundtrip], studios: [{name: x, place_id: 9000000001, studio_id: s}]}}]}
+  checks: [{type: step_error_contains, step: 0, text: "refusing to generate a data check"}]
+- id: data-check-switch_deleted-from-config-is-refused
+  tags: [data, refusal]
+  input: {op: gen_script, check: data_roundtrip, cfg_patch: [{delete: data.test_mode.switch}]}
+  checks: [{type: error_contains, text: "(data.test_mode.switch) is missing"}]
+- id: data-check-with-the-switch-generates-and-enforces-it-in-the-script
+  tags: [data, known-good]
+  input: {op: gen_script, check: data_roundtrip}
+  checks:
+    - {type: list_empty, path: lint}
+    - {type: text_contains, path: luau, text: "test-mode switch"}
+    - {type: text_contains, path: luau, text: "result.refused"}
+    - {type: text_excludes, path: luau, text: "DataStore"}
+- id: unconfigured-check-is-refused
+  tags: [scope, refusal]
+  input: {op: tools_seq, steps: [{tool: generate_check_script, args: {project_id: demo_obby, place_id: main, check_id: remotes, studios: [{name: "Demo Obby (SYNTHETIC)", place_id: 0, studio_id: s}]}}]}
+  checks: [{type: step_error_contains, step: 0, text: "no 'remotes' section"}]
+- id: unknown-check-is-refused
+  tags: [scope, refusal]
+  input: {op: tools_seq, steps: [{tool: explain_failure, args: {project_id: demo_mine, place_id: main, check_id: teleport, results: []}}]}
+  checks: [{type: step_error_contains, step: 0, text: "unknown check 'teleport'"}]
+- id: list-checks-demo-mine-all-seven-three-flaky
+  tags: [checks, flaky]
+  input: {op: tools_seq, steps: [{tool: list_checks, args: {project_id: demo_mine, place_id: main}}]}
+  checks:
+    - {type: text_contains, path: steps.0.result.summary, text: "7 checks in the library; 7 can run"}
+    - {type: text_contains, path: steps.0.result.summary, text: "(3 flaky: re-run 3x"}
+- id: list-checks-demo-obby-only-the-configured-three
+  tags: [checks]
+  input: {op: tools_seq, steps: [{tool: list_checks, args: {project_id: demo_obby, place_id: main}}]}
+  checks: [{type: text_contains, path: steps.0.result.summary, text: "3 can run"}, {type: text_contains, path: steps.0.result.checks.5.why_not, text: "no 'remotes' section"}]
+- id: list-checks-demo-tycoon-explains-why-data-cannot-run
+  tags: [checks, data, refusal]
+  input: {op: tools_seq, steps: [{tool: list_checks, args: {project_id: demo_tycoon, place_id: main}}]}
+  checks: [{type: equals, path: steps.0.result.checks.1.id, value: data_roundtrip}, {type: equals, path: steps.0.result.checks.1.runnable, value: false}, {type: text_contains, path: steps.0.result.checks.1.why_not, text: "refused"}]
+- id: dry-runs-write-nothing
+  tags: [dryrun]
+  title: "generate, record_run and record_result as dry runs leave the workspace empty"
+  input:
+    op: tools_seq
+    steps:
+      - {tool: generate_check_script, args: {project_id: demo_mine, place_id: main, check_id: boot, studios: [{name: "Demo Mine Main (SYNTHETIC)", place_id: 0, studio_id: s}]}}
+      - {tool: record_run, args: {project_id: demo_mine, place_id: main, request: "playtest"}}
+      - {tool: record_result, args: {project_id: demo_mine, place_id: main, check_id: boot, results: ["$world:boot:"], console_log: "$console:boot:"}}
+  checks:
+    - {type: list_empty, path: wrote}
+    - {type: equals, path: steps.0.result.dry_run, value: true}
+    - {type: equals, path: steps.2.result.verdict, value: pass}
+- id: real-writes-go-to-the-place-folder
+  tags: [dryrun]
+  input:
+    op: tools_seq
+    steps:
+      - {tool: generate_check_script, args: {project_id: demo_mine, place_id: main, check_id: boot, dry_run: false, studios: [{name: "Demo Mine Main (SYNTHETIC)", place_id: 0, studio_id: s}]}}
+      - {tool: record_result, args: {project_id: demo_mine, place_id: main, check_id: boot, results: ["$world:boot:"], console_log: "$console:boot:", dry_run: false}}
+  checks:
+    - {type: list_contains, path: wrote, items: ["projects/demo_mine/main/output/scripts/boot-1.luau", "projects/demo_mine/main/results/results.jsonl"]}
+    - {type: text_contains, path: steps.0.result.luau, text: "PLAYQA_MARK"}
+- id: corrections-stay-in-their-place-unless-marked-global
+  tags: [scope, learning, isolation]
+  title: "a correction saved for demo_mine/main is invisible in demo_tycoon/main until it is marked global"
+  input:
+    op: tools_seq
+    steps:
+      - {tool: record_run, args: {project_id: demo_mine, place_id: main, request: "boot window too short", dry_run: false}}
+      - {tool: record_decision, args: {project_id: demo_mine, place_id: main, run_id: "$ref:steps.0.result.run_id", decision: revise, reason: "boot window should be longer", corrections: [{dimension: threshold, note: "boot window should be 15 s"}], dry_run: false}}
+      - {tool: find_past_corrections, args: {project_id: demo_mine, place_id: main, request: "boot window"}}
+      - {tool: find_past_corrections, args: {project_id: demo_tycoon, place_id: main, request: "boot window"}}
+      - {tool: record_decision, args: {project_id: demo_mine, place_id: main, run_id: "$ref:steps.0.result.run_id", decision: revise, reason: "applies everywhere", corrections: [{dimension: threshold, note: "boot window should be 15 s everywhere"}], mark_global: true, dry_run: false}}
+      - {tool: find_past_corrections, args: {project_id: demo_tycoon, place_id: main, request: "boot window"}}
+  checks:
+    - {type: text_contains, path: steps.2.result.summary, text: "1 correction(s) for demo_mine/main"}
+    - {type: text_contains, path: steps.3.result.summary, text: "0 correction(s) for demo_tycoon/main"}
+    - {type: text_contains, path: steps.5.result.summary, text: "1 correction(s) for demo_tycoon/main"}
+- id: decision-with-an-unknown-dimension-is-refused
+  tags: [feedback, refusal]
+  input:
+    op: tools_seq
+    steps:
+      - {tool: record_run, args: {project_id: demo_mine, place_id: main, request: "x", dry_run: false}}
+      - {tool: record_decision, args: {project_id: demo_mine, place_id: main, run_id: "$ref:steps.0.result.run_id", decision: revise, corrections: [{dimension: vibes, note: "meh"}]}}
+  checks: [{type: step_error_contains, step: 1, text: "unknown correction dimension 'vibes'"}]
+- id: decision-for-an-unknown-run-is-refused-even-as-a-dry-run
+  tags: [feedback, refusal]
+  input: {op: tools_seq, steps: [{tool: record_decision, args: {project_id: demo_mine, place_id: main, run_id: "run-nope", decision: accept}}]}
+  checks: [{type: step_error_contains, step: 0, text: "unknown run_id"}]
+- id: promote-with-an-unknown-kind-is-refused
+  tags: [feedback, refusal]
+  input:
+    op: tools_seq
+    steps:
+      - {tool: record_run, args: {project_id: demo_mine, place_id: main, request: "x", dry_run: false}}
+      - {tool: promote_run, args: {project_id: demo_mine, place_id: main, run_id: "$ref:steps.0.result.run_id", kind: screenshot, title: t, description: d, tags: [], path: p}}
+  checks: [{type: step_error_contains, step: 1, text: "kind must be one of"}]

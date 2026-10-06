@@ -1,0 +1,378 @@
+{
+ "collector_version": 1,
+ "format": "placemap-collect/1",
+ "full": true,
+ "nodes": [
+  {
+   "c": "ReplicatedStorage",
+   "n": 1,
+   "p": "ReplicatedStorage"
+  },
+  {
+   "c": "Folder",
+   "n": 3,
+   "p": "ReplicatedStorage/Remotes"
+  },
+  {
+   "c": "RemoteEvent",
+   "n": 0,
+   "p": "ReplicatedStorage/Remotes/BuyStuff"
+  },
+  {
+   "c": "RemoteEvent",
+   "n": 0,
+   "p": "ReplicatedStorage/Remotes/Chatter"
+  },
+  {
+   "c": "RemoteEvent",
+   "n": 0,
+   "p": "ReplicatedStorage/Remotes/GrabIt"
+  },
+  {
+   "c": "ServerScriptService",
+   "n": 1,
+   "p": "ServerScriptService"
+  },
+  {
+   "c": "Script",
+   "n": 0,
+   "p": "ServerScriptService/Pickup",
+   "rc": "Server",
+   "s": {
+    "fp": "193:f3d64e83",
+    "len": 193,
+    "src": "-- Collect handling.\nlocal loose = workspace:WaitForChild(\"Loose\")\nlocal Remotes = game:GetService(\"ReplicatedStorage\").Remotes\nRemotes.GrabIt.OnServerEvent:Connect(function(player, item) end)\n"
+   }
+  },
+  {
+   "c": "Workspace",
+   "n": 4,
+   "p": "Workspace"
+  },
+  {
+   "c": "Folder",
+   "n": 3,
+   "p": "Workspace/Decor"
+  },
+  {
+   "c": "Part",
+   "n": 0,
+   "p": "Workspace/Decor/CoinPile1",
+   "v": [
+    71.0,
+    1.0,
+    0.0
+   ]
+  },
+  {
+   "c": "Part",
+   "n": 0,
+   "p": "Workspace/Decor/CoinPile2",
+   "v": [
+    72.0,
+    1.0,
+    0.0
+   ]
+  },
+  {
+   "c": "Part",
+   "n": 0,
+   "p": "Workspace/Decor/CoinPile3",
+   "v": [
+    73.0,
+    1.0,
+    0.0
+   ]
+  },
+  {
+   "c": "Folder",
+   "n": 6,
+   "p": "Workspace/Loose"
+  },
+  {
+   "a": {
+    "Value": 2
+   },
+   "c": "Part",
+   "n": 1,
+   "p": "Workspace/Loose/Thing1",
+   "v": [
+    51.0,
+    1.0,
+    0.0
+   ]
+  },
+  {
+   "c": "ClickDetector",
+   "n": 0,
+   "p": "Workspace/Loose/Thing1/Click"
+  },
+  {
+   "a": {
+    "Value": 2
+   },
+   "c": "Part",
+   "n": 1,
+   "p": "Workspace/Loose/Thing2",
+   "v": [
+    52.0,
+    1.0,
+    0.0
+   ]
+  },
+  {
+   "c": "ClickDetector",
+   "n": 0,
+   "p": "Workspace/Loose/Thing2/Click"
+  },
+  {
+   "a": {
+    "Value": 2
+   },
+   "c": "Part",
+   "n": 1,
+   "p": "Workspace/Loose/Thing3",
+   "v": [
+    53.0,
+    1.0,
+    0.0
+   ]
+  },
+  {
+   "c": "ClickDetector",
+   "n": 0,
+   "p": "Workspace/Loose/Thing3/Click"
+  },
+  {
+   "a": {
+    "Value": 2
+   },
+   "c": "Part",
+   "n": 1,
+   "p": "Workspace/Loose/Thing4",
+   "v": [
+    54.0,
+    1.0,
+    0.0
+   ]
+  },
+  {
+   "c": "ClickDetector",
+   "n": 0,
+   "p": "Workspace/Loose/Thing4/Click"
+  },
+  {
+   "a": {
+    "Value": 2
+   },
+   "c": "Part",
+   "n": 1,
+   "p": "Workspace/Loose/Thing5",
+   "v": [
+    55.0,
+    1.0,
+    0.0
+   ]
+  },
+  {
+   "c": "ClickDetector",
+   "n": 0,
+   "p": "Workspace/Loose/Thing5/Click"
+  },
+  {
+   "a": {
+    "Value": 2
+   },
+   "c": "Part",
+   "n": 1,
+   "p": "Workspace/Loose/Thing6",
+   "v": [
+    56.0,
+    1.0,
+    0.0
+   ]
+  },
+  {
+   "c": "ClickDetector",
+   "n": 0,
+   "p": "Workspace/Loose/Thing6/Click"
+  },
+  {
+   "c": "Folder",
+   "n": 5,
+   "p": "Workspace/Npcs"
+  },
+  {
+   "c": "Model",
+   "n": 3,
+   "p": "Workspace/Npcs/Alice",
+   "v": [
+    300.0,
+    0.0,
+    0.0
+   ]
+  },
+  {
+   "c": "Humanoid",
+   "n": 0,
+   "p": "Workspace/Npcs/Alice/Humanoid"
+  },
+  {
+   "c": "Script",
+   "n": 0,
+   "p": "Workspace/Npcs/Alice/Logic",
+   "rc": "Server",
+   "s": {
+    "fp": "109:5e305bbd",
+    "len": 109,
+    "src": "-- Chats.\nlocal Remotes = game:GetService(\"ReplicatedStorage\").Remotes\nRemotes.Chatter:FireClient(nil, \"hi\")\n"
+   }
+  },
+  {
+   "c": "ProximityPrompt",
+   "n": 0,
+   "p": "Workspace/Npcs/Alice/Talk"
+  },
+  {
+   "a": {
+    "Price": 20,
+    "Stock": 3
+   },
+   "c": "Model",
+   "n": 3,
+   "p": "Workspace/Npcs/Bob",
+   "v": [
+    0.0,
+    0.0,
+    0.0
+   ]
+  },
+  {
+   "c": "Humanoid",
+   "n": 0,
+   "p": "Workspace/Npcs/Bob/Humanoid"
+  },
+  {
+   "c": "Script",
+   "n": 0,
+   "p": "Workspace/Npcs/Bob/Logic",
+   "rc": "Server",
+   "s": {
+    "fp": "132:c8b2587b",
+    "len": 132,
+    "src": "-- Sells.\nlocal Remotes = game:GetService(\"ReplicatedStorage\").Remotes\nRemotes.BuyStuff.OnServerEvent:Connect(function(player) end)\n"
+   }
+  },
+  {
+   "c": "ProximityPrompt",
+   "n": 0,
+   "p": "Workspace/Npcs/Bob/Talk"
+  },
+  {
+   "c": "Model",
+   "n": 3,
+   "p": "Workspace/Npcs/Carl",
+   "v": [
+    600.0,
+    0.0,
+    0.0
+   ]
+  },
+  {
+   "c": "Humanoid",
+   "n": 0,
+   "p": "Workspace/Npcs/Carl/Humanoid"
+  },
+  {
+   "c": "Script",
+   "n": 0,
+   "p": "Workspace/Npcs/Carl/Logic",
+   "rc": "Server",
+   "s": {
+    "fp": "116:3d77d87c",
+    "len": 116,
+    "src": "-- Sells too.\nlocal Remotes = game:GetService(\"ReplicatedStorage\").Remotes\nRemotes.BuyStuff:FireClient(nil, \"open\")\n"
+   }
+  },
+  {
+   "c": "ProximityPrompt",
+   "n": 0,
+   "p": "Workspace/Npcs/Carl/Talk"
+  },
+  {
+   "c": "Part",
+   "n": 0,
+   "p": "Workspace/Npcs/ShopSign",
+   "v": [
+    2.0,
+    4.0,
+    0.0
+   ]
+  },
+  {
+   "c": "Model",
+   "n": 1,
+   "p": "Workspace/Npcs/VendorStatue",
+   "v": [
+    4.0,
+    0.0,
+    0.0
+   ]
+  },
+  {
+   "c": "Part",
+   "n": 0,
+   "p": "Workspace/Npcs/VendorStatue/Base",
+   "v": [
+    4.0,
+    0.0,
+    0.0
+   ]
+  },
+  {
+   "c": "Folder",
+   "n": 2,
+   "p": "Workspace/Start"
+  },
+  {
+   "a": {
+    "Checkpoint": 1
+   },
+   "c": "Part",
+   "n": 0,
+   "p": "Workspace/Start/Entry",
+   "v": [
+    0.0,
+    0.0,
+    3.0
+   ]
+  },
+  {
+   "c": "SpawnLocation",
+   "n": 0,
+   "p": "Workspace/Start/Pad",
+   "v": [
+    1.0,
+    0.0,
+    0.0
+   ]
+  }
+ ],
+ "place": {
+  "name": "Role Lab (SYNTHETIC)",
+  "place_id": 0
+ },
+ "roots": [
+  "ReplicatedStorage",
+  "ServerScriptService",
+  "Workspace"
+ ],
+ "skipped": {
+  "instances": 0,
+  "plain_leaves": 0,
+  "secrets": 0,
+  "sources": 0
+ },
+ "taken_unix": 1790000000,
+ "truncated": false
+}

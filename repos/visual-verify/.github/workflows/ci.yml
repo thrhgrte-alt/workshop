@@ -1,0 +1,21 @@
+name: ci
+on: [push, pull_request]
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.10", "3.12"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      # guide-core is a local repository (not on PyPI): check it out next to this one and install it first
+      - run: pip install -e ../guide-core && pip install -e ".[dev]"
+      - run: python -m pytest
+      - run: python -m visualverify check-skills
+      - run: python -m visualverify sync-agent-files --check
+      - run: python scripts/build_schema.py --check
+      - run: python -m visualverify eval run --label ci
+      - run: python scripts/make_examples.py --check && python scripts/make_samples.py --check

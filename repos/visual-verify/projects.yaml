@@ -1,0 +1,40 @@
+# The projects and places this repository knows. EVERY tool needs a project_id from this file (and a place_id where it applies) and refuses without one.
+# These three are SYNTHETIC examples (no real game, no real Roblox place id, no real Studio name): replace them with your own.
+# image_roots: folders (relative to this file, or absolute) a project's tools may read images from, ON TOP OF the shared synthetic examples/shared and samples folders,
+#              the private workspace and VISUALVERIFY_ALLOWED_PATHS. One project cannot read another project's image_roots.
+version: 1
+projects:
+  - project_id: demo-pixel-brawler
+    alias: Demo Pixel Brawler (SYNTHETIC)
+    synthetic: true
+    universe_id: 0
+    image_roots: [examples/demo-pixel-brawler]
+    places:
+      - place_id: arena
+        alias: Arena
+        roblox_place_id: 0
+        studio_name: "Demo Pixel Brawler Arena (SYNTHETIC)"
+      - place_id: lobby
+        alias: Lobby
+        roblox_place_id: 0
+        studio_name: "Demo Pixel Brawler Lobby (SYNTHETIC)"
+  - project_id: demo-realistic-tycoon
+    alias: Demo Realistic Tycoon (SYNTHETIC)
+    synthetic: true
+    universe_id: 0
+    image_roots: [examples/demo-realistic-tycoon]
+    places:
+      - place_id: factory
+        alias: Factory
+        roblox_place_id: 0
+        studio_name: "Demo Realistic Tycoon Factory (SYNTHETIC)"
+  - project_id: demo-stylized-obby
+    alias: Demo Stylized Obby (SYNTHETIC)
+    synthetic: true
+    universe_id: 0
+    image_roots: [examples/demo-stylized-obby]
+    places:
+      - place_id: stage-1
+        alias: Stage 1
+        roblox_place_id: 0
+        studio_name: "Demo Stylized Obby Stage 1 (SYNTHETIC)"

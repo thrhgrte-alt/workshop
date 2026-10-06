@@ -1,6 +1,6 @@
 # AI creative-work repositories
 
-Eight **separate** repositories (not a monorepo), each a practical toolkit that lets a capable AI agent (Claude Code, Codex CLI, Gemini CLI, Copilot, Cursor, ...) do one kind of creative work
+Twelve **separate** repositories (not a monorepo), each a practical toolkit that lets a capable AI agent (Claude Code, Codex CLI, Gemini CLI, Copilot, Cursor, ...) do one kind of creative work
 through instructions, a searchable reference library, deterministic tools, evals and a feedback loop. Each is a Git repository with its own history.
 
 | Repository | Work | Tests | Eval tasks | Needs an app to *finish* the job |
@@ -58,3 +58,10 @@ projects are **placeholders to replace**. None was run against real Blender, Stu
 (observe, tunable parameters, proposals, an eval gate, versioned promotion, skill export). `luau-reviewer`, `roblox-economy-balancer` and `asset-roblox-preflight` now depend on it (their vendored `core/` folders were removed; test and eval
 results were unchanged, see each repo's git history). **Install it first:** `pip install -e repos/guide-core`. The five older repositories still carry their own vendored copy; see `repos/guide-core/docs/migrating-older-repos.md`.
 It improves only as far as the corrections and evals it is given; model weights never change.
+
+## Fourth batch: `place-map`, `studio-playtest-qa`, `visual-verify`
+
+Built on `guide-core` (see above). `place-map` indexes a Roblox place from hub-collected snapshots and finds landmarks by structural role scoring (no game-specific names); `studio-playtest-qa` generates assertion Luau and a run plan for scripted
+playtests and parses the results (data checks refuse without a test-mode switch); `visual-verify` measures images numerically (silhouette IoU, palette, value structure, edges, tiling, PBR ranges, diffs).
+**Every parser of hub output is `schema_unverified`**: no real hub captures existed here, so `samples/hub/` is empty in each repo and `samples/README.md` says which hub call to run and where to save it. `evals/real/` is empty in every repo: all
+reported eval results are self-written and only show each tool agrees with itself. All numeric limits are placeholders. Nothing was run against real Studio, Blender or the real Luau tools.

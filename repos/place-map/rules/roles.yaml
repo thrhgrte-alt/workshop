@@ -1,0 +1,102 @@
+# Generic landmark roles. NO game-specific names: a role is a weighted list of GENERIC features (see placemap/domain/features.py).
+#   score(r, x) = clamp( sum_i w_i * f_i(x) / sum_i |w_i| , 0, 1 )          f_i(x) in [0, 1]; a negative weight counts against the role
+# Every weight and band below is a PLACEHOLDER default, registered as a named parameter (weight.<role>.<feature>, band.<role>.confident|candidate) so the user's labels can tune them
+# per project (see README "Learning the weights"). Nothing here comes from Roblox. A project can add roles in projects/<project_id>/roles.yaml (same format).
+#
+# aliases: extra words that name the role in a request such as 'the nodes' (plural 's' is ignored); a request that is exactly these words is a ROLE request.
+# Feature kinds (fn):
+#   token_match         field: name | attribute_keys ; tokens come from synonyms_key (rules/synonyms.yaml + projects/<id>/synonyms.yaml) or inline `tokens`; k: matches needed to reach 1.0
+#   class_presence      classes: [...]; 1 if the instance (include_self: true) or any descendant has one of the classes
+#   remote_string_refs  scripts that reference the instance (inside it, or mentioning its name); sources: remotes and/or strings; synonyms_key or tokens; k as above
+#   repetition          n_similar / (n_similar + c) among siblings (same class signature, name-token Jaccard above the threshold)
+#   reference_density   scripts mentioning the instance, normalised by the place's median reference count
+#   proximity_cluster   instances near an already-confident landmark of ANOTHER role (near_roles) raise the score slightly
+version: 1
+placeholder: true
+roles:
+  vendor:
+    aliases: [vendor]                 # words that name the role in a request (the role id's own words always do)
+    description: sells things to the player
+    features:
+      has_interaction:              {fn: class_presence, w: 3.0, classes: [ProximityPrompt, ClickDetector, TouchInterest]}
+      name_matches_synonyms:        {fn: token_match, w: 1.5, field: name}
+      has_humanoid_or_model:        {fn: class_presence, w: 1.0, classes: [Humanoid, Model], include_self: true}
+      script_fires_purchase_remote: {fn: remote_string_refs, w: 3.0, sources: [remotes]}
+      attribute_keys_match:         {fn: token_match, w: 1.0, field: attribute_keys, tokens: [price, cost, stock, item], k: 2}
+      repeated_siblings:            {fn: repetition, w: -1.0}
+    bands: {confident: 0.75, candidate: 0.45}
+  upgradable_tool:
+    aliases: [tool, upgradable tool]                 # words that name the role in a request (the role id's own words always do)
+    description: owned, equipped or upgraded by the player
+    features:
+      is_tool_class:                {fn: class_presence, w: 2.0, classes: [Tool, HopperBin], include_self: true}
+      name_matches_synonyms:        {fn: token_match, w: 1.0, field: name}
+      attribute_keys_match:         {fn: token_match, w: 1.5, field: attribute_keys, k: 2}
+      script_fires_equip_remote:    {fn: remote_string_refs, w: 2.5, sources: [remotes]}
+      reference_density:            {fn: reference_density, w: 0.5}
+      repeated_siblings:            {fn: repetition, w: -0.5}
+    bands: {confident: 0.7, candidate: 0.4}
+  resource_node:
+    aliases: [node, resource, resource node]                 # words that name the role in a request (the role id's own words always do)
+    description: harvestable by the player, repeated in numbers
+    features:
+      repeated_siblings:            {fn: repetition, w: 3.0}
+      has_interaction:              {fn: class_presence, w: 2.0, classes: [ProximityPrompt, ClickDetector, TouchInterest]}
+      attribute_keys_match:         {fn: token_match, w: 1.5, field: attribute_keys, k: 2}
+      name_matches_synonyms:        {fn: token_match, w: 1.0, field: name}
+      script_fires_harvest_remote:  {fn: remote_string_refs, w: 2.0, sources: [remotes]}
+      reference_density:            {fn: reference_density, w: 0.5}
+      has_humanoid:                 {fn: class_presence, w: -1.5, classes: [Humanoid]}
+    bands: {confident: 0.55, candidate: 0.45}
+  collectible:
+    aliases: [collectible, pickup]                 # words that name the role in a request (the role id's own words always do)
+    description: picked up by the player, usually repeated
+    features:
+      has_interaction:              {fn: class_presence, w: 2.5, classes: [ProximityPrompt, ClickDetector, TouchInterest]}
+      repeated_siblings:            {fn: repetition, w: 2.5}
+      name_matches_synonyms:        {fn: token_match, w: 1.0, field: name}
+      script_fires_collect_remote:  {fn: remote_string_refs, w: 2.0, sources: [remotes]}
+      attribute_keys_match:         {fn: token_match, w: 1.0, field: attribute_keys, k: 2}
+      has_humanoid:                 {fn: class_presence, w: -1.5, classes: [Humanoid]}
+    bands: {confident: 0.6, candidate: 0.5}
+  spawn:
+    aliases: [spawn, spawn point, spawn location]                 # words that name the role in a request (the role id's own words always do)
+    description: where players or things appear
+    features:
+      is_spawn_class:               {fn: class_presence, w: 4.0, classes: [SpawnLocation], include_self: true}
+      name_matches_synonyms:        {fn: token_match, w: 1.5, field: name}
+      attribute_keys_match:         {fn: token_match, w: 1.0, field: attribute_keys, k: 1}
+      script_refs_spawn_tokens:     {fn: remote_string_refs, w: 1.5, sources: [remotes]}
+      near_other_landmark:          {fn: proximity_cluster, w: 0.5, near_roles: [vendor, zone, progression_gate]}
+    bands: {confident: 0.6, candidate: 0.4}
+  zone:
+    aliases: [zone]                 # words that name the role in a request (the role id's own words always do)
+    description: a bounded area with a rule
+    features:
+      name_matches_synonyms:        {fn: token_match, w: 1.5, field: name}
+      attribute_keys_match:         {fn: token_match, w: 1.5, field: attribute_keys, k: 2}
+      script_refs_zone_tokens:      {fn: remote_string_refs, w: 2.0, sources: [remotes, strings]}
+      is_volume_part:               {fn: class_presence, w: 0.5, classes: [Part, MeshPart, UnionOperation], include_self: true}
+      reference_density:            {fn: reference_density, w: 1.0}
+      near_other_landmark:          {fn: proximity_cluster, w: 0.5, near_roles: [spawn, progression_gate]}
+    bands: {confident: 0.7, candidate: 0.4}
+  currency_display:
+    aliases: [currency, currency display]                 # words that name the role in a request (the role id's own words always do)
+    description: shows the player a balance
+    features:
+      is_text_gui:                  {fn: class_presence, w: 1.5, classes: [TextLabel, TextButton, TextBox], include_self: true}
+      name_matches_synonyms:        {fn: token_match, w: 2.0, field: name}
+      script_refs_currency_tokens:  {fn: remote_string_refs, w: 1.5, sources: [remotes, strings]}
+      attribute_keys_match:         {fn: token_match, w: 1.0, field: attribute_keys, k: 1}
+      is_value_object:              {fn: class_presence, w: 1.0, classes: [NumberValue, IntValue], include_self: true}
+    bands: {confident: 0.65, candidate: 0.4}
+  progression_gate:
+    aliases: [gate, progression gate]                 # words that name the role in a request (the role id's own words always do)
+    description: blocks the player until a condition is met
+    features:
+      name_matches_synonyms:        {fn: token_match, w: 1.5, field: name}
+      attribute_keys_match:         {fn: token_match, w: 2.0, field: attribute_keys, k: 2}
+      has_interaction:              {fn: class_presence, w: 1.5, classes: [ProximityPrompt, ClickDetector, TouchInterest]}
+      script_refs_gate_tokens:      {fn: remote_string_refs, w: 2.5, sources: [remotes]}
+      reference_density:            {fn: reference_density, w: 0.5}
+    bands: {confident: 0.7, candidate: 0.4}

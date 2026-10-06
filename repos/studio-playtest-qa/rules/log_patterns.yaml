@@ -1,0 +1,30 @@
+# How console lines are classified. verify_against_current_docs: the real format of get_console_output was never captured here, and Studio's message wording can change.
+# Tags are matched case-insensitively at the start of a line (after an optional time stamp) and win over patterns; patterns are searched anywhere in the line.
+version: 1
+verify_against_current_docs: true
+schema_status: schema_unverified
+tags:
+  error: ["[error]", "error:", "error -", "messageerror", "enum.messagetype.messageerror", "<error>"]
+  warning: ["[warning]", "warning:", "warning -", "messagewarning", "enum.messagetype.messagewarning", "<warning>"]
+  info: ["[info]", "[output]", "info:", "messageinfo", "messageoutput", "enum.messagetype.messageinfo", "enum.messagetype.messageoutput"]
+error_patterns:
+  - "attempt to "
+  - "is not a valid member of"
+  - "script timeout"
+  - "exhausted allowed execution time"
+  - "unable to cast"
+  - "argument \\d+ missing or nil"
+  - "invalid argument"
+  - "\\w+:\\d+: .*(error|failed)"
+# Lines that continue the previous entry (a stack trace), never an entry of their own.
+continuation_patterns:
+  - "^stack begin"
+  - "^script '"
+  - "^stack end"
+  - "^\\s+at "
+warning_patterns:
+  - "infinite yield possible"
+  - "deprecated"
+  - "this script is being throttled"
+# Lines to leave out of the counts. NONE are shipped: a game adds its own in playtest.yaml (log_ignore). Ignored lines are always counted and reported, never hidden.
+ignore_patterns: []

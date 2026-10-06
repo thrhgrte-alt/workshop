@@ -1,0 +1,24 @@
+version: 1
+checks:
+  - id: spawn
+    kind: spawn
+    title: "Spawn: the player spawns, is alive, is not stuck and stands on a valid surface"
+    context: server
+    session: shared
+    flaky: false
+    config_section: spawn
+    settings: [spawn_timeout_seconds, spawn_probe_distance_studs, spawn_probe_seconds, spawn_void_y, spawn_floor_ray_studs]
+    ranges: [spawn_min_move_fraction]
+    assertions:
+      - {id: player_present, title: "a player exists in the play session", source: script}
+      - {id: character_spawned, title: "the player's character exists within the timeout", source: script}
+      - {id: alive, title: "the humanoid has health above 0", source: script}
+      - {id: above_void, title: "the character is above the void height", source: script}
+      - {id: floor_found, title: "a surface is found under the character", source: script}
+      - {id: floor_valid, title: "that surface is not on the invalid list (names, attributes)", source: script}
+      - {id: not_stuck, title: "the character covers the required share of the MoveTo probe distance", source: tool}
+    not_checked:
+      - "the look of the spawn area or any UI"
+      - "teams, spawn protection or respawn timing"
+      - "other players or other spawn locations"
+    verify_against_current_docs: false

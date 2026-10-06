@@ -1,0 +1,176 @@
+# Boot check and console parsing. Every expectation was computed by hand from the fixtures below (the mock world's boot log: 0.1 s "Server started", 0.4 s "Economy loaded",
+# optionally a boot error at 1.2 s with a 3-line stack trace, an "Infinite yield possible" warning at 2.0 s). Self-written: they show the tool agrees with itself, not real-world precision.
+- id: boot-clean-passes
+  tags: [boot, known-good]
+  title: "the clean mock world passes boot: 4 of 4 services, 3 of 3 paths, 0 errors and 0 warnings in the window"
+  input: {op: world_check, check: boot}
+  checks:
+    - {type: equals, path: verdict, value: pass}
+    - {type: list_empty, path: failed}
+    - {type: equals, path: lint_clean, value: true}
+    - {type: text_contains, path: checked.0, text: "4 of 4 expected services exist"}
+    - {type: text_contains, path: checked.1, text: "3 of 3 expected paths exist"}
+    - {type: text_contains, path: checked.3, text: "0 error(s) and 0 warning(s)"}
+- id: boot-script-error-is-caught
+  tags: [boot, planted-fault]
+  title: "a script error at boot fails the check twice over: the console and the LogService history each show 1 error line"
+  input: {op: world_check, check: boot, faults: [boot_error]}
+  checks:
+    - {type: equals, path: verdict, value: fail}
+    - {type: list_equals, path: failed, items: [console_no_errors, log_service_clean]}
+    - {type: text_contains, path: failures.0.evidence.log_lines.0, text: "attempt to index nil with 'Spawn'"}
+    - {type: equals, path: failures.0.cause_rule, value: boot-nil-index}
+    - {type: equals, path: failures.1.evidence.measured, value: 1}
+- id: boot-warning-is-caught
+  tags: [boot, planted-fault]
+  input: {op: world_check, check: boot, faults: [boot_warning]}
+  checks:
+    - {type: equals, path: verdict, value: fail}
+    - {type: list_equals, path: failed, items: [console_no_warnings]}
+    - {type: equals, path: failures.0.cause_rule, value: boot-warning}
+    - {type: text_contains, path: failures.0.evidence.detail, text: "Infinite yield possible"}
+- id: boot-missing-folder-is-caught
+  tags: [boot, planted-fault]
+  input: {op: world_check, check: boot, faults: [missing_folder]}
+  checks:
+    - {type: equals, path: verdict, value: fail}
+    - {type: list_equals, path: failed, items: [paths_exist]}
+    - {type: text_contains, path: failures.0.evidence.detail, text: "ServerScriptService.Systems"}
+    - {type: equals, path: failures.0.cause_rule, value: boot-missing-path}
+- id: boot-error-found-in-entries-list-format
+  tags: [boot, parser]
+  title: "the same boot error is found when the console arrives as a list of {message, messageType, timestamp} entries"
+  input: {op: world_check, check: boot, faults: [boot_error], console: entries}
+  checks:
+    - {type: equals, path: verdict, value: fail}
+    - {type: list_contains, path: failed, items: [console_no_errors]}
+- id: boot-without-console-passes-only-with-log-service-evidence
+  tags: [boot, honesty]
+  title: "no console supplied: the pass rests on LogService evidence and says the console was not read"
+  input: {op: world_check, check: boot, console: none}
+  checks:
+    - {type: equals, path: verdict, value: pass}
+    - {type: text_contains, path: report.not_checked.3, text: "console: no console_log was supplied"}
+- id: boot-without-any-error-evidence-is-inconclusive
+  tags: [boot, honesty]
+  title: "no console and no LogService: folders existing is not enough to pass a boot check"
+  input: {op: world_check, check: boot, console: none, cfg_patch: [{set: boot.use_log_service, value: false}]}
+  checks:
+    - {type: equals, path: verdict, value: inconclusive}
+    - {type: text_contains, path: summary, text: "INCONCLUSIVE boot"}
+- id: boot-error-after-the-window-does-not-count
+  tags: [boot, parser, hand-computed]
+  title: "3 lines at 0 s, 5 s (warning), 30 s (error): a 10 s window holds 2 lines, 0 errors, 1 warning"
+  input:
+    op: parse_console
+    window_seconds: 10
+    console: |
+      10:00:00.000 Server started
+      10:00:05.000 Infinite yield possible on 'Workspace.Map:WaitForChild("Gate")'
+      10:00:30.000 ServerScriptService.Late:3: attempt to call nil
+  checks:
+    - {type: equals, path: lines_read, value: 3}
+    - {type: equals, path: lines_in_window, value: 2}
+    - {type: equals, path: errors, value: 0}
+    - {type: equals, path: warnings, value: 1}
+    - {type: equals, path: window_applied, value: true}
+- id: console-stack-trace-is-one-error
+  tags: [parser, hand-computed]
+  title: "an error line followed by Stack Begin / Script / Stack End counts as ONE error with its script and line"
+  input:
+    op: parse_console
+    console: |
+      10:00:00.000 ServerScriptService.Boot:12: attempt to index nil with 'Spawn'
+      Stack Begin
+      Script 'ServerScriptService.Boot', Line 12
+      Stack End
+  checks:
+    - {type: equals, path: lines_read, value: 4}
+    - {type: equals, path: errors, value: 1}
+    - {type: equals, path: findings.0.script, value: ServerScriptService.Boot}
+    - {type: equals, path: findings.0.line, value: 12}
+- id: console-without-timestamps-cannot-apply-a-window
+  tags: [parser, honesty]
+  input:
+    op: parse_console
+    window_seconds: 10
+    console: |
+      Server started
+      attempt to call nil value
+      Infinite yield possible on X
+  checks:
+    - {type: equals, path: window_applied, value: false}
+    - {type: equals, path: errors, value: 1}
+    - {type: equals, path: warnings, value: 1}
+    - {type: text_contains, path: notes, text: "no time stamps"}
+- id: console-level-field-wins-over-patterns
+  tags: [parser, hand-computed]
+  title: "entries with a messageType field are classified by that field, not guessed from the text"
+  input:
+    op: parse_console
+    console:
+      - {message: "hello", messageType: "Enum.MessageType.MessageOutput", timestamp: 1.0}
+      - {message: "boom", messageType: "Enum.MessageType.MessageError", timestamp: 2.0}
+      - {message: "careful", messageType: "MessageWarning", timestamp: 3.0}
+  checks:
+    - {type: equals, path: errors, value: 1}
+    - {type: equals, path: warnings, value: 1}
+    - {type: equals, path: findings.0.level_source, value: type_field}
+- id: console-ignore-patterns-are-counted-not-hidden
+  tags: [parser, hand-computed]
+  input:
+    op: parse_console
+    ignore: ["Known:9"]
+    console: |
+      10:00:00.000 ServerScriptService.Boot:5: attempt to index nil
+      10:00:01.000 ServerScriptService.Known:9: attempt to call nil (known)
+  checks:
+    - {type: equals, path: errors, value: 1}
+    - {type: equals, path: ignored, value: 1}
+- id: console-marker-cuts-one-check-run
+  tags: [parser, hand-computed]
+  input:
+    op: parse_console
+    marker: [boot, 1]
+    console: |
+      10:00:00.000 PLAYQA_MARK boot 1 start
+      10:00:01.000 ServerScriptService.A:1: attempt to index nil
+      10:00:02.000 PLAYQA_MARK boot 1 end
+      10:00:03.000 ServerScriptService.B:2: attempt to call nil
+  checks:
+    - {type: equals, path: marker_found, value: true}
+    - {type: equals, path: lines_in_window, value: 1}
+    - {type: equals, path: errors, value: 1}
+    - {type: equals, path: findings.0.script, value: ServerScriptService.A}
+- id: console-own-result-line-is-never-an-error
+  tags: [parser]
+  title: "the PLAYQA_RESULT line carries other lines' words in its JSON; it must not be counted as an error"
+  input:
+    op: parse_console
+    console: |
+      10:00:00.000 PLAYQA_RESULT {"detail":"attempt to index nil"}
+  checks:
+    - {type: equals, path: errors, value: 0}
+- id: console-findings-are-ranked-and-capped-at-ten
+  tags: [parser, token-discipline, hand-computed]
+  title: "12 distinct errors: 10 shown, 2 more reported, errors first"
+  input:
+    op: parse_console
+    console: |
+      10:00:00.000 ServerScriptService.S1:1: attempt to index nil
+      10:00:00.100 ServerScriptService.S2:1: attempt to index nil
+      10:00:00.200 ServerScriptService.S3:1: attempt to index nil
+      10:00:00.300 ServerScriptService.S4:1: attempt to index nil
+      10:00:00.400 ServerScriptService.S5:1: attempt to index nil
+      10:00:00.500 ServerScriptService.S6:1: attempt to index nil
+      10:00:00.600 ServerScriptService.S7:1: attempt to index nil
+      10:00:00.700 ServerScriptService.S8:1: attempt to index nil
+      10:00:00.800 ServerScriptService.S9:1: attempt to index nil
+      10:00:00.900 ServerScriptService.S10:1: attempt to index nil
+      10:00:01.000 ServerScriptService.S11:1: attempt to index nil
+      10:00:01.100 ServerScriptService.S12:1: attempt to index nil
+  checks:
+    - {type: equals, path: errors, value: 12}
+    - {type: equals, path: distinct, value: 12}
+    - {type: equals, path: more_findings, value: 2}
+    - {type: less, path: findings.9.first_line_no, than: 11}

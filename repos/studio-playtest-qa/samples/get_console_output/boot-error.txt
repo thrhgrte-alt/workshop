@@ -1,0 +1,9 @@
+10:00:00.100  Server started
+10:00:00.400  ServerScriptService.Economy loaded 2 upgrades
+10:00:01.200  ServerScriptService.Boot:12: attempt to index nil with 'Spawn'
+10:00:01.200  Stack Begin
+10:00:01.200  Script 'ServerScriptService.Boot', Line 12
+10:00:01.200  Stack End
+10:00:03.000  PLAYQA_MARK boot 1 start
+10:00:03.000  PLAYQA_MARK boot 1 end
+10:00:03.000  PLAYQA_RESULT {"assertions": [{"detail": "all present", "expected": 4, "id": "services_exist", "measured": 4, "ok": true}, {"detail": "all present", "expected": 3, "id": "paths_exist", "measured": 3, "ok": true}, {"detail": "ServerScriptService.Boot:12: attempt to index nil with 'Spawn'", "expected": 0, "id": "log_service_clean", "measured": 1, "ok": false}], "check_id": "boot", "kind": "boot", "measures": {"expected_paths": 3, "expected_services": 4, "log_errors": ["ServerScriptService.Boot:12: attempt to index nil with 'Spawn'"], "log_warnings": 0, "missing_paths": [], "missing_services": [], "window_seconds": 10}, "place": {"name": "Demo Mine Main (SYNTHETIC)", "place_id": 0}, "repeat_no": 1, "schema": "playqa.result/1"}

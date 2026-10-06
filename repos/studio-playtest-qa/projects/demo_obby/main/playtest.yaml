@@ -1,0 +1,13 @@
+# SYNTHETIC. A place with only boot, spawn and reachability sections: every other check is "not configured" here.
+version: 1
+synthetic: true
+overrides: {settings: {boot_window_seconds: 15.0}}   # an explicit number in the place's own config wins over learned values
+boot:
+  expected_services: [Workspace]
+  expected_paths: [Workspace.Course]
+spawn:
+  invalid_surface_names: [KillBrick]
+reachability:
+  areas:
+    - {name: Stage5, path: Workspace.Course.Stage5}
+    - {name: Finish, path: Workspace.Course.Finish}

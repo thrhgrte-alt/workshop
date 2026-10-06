@@ -1,0 +1,107 @@
+# plan_refresh: the Luau the hub must run, and the refusal when the open Studio place is not the named one. Nothing here talks to Studio.
+- id: refresh-refuses-without-the-open-studio-list
+  tags: [refresh, scope, known-bad]
+  input: {op: tool, tool: plan_refresh, args: {project_id: demo_mine, place_id: dive-and-mine}}
+  checks:
+    - {type: refused, text: list_roblox_studios}
+
+- id: refresh-refuses-when-another-place-is-open-and-says-which
+  tags: [refresh, scope, wrong-place, known-bad]
+  input:
+    op: tool
+    tool: plan_refresh
+    args:
+      project_id: demo_mine
+      place_id: dive-and-mine
+      studios: [{name: "Dive and Mine Hardcore (SYNTHETIC)", place_id: 9000000002, studio_id: s1}]
+  checks:
+    - {type: refused, text: "are not place 'dive-and-mine'"}
+    - {type: error_contains, text: "Hardcore"}
+    - {type: error_contains, text: "nothing was generated"}
+
+- id: refresh-matches-an-unpublished-place-by-name
+  tags: [refresh, scope, known-good]
+  input:
+    op: tool
+    tool: plan_refresh
+    args: {project_id: demo_mine, place_id: dive-and-mine, studios: [{name: "Dive and Mine (SYNTHETIC)", place_id: 0, studio_id: s1}]}
+  checks:
+    - {type: ok}
+    - {type: equals, path: result.studio.matched_by, value: name}
+    - {type: equals, path: result.dry_run, value: true}
+
+- id: refresh-matches-a-published-place-by-id
+  tags: [refresh, scope, known-good]
+  input:
+    op: tool
+    tool: plan_refresh
+    args: {project_id: demo_mine, place_id: dive-and-mine-hardcore, studios: [{name: "renamed in studio", place_id: 9000000002, studio_id: s9}]}
+  checks:
+    - {type: ok}
+    - {type: equals, path: result.studio.matched_by, value: place_id}
+
+- id: refresh-returns-guarded-read-only-luau-for-the-hub
+  tags: [refresh, luau, known-good]
+  input:
+    op: tool
+    tool: plan_refresh
+    args: {project_id: demo_roles, place_id: role-lab, studios: [{name: "Role Lab (SYNTHETIC)", place_id: 0, studio_id: s1}]}
+  checks:
+    - {type: ok}
+    - {type: text_contains, path: result.luau, text: "wrong place"}
+    - {type: text_contains, path: result.luau, text: "placemap-collect/1"}
+    - {type: text_excludes, path: result.luau, text: "Instance.new"}
+    - {type: equals, path: result.hub_calls.0.tool, value: roblox_studio_execute_luau}
+    - {type: text_contains, path: result.input_schema, text: schema_unverified}
+
+- id: refresh-incremental-embeds-the-fingerprints-of-known-scripts
+  tags: [refresh, incremental, known-good]
+  input:
+    op: tool
+    tool: plan_refresh
+    args: {project_id: demo_mine, place_id: dive-and-mine, studios: [{name: "Dive and Mine (SYNTHETIC)", place_id: 0, studio_id: s1}]}
+  checks:
+    - {type: ok}
+    - {type: equals, path: result.incremental_known_scripts, value: 40}
+    - {type: equals, path: result.full, value: true}
+
+- id: refresh-partial-roots-only-embed-their-scripts
+  tags: [refresh, incremental, known-good]
+  input:
+    op: tool
+    tool: plan_refresh
+    args: {project_id: demo_mine, place_id: dive-and-mine, roots: [Workspace/Vendors], studios: [{name: "Dive and Mine (SYNTHETIC)", place_id: 0, studio_id: s1}]}
+  checks:
+    - {type: equals, path: result.full, value: false}
+    - {type: equals, path: result.roots, value: [Workspace/Vendors]}
+    - {type: equals, path: result.incremental_known_scripts, value: 2}
+
+- id: refresh-without-a-place-id-never-guesses
+  tags: [refresh, scope, known-bad]
+  input:
+    op: tool
+    tool: plan_refresh
+    args: {project_id: demo_mine, studios: [{name: "Dive and Mine Hardcore (SYNTHETIC)", place_id: 9000000002, studio_id: s1}]}
+  checks:
+    - {type: refused, text: "place_id is required"}
+
+- id: refresh-rejects-a-root-that-could-inject-code
+  tags: [refresh, injection, known-bad]
+  input:
+    op: tool
+    tool: plan_refresh
+    args: {project_id: demo_mine, place_id: dive-and-mine, roots: ["Workspace\nloadstring(x)()"], studios: [{name: "Dive and Mine (SYNTHETIC)", place_id: 0, studio_id: s1}]}
+  checks:
+    - {type: refused, text: "refresh root"}
+
+- id: refresh-dry-run-records-nothing-and-apply-records-the-plan
+  tags: [refresh, dry-run, known-good]
+  input:
+    op: steps
+    steps:
+      - {tool: plan_refresh, args: {project_id: demo_roles, place_id: role-lab, studios: [{name: "Role Lab (SYNTHETIC)", place_id: 0, studio_id: s1}]}}
+      - {tool: plan_refresh, args: {project_id: demo_roles, place_id: role-lab, dry_run: false, studios: [{name: "Role Lab (SYNTHETIC)", place_id: 0, studio_id: s1}]}}
+  checks:
+    - {type: equals, path: steps.0.result.dry_run, value: true}
+    - {type: equals, path: steps.1.result.dry_run, value: false}
+    - {type: list_contains, path: workspace_files, items: [projects/demo_roles/role-lab/refresh_plans.jsonl]}

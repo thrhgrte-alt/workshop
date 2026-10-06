@@ -1,0 +1,282 @@
+# The learning loop: record_run (re-measures), record_decision (signals), then propose / gate / promote / rollback through guide-core. Flows run in a temporary workspace.
+# Hand-computed fixtures: reference box [20,20,60,60] (40x40). A candidate box shifted 5 px right has IoU 35*40/(3200-1400) = 1400/1800 = 0.7778 (fails 0.8, passes 0.75), centroid and
+# bbox offsets 0.05 (equal to their limits, which pass: the operator is <=). A candidate shifted 2 px has IoU 0.9048, offsets 0.02. A symmetric 2-px grow [18,18,62,62] has IoU 1600/1936 = 0.8264,
+# centroid offset 0, bbox offset 0.02.
+- id: learn-three-accepts-of-a-failing-check-propose-relaxing-it
+  tags: [learning, hand-computed]
+  # Accepting a result whose IoU (0.7778) fails the 0.8 limit is a signal that the limit is too strict. 3 of 3 runs -> one step of 0.05: 0.80 -> 0.75. Nothing is applied by proposing.
+  input:
+    op: learning
+    images:
+      ref: {gen: rect, size: [100, 100], bg: [200, 200, 200], fg: [30, 30, 30], box: [20, 20, 60, 60]}
+      cand5: {gen: rect, size: [100, 100], bg: [200, 200, 200], fg: [30, 30, 30], box: [25, 20, 65, 60]}
+    steps:
+      - {tool: record_run, args: {request: "hero render 0", project_id: demo-stylized-obby, place_id: stage-1, measure: {tool: silhouette_iou, args: {candidate: "@cand5", reference: "@ref"}}}}
+      - {tool: record_decision, args: {run_id: "$ref:steps.0.result.run_id", decision: accept, project_id: demo-stylized-obby, place_id: stage-1}}
+      - {tool: record_run, args: {request: "hero render 1", project_id: demo-stylized-obby, place_id: stage-1, measure: {tool: silhouette_iou, args: {candidate: "@cand5", reference: "@ref"}}}}
+      - {tool: record_decision, args: {run_id: "$ref:steps.2.result.run_id", decision: accept, project_id: demo-stylized-obby, place_id: stage-1}}
+      - {tool: record_run, args: {request: "hero render 2", project_id: demo-stylized-obby, place_id: stage-1, measure: {tool: silhouette_iou, args: {candidate: "@cand5", reference: "@ref"}}}}
+      - {tool: record_decision, args: {run_id: "$ref:steps.4.result.run_id", decision: accept, project_id: demo-stylized-obby, place_id: stage-1}}
+      - {do: propose, project_id: demo-stylized-obby, place_id: stage-1}
+      - {do: value, param: silhouette.iou_min, project_id: demo-stylized-obby, place_id: stage-1}
+  checks:
+    - {type: is, path: steps.1.result.signals.0.target, value: "param:silhouette.iou_min"}
+    - {type: is, path: steps.1.result.signals.0.direction, value: down}
+    - {type: is, path: steps.1.result.regression_case_kept, value: true}
+    - {type: proposal_has, path: steps.6.result.proposals, param: silhouette.iou_min, before: 0.8, after: 0.75}
+    - {type: no_proposal_for, path: steps.6.result.proposals, param: silhouette.centroid_offset_max}
+    - {type: is, path: steps.7.result.value, value: 0.8}
+    - {type: is, path: steps.7.result.source, value: default}
+    - {type: text_has, path: steps.6.result.proposals.0.evidence, text: "3 of 3 runs"}
+
+- id: learn-two-runs-are-not-enough-evidence
+  tags: [learning, known-bad]
+  # The same signal in only 2 runs is below min_runs (3): no proposal.
+  input:
+    op: learning
+    images:
+      ref: {gen: rect, size: [100, 100], bg: [200, 200, 200], fg: [30, 30, 30], box: [20, 20, 60, 60]}
+      cand5: {gen: rect, size: [100, 100], bg: [200, 200, 200], fg: [30, 30, 30], box: [25, 20, 65, 60]}
+    steps:
+      - {tool: record_run, args: {request: "hero render 0", project_id: demo-stylized-obby, place_id: stage-1, measure: {tool: silhouette_iou, args: {candidate: "@cand5", reference: "@ref"}}}}
+      - {tool: record_decision, args: {run_id: "$ref:steps.0.result.run_id", decision: accept, project_id: demo-stylized-obby, place_id: stage-1}}
+      - {tool: record_run, args: {request: "hero render 1", project_id: demo-stylized-obby, place_id: stage-1, measure: {tool: silhouette_iou, args: {candidate: "@cand5", reference: "@ref"}}}}
+      - {tool: record_decision, args: {run_id: "$ref:steps.2.result.run_id", decision: accept, project_id: demo-stylized-obby, place_id: stage-1}}
+      - {do: propose, project_id: demo-stylized-obby, place_id: stage-1}
+  checks:
+    - {type: is, path: steps.4.result.proposals, value: []}
+    - {type: is, path: steps.4.result.runs_considered, value: 2}
+
+- id: learn-accepting-a-passing-result-is-no-signal
+  tags: [learning, known-good]
+  # IoU 0.9048, offsets 0.02: every check passes, so accepting it says nothing about the limits.
+  input:
+    op: learning
+    images:
+      ref: {gen: rect, size: [100, 100], bg: [200, 200, 200], fg: [30, 30, 30], box: [20, 20, 60, 60]}
+      cand2: {gen: rect, size: [100, 100], bg: [200, 200, 200], fg: [30, 30, 30], box: [22, 20, 62, 60]}
+    steps:
+      - {tool: record_run, args: {request: "hero render 0", project_id: demo-stylized-obby, place_id: stage-1, measure: {tool: silhouette_iou, args: {candidate: "@cand2", reference: "@ref"}}}}
+      - {tool: record_decision, args: {run_id: "$ref:steps.0.result.run_id", decision: accept, project_id: demo-stylized-obby, place_id: stage-1}}
+      - {tool: record_run, args: {request: "hero render 1", project_id: demo-stylized-obby, place_id: stage-1, measure: {tool: silhouette_iou, args: {candidate: "@cand2", reference: "@ref"}}}}
+      - {tool: record_decision, args: {run_id: "$ref:steps.2.result.run_id", decision: accept, project_id: demo-stylized-obby, place_id: stage-1}}
+      - {tool: record_run, args: {request: "hero render 2", project_id: demo-stylized-obby, place_id: stage-1, measure: {tool: silhouette_iou, args: {candidate: "@cand2", reference: "@ref"}}}}
+      - {tool: record_decision, args: {run_id: "$ref:steps.4.result.run_id", decision: accept, project_id: demo-stylized-obby, place_id: stage-1}}
+      - {do: propose, project_id: demo-stylized-obby, place_id: stage-1}
+  checks:
+    - {type: is, path: steps.1.result.signals, value: []}
+    - {type: is, path: steps.6.result.proposals, value: []}
+
+- id: learn-rejecting-a-passing-result-tightens-the-narrowest-check
+  tags: [learning, hand-computed]
+  # Rejecting (dimension silhouette) results that PASS: the check that passed by the smallest margin relative to its range is the suspect. Margins: iou (0.9048-0.8)/(0.99-0.30)=0.152,
+  # centroid and bbox (0.05-0.02)/(0.50-0.005)=0.0606 each (equal; the name order picks bbox). Proposal: bbox_offset_max 0.05 -> 0.04 (step 0.01).
+  input:
+    op: learning
+    images:
+      ref: {gen: rect, size: [100, 100], bg: [200, 200, 200], fg: [30, 30, 30], box: [20, 20, 60, 60]}
+      cand2: {gen: rect, size: [100, 100], bg: [200, 200, 200], fg: [30, 30, 30], box: [22, 20, 62, 60]}
+    steps:
+      - {tool: record_run, args: {request: "hero render 0", project_id: demo-stylized-obby, place_id: stage-1, measure: {tool: silhouette_iou, args: {candidate: "@cand2", reference: "@ref"}}}}
+      - {tool: record_decision, args: {run_id: "$ref:steps.0.result.run_id", decision: reject, project_id: demo-stylized-obby, place_id: stage-1, reason: "still not close enough", corrections: [{dimension: silhouette, note: "silhouette is off"}]}}
+      - {tool: record_run, args: {request: "hero render 1", project_id: demo-stylized-obby, place_id: stage-1, measure: {tool: silhouette_iou, args: {candidate: "@cand2", reference: "@ref"}}}}
+      - {tool: record_decision, args: {run_id: "$ref:steps.2.result.run_id", decision: reject, project_id: demo-stylized-obby, place_id: stage-1, reason: "still not close enough", corrections: [{dimension: silhouette, note: "silhouette is off"}]}}
+      - {tool: record_run, args: {request: "hero render 2", project_id: demo-stylized-obby, place_id: stage-1, measure: {tool: silhouette_iou, args: {candidate: "@cand2", reference: "@ref"}}}}
+      - {tool: record_decision, args: {run_id: "$ref:steps.4.result.run_id", decision: reject, project_id: demo-stylized-obby, place_id: stage-1, reason: "still not close enough", corrections: [{dimension: silhouette, note: "silhouette is off"}]}}
+      - {do: propose, project_id: demo-stylized-obby, place_id: stage-1}
+  checks:
+    - {type: is, path: steps.1.result.signals.0.target, value: "param:silhouette.bbox_offset_max"}
+    - {type: is, path: steps.1.result.signals.0.direction, value: down}
+    - {type: proposal_has, path: steps.6.result.proposals, param: silhouette.bbox_offset_max, before: 0.05, after: 0.04}
+    - {type: no_proposal_for, path: steps.6.result.proposals, param: silhouette.iou_min}
+
+- id: learn-a-reject-without-a-dimension-gives-no-signal
+  tags: [learning, known-bad]
+  # It is not known which threshold to tighten, so none is guessed.
+  input:
+    op: learning
+    images:
+      ref: {gen: rect, size: [100, 100], bg: [200, 200, 200], fg: [30, 30, 30], box: [20, 20, 60, 60]}
+      cand2: {gen: rect, size: [100, 100], bg: [200, 200, 200], fg: [30, 30, 30], box: [22, 20, 62, 60]}
+    steps:
+      - {tool: record_run, args: {request: "hero render 0", project_id: demo-stylized-obby, place_id: stage-1, measure: {tool: silhouette_iou, args: {candidate: "@cand2", reference: "@ref"}}}}
+      - {tool: record_decision, args: {run_id: "$ref:steps.0.result.run_id", decision: reject, project_id: demo-stylized-obby, place_id: stage-1, reason: "not what I wanted"}}
+      - {tool: record_run, args: {request: "hero render 1", project_id: demo-stylized-obby, place_id: stage-1, measure: {tool: silhouette_iou, args: {candidate: "@cand2", reference: "@ref"}}}}
+      - {tool: record_decision, args: {run_id: "$ref:steps.2.result.run_id", decision: reject, project_id: demo-stylized-obby, place_id: stage-1, reason: "not what I wanted"}}
+      - {tool: record_run, args: {request: "hero render 2", project_id: demo-stylized-obby, place_id: stage-1, measure: {tool: silhouette_iou, args: {candidate: "@cand2", reference: "@ref"}}}}
+      - {tool: record_decision, args: {run_id: "$ref:steps.4.result.run_id", decision: reject, project_id: demo-stylized-obby, place_id: stage-1, reason: "not what I wanted"}}
+      - {do: propose, project_id: demo-stylized-obby, place_id: stage-1}
+  checks:
+    - {type: is, path: steps.1.result.signals, value: []}
+    - {type: is, path: steps.6.result.proposals, value: []}
+
+- id: learn-contradicting-evidence-is-surfaced-not-merged
+  tags: [learning, known-bad, hand-computed]
+  # 3 accepts at IoU 0.7778 push iou_min DOWN; 3 rejects at IoU 0.8264 (passing narrowly: margin 0.0377, smaller than the bbox margin 0.0606) push it UP. Same target, both directions, 3 of 6 runs each:
+  # reported as a contradiction and no proposal is made for it.
+  input:
+    op: learning
+    images:
+      ref: {gen: rect, size: [100, 100], bg: [200, 200, 200], fg: [30, 30, 30], box: [20, 20, 60, 60]}
+      cand5: {gen: rect, size: [100, 100], bg: [200, 200, 200], fg: [30, 30, 30], box: [25, 20, 65, 60]}
+      candg: {gen: rect, size: [100, 100], bg: [200, 200, 200], fg: [30, 30, 30], box: [18, 18, 62, 62]}
+    steps:
+      - {tool: record_run, args: {request: "hero render 0", project_id: demo-stylized-obby, place_id: stage-1, measure: {tool: silhouette_iou, args: {candidate: "@cand5", reference: "@ref"}}}}
+      - {tool: record_decision, args: {run_id: "$ref:steps.0.result.run_id", decision: accept, project_id: demo-stylized-obby, place_id: stage-1}}
+      - {tool: record_run, args: {request: "hero render 1", project_id: demo-stylized-obby, place_id: stage-1, measure: {tool: silhouette_iou, args: {candidate: "@cand5", reference: "@ref"}}}}
+      - {tool: record_decision, args: {run_id: "$ref:steps.2.result.run_id", decision: accept, project_id: demo-stylized-obby, place_id: stage-1}}
+      - {tool: record_run, args: {request: "hero render 2", project_id: demo-stylized-obby, place_id: stage-1, measure: {tool: silhouette_iou, args: {candidate: "@cand5", reference: "@ref"}}}}
+      - {tool: record_decision, args: {run_id: "$ref:steps.4.result.run_id", decision: accept, project_id: demo-stylized-obby, place_id: stage-1}}
+      - {tool: record_run, args: {request: "hero render 0", project_id: demo-stylized-obby, place_id: stage-1, measure: {tool: silhouette_iou, args: {candidate: "@candg", reference: "@ref"}}}}
+      - {tool: record_decision, args: {run_id: "$ref:steps.6.result.run_id", decision: reject, project_id: demo-stylized-obby, place_id: stage-1, reason: "too loose", corrections: [{dimension: silhouette, note: "overlap is loose"}]}}
+      - {tool: record_run, args: {request: "hero render 1", project_id: demo-stylized-obby, place_id: stage-1, measure: {tool: silhouette_iou, args: {candidate: "@candg", reference: "@ref"}}}}
+      - {tool: record_decision, args: {run_id: "$ref:steps.8.result.run_id", decision: reject, project_id: demo-stylized-obby, place_id: stage-1, reason: "too loose", corrections: [{dimension: silhouette, note: "overlap is loose"}]}}
+      - {tool: record_run, args: {request: "hero render 2", project_id: demo-stylized-obby, place_id: stage-1, measure: {tool: silhouette_iou, args: {candidate: "@candg", reference: "@ref"}}}}
+      - {tool: record_decision, args: {run_id: "$ref:steps.10.result.run_id", decision: reject, project_id: demo-stylized-obby, place_id: stage-1, reason: "too loose", corrections: [{dimension: silhouette, note: "overlap is loose"}]}}
+      - {do: propose, project_id: demo-stylized-obby, place_id: stage-1}
+  checks:
+    - {type: no_proposal_for, path: steps.12.result.proposals, param: silhouette.iou_min}
+    - {type: text_has, path: steps.12.result.skipped.0.reason, text: contradicting}
+
+- id: learn-gate-then-approved-promotion-then-rollback
+  tags: [learning, known-good, hand-computed]
+  # Gate: the 3 accepted cases fail at 0.8 and pass at 0.75 (improvements); no self-written eval flips. Promotion needs an explicit confirm and a person's name (an automatic name such as 'claude' is refused).
+  # The new value is scoped to the stage-1 place only: another project and the project level keep the default. Rollback restores exactly the previous value.
+  input:
+    op: learning
+    images:
+      ref: {gen: rect, size: [100, 100], bg: [200, 200, 200], fg: [30, 30, 30], box: [20, 20, 60, 60]}
+      cand5: {gen: rect, size: [100, 100], bg: [200, 200, 200], fg: [30, 30, 30], box: [25, 20, 65, 60]}
+    steps:
+      - {tool: record_run, args: {request: "hero render 0", project_id: demo-stylized-obby, place_id: stage-1, measure: {tool: silhouette_iou, args: {candidate: "@cand5", reference: "@ref"}}}}
+      - {tool: record_decision, args: {run_id: "$ref:steps.0.result.run_id", decision: accept, project_id: demo-stylized-obby, place_id: stage-1}}
+      - {tool: record_run, args: {request: "hero render 1", project_id: demo-stylized-obby, place_id: stage-1, measure: {tool: silhouette_iou, args: {candidate: "@cand5", reference: "@ref"}}}}
+      - {tool: record_decision, args: {run_id: "$ref:steps.2.result.run_id", decision: accept, project_id: demo-stylized-obby, place_id: stage-1}}
+      - {tool: record_run, args: {request: "hero render 2", project_id: demo-stylized-obby, place_id: stage-1, measure: {tool: silhouette_iou, args: {candidate: "@cand5", reference: "@ref"}}}}
+      - {tool: record_decision, args: {run_id: "$ref:steps.4.result.run_id", decision: accept, project_id: demo-stylized-obby, place_id: stage-1}}
+      - {do: propose, project_id: demo-stylized-obby, place_id: stage-1}
+      - {do: gate, proposal: "$ref:steps.6.result.proposals.0.id", project_id: demo-stylized-obby, place_id: stage-1}
+      - {do: promote, proposal: "$ref:steps.6.result.proposals.0.id", approved_by: tester, confirm: false, project_id: demo-stylized-obby}
+      - {do: promote, proposal: "$ref:steps.6.result.proposals.0.id", approved_by: claude, confirm: true, project_id: demo-stylized-obby}
+      - {do: promote, proposal: "$ref:steps.6.result.proposals.0.id", approved_by: tester, confirm: true, project_id: demo-stylized-obby}
+      - {do: value, param: silhouette.iou_min, project_id: demo-stylized-obby, place_id: stage-1}
+      - {do: value, param: silhouette.iou_min, project_id: demo-pixel-brawler, place_id: arena}
+      - {do: value, param: silhouette.iou_min, project_id: demo-stylized-obby}
+      - {do: rollback, param: silhouette.iou_min, project_id: demo-stylized-obby, place_id: stage-1, approved_by: tester, reason: "back to the default"}
+      - {do: value, param: silhouette.iou_min, project_id: demo-stylized-obby, place_id: stage-1}
+  checks:
+    - {type: is, path: steps.7.result.verdict, value: pass}
+    - {type: is, path: steps.7.result.regressions, value: []}
+    - {type: greater, path: steps.7.result.cases_run, than: 40}
+    - {type: step_error, step: 8, text: confirm}
+    - {type: step_error, step: 9, text: approved_by}
+    - {type: step_ok, step: 10}
+    - {type: is, path: steps.11.result.value, value: 0.75}
+    - {type: is, path: steps.11.result.source, value: project}
+    - {type: is, path: steps.12.result.value, value: 0.8}
+    - {type: is, path: steps.13.result.value, value: 0.8}
+    - {type: is, path: steps.15.result.value, value: 0.8}
+    - {type: is, path: steps.15.result.source, value: default}
+
+- id: learn-gate-rejects-a-proposal-that-undoes-a-revise
+  tags: [learning, known-bad, hand-computed]
+  # Three accepts at IoU 0.7778 propose iou_min 0.80 -> 0.75 (3 of 4 runs). But the fourth run was a REVISE of the same IoU in dimension silhouette: the user said it needed work, so its case
+  # 'some silhouette check must fail' passes at 0.8 and would fail at 0.75. The gate rejects automatically, lists the case, and promotion is then refused.
+  input:
+    op: learning
+    images:
+      ref: {gen: rect, size: [100, 100], bg: [200, 200, 200], fg: [30, 30, 30], box: [20, 20, 60, 60]}
+      cand5: {gen: rect, size: [100, 100], bg: [200, 200, 200], fg: [30, 30, 30], box: [25, 20, 65, 60]}
+    steps:
+      - {tool: record_run, args: {request: "hero render 0", project_id: demo-stylized-obby, place_id: stage-1, measure: {tool: silhouette_iou, args: {candidate: "@cand5", reference: "@ref"}}}}
+      - {tool: record_decision, args: {run_id: "$ref:steps.0.result.run_id", decision: accept, project_id: demo-stylized-obby, place_id: stage-1}}
+      - {tool: record_run, args: {request: "hero render 1", project_id: demo-stylized-obby, place_id: stage-1, measure: {tool: silhouette_iou, args: {candidate: "@cand5", reference: "@ref"}}}}
+      - {tool: record_decision, args: {run_id: "$ref:steps.2.result.run_id", decision: accept, project_id: demo-stylized-obby, place_id: stage-1}}
+      - {tool: record_run, args: {request: "hero render 2", project_id: demo-stylized-obby, place_id: stage-1, measure: {tool: silhouette_iou, args: {candidate: "@cand5", reference: "@ref"}}}}
+      - {tool: record_decision, args: {run_id: "$ref:steps.4.result.run_id", decision: accept, project_id: demo-stylized-obby, place_id: stage-1}}
+      - {tool: record_run, args: {request: "hero render 0", project_id: demo-stylized-obby, place_id: stage-1, measure: {tool: silhouette_iou, args: {candidate: "@cand5", reference: "@ref"}}}}
+      - {tool: record_decision, args: {run_id: "$ref:steps.6.result.run_id", decision: revise, project_id: demo-stylized-obby, place_id: stage-1, reason: "still loose", corrections: [{dimension: silhouette, note: "needs a tighter fit"}]}}
+      - {do: propose, project_id: demo-stylized-obby, place_id: stage-1}
+      - {do: gate, proposal: "$ref:steps.8.result.proposals.0.id", project_id: demo-stylized-obby, place_id: stage-1}
+      - {do: promote, proposal: "$ref:steps.8.result.proposals.0.id", approved_by: tester, confirm: true, project_id: demo-stylized-obby}
+  checks:
+    - {type: proposal_has, path: steps.8.result.proposals, param: silhouette.iou_min, before: 0.8, after: 0.75}
+    - {type: is, path: steps.9.result.verdict, value: reject}
+    - {type: is, path: steps.9.result.regressions.0.suite, value: corrections}
+    - {type: text_has, path: steps.9.result.notes, text: "rejected automatically"}
+    - {type: step_error, step: 10, text: "rejected automatically"}
+
+- id: learn-a-decision-cannot-cross-projects
+  tags: [learning, refusal, isolation]
+  # A run recorded for one project cannot receive a decision from another.
+  input:
+    op: learning
+    images:
+      ref: {gen: rect, size: [100, 100], bg: [200, 200, 200], fg: [30, 30, 30], box: [20, 20, 60, 60]}
+      cand5: {gen: rect, size: [100, 100], bg: [200, 200, 200], fg: [30, 30, 30], box: [25, 20, 65, 60]}
+    steps:
+      - {tool: record_run, args: {request: "hero render", project_id: demo-stylized-obby, place_id: stage-1}}
+      - {tool: record_decision, args: {run_id: "$ref:steps.0.result.run_id", decision: accept, project_id: demo-pixel-brawler, place_id: arena}}
+      - {tool: record_decision, args: {run_id: "$ref:steps.0.result.run_id", decision: accept, project_id: demo-stylized-obby, place_id: stage-1}}
+  checks:
+    - {type: step_error, step: 1, text: "belongs to demo-stylized-obby/stage-1"}
+    - {type: step_ok, step: 2}
+
+- id: learn-decision-validation
+  tags: [learning, refusal]
+  # Unknown correction dimensions, an empty reject and an unknown run are refused; an unlisted measure tool is refused.
+  input:
+    op: learning
+    images:
+      ref: {gen: rect, size: [100, 100], bg: [200, 200, 200], fg: [30, 30, 30], box: [20, 20, 60, 60]}
+    steps:
+      - {tool: record_run, args: {request: "hero render", project_id: demo-stylized-obby}}
+      - {tool: record_decision, args: {run_id: "$ref:steps.0.result.run_id", decision: reject, reason: no, corrections: [{dimension: vibes, note: x}], project_id: demo-stylized-obby}}
+      - {tool: record_decision, args: {run_id: "$ref:steps.0.result.run_id", decision: reject, project_id: demo-stylized-obby}}
+      - {tool: record_decision, args: {run_id: "run-nope", decision: accept, project_id: demo-stylized-obby}}
+      - {tool: record_run, args: {request: x, project_id: demo-stylized-obby, measure: {tool: rm_rf, args: {}}}}
+      - {tool: record_decision, args: {run_id: "$ref:steps.0.result.run_id", decision: maybe, project_id: demo-stylized-obby}}
+  checks:
+    - {type: step_error, step: 1, text: "unknown correction dimension"}
+    - {type: step_error, step: 2, text: "reason or at least one correction"}
+    - {type: step_error, step: 3, text: "unknown run_id"}
+    - {type: step_error, step: 4, text: "measure.tool must be one of"}
+    - {type: step_error, step: 5, text: "decision must be one of"}
+
+- id: learn-a-recorded-run-stores-numbers-not-paths
+  tags: [learning, privacy]
+  # record_run re-measures and stores check ids, limits and values with image file NAMES and hashes, never a folder path.
+  input:
+    op: learning
+    images:
+      ref: {gen: rect, size: [100, 100], bg: [200, 200, 200], fg: [30, 30, 30], box: [20, 20, 60, 60]}
+      cand5: {gen: rect, size: [100, 100], bg: [200, 200, 200], fg: [30, 30, 30], box: [25, 20, 65, 60]}
+    steps:
+      - {tool: record_run, args: {request: "hero render", project_id: demo-stylized-obby, place_id: stage-1, measure: {tool: silhouette_iou, args: {candidate: "@cand5", reference: "@ref"}}}}
+  checks:
+    - {type: step_ok, step: 0}
+    - {type: text_in_file, file_part: "feedback/runs.jsonl", text: "silhouette.iou"}
+    - {type: text_in_file, file_part: "feedback/runs.jsonl", text: "cand5.png"}
+    - {type: text_in_file, file_part: "feedback/runs.jsonl", text: "/imgs/", present: false}
+    - {type: text_has, path: steps.0.result.summary, text: "3 measured check"}
+
+- id: learn-corrections-are-per-project-unless-marked-global
+  tags: [learning, isolation]
+  # A correction recorded for one project is invisible to another project's find_past_corrections unless the user marked it global.
+  input:
+    op: learning
+    images:
+      ref: {gen: rect, size: [100, 100], bg: [200, 200, 200], fg: [30, 30, 30], box: [20, 20, 60, 60]}
+    steps:
+      - {tool: record_run, args: {request: "rim light is too harsh on the hero", project_id: demo-stylized-obby, place_id: stage-1}}
+      - {tool: record_decision, args: {run_id: "$ref:steps.0.result.run_id", decision: revise, reason: "harsh rim", corrections: [{dimension: value, note: "soften the rim light contrast"}], project_id: demo-stylized-obby, place_id: stage-1}}
+      - {tool: record_run, args: {request: "palette drifts toward orange on the hero", project_id: demo-stylized-obby, place_id: stage-1}}
+      - {tool: record_decision, args: {run_id: "$ref:steps.2.result.run_id", decision: revise, reason: "orange drift", corrections: [{dimension: palette, note: "keep the palette cool"}], project_id: demo-stylized-obby, place_id: stage-1, is_global: true}}
+      - {tool: find_past_corrections, args: {request: "rim light contrast", project_id: demo-stylized-obby, place_id: stage-1}}
+      - {tool: find_past_corrections, args: {request: "rim light contrast", project_id: demo-pixel-brawler, place_id: arena}}
+      - {tool: find_past_corrections, args: {request: "palette orange drift", project_id: demo-pixel-brawler, place_id: arena}}
+  checks:
+    - {type: greater, path: steps.4.result.corrections.0.score, than: 0}
+    - {type: is, path: steps.5.result.corrections, value: []}
+    - {type: text_has, path: steps.6.result.corrections.0.corrections.0.note, text: cool}
+

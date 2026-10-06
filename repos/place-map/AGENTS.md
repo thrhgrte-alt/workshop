@@ -1,0 +1,47 @@
+# AGENTS.md - place-map
+
+A toolkit that lets an AI agent keep a searchable map of one Roblox place so it does not re-explore the place every session: where things are, which instances play which role (vendor, collectible, spawn,
+zone ...), what fires which remote, what depends on which module, what changed. It never connects to Studio, never publishes, and does not change any model: the model reads intent and asks; code does the exact work.
+
+## Setup and commands
+
+```bash
+python -m venv .venv && . .venv/bin/activate
+pip install -e /path/to/guide-core        # the shared library first (a local repository)
+pip install -e ".[dev]"                   # lupa (Luau mock), pytest
+python -m placemap doctor                 # what works on this machine right now
+python -m placemap places                 # the registry (projects.yaml)
+python -m placemap export-skill --scope demo_roles --place role-lab   # agent skill from the learned weights and corrections (dry run; --write)
+python -m placemap eval run --label x     # compare: eval compare baseline x ; eval-report keeps self-written and real results apart
+python -m placemap propose --project-id demo_roles --place-id role-lab   # proposals from repeated label signals (nothing is applied)
+python -m placemap serve                  # MCP server over stdio (PLACEMAP_DISABLE_GROUPS=rare leaves out the rarely used tools)
+python -m placemap call                   # list tools; `call <tool> --json '{...}'` runs one without an MCP client
+python -m pytest
+python scripts/make_examples.py           # regenerate the synthetic places in examples/places and samples/synthetic
+python scripts/build_schema.py            # library/manifest.schema.json
+python scripts/sync_agent_files.py        # regenerate CLAUDE.md, GEMINI.md, copilot file, skill mirrors
+```
+
+## Operating rules for an AI agent using this repo
+
+1. Load `skills/place-map-workflow/SKILL.md` and follow it. Keep context small: results are short on purpose (one-line summary first, at most 10 ranked results); ask for `detail=true` only when needed.
+2. **Scope is literal.** Every tool needs `project_id` and `place_id` (or `studios` to use the place open in Studio). Never guess a place. Every path you quote keeps its `place::` prefix.
+3. **A request that names a thing returns that exact path only.** Near matches are `not_selected`. When several candidates are borderline or share a name, ask the user. Never widen a match.
+4. **Numbers come from tools.** Scores, hashes, ages: copy them. Weights, bands and limits are placeholders; say so. Hub-output parsers are `schema_unverified`; say so when a warning mentions it.
+5. This server **does not connect to Studio**. Fresh data: `plan_refresh` (needs the hub's `list_roblox_studios`; refuses if the open place is not the named one) -> `roblox_studio_execute_luau` -> `ingest_snapshot`. Never claim anything
+   ran in Studio without a Studio report; never reuse a `studios` list from an earlier session.
+6. Every write is a dry run first (`dry_run=true`). `label_landmark` only with the user's explicit confirm or reject (their name in `confirmed_by`); it changes that project's weights by a small bounded step and can be undone (`undo_label`).
+7. Cross-place questions use `find_across_places`, `compare_places`, `find_shared_code` only. Records belong to one place unless the user marks them `is_global`.
+8. Record the user's verdicts with `record_decision` using their words and a dimension from `style/style.yaml`. Promote nothing without a yes.
+9. Self-written evals only show the tool agrees with itself. Real results need examples in `evals/real/`.
+
+## Conventions for editing this repo
+
+- Python 3.10+. `lupa` only in `domain/mock_extra.py` and the mock-based tests.
+- Shared machinery comes from the installed `guide-core` library. **Import it only through `placemap/guide_adapter.py`** (a test enforces this). Fix shared code in guide-core, not here.
+- Tool functions are annotated `-> dict[str, Any]`, raise `ValueError` (or `ScopeError`) with an actionable message, take `project_id`/`place_id`, put a one-line `summary` first, keep descriptions short (<= 300 chars), and start `[rare]` descriptions with `[rare]`.
+- Thresholds, weights, bands and limits live in `rules/*.yaml` and are registered as guide-core parameters by `placemap/learning_params.py` (defaults come from the files). Roblox- or Studio-dependent limits carry `verify_against_current_docs: true`.
+- A role is a weighted list of the six generic features (`rules/roles.yaml`); never put a game's names in `rules/`.
+- Identifiers that reach Luau are validated with `fullmatch` and embedded with `quote_string`; generated Luau stays plain-Lua compatible (the mock runs it) and lint-clean.
+- New behaviour needs an eval task with a hand-computed expectation; the budget evals (`evals/budgets.yaml`) must still pass. After editing `AGENTS.md` or `skills/`, run `python scripts/sync_agent_files.py`; after editing the synthetic places,
+  run `python scripts/make_examples.py` and `python -m placemap eval run --label baseline`.

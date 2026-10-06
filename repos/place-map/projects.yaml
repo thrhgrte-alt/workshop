@@ -1,0 +1,29 @@
+# SYNTHETIC registry of projects and places (the shared guide-core projects.yaml format; scripts/make_examples.py writes the places they point at). Replace with your own games, or point
+# PLACEMAP_PROJECTS at your private file. An optional places.yaml of the SAME format (PLACEMAP_PLACES) is merged in: use it if you prefer to keep places apart from projects.
+#   place_id        the registry alias (letters, digits . _ -); every returned path is prefixed with it:  dive-and-mine::ServerScriptService/Services/ShopService
+#   roblox_place_id the real Roblox place id; 0/absent for an unpublished place (it then gets the local id  local-<place_id>  and the Studio name is matched instead)
+#   universe_id     places of the same game share it
+#   studio_name     the name the place has in Studio (used to match the open place from the hub's list_roblox_studios)
+#   profiles.landmarks   optional tracked file of landmarks you labelled, e.g. projects/<project_id>/<place_id>/landmarks.yaml  ({landmarks: [{path, role, label, alias}]})
+# Each place keeps its own snapshots, labels and corrections under workspace/projects/<project_id>/<place_id>/.
+version: 1
+projects:
+  - project_id: demo_mine
+    alias: Demo Mine (SYNTHETIC)
+    universe_id: 9000000000
+    synthetic: true
+    places:
+      - {place_id: dive-and-mine, alias: Dive and Mine, studio_name: "Dive and Mine (SYNTHETIC)", roblox_place_id: 0}
+      - {place_id: dive-and-mine-hardcore, alias: Hardcore mode, studio_name: "Dive and Mine Hardcore (SYNTHETIC)", roblox_place_id: 9000000002}
+  - project_id: demo_roles
+    alias: Demo Role Lab (SYNTHETIC)
+    universe_id: 0
+    synthetic: true
+    places:
+      - {place_id: role-lab, alias: Role Lab, studio_name: "Role Lab (SYNTHETIC)", roblox_place_id: 0}
+  - project_id: demo_tycoon
+    alias: Demo Tycoon (SYNTHETIC)
+    universe_id: 9000000010
+    synthetic: true
+    places:
+      - {place_id: tycoon-main, alias: Tycoon, studio_name: "Demo Tycoon (SYNTHETIC)", roblox_place_id: 9000000001}

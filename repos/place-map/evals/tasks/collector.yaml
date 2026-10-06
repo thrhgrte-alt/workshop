@@ -1,0 +1,171 @@
+# The collector Luau: generated, linted, and RUN on the guide-core mock DataModel (extended in domain/mock_extra.py). Real Studio was never used.
+- id: collector-is-clean-read-only-and-guarded
+  tags: [collector, luau, known-good]
+  input:
+    op: collector_mock
+    place_name: "Mini (SYNTHETIC)"
+    roots: [Workspace]
+    tree:
+      - {parent: Workspace, class: Part, name: P1}
+  checks:
+    - {type: mock_ok_or_skipped}
+    - {type: list_empty, path: lint}
+    - {type: equals, path: read_only, value: true}
+    - {type: equals, path: has_guard, value: true}
+
+- id: collector-dumps-the-tree-with-positions
+  tags: [collector, luau, known-good]
+  input:
+    op: collector_mock
+    roots: [Workspace]
+    tree:
+      - {parent: Workspace.Vendors, class: Model, name: Bob, pos: [1, 2, 3]}
+      - {parent: Workspace.Vendors.Bob, class: ProximityPrompt, name: Prompt}
+  checks:
+    - {type: mock_ok_or_skipped}
+    - {type: list_equals, path: paths, items: [Workspace, Workspace/Vendors, Workspace/Vendors/Bob, Workspace/Vendors/Bob/Prompt]}
+    - {type: equals, path: "positions.Workspace/Vendors/Bob", value: [1.0, 2.0, 3.0]}
+
+- id: collector-skips-secret-attributes
+  tags: [collector, secrets, known-bad]
+  input:
+    op: collector_mock
+    roots: [Workspace]
+    tree:
+      - {parent: Workspace, class: Part, name: Thing, attrs: {Price: 5, Note: hello, ApiKey: abcd, Blob: "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA9"}}
+  checks:
+    - {type: mock_ok_or_skipped}
+    - {type: equals, path: "attrs.Workspace/Thing", value: {Note: hello, Price: 5}}
+    - {type: equals, path: meta.skipped.secrets, value: 2}
+
+- id: collector-refuses-to-run-in-another-place
+  tags: [collector, luau, scope, known-bad]
+  input:
+    op: collector_mock
+    place_name: "Mini (SYNTHETIC)"
+    open_name: "Some Other Place"
+    roots: [Workspace]
+    tree:
+      - {parent: Workspace, class: Part, name: P1}
+  checks:
+    - {type: mock_ok_or_skipped}
+    - {type: error_contains, text: "wrong place"}
+
+- id: collector-incremental-omits-known-sources
+  tags: [collector, incremental, known-good]
+  input:
+    op: collector_mock
+    roots: [Workspace]
+    known: {"Workspace/Same": "13:cb602746"}
+    tree:
+      - {parent: Workspace, class: Script, name: Same, source: "print('same')"}
+      - {parent: Workspace, class: Script, name: Other, source: "print('other')"}
+  checks:
+    - {type: mock_ok_or_skipped}
+    # Same is already known (its fingerprint is embedded), so only Other's source is sent back
+    - {type: list_equals, path: sources_sent, items: ["Workspace/Other"]}
+
+- id: collector-sends-every-source-when-nothing-is-known
+  tags: [collector, incremental, known-good]
+  input:
+    op: collector_mock
+    roots: [Workspace]
+    tree:
+      - {parent: Workspace, class: Script, name: A, source: "print('a')"}
+      - {parent: Workspace, class: ModuleScript, name: B, source: "return 1"}
+  checks:
+    - {type: mock_ok_or_skipped}
+    - {type: list_equals, path: sources_sent, items: ["Workspace/A", "Workspace/B"]}
+
+- id: collector-fingerprint-matches-python-on-utf8
+  tags: [collector, luau, known-good]
+  input:
+    op: collector_mock
+    roots: [Workspace]
+    tree:
+      - {parent: Workspace, class: ModuleScript, name: M, source: "return 'héllo wörld'"}
+  checks:
+    - {type: mock_ok_or_skipped}
+    - {type: equals, path: fp_matches_python, value: true}
+
+- id: collector-print-mode-chunks-and-parses-back
+  tags: [collector, luau, known-good]
+  input:
+    op: collector_mock
+    emit: print
+    roots: [Workspace]
+    limits: {print_chunk_chars: 500}
+    tree:
+      - {parent: Workspace.Many, class: Part, name: Alpha, attrs: {Note: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa}}
+      - {parent: Workspace.Many, class: Part, name: Beta, attrs: {Note: bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb}}
+      - {parent: Workspace.Many, class: Part, name: Gamma, attrs: {Note: cccccccccccccccccccccccccccccccccccccccccccccc}}
+      - {parent: Workspace.Many, class: Part, name: Delta, attrs: {Note: dddddddddddddddddddddddddddddddddddddddddddddd}}
+  checks:
+    - {type: mock_ok_or_skipped}
+    - {type: greater, path: printed_lines, than: 3}
+    - {type: list_contains, path: paths, items: ["Workspace/Many/Alpha", "Workspace/Many/Delta"]}
+
+- id: collector-stops-at-its-instance-cap-and-says-so
+  tags: [collector, caps, known-bad]
+  input:
+    op: collector_mock
+    roots: [Workspace]
+    limits: {max_instances: 3}
+    tree:
+      - {parent: Workspace.A, class: Part, name: P1}
+      - {parent: Workspace.A, class: Part, name: P2}
+      - {parent: Workspace.A, class: Part, name: P3}
+      - {parent: Workspace.A, class: Part, name: P4}
+  checks:
+    - {type: mock_ok_or_skipped}
+    - {type: equals, path: n_nodes, value: 3}
+    - {type: equals, path: meta.truncated, value: true}
+
+- id: collector-disambiguates-duplicate-names-and-escapes-slashes
+  tags: [collector, naming, known-good]
+  input:
+    op: collector_mock
+    roots: [Workspace]
+    tree:
+      - {parent: Workspace, class: Part, name: Rock}
+      - {parent: Workspace, class: Part, name: Rock}
+      - {parent: Workspace, class: Part, name: "A/B"}
+  checks:
+    - {type: mock_ok_or_skipped}
+    - {type: list_equals, path: paths, items: [Workspace, Workspace/Rock, "Workspace/Rock#2", "Workspace/A%2FB"]}
+
+- id: collector-counts-plain-leaves-over-its-cap-instead-of-listing-them
+  tags: [collector, caps, known-good]
+  input:
+    op: collector_mock
+    roots: [Workspace]
+    limits: {plain_leaf_cap: 3}
+    tree:
+      - {parent: Workspace.Many, class: Part, name: L1}
+      - {parent: Workspace.Many, class: Part, name: L2}
+      - {parent: Workspace.Many, class: Part, name: L3}
+      - {parent: Workspace.Many, class: Part, name: L4}
+      - {parent: Workspace.Many, class: Part, name: L5}
+  checks:
+    - {type: mock_ok_or_skipped}
+    - {type: equals, path: n_nodes, value: 5}
+    - {type: equals, path: meta.skipped.plain_leaves, value: 2}
+
+- id: collector-rejects-a-root-with-a-newline
+  tags: [collector, injection, known-bad]
+  input: {op: collector_build, roots: ["Workspace\nloadstring(x)()"]}
+  checks:
+    - {type: error_contains, text: "refresh root"}
+
+- id: collector-quotes-a-root-with-quotes-safely
+  tags: [collector, injection, known-good]
+  input: {op: collector_build, roots: ['Say "hi" \ there']}
+  checks:
+    - {type: equals, path: error, value: null}
+    - {type: list_empty, path: lint}
+
+- id: collector-rejects-a-place-name-it-cannot-embed
+  tags: [collector, injection, known-bad]
+  input: {op: collector_build, roots: [Workspace], place_name: "Bad\"name", place_id: 0}
+  checks:
+    - {type: error_contains, text: "cannot be embedded"}

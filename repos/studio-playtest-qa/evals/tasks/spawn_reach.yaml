@@ -1,0 +1,195 @@
+# Spawn and reachability. Mock world: the spawn at (0,2,0) in region hub, areas Shop (20,2,0), MineEntrance (40,2,10), Vault (60,2,-30); the character stands at (0,3,0) above a floor
+# whose top is y=1; speed 16 studs/s; probe distance 8 studs, 3 s, needs 0.5 x 8 = 4 studs (placeholders in style/style.yaml).
+- id: spawn-clean-passes
+  tags: [spawn, known-good]
+  input: {op: world_check, check: spawn}
+  checks:
+    - {type: equals, path: verdict, value: pass}
+    - {type: list_empty, path: failed}
+    - {type: text_contains, path: checked.0, text: "appeared after 0 s at (0, 3, 0)"}
+    - {type: text_contains, path: checked.3, text: "not stuck: moved 8 of 8 studs (needs 4)"}
+- id: spawn-stuck-character-is-caught
+  tags: [spawn, planted-fault]
+  title: "a character that cannot move covers 0 of the 4 studs it needs in all 4 directions"
+  input: {op: world_check, check: spawn, faults: [spawn_stuck]}
+  checks:
+    - {type: equals, path: verdict, value: fail}
+    - {type: list_equals, path: failed, items: [not_stuck]}
+    - {type: equals, path: failures.0.evidence.measured, value: 0}
+    - {type: equals, path: failures.0.cause_rule, value: spawn-stuck}
+- id: spawn-on-lava-is-caught
+  tags: [spawn, planted-fault]
+  input: {op: world_check, check: spawn, faults: [spawn_lava]}
+  checks:
+    - {type: list_equals, path: failed, items: [floor_valid]}
+    - {type: text_contains, path: failures.0.evidence.detail, text: "Workspace.Map.Lava"}
+    - {type: equals, path: failures.0.cause_rule, value: spawn-bad-surface}
+- id: spawn-below-the-world-is-caught
+  tags: [spawn, planted-fault]
+  title: "y = -80 is below the void line -50 and nothing is under the character"
+  input: {op: world_check, check: spawn, faults: [spawn_void]}
+  checks:
+    - {type: list_equals, path: failed, items: [above_void, floor_found]}
+    - {type: text_contains, path: failures.0.evidence.detail, text: "-80"}
+- id: spawn-without-a-character-is-caught
+  tags: [spawn, planted-fault]
+  input: {op: world_check, check: spawn, faults: [no_character]}
+  checks:
+    - {type: equals, path: verdict, value: fail}
+    - {type: list_equals, path: failed, items: [character_spawned]}
+    - {type: equals, path: failures.0.cause_rule, value: spawn-no-character}
+- id: reach-clean-passes
+  tags: [reachability, known-good]
+  title: "3 of 3 named areas are reached from the spawn, each ending 0 studs from its target"
+  input: {op: world_check, check: reachability}
+  checks:
+    - {type: equals, path: verdict, value: pass}
+    - {type: list_empty, path: failed}
+    - {type: text_contains, path: checked.0, text: "3 of 3 named area(s) reached (Shop, MineEntrance, Vault)"}
+- id: reach-unreachable-room-is-caught
+  tags: [reachability, planted-fault]
+  title: "the Vault is cut off: spawn->Vault is NoPath, the other two areas stay reachable"
+  input: {op: world_check, check: reachability, faults: [unreachable_room]}
+  checks:
+    - {type: equals, path: verdict, value: fail}
+    - {type: list_equals, path: failed, items: ["area_reachable[Vault]"]}
+    - {type: text_contains, path: failures.0.evidence.detail, text: "spawn->Vault: status NoPath"}
+    - {type: equals, path: failures.0.cause_rule, value: reach-no-path}
+    - {type: text_contains, path: checked.0, text: "2 of 3 named area(s) reached"}
+- id: reach-path-that-stops-short-is-caught
+  tags: [reachability, planted-fault]
+  title: "Success but 9 studs from the target (allowed 4): reached, yet path_ends_at_target fails"
+  input: {op: world_check, check: reachability, faults: [path_stops_short]}
+  checks:
+    - {type: list_equals, path: failed, items: ["path_ends_at_target[Shop]"]}
+    - {type: equals, path: failures.0.evidence.measured, value: 9}
+    - {type: equals, path: failures.0.cause_rule, value: reach-end-gap}
+- id: reach-flood-fill-follows-hops
+  tags: [reachability, hand-computed]
+  title: "spawn->B is NoPath but spawn->A and A->B succeed: B is reached through A (2 hops)"
+  input:
+    op: judge_docs
+    check: reachability
+    results:
+      - schema: playqa.result/1
+        check_id: reachability
+        kind: reachability
+        repeat_no: 1
+        assertions: []
+        measures:
+          hops: true
+          areas: [{name: A, path: Workspace.A, position: [10, 0, 0]}, {name: B, path: Workspace.B, position: [20, 0, 0]}]
+          paths:
+            - {from: spawn, to: A, status: Success, waypoints: 3, length: 10.0, end_gap: 0.5}
+            - {from: spawn, to: B, status: NoPath, waypoints: 0, length: 0, end_gap: -1}
+            - {from: A, to: B, status: Success, waypoints: 3, length: 11.0, end_gap: 1.0}
+  checks:
+    - {type: equals, path: verdict, value: pass}
+    - {type: text_contains, path: checked.0, text: "2 of 2 named area(s) reached (A, B)"}
+    - {type: text_contains, path: checked.0, text: "with hops through other areas"}
+- id: reach-without-the-hop-edge-b-is-unreachable
+  tags: [reachability, hand-computed]
+  input:
+    op: judge_docs
+    check: reachability
+    detail: true
+    results:
+      - schema: playqa.result/1
+        check_id: reachability
+        kind: reachability
+        repeat_no: 1
+        assertions: []
+        measures:
+          hops: false
+          areas: [{name: A, path: Workspace.A, position: [10, 0, 0]}, {name: B, path: Workspace.B, position: [20, 0, 0]}]
+          paths:
+            - {from: spawn, to: A, status: Success, waypoints: 3, length: 10.0, end_gap: 0.5}
+            - {from: spawn, to: B, status: NoPath, waypoints: 0, length: 0, end_gap: -1}
+  checks:
+    - {type: equals, path: verdict, value: fail}
+    - {type: list_equals, path: failed, items: ["area_reachable[B]"]}
+    - {type: equals, path: failures.0.cause_rule, value: reach-no-path}
+- id: reach-one-waypoint-success-is-not-a-route
+  tags: [reachability, hand-computed]
+  title: "Success with 1 waypoint (fewer than the 2 required) is not usable"
+  input:
+    op: judge_docs
+    check: reachability
+    results:
+      - schema: playqa.result/1
+        check_id: reachability
+        kind: reachability
+        repeat_no: 1
+        assertions: []
+        measures:
+          areas: [{name: A, path: Workspace.A, position: [10, 0, 0]}]
+          paths: [{from: spawn, to: A, status: Success, waypoints: 1, length: 0.0, end_gap: 0.0}]
+  checks:
+    - {type: list_equals, path: failed, items: ["area_reachable[A]"]}
+    - {type: text_contains, path: failures.0.evidence.detail, text: "Success with 1 waypoint(s), fewer than 2"}
+    - {type: equals, path: failures.0.cause_rule, value: reach-generic}
+- id: reach-start-inside-a-part-is-explained
+  tags: [reachability, hand-computed]
+  input:
+    op: judge_docs
+    check: reachability
+    results:
+      - schema: playqa.result/1
+        check_id: reachability
+        kind: reachability
+        repeat_no: 1
+        assertions: []
+        measures:
+          areas: [{name: A, path: Workspace.A, position: [10, 0, 0]}]
+          paths: [{from: spawn, to: A, status: FailStartNotEmpty, waypoints: 0, length: 0.0, end_gap: -1}]
+  checks:
+    - {type: equals, path: failures.0.cause_rule, value: reach-fail-start}
+- id: reach-end-gap-boundary-4-passes-401-fails
+  tags: [reachability, hand-computed, boundary]
+  title: "end gap exactly 4.0 (the limit) passes; 4.01 fails"
+  input:
+    op: judge_docs
+    check: reachability
+    results:
+      - schema: playqa.result/1
+        check_id: reachability
+        kind: reachability
+        repeat_no: 1
+        assertions: []
+        measures:
+          areas: [{name: A, path: Workspace.A, position: [10, 0, 0]}, {name: B, path: Workspace.B, position: [20, 0, 0]}]
+          paths:
+            - {from: spawn, to: A, status: Success, waypoints: 3, length: 10.0, end_gap: 4.0}
+            - {from: spawn, to: B, status: Success, waypoints: 3, length: 20.0, end_gap: 4.01}
+  checks:
+    - {type: list_equals, path: failed, items: ["path_ends_at_target[B]"]}
+- id: reach-end-gap-limit-can-be-widened
+  tags: [reachability, hand-computed, params]
+  title: "with the placeholder limit raised to 5 studs the 4.5 gap passes"
+  input:
+    op: judge_docs
+    check: reachability
+    range_patch: {reach_end_gap_studs: {max: 5.0}}
+    results:
+      - schema: playqa.result/1
+        check_id: reachability
+        kind: reachability
+        repeat_no: 1
+        assertions: []
+        measures:
+          areas: [{name: A, path: Workspace.A, position: [10, 0, 0]}]
+          paths: [{from: spawn, to: A, status: Success, waypoints: 3, length: 10.0, end_gap: 4.5}]
+  checks:
+    - {type: equals, path: verdict, value: pass}
+- id: reach-too-many-areas-is-refused
+  tags: [reachability, refusal]
+  title: "12 areas plus the spawn is 13 nodes, above reach_max_nodes = 12: no script"
+  input:
+    op: gen_script
+    check: reachability
+    cfg_patch:
+      - set: reachability.areas
+        value: [{name: A1, path: Workspace.A1}, {name: A2, path: Workspace.A2}, {name: A3, path: Workspace.A3}, {name: A4, path: Workspace.A4}, {name: A5, path: Workspace.A5}, {name: A6, path: Workspace.A6},
+                {name: A7, path: Workspace.A7}, {name: A8, path: Workspace.A8}, {name: A9, path: Workspace.A9}, {name: A10, path: Workspace.A10}, {name: A11, path: Workspace.A11}, {name: A12, path: Workspace.A12}]
+  checks:
+    - {type: error_contains, text: "reach_max_nodes=12"}

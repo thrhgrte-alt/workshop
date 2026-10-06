@@ -117,7 +117,7 @@ def export_skill(*, out_dir: str | Path, name: str, description: str, repo: str,
     if meta_ok is not None:
         if meta_ok.get("name") != name:
             problems.append("frontmatter name does not match")
-        if not agentfiles.NAME_RE.match(name) or not 1 <= len(name) <= 64:
+        if not agentfiles.NAME_RE.fullmatch(name) or not 1 <= len(name) <= 64:
             problems.append(f"name '{name}' must be 1-64 chars of lowercase letters, digits and single hyphens")
         if not 1 <= len(description) <= 1024:
             problems.append("description must be 1-1024 characters")

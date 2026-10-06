@@ -1,0 +1,23 @@
+# SYNTHETIC registry of projects and places (hand-written). Replace with your own games, or point PLAYQA_PROJECTS at your private file.
+# Shared guide-core format. `profiles.playtest` names each place's playtest.yaml (what to test), relative to this file.
+# studio_name is what Studio shows for the open place; roblox_place_id 0/absent = unpublished (then the name is matched). Nothing is guessed.
+version: 1
+projects:
+  - project_id: demo_mine
+    alias: Demo Mine (SYNTHETIC)
+    universe_id: 0
+    synthetic: true
+    places:
+      - {place_id: main, alias: Main mine, studio_name: "Demo Mine Main (SYNTHETIC)", roblox_place_id: 0, profiles: {playtest: projects/demo_mine/main/playtest.yaml}}
+  - project_id: demo_tycoon
+    alias: Demo Tycoon (SYNTHETIC)
+    universe_id: 9000000000
+    synthetic: true
+    places:
+      - {place_id: main, alias: Tycoon, studio_name: "Demo Tycoon (SYNTHETIC)", roblox_place_id: 9000000001, profiles: {playtest: projects/demo_tycoon/main/playtest.yaml}}
+  - project_id: demo_obby
+    alias: Demo Obby (SYNTHETIC)
+    universe_id: 0
+    synthetic: true
+    places:
+      - {place_id: main, alias: Obby, studio_name: "Demo Obby (SYNTHETIC)", roblox_place_id: 0, profiles: {playtest: projects/demo_obby/main/playtest.yaml}}

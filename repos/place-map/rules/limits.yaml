@@ -1,0 +1,35 @@
+# Limits, thresholds and defaults for place-map. EVERY NUMBER HERE IS A PLACEHOLDER chosen by the builder, not a Roblox figure.
+# Entries marked verify_against_current_docs: true depend on limits of Studio, the hub's execute_luau or Roblox itself (output length, script size): check them against current docs
+# before relying on them. Each numeric entry is registered as a named parameter (see placemap/learning_params.py) with this value as its default, its range and its largest allowed
+# step; learned values change only through guide-core's gated, approved path.
+version: 1
+placeholder: true
+snapshots:
+  stale_hours:      {value: 24, min: 1, max: 720, step: 6, note: "a snapshot older than this is flagged stale and a refresh is offered"}
+  keep_older:       {value: 3,  min: 0, max: 20,  step: 1, note: "older snapshots kept per place besides the latest (for diff_snapshots); prune_snapshots removes the rest"}
+collector:
+  max_instances:            {value: 20000,   min: 100, max: 200000,   step: 2000,   verify_against_current_docs: true, note: "instances the generated Luau visits per run before it stops and reports truncated"}
+  max_source_chars:         {value: 60000,   min: 1000, max: 500000,  step: 10000,  verify_against_current_docs: true, note: "script source characters read per script; longer scripts are cut and flagged"}
+  max_total_source_chars:   {value: 1500000, min: 10000, max: 20000000, step: 250000, verify_against_current_docs: true, note: "source characters read per run (the output size the hub can return is the real limit)"}
+  plain_leaf_cap:           {value: 200,     min: 10, max: 5000,      step: 50,     note: "plain leaf Parts (no children, attributes or tags) kept per parent; the rest are only counted"}
+  attr_value_max_chars:     {value: 200,     min: 20, max: 2000,      step: 50,     note: "string attribute values are cut to this length"}
+  print_chunk_chars:        {value: 8000,    min: 500, max: 100000,   step: 2000,   verify_against_current_docs: true, note: "emit=print splits the JSON into lines of this size (Studio output lines are limited)"}
+  default_roots: [Workspace, ReplicatedStorage, ReplicatedFirst, ServerScriptService, ServerStorage, StarterGui, StarterPack, StarterPlayer, Teams]
+  skip_classes: [Terrain, Camera]
+features:
+  repetition_c:        {value: 3.0, min: 0.5, max: 20,   step: 1,    note: "damping constant c in n_similar / (n_similar + c)"}
+  repetition_jaccard:  {value: 0.6, min: 0.0, max: 1.0,  step: 0.05, note: "name-token Jaccard similarity above which two siblings count as similar"}
+  token_k:             {value: 1,   min: 1,   max: 5,    step: 1,    note: "default k: how many synonym matches saturate a token feature at 1.0"}
+  proximity_distance:  {value: 50,  min: 1,   max: 2000, step: 10,   note: "studs: an instance within this distance of a confident landmark of another role gets the proximity feature (linear fall-off)"}
+learning:
+  eta:                 {value: 0.1, min: 0.01, max: 0.5, step: 0.02, note: "step size of w_i += eta * (label - score) * f_i(x)"}
+  weight_limit:        {value: 6.0, min: 1.0, max: 20.0, step: 1.0,  note: "learned weights are clamped to [-limit, 0] or [0, limit], keeping their default sign"}
+search:
+  margin:              {value: 0.15, min: 0.0, max: 1.0, step: 0.05, note: "a text hit is auto-selected only if it beats the runner-up by this much of the top score; otherwise the model is asked"}
+  min_score:           {value: 0.05, min: 0.0, max: 1.0, step: 0.05, note: "hits scoring below this are not listed"}
+  near_matches:        {value: 5,   min: 0, max: 20, step: 1,        note: "'not selected' near matches listed with a selected result"}
+output:
+  max_findings:        {value: 10,  min: 1, max: 50, step: 5,        note: "ranked findings/hits returned unless detail=true"}
+scoring:
+  skip_classes: [Folder, Configuration, Script, LocalScript, ModuleScript, ProximityPrompt, ClickDetector, TouchInterest, Humanoid, Attachment, Weld, WeldConstraint, Decal, Texture, Sound, RemoteEvent, RemoteFunction,
+                 UnreliableRemoteEvent, BindableEvent, BindableFunction, SurfaceGui, UIListLayout, UICorner, UIPadding, UIStroke]   # classes that are never themselves a landmark

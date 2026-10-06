@@ -1,0 +1,4 @@
+[mcp_servers.place-map]
+command = "python"
+args = ["-m", "placemap.server"]
+env = { PLACEMAP_ROOT = "/ABSOLUTE/PATH/TO/place-map" }

@@ -1,0 +1,110 @@
+{
+ "collector_version": 1,
+ "format": "placemap-collect/1",
+ "full": true,
+ "nodes": [
+  {
+   "c": "ReplicatedStorage",
+   "n": 2,
+   "p": "ReplicatedStorage"
+  },
+  {
+   "c": "Folder",
+   "n": 2,
+   "p": "ReplicatedStorage/Modules"
+  },
+  {
+   "c": "ModuleScript",
+   "n": 0,
+   "p": "ReplicatedStorage/Modules/Economy",
+   "s": {
+    "fp": "86:3d8fd72a",
+    "len": 86,
+    "src": "-- Tycoon currency maths.\nlocal E = {}\nfunction E.income(n) return n * 5 end\nreturn E\n"
+   }
+  },
+  {
+   "c": "ModuleScript",
+   "n": 0,
+   "p": "ReplicatedStorage/Modules/Util",
+   "s": {
+    "fp": "146:9aadca55",
+    "len": 146,
+    "src": "-- Small helpers shared by server and client.\nlocal Util = {}\nfunction Util.clamp(x, lo, hi) return math.max(lo, math.min(hi, x)) end\nreturn Util\n"
+   }
+  },
+  {
+   "c": "Folder",
+   "n": 1,
+   "p": "ReplicatedStorage/Remotes"
+  },
+  {
+   "c": "RemoteEvent",
+   "n": 0,
+   "p": "ReplicatedStorage/Remotes/BuyDropper"
+  },
+  {
+   "c": "ServerScriptService",
+   "n": 1,
+   "p": "ServerScriptService"
+  },
+  {
+   "c": "Script",
+   "n": 0,
+   "p": "ServerScriptService/Plots",
+   "rc": "Server",
+   "s": {
+    "fp": "96:1cadd27a",
+    "len": 96,
+    "src": "-- Assigns plots.\nlocal Economy = require(game:GetService(\"ReplicatedStorage\").Modules.Economy)\n"
+   }
+  },
+  {
+   "c": "Workspace",
+   "n": 1,
+   "p": "Workspace"
+  },
+  {
+   "c": "Folder",
+   "n": 1,
+   "p": "Workspace/Plots"
+  },
+  {
+   "c": "Model",
+   "n": 1,
+   "p": "Workspace/Plots/Plot1",
+   "v": [
+    0.0,
+    0.0,
+    0.0
+   ]
+  },
+  {
+   "c": "Part",
+   "n": 1,
+   "p": "Workspace/Plots/Plot1/Buy"
+  },
+  {
+   "c": "ClickDetector",
+   "n": 0,
+   "p": "Workspace/Plots/Plot1/Buy/ClickDetector"
+  }
+ ],
+ "place": {
+  "name": "Demo Tycoon (SYNTHETIC)",
+  "place_id": 9000000001
+ },
+ "roots": [
+  "ReplicatedStorage",
+  "ServerScriptService",
+  "Workspace"
+ ],
+ "skipped": {
+  "instances": 0,
+  "plain_leaves": 0,
+  "secrets": 0,
+  "sources": 0
+ },
+ "taken_unix": 1790000000,
+ "truncated": false
+}

@@ -1,0 +1,21 @@
+# Typical output size per tool on the synthetic mining place (characters of compact JSON). A tool that grows past its budget fails the eval 'tokens-typical-output-sizes-stay-inside-their-budgets'.
+# plan_refresh returns the whole collector script on purpose (the hub has to run it), so its budget is much larger than the rest.
+tools:
+  find_in_place: {args: {query: Bob, project_id: demo_mine, place_id: dive-and-mine}, max_chars: 1800}
+  get_path_info: {args: {path: Workspace/Vendors/Bob, project_id: demo_mine, place_id: dive-and-mine}, max_chars: 2000}
+  who_uses: {args: {path: ReplicatedStorage/Modules/Economy, project_id: demo_mine, place_id: dive-and-mine}, max_chars: 2600}
+  list_remotes: {args: {project_id: demo_mine, place_id: dive-and-mine}, max_chars: 4000}
+  show_dependencies: {args: {path: ServerScriptService/Main, project_id: demo_mine, place_id: dive-and-mine}, max_chars: 3000}
+  summarize_area: {args: {path: ServerScriptService, project_id: demo_mine, place_id: dive-and-mine}, max_chars: 3800}
+  find_past_corrections: {args: {request: vendor, project_id: demo_mine, place_id: dive-and-mine}, max_chars: 800}
+  find_across_places: {args: {query: Economy, project_id: demo_mine}, max_chars: 2200}
+  list_places: {args: {}, max_chars: 2500}
+  list_candidates: {args: {project_id: demo_roles, place_id: role-lab}, max_chars: 2200}
+  list_snapshots: {args: {project_id: demo_mine, place_id: dive-and-mine}, max_chars: 1000}
+  list_roles: {args: {project_id: demo_mine, place_id: dive-and-mine}, max_chars: 7500}
+  compare_places: {args: {project_id: demo_mine, place_a: dive-and-mine, place_b: dive-and-mine-hardcore}, max_chars: 2500}
+  find_shared_code: {args: {project_id: demo_mine}, max_chars: 4500}
+  plan_refresh: {args: {project_id: demo_mine, place_id: dive-and-mine, studios: [{name: "Dive and Mine (SYNTHETIC)", place_id: 0, studio_id: s1}]}, max_chars: 25000}
+  ingest_snapshot: {args: {project_id: demo_tycoon, place_id: tycoon-main, file: samples/synthetic/collect-tycoon.json}, max_chars: 2500}
+  label_landmark: {args: {path: Workspace/Vendors/Bob, role: vendor, project_id: demo_mine, place_id: dive-and-mine}, max_chars: 2200}
+  prune_snapshots: {args: {project_id: demo_mine, place_id: dive-and-mine}, max_chars: 800}

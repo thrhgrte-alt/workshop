@@ -1,0 +1,79 @@
+{
+ "mine-main": {
+  "collectible": [
+   "Workspace/Things/Thing1",
+   "Workspace/Things/Thing2",
+   "Workspace/Things/Thing3",
+   "Workspace/Things/Thing4",
+   "Workspace/Things/Thing5",
+   "Workspace/Things/Thing6",
+   "Workspace/Things/Thing7",
+   "Workspace/Things/Thing8"
+  ],
+  "currency_display": [
+   "StarterGui/Hud/CashLabel"
+  ],
+  "decoys": [
+   "Workspace/Vendors/ShopSign",
+   "Workspace/Vendors/VendorStatue",
+   "StarterGui/Hud/TitleLabel",
+   "Workspace/Gates/Door1/Barrier"
+  ],
+  "progression_gate": [
+   "Workspace/Gates/Door1"
+  ],
+  "resource_node": [
+   "Workspace/Deposits/Node1",
+   "Workspace/Deposits/Node2",
+   "Workspace/Deposits/Node3",
+   "Workspace/Deposits/Node4",
+   "Workspace/Deposits/Node5",
+   "Workspace/Deposits/Node6",
+   "Workspace/Deposits/Node7",
+   "Workspace/Deposits/Node8",
+   "Workspace/Deposits/Node9",
+   "Workspace/Deposits/Node10",
+   "Workspace/Deposits/Node11",
+   "Workspace/Deposits/Node12"
+  ],
+  "spawn": [
+   "Workspace/Spawns/Lobby",
+   "Workspace/Spawns/CheckpointA"
+  ],
+  "upgradable_tool": [
+   "StarterPack/Drill"
+  ],
+  "vendor": [
+   "Workspace/Vendors/Bob",
+   "Workspace/Vendors/Zed"
+  ],
+  "zone": [
+   "Workspace/Zones/MineZone"
+  ]
+ },
+ "role-lab": {
+  "collectible": [
+   "Workspace/Loose/Thing1",
+   "Workspace/Loose/Thing2",
+   "Workspace/Loose/Thing3",
+   "Workspace/Loose/Thing4",
+   "Workspace/Loose/Thing5",
+   "Workspace/Loose/Thing6"
+  ],
+  "decoys": [
+   "Workspace/Npcs/ShopSign",
+   "Workspace/Npcs/VendorStatue",
+   "Workspace/Npcs/Alice",
+   "Workspace/Decor/CoinPile1",
+   "Workspace/Decor/CoinPile2",
+   "Workspace/Decor/CoinPile3"
+  ],
+  "spawn": [
+   "Workspace/Start/Pad"
+  ],
+  "vendor": [
+   "Workspace/Npcs/Bob",
+   "Workspace/Npcs/Carl"
+  ]
+ }
+}

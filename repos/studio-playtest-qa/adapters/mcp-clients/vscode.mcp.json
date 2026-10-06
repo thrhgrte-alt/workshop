@@ -1,0 +1,15 @@
+{
+  "servers": {
+    "studio-playtest-qa": {
+      "type": "stdio",
+      "command": "python",
+      "args": [
+        "-m",
+        "playqa.server"
+      ],
+      "env": {
+        "PLAYQA_ROOT": "/ABSOLUTE/PATH/TO/studio-playtest-qa"
+      }
+    }
+  }
+}

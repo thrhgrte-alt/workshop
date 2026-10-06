@@ -1,0 +1,45 @@
+{
+  "description": "SYNTHETIC example profile built from examples/demo-stylized-obby/ref_stage.png (numbers only)",
+  "name": "demo-obby-look",
+  "palette": [
+    {
+      "hex": "#f0f0dc",
+      "share": 0.3333
+    },
+    {
+      "hex": "#c81e1e",
+      "share": 0.3333
+    },
+    {
+      "hex": "#1e961e",
+      "share": 0.3333
+    }
+  ],
+  "ranges": {
+    "contrast_min": 0.4,
+    "edge_density": [
+      0.0,
+      0.1
+    ],
+    "luminance_mean": [
+      0.35,
+      0.75
+    ],
+    "saturation_mean": [
+      0.45,
+      0.75
+    ],
+    "value_mean": [
+      0.65,
+      0.95
+    ]
+  },
+  "schema": "visualverify-profile/1",
+  "source": {
+    "image": "ref_stage.png",
+    "size": [
+      96,
+      96
+    ]
+  }
+}

@@ -1,0 +1,275 @@
+# Output-size budgets (token discipline): the typical answer of every tool, in characters of compact JSON. They are guard rails, not hand-computed values: if a change makes an answer bigger,
+# this fails and the change has to justify it. ~4 characters is roughly one token.
+- id: budget-measure-image
+  tags: [budget, token-discipline]
+  input:
+    op: tools_seq
+    images:
+      a: {gen: vstep, size: [100, 100], left: [0, 0, 0], right: [255, 255, 255], x: 50}
+      b: {gen: rect, size: [100, 100], bg: [200, 200, 200], fg: [30, 30, 30], box: [20, 20, 60, 60]}
+      t: {gen: smooth_tile, size: [128, 128], seed: 7}
+      r: {gen: gray_noise, size: [100, 100], seed: 3, mean: 0.5, amp: 0.2}
+      n: {gen: normal_noisy, size: [100, 100], seed: 5, tilt: 0.3}
+    steps:
+      - {tool: measure_image, args: {path: "@a", project_id: demo-stylized-obby, place_id: stage-1}}
+  checks:
+    - {type: step_ok, step: 0}
+    - {type: budget, step: 0, chars: 2100}
+
+- id: budget-compare-to-reference
+  tags: [budget, token-discipline]
+  input:
+    op: tools_seq
+    images:
+      a: {gen: vstep, size: [100, 100], left: [0, 0, 0], right: [255, 255, 255], x: 50}
+      b: {gen: rect, size: [100, 100], bg: [200, 200, 200], fg: [30, 30, 30], box: [20, 20, 60, 60]}
+      t: {gen: smooth_tile, size: [128, 128], seed: 7}
+      r: {gen: gray_noise, size: [100, 100], seed: 3, mean: 0.5, amp: 0.2}
+      n: {gen: normal_noisy, size: [100, 100], seed: 5, tilt: 0.3}
+    steps:
+      - {tool: compare_to_reference, args: {candidate: "@a", reference: "@b", project_id: demo-stylized-obby}}
+  checks:
+    - {type: step_ok, step: 0}
+    - {type: budget, step: 0, chars: 2700}
+
+- id: budget-silhouette-iou
+  tags: [budget, token-discipline]
+  input:
+    op: tools_seq
+    images:
+      a: {gen: vstep, size: [100, 100], left: [0, 0, 0], right: [255, 255, 255], x: 50}
+      b: {gen: rect, size: [100, 100], bg: [200, 200, 200], fg: [30, 30, 30], box: [20, 20, 60, 60]}
+      t: {gen: smooth_tile, size: [128, 128], seed: 7}
+      r: {gen: gray_noise, size: [100, 100], seed: 3, mean: 0.5, amp: 0.2}
+      n: {gen: normal_noisy, size: [100, 100], seed: 5, tilt: 0.3}
+    steps:
+      - {tool: silhouette_iou, args: {candidate: "@a", reference: "@b", project_id: demo-stylized-obby}}
+  checks:
+    - {type: step_ok, step: 0}
+    - {type: budget, step: 0, chars: 2100}
+
+- id: budget-palette-distance
+  tags: [budget, token-discipline]
+  input:
+    op: tools_seq
+    images:
+      a: {gen: vstep, size: [100, 100], left: [0, 0, 0], right: [255, 255, 255], x: 50}
+      b: {gen: rect, size: [100, 100], bg: [200, 200, 200], fg: [30, 30, 30], box: [20, 20, 60, 60]}
+      t: {gen: smooth_tile, size: [128, 128], seed: 7}
+      r: {gen: gray_noise, size: [100, 100], seed: 3, mean: 0.5, amp: 0.2}
+      n: {gen: normal_noisy, size: [100, 100], seed: 5, tilt: 0.3}
+    steps:
+      - {tool: palette_distance, args: {path: "@a", target_palette: ["#000000", "#ffffff"], project_id: demo-stylized-obby}}
+  checks:
+    - {type: step_ok, step: 0}
+    - {type: budget, step: 0, chars: 1100}
+
+- id: budget-check-tiling
+  tags: [budget, token-discipline]
+  input:
+    op: tools_seq
+    images:
+      a: {gen: vstep, size: [100, 100], left: [0, 0, 0], right: [255, 255, 255], x: 50}
+      b: {gen: rect, size: [100, 100], bg: [200, 200, 200], fg: [30, 30, 30], box: [20, 20, 60, 60]}
+      t: {gen: smooth_tile, size: [128, 128], seed: 7}
+      r: {gen: gray_noise, size: [100, 100], seed: 3, mean: 0.5, amp: 0.2}
+      n: {gen: normal_noisy, size: [100, 100], seed: 5, tilt: 0.3}
+    steps:
+      - {tool: check_tiling, args: {path: "@t", project_id: demo-stylized-obby}}
+  checks:
+    - {type: step_ok, step: 0}
+    - {type: budget, step: 0, chars: 1000}
+
+- id: budget-check-pbr-ranges
+  tags: [budget, token-discipline]
+  input:
+    op: tools_seq
+    images:
+      a: {gen: vstep, size: [100, 100], left: [0, 0, 0], right: [255, 255, 255], x: 50}
+      b: {gen: rect, size: [100, 100], bg: [200, 200, 200], fg: [30, 30, 30], box: [20, 20, 60, 60]}
+      t: {gen: smooth_tile, size: [128, 128], seed: 7}
+      r: {gen: gray_noise, size: [100, 100], seed: 3, mean: 0.5, amp: 0.2}
+      n: {gen: normal_noisy, size: [100, 100], seed: 5, tilt: 0.3}
+    steps:
+      - {tool: check_pbr_ranges, args: {albedo: "@b", roughness: "@r", metalness: "@a", normal: "@n", project_id: demo-stylized-obby}}
+  checks:
+    - {type: step_ok, step: 0}
+    - {type: budget, step: 0, chars: 2600}
+
+- id: budget-diff-images
+  tags: [budget, token-discipline]
+  input:
+    op: tools_seq
+    images:
+      a: {gen: vstep, size: [100, 100], left: [0, 0, 0], right: [255, 255, 255], x: 50}
+      b: {gen: rect, size: [100, 100], bg: [200, 200, 200], fg: [30, 30, 30], box: [20, 20, 60, 60]}
+      t: {gen: smooth_tile, size: [128, 128], seed: 7}
+      r: {gen: gray_noise, size: [100, 100], seed: 3, mean: 0.5, amp: 0.2}
+      n: {gen: normal_noisy, size: [100, 100], seed: 5, tilt: 0.3}
+    steps:
+      - {tool: diff_images, args: {before: "@a", after: "@b", project_id: demo-stylized-obby}}
+  checks:
+    - {type: step_ok, step: 0}
+    - {type: budget, step: 0, chars: 1200}
+
+- id: budget-get-style-brief
+  tags: [budget, token-discipline]
+  input:
+    op: tools_seq
+    images:
+      a: {gen: vstep, size: [100, 100], left: [0, 0, 0], right: [255, 255, 255], x: 50}
+      b: {gen: rect, size: [100, 100], bg: [200, 200, 200], fg: [30, 30, 30], box: [20, 20, 60, 60]}
+      t: {gen: smooth_tile, size: [128, 128], seed: 7}
+      r: {gen: gray_noise, size: [100, 100], seed: 3, mean: 0.5, amp: 0.2}
+      n: {gen: normal_noisy, size: [100, 100], seed: 5, tilt: 0.3}
+    steps:
+      - {tool: get_style_brief, args: {project_id: demo-stylized-obby}}
+  checks:
+    - {type: step_ok, step: 0}
+    - {type: budget, step: 0, chars: 3500}
+
+- id: budget-find-past-corrections
+  tags: [budget, token-discipline]
+  input:
+    op: tools_seq
+    images:
+      a: {gen: vstep, size: [100, 100], left: [0, 0, 0], right: [255, 255, 255], x: 50}
+      b: {gen: rect, size: [100, 100], bg: [200, 200, 200], fg: [30, 30, 30], box: [20, 20, 60, 60]}
+      t: {gen: smooth_tile, size: [128, 128], seed: 7}
+      r: {gen: gray_noise, size: [100, 100], seed: 3, mean: 0.5, amp: 0.2}
+      n: {gen: normal_noisy, size: [100, 100], seed: 5, tilt: 0.3}
+    steps:
+      - {tool: find_past_corrections, args: {request: palette, project_id: demo-stylized-obby}}
+  checks:
+    - {type: step_ok, step: 0}
+    - {type: budget, step: 0, chars: 200}
+
+- id: budget-get-target-profile
+  tags: [budget, token-discipline]
+  input:
+    op: tools_seq
+    images:
+      a: {gen: vstep, size: [100, 100], left: [0, 0, 0], right: [255, 255, 255], x: 50}
+      b: {gen: rect, size: [100, 100], bg: [200, 200, 200], fg: [30, 30, 30], box: [20, 20, 60, 60]}
+      t: {gen: smooth_tile, size: [128, 128], seed: 7}
+      r: {gen: gray_noise, size: [100, 100], seed: 3, mean: 0.5, amp: 0.2}
+      n: {gen: normal_noisy, size: [100, 100], seed: 5, tilt: 0.3}
+    steps:
+      - {tool: get_target_profile, args: {project_id: demo-stylized-obby}}
+  checks:
+    - {type: step_ok, step: 0}
+    - {type: budget, step: 0, chars: 200}
+
+- id: budget-list-thresholds
+  tags: [budget, token-discipline]
+  input:
+    op: tools_seq
+    images:
+      a: {gen: vstep, size: [100, 100], left: [0, 0, 0], right: [255, 255, 255], x: 50}
+      b: {gen: rect, size: [100, 100], bg: [200, 200, 200], fg: [30, 30, 30], box: [20, 20, 60, 60]}
+      t: {gen: smooth_tile, size: [128, 128], seed: 7}
+      r: {gen: gray_noise, size: [100, 100], seed: 3, mean: 0.5, amp: 0.2}
+      n: {gen: normal_noisy, size: [100, 100], seed: 5, tilt: 0.3}
+    steps:
+      - {tool: list_thresholds, args: {project_id: demo-stylized-obby}}
+  checks:
+    - {type: step_ok, step: 0}
+    - {type: budget, step: 0, chars: 4000}
+
+- id: budget-save-target-profile
+  tags: [budget, token-discipline]
+  input:
+    op: tools_seq
+    images:
+      a: {gen: vstep, size: [100, 100], left: [0, 0, 0], right: [255, 255, 255], x: 50}
+      b: {gen: rect, size: [100, 100], bg: [200, 200, 200], fg: [30, 30, 30], box: [20, 20, 60, 60]}
+      t: {gen: smooth_tile, size: [128, 128], seed: 7}
+      r: {gen: gray_noise, size: [100, 100], seed: 3, mean: 0.5, amp: 0.2}
+      n: {gen: normal_noisy, size: [100, 100], seed: 5, tilt: 0.3}
+    steps:
+      - {tool: save_target_profile, args: {name: look, reference: "@a", project_id: demo-stylized-obby}}
+  checks:
+    - {type: step_ok, step: 0}
+    - {type: budget, step: 0, chars: 1200}
+
+- id: budget-render-diff-image
+  tags: [budget, token-discipline]
+  input:
+    op: tools_seq
+    images:
+      a: {gen: vstep, size: [100, 100], left: [0, 0, 0], right: [255, 255, 255], x: 50}
+      b: {gen: rect, size: [100, 100], bg: [200, 200, 200], fg: [30, 30, 30], box: [20, 20, 60, 60]}
+      t: {gen: smooth_tile, size: [128, 128], seed: 7}
+      r: {gen: gray_noise, size: [100, 100], seed: 3, mean: 0.5, amp: 0.2}
+      n: {gen: normal_noisy, size: [100, 100], seed: 5, tilt: 0.3}
+    steps:
+      - {tool: render_diff_image, args: {before: "@a", after: "@b", project_id: demo-stylized-obby}}
+  checks:
+    - {type: step_ok, step: 0}
+    - {type: budget, step: 0, chars: 1550}
+
+- id: budget-ingest-capture
+  tags: [budget, token-discipline]
+  input:
+    op: tools_seq
+    images:
+      a: {gen: vstep, size: [100, 100], left: [0, 0, 0], right: [255, 255, 255], x: 50}
+      b: {gen: rect, size: [100, 100], bg: [200, 200, 200], fg: [30, 30, 30], box: [20, 20, 60, 60]}
+      t: {gen: smooth_tile, size: [128, 128], seed: 7}
+      r: {gen: gray_noise, size: [100, 100], seed: 3, mean: 0.5, amp: 0.2}
+      n: {gen: normal_noisy, size: [100, 100], seed: 5, tilt: 0.3}
+    steps:
+      - {tool: ingest_capture, args: {path: "@a", name: shot, project_id: demo-stylized-obby}}
+  checks:
+    - {type: step_ok, step: 0}
+    - {type: budget, step: 0, chars: 700}
+
+- id: budget-record-run
+  tags: [budget, token-discipline]
+  input:
+    op: tools_seq
+    images:
+      a: {gen: vstep, size: [100, 100], left: [0, 0, 0], right: [255, 255, 255], x: 50}
+      b: {gen: rect, size: [100, 100], bg: [200, 200, 200], fg: [30, 30, 30], box: [20, 20, 60, 60]}
+      t: {gen: smooth_tile, size: [128, 128], seed: 7}
+      r: {gen: gray_noise, size: [100, 100], seed: 3, mean: 0.5, amp: 0.2}
+      n: {gen: normal_noisy, size: [100, 100], seed: 5, tilt: 0.3}
+    steps:
+      - {tool: record_run, args: {request: "hero render", project_id: demo-stylized-obby, measure: {tool: measure_image, args: {path: "@a"}}}}
+  checks:
+    - {type: step_ok, step: 0}
+    - {type: budget, step: 0, chars: 300}
+
+- id: budget-record-decision
+  tags: [budget, token-discipline]
+  input:
+    op: tools_seq
+    images:
+      a: {gen: vstep, size: [100, 100], left: [0, 0, 0], right: [255, 255, 255], x: 50}
+      b: {gen: rect, size: [100, 100], bg: [200, 200, 200], fg: [30, 30, 30], box: [20, 20, 60, 60]}
+      t: {gen: smooth_tile, size: [128, 128], seed: 7}
+      r: {gen: gray_noise, size: [100, 100], seed: 3, mean: 0.5, amp: 0.2}
+      n: {gen: normal_noisy, size: [100, 100], seed: 5, tilt: 0.3}
+    steps:
+      - {tool: record_run, args: {request: "hero render", project_id: demo-stylized-obby}}
+      - {tool: record_decision, args: {run_id: "$ref:steps.0.result.run_id", decision: accept, project_id: demo-stylized-obby}}
+  checks:
+    - {type: step_ok, step: 1}
+    - {type: budget, step: 1, chars: 450}
+
+- id: budget-promote-run
+  tags: [budget, token-discipline]
+  input:
+    op: tools_seq
+    images:
+      a: {gen: vstep, size: [100, 100], left: [0, 0, 0], right: [255, 255, 255], x: 50}
+      b: {gen: rect, size: [100, 100], bg: [200, 200, 200], fg: [30, 30, 30], box: [20, 20, 60, 60]}
+      t: {gen: smooth_tile, size: [128, 128], seed: 7}
+      r: {gen: gray_noise, size: [100, 100], seed: 3, mean: 0.5, amp: 0.2}
+      n: {gen: normal_noisy, size: [100, 100], seed: 5, tilt: 0.3}
+    steps:
+      - {tool: record_run, args: {request: "hero render", project_id: demo-stylized-obby}}
+      - {tool: promote_run, args: {run_id: "$ref:steps.0.result.run_id", kind: reference_image, title: "hero ref", description: "a reference", tags: [hero], path: "@a", project_id: demo-stylized-obby}}
+  checks:
+    - {type: step_ok, step: 1}
+    - {type: budget, step: 1, chars: 300}

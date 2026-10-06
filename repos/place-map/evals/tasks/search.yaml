@@ -1,0 +1,108 @@
+# Resolving requests against the synthetic place dive-and-mine (40 scripts). Expected answers come from how examples/places was written (scripts/make_examples.py), not from tool output.
+- id: search-where-is-bob-exact-path-only
+  tags: [search, literal, known-good]
+  input: {op: tool, tool: find_in_place, args: {query: Bob, project_id: demo_mine, place_id: dive-and-mine}}
+  checks:
+    - {type: equals, path: result.mode, value: exact_name}
+    - {type: pluck_equals, path: result.selected, field: path, items: ["dive-and-mine::Workspace/Vendors/Bob"]}
+
+- id: search-near-matches-are-listed-as-not-selected
+  tags: [search, literal, known-good]
+  input: {op: tool, tool: find_in_place, args: {query: Bob, project_id: demo_mine, place_id: dive-and-mine}}
+  checks:
+    - {type: pluck_contains, path: result.not_selected, field: path, items: ["dive-and-mine::Workspace/Vendors/Zed"]}
+    - {type: pluck_excludes, path: result.not_selected, field: path, items: ["dive-and-mine::Workspace/Vendors/Bob"]}
+
+- id: search-a-path-is-exact
+  tags: [search, path, known-good]
+  input: {op: tool, tool: find_in_place, args: {query: "dive-and-mine::ServerScriptService/Services/ShopService", project_id: demo_mine, place_id: dive-and-mine}}
+  checks:
+    - {type: equals, path: result.mode, value: path}
+    - {type: pluck_equals, path: result.selected, field: path, items: ["dive-and-mine::ServerScriptService/Services/ShopService"]}
+
+- id: search-a-dotted-studio-path-is-understood
+  tags: [search, path, known-good]
+  input: {op: tool, tool: find_in_place, args: {query: ReplicatedStorage.Modules.Economy, project_id: demo_mine, place_id: dive-and-mine}}
+  checks:
+    - {type: pluck_equals, path: result.selected, field: path, items: ["dive-and-mine::ReplicatedStorage/Modules/Economy"]}
+
+- id: search-a-path-of-another-place-is-refused
+  tags: [search, scope, wrong-place, known-bad]
+  input: {op: tool, tool: find_in_place, args: {query: "dive-and-mine-hardcore::ReplicatedStorage/Modules/Economy", project_id: demo_mine, place_id: dive-and-mine}}
+  checks:
+    - {type: refused, text: find_across_places}
+
+- id: search-same-named-things-are-never-guessed
+  tags: [search, literal, known-bad]
+  input: {op: tool, tool: find_in_place, args: {query: Brain, project_id: demo_mine, place_id: dive-and-mine}}
+  checks:
+    - {type: list_empty, path: result.selected}
+    - {type: pluck_equals, path: result.not_selected, field: path, items: ["dive-and-mine::Workspace/Vendors/Bob/Brain", "dive-and-mine::Workspace/Vendors/Zed/Brain"]}
+    - {type: text_contains, path: result.ask, text: "Which one"}
+
+- id: search-under-narrows-same-named-things
+  tags: [search, literal, known-good]
+  input: {op: tool, tool: find_in_place, args: {query: Brain, under: Workspace/Vendors/Zed, project_id: demo_mine, place_id: dive-and-mine}}
+  checks:
+    - {type: pluck_equals, path: result.selected, field: path, items: ["dive-and-mine::Workspace/Vendors/Zed/Brain"]}
+
+- id: search-text-finds-the-purchase-handler-first
+  tags: [search, hybrid, known-good]
+  input: {op: tool, tool: find_in_place, args: {query: purchase handler, project_id: demo_mine, place_id: dive-and-mine}}
+  checks:
+    - {type: top_hit, path: "dive-and-mine::ServerScriptService/Handlers/PurchaseHandler"}
+
+- id: search-text-survives-a-misspelling
+  tags: [search, hybrid, known-good]
+  input: {op: tool, tool: find_in_place, args: {query: PurchsaeHandler, project_id: demo_mine, place_id: dive-and-mine}}
+  checks:
+    - {type: top_hit, path: "dive-and-mine::ServerScriptService/Handlers/PurchaseHandler"}
+
+- id: search-kind-filter-limits-the-class
+  tags: [search, known-good]
+  input: {op: tool, tool: find_in_place, args: {query: handler, kind: script, project_id: demo_mine, place_id: dive-and-mine, detail: true}}
+  checks:
+    - {type: pluck_excludes, path: result.not_selected, field: class, items: [ModuleScript, Folder, Model]}
+
+- id: search-empty-query-is-refused
+  tags: [search, known-bad]
+  input: {op: tool, tool: find_in_place, args: {query: "  ", project_id: demo_mine, place_id: dive-and-mine}}
+  checks:
+    - {type: refused, text: "query is empty"}
+
+- id: search-without-any-snapshot-says-what-to-do
+  tags: [search, known-bad]
+  input: {op: tool, world: empty, tool: find_in_place, args: {query: Bob, project_id: demo_mine, place_id: dive-and-mine}}
+  checks:
+    - {type: refused, text: plan_refresh}
+
+- id: search-unknown-role-lists-the-known-roles
+  tags: [search, roles, known-bad]
+  input: {op: tool, tool: find_in_place, args: {query: x, role: wizard, project_id: demo_mine, place_id: dive-and-mine}}
+  checks:
+    - {type: refused, text: vendor}
+
+- id: search-active-place-comes-from-the-open-studio-not-a-guess
+  tags: [search, scope, known-good]
+  input:
+    op: tool
+    tool: find_in_place
+    args: {query: Bob, project_id: demo_roles, studios: [{name: "Role Lab (SYNTHETIC)", place_id: 0, studio_id: s1}]}
+  checks:
+    - {type: ok}
+    - {type: equals, path: result.place_id, value: role-lab}
+
+- id: search-without-place-or-matching-studio-is-refused
+  tags: [search, scope, known-bad]
+  input:
+    op: tool
+    tool: find_in_place
+    args: {query: Bob, project_id: demo_mine, studios: [{name: "Something Else", place_id: 5, studio_id: s1}]}
+  checks:
+    - {type: refused, text: "cannot tell the active place"}
+
+- id: search-results-carry-the-place-prefix
+  tags: [search, scope, known-good]
+  input: {op: tool, tool: find_in_place, args: {query: vendors, role: vendor, project_id: demo_mine, place_id: dive-and-mine}}
+  checks:
+    - {type: pluck_equals, path: result.selected, field: path, items: ["dive-and-mine::Workspace/Vendors/Bob", "dive-and-mine::Workspace/Vendors/Zed"]}

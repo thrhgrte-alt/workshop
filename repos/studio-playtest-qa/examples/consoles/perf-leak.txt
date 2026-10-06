@@ -1,0 +1,8 @@
+10:00:00.100  Server started
+10:00:00.400  ServerScriptService.Economy loaded 2 upgrades
+10:00:03.000  PLAYQA_MARK perf_snapshot 3 start
+10:00:03.000  PLAYQA_MARK perf_snapshot 3 end
+10:00:03.000  PLAYQA_RESULT {"assertions": [{"detail": "parts 6, memory 410.0 MB, frame 16.6 ms", "expected": "part count, memory and frame time measured", "id": "snapshot_taken", "measured": 6, "ok": true}], "check_id": "perf_snapshot", "kind": "perf", "measures": {"frame_ms": 16.6, "frame_samples": 30, "instance_count": 39, "memory_mb": 410.0, "module_count": 1, "part_count": 6, "phase": "start", "script_count": 3}, "place": {"name": "Demo Mine Main (SYNTHETIC)", "place_id": 0}, "repeat_no": 3, "schema": "playqa.result/1"}
+10:05:03.000  PLAYQA_MARK perf_snapshot 3 start
+10:05:03.000  PLAYQA_MARK perf_snapshot 3 end
+10:05:03.000  PLAYQA_RESULT {"assertions": [{"detail": "parts 6, memory 510.0 MB, frame 16.6 ms", "expected": "part count, memory and frame time measured", "id": "snapshot_taken", "measured": 6, "ok": true}], "check_id": "perf_snapshot", "kind": "perf", "measures": {"frame_ms": 16.6, "frame_samples": 30, "instance_count": 39, "memory_mb": 510.0, "module_count": 1, "part_count": 6, "phase": "end", "script_count": 3}, "place": {"name": "Demo Mine Main (SYNTHETIC)", "place_id": 0}, "repeat_no": 3, "schema": "playqa.result/1"}

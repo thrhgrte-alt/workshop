@@ -1,0 +1,59 @@
+# Output-size budgets: characters of the JSON each tool returns for a typical call on demo_mine/main. Output is loaded into the model's context, so growth is a regression.
+# If a change legitimately needs more room, raise the number here deliberately in the same commit and say why. (Self-written; the numbers were set from the measured sizes plus headroom.)
+- id: budget-list-checks
+  input: {op: tools_seq, steps: [{tool: list_checks, args: {project_id: demo_mine, place_id: main}}]}
+  checks: [{type: step_ok, step: 0}, {type: less, path: steps.0.chars, than: 1500}]
+- id: budget-plan-playtest
+  input: {op: tools_seq, steps: [{tool: plan_playtest, args: {project_id: demo_mine, place_id: main, studios: [{name: "Demo Mine Main (SYNTHETIC)", place_id: 0, studio_id: s}]}}]}
+  checks: [{type: step_ok, step: 0}, {type: less, path: steps.0.chars, than: 4600}]
+- id: budget-parse-console-log
+  input: {op: tools_seq, steps: [{tool: parse_console_log, args: {project_id: demo_mine, place_id: main, console_log: "$console:boot:boot_error", check_id: boot}}]}
+  checks: [{type: step_ok, step: 0}, {type: less, path: steps.0.chars, than: 650}]
+- id: budget-compare-baseline
+  input:
+    op: tools_seq
+    steps:
+      - {tool: save_baseline, args: {project_id: demo_mine, place_id: main, results: "$perf:", dry_run: false}}
+      - {tool: compare_baseline, args: {project_id: demo_mine, place_id: main, results: "$perf:"}}
+  checks: [{type: step_ok, step: 1}, {type: less, path: steps.1.chars, than: 620}]
+- id: budget-explain-failure
+  title: "a failing boot check with the console: verdict, checked list and two failures with evidence"
+  input: {op: tools_seq, steps: [{tool: explain_failure, args: {project_id: demo_mine, place_id: main, check_id: boot, results: ["$world:boot:boot_error"], console_log: "$console:boot:boot_error"}}]}
+  checks: [{type: step_ok, step: 0}, {type: less, path: steps.0.chars, than: 3300}]
+- id: budget-explain-failure-pass
+  input: {op: tools_seq, steps: [{tool: explain_failure, args: {project_id: demo_mine, place_id: main, check_id: boot, results: ["$world:boot:"], console_log: "$console:boot:"}}]}
+  checks: [{type: step_ok, step: 0}, {type: less, path: steps.0.chars, than: 1500}]
+- id: budget-find-past-corrections
+  input: {op: tools_seq, steps: [{tool: find_past_corrections, args: {project_id: demo_mine, place_id: main, request: x}}]}
+  checks: [{type: step_ok, step: 0}, {type: less, path: steps.0.chars, than: 320}]
+- id: budget-generate-check-script
+  title: "the dry run (the plan, lint verdict and hash, no script text)"
+  input: {op: tools_seq, steps: [{tool: generate_check_script, args: {project_id: demo_mine, place_id: main, check_id: remotes, studios: [{name: "Demo Mine Main (SYNTHETIC)", place_id: 0, studio_id: s}]}}]}
+  checks: [{type: step_ok, step: 0}, {type: less, path: steps.0.chars, than: 800}]
+- id: budget-generate-check-script-real
+  title: "dry_run=false returns the Luau itself: the largest script (remotes with 3 remotes) must stay small"
+  input: {op: tools_seq, steps: [{tool: generate_check_script, args: {project_id: demo_mine, place_id: main, check_id: remotes, dry_run: false, studios: [{name: "Demo Mine Main (SYNTHETIC)", place_id: 0, studio_id: s}]}}]}
+  checks: [{type: step_ok, step: 0}, {type: less, path: steps.0.chars, than: 8600}]
+- id: budget-save-baseline
+  input: {op: tools_seq, steps: [{tool: save_baseline, args: {project_id: demo_mine, place_id: main, results: "$perf:"}}]}
+  checks: [{type: step_ok, step: 0}, {type: less, path: steps.0.chars, than: 650}]
+- id: budget-record-result
+  input: {op: tools_seq, steps: [{tool: record_result, args: {project_id: demo_mine, place_id: main, check_id: boot, results: ["$world:boot:boot_error"], console_log: "$console:boot:boot_error"}}]}
+  checks: [{type: step_ok, step: 0}, {type: less, path: steps.0.chars, than: 650}]
+- id: budget-record-run
+  input: {op: tools_seq, steps: [{tool: record_run, args: {project_id: demo_mine, place_id: main, request: x}}]}
+  checks: [{type: step_ok, step: 0}, {type: less, path: steps.0.chars, than: 400}]
+- id: budget-record-decision
+  input:
+    op: tools_seq
+    steps:
+      - {tool: record_run, args: {project_id: demo_mine, place_id: main, request: x, dry_run: false}}
+      - {tool: record_decision, args: {project_id: demo_mine, place_id: main, run_id: "$ref:steps.0.result.run_id", decision: accept}}
+  checks: [{type: step_ok, step: 1}, {type: less, path: steps.1.chars, than: 450}]
+- id: budget-promote-run
+  input:
+    op: tools_seq
+    steps:
+      - {tool: record_run, args: {project_id: demo_mine, place_id: main, request: x, dry_run: false}}
+      - {tool: promote_run, args: {project_id: demo_mine, place_id: main, run_id: "$ref:steps.0.result.run_id", kind: failure_case, title: t, description: d, tags: [boot], path: p}}
+  checks: [{type: step_ok, step: 1}, {type: less, path: steps.1.chars, than: 450}]

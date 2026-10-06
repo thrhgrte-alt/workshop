@@ -91,9 +91,9 @@ class Scope:
             if self.project_id != GLOBAL or self.place_id is not None:
                 raise ScopeError("a global scope has project_id '_global' and no place")
             return
-        if not isinstance(self.project_id, str) or not _ID_RE.match(self.project_id):
+        if not isinstance(self.project_id, str) or not _ID_RE.fullmatch(self.project_id):
             raise ScopeError(f"project_id {self.project_id!r} is not usable: it must be a non-empty name (letters, digits, . _ -)")
-        if self.place_id is not None and (not isinstance(self.place_id, str) or not _ID_RE.match(self.place_id)):
+        if self.place_id is not None and (not isinstance(self.place_id, str) or not _ID_RE.fullmatch(self.place_id)):
             raise ScopeError(f"place_id {self.place_id!r} is not usable: it must be a registry id (letters, digits, . _ -) or None")
 
     @classmethod
@@ -218,7 +218,7 @@ class ProjectRegistry:
         projects = []
         for raw in data.get("projects") or []:
             pid = raw.get("project_id") or raw.get("id")
-            if not isinstance(pid, str) or not _ID_RE.match(pid):
+            if not isinstance(pid, str) or not _ID_RE.fullmatch(pid):
                 raise ScopeError(f"projects.yaml: every project needs a usable project_id (got {pid!r})")
             places = []
             for rp in raw.get("places") or []:
@@ -230,7 +230,7 @@ class ProjectRegistry:
                     slug, rbx = raw_pid, _num(rp.get("roblox_place_id"))
                     if rp.get("id") is not None and rp.get("place_id") is not None:
                         rbx = _num(rp.get("roblox_place_id")) or _num(rp.get("place_id"))
-                if not isinstance(slug, str) or not _ID_RE.match(slug):
+                if not isinstance(slug, str) or not _ID_RE.fullmatch(slug):
                     raise ScopeError(f"project '{pid}': a place needs a usable place_id (got {raw_pid!r})")
                 places.append(PlaceEntry(slug, rp.get("alias") or rp.get("name") or slug, rbx, rp.get("studio_name") or rp.get("name"),
                                          rp.get("local_file") or rp.get("file"), _profiles(rp),

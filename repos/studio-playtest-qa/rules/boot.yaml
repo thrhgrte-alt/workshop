@@ -1,0 +1,26 @@
+# Check library: boot. Each file in rules/ lists `checks`. A check names the script kind that is generated, where the script is assumed to run, whether it can share a
+# play session with others, whether it is flaky by default, the assertions it can emit (the final report only ever uses these ids) and what it does NOT check.
+# `context` is an assumption about where the hub's execute_luau runs the code (schema_unverified until a real capture exists).
+version: 1
+checks:
+  - id: boot
+    kind: boot
+    title: "Boot: no script errors or warnings in the first N seconds; expected services and folders exist"
+    context: server
+    session: shared
+    flaky: false
+    config_section: boot
+    settings: [boot_window_seconds]
+    ranges: [boot_error_lines, boot_warning_lines]
+    assertions:
+      - {id: services_exist, title: "every expected service exists", source: script}
+      - {id: paths_exist, title: "every expected folder or instance path exists", source: script}
+      - {id: console_no_errors, title: "no error lines in the boot window of the console", source: tool}
+      - {id: console_no_warnings, title: "no warning lines in the boot window of the console", source: tool}
+      - {id: log_service_clean, title: "LogService history shows no error lines (secondary evidence; skipped when unavailable)", source: script}
+    not_checked:
+      - "anything after the boot window"
+      - "scripts that never ran (a disabled script raises no error)"
+      - "client-side errors when the console was read from the server side"
+    verify_against_current_docs: true
+    notes: "LogService:GetLogHistory is used as secondary evidence; verify it against the current Roblox docs. The console parse is the primary evidence."

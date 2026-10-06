@@ -1,0 +1,193 @@
+# Remotes, economy smoke test and data round trip on the mock world. Hand computation for the economy fixtures (config in projects/demo_mine/main/playtest.yaml):
+#   start: coins 0, ore 0. mine x3 -> ore +3. sell -> coins += ore x 5 = +15, ore -> 0 (ore -3). buy PickaxeII (price 10) -> coins -10 (15 -> 5). buy DiamondPick (price 40, only 5 coins) -> refused, change 0.
+#   Faults: currency_bug = no deduction (buy change 0, expected -10); sell_doubles = x10 per ore (+30 vs +15, ratio 2.0); negative_balance = no funds check (5 - 40 = -35).
+- id: remotes-clean-passes
+  tags: [remotes, known-good]
+  title: "3 runs, all clean: BuyUpgrade 1 valid + 7 bad (1 configured + the first 6 generic probes), Ping 1 valid + 6 bad, EquipTool 1 valid + 6 bad"
+  input: {op: world_check, check: remotes}
+  checks:
+    - {type: equals, path: verdict, value: pass}
+    - {type: equals, path: repeats.conclusive, value: 3}
+    - {type: list_empty, path: failed}
+    - {type: text_contains, path: checked.0, text: "BuyUpgrade (RemoteFunction, 1 valid + 7 bad)"}
+    - {type: text_contains, path: checked.0, text: "EquipTool (RemoteEvent, 1 valid + 6 bad)"}
+- id: remotes-erroring-handler-is-caught
+  tags: [remotes, planted-fault]
+  title: "a handler that raises fails in 3 of 3 runs: the valid call and all 7 bad inputs raise, and the server log line is attributed to the probe"
+  input: {op: world_check, check: remotes, faults: [remote_errors]}
+  checks:
+    - {type: equals, path: verdict, value: fail}
+    - {type: equals, path: repeats.failed, value: 3}
+    - {type: list_equals, path: failed, items: ["valid_call_no_error[BuyUpgrade]", "bad_input_no_error[BuyUpgrade]"]}
+    - {type: text_contains, path: failures.0.evidence.log_lines.0, text: "BuyUpgrade:12: attempt to index nil with 'Cost'"}
+    - {type: equals, path: failures.0.cause_rule, value: remote-handler-threw}
+    - {type: equals, path: failures.1.cause_rule, value: remote-bad-input-threw}
+- id: remotes-accepting-bad-input-is-caught
+  tags: [remotes, planted-fault]
+  title: "a handler that returns true for everything accepts all 7 bad inputs"
+  input: {op: world_check, check: remotes, faults: [remote_accepts_bad]}
+  checks:
+    - {type: list_equals, path: failed, items: ["bad_input_rejected[BuyUpgrade]"]}
+    - {type: text_contains, path: failures.0.evidence.detail, text: "0 of 7 bad input(s) rejected"}
+    - {type: equals, path: failures.0.cause_rule, value: remote-accepted-bad}
+- id: remotes-event-error-is-seen-only-through-the-console
+  tags: [remotes, planted-fault]
+  title: "EquipTool (a RemoteEvent) raises on non-strings: 5 of the 6 probes (all but huge_string) leave an error line"
+  input: {op: world_check, check: remotes, faults: [event_errors]}
+  checks:
+    - {type: list_equals, path: failed, items: ["bad_input_no_error[EquipTool]"]}
+    - {type: text_contains, path: failures.0.evidence.detail, text: "5 of 6 bad input(s)"}
+- id: remotes-event-error-without-console-is-a-stated-blind-spot
+  tags: [remotes, honesty]
+  title: "without the console a RemoteEvent's server error is invisible: the verdict is pass and says what was not seen"
+  input: {op: world_check, check: remotes, faults: [event_errors], console: none}
+  checks:
+    - {type: equals, path: verdict, value: pass}
+    - {type: text_contains, path: report.not_checked.3, text: "NOT seen"}
+- id: remotes-one-failed-run-of-three-is-flaky-not-a-failure
+  tags: [remotes, flaky, aggregation]
+  input: {op: world_check, check: remotes, faults_by_run: [[remote_errors], [], []]}
+  checks:
+    - {type: equals, path: verdict, value: flaky}
+    - {type: equals, path: repeats.failed, value: 1}
+    - {type: equals, path: repeats.conclusive, value: 3}
+    - {type: text_contains, path: summary, text: "FLAKY remotes (1 of 3 runs failed)"}
+- id: remotes-one-failed-run-of-one-is-inconclusive
+  tags: [remotes, flaky, aggregation]
+  title: "a flaky check that failed once is re-run before a failure is called"
+  input: {op: world_check, check: remotes, faults_by_run: [[remote_errors]]}
+  checks:
+    - {type: equals, path: verdict, value: inconclusive}
+    - {type: text_contains, path: summary, text: "re-run it until 3 run(s) exist"}
+- id: economy-clean-passes
+  tags: [economy, known-good]
+  input: {op: world_check, check: economy_smoke}
+  checks:
+    - {type: equals, path: verdict, value: pass}
+    - {type: equals, path: repeats.conclusive, value: 3}
+    - {type: text_contains, path: checked.0, text: "mine: ore +3, coins +0; sell: ore -3, coins +15; buy_upgrade: coins -10; buy_too_expensive: coins +0"}
+- id: economy-currency-bug-is-caught
+  tags: [economy, planted-fault]
+  title: "buying PickaxeII does not deduct: coins 15 -> 15 (change 0, expected -10), ratio 0"
+  input: {op: world_check, check: economy_smoke, faults: [currency_bug]}
+  checks:
+    - {type: equals, path: verdict, value: fail}
+    - {type: list_equals, path: failed, items: ["delta_as_expected[buy_upgrade.coins]"]}
+    - {type: equals, path: failures.0.evidence.measured, value: 0}
+    - {type: text_contains, path: failures.0.evidence.detail, text: "coins went 15 -> 15"}
+    - {type: equals, path: failures.0.cause_rule, value: econ-not-applied}
+- id: economy-doubled-sale-is-caught
+  tags: [economy, planted-fault]
+  title: "3 ore x 10 = +30 where +15 was expected: ratio 2.0"
+  input: {op: world_check, check: economy_smoke, faults: [sell_doubles]}
+  checks:
+    - {type: list_equals, path: failed, items: ["delta_as_expected[sell.coins]"]}
+    - {type: equals, path: failures.0.evidence.measured, value: 30}
+    - {type: equals, path: failures.0.ratio, value: 2.0}
+    - {type: equals, path: failures.0.cause_rule, value: econ-doubled}
+- id: economy-purchase-without-funds-goes-negative
+  tags: [economy, planted-fault]
+  title: "5 coins - 40 = -35: the refusal that should change nothing changes -40, and the balance goes below 0"
+  input: {op: world_check, check: economy_smoke, faults: [negative_balance]}
+  checks:
+    - {type: list_equals, path: failed, items: ["delta_as_expected[buy_too_expensive.coins]", balance_not_negative]}
+    - {type: equals, path: failures.0.evidence.measured, value: -40}
+    - {type: equals, path: failures.0.cause_rule, value: econ-unexpected-change}
+- id: economy-missing-hook-fails-the-step
+  tags: [economy, config-error]
+  title: "an action path that does not exist fails step_ran for that step and says which instance is missing"
+  input:
+    op: world_check
+    check: economy_smoke
+    cfg_patch: [{set: economy.steps.1.action.path, value: ServerScriptService.QA.NoSuchHook}]
+  checks:
+    - {type: equals, path: verdict, value: fail}
+    - {type: list_contains, path: failed, items: ["step_ran[sell]"]}
+    - {type: text_contains, path: failures.0.evidence.detail, text: "action instance not found: ServerScriptService.QA.NoSuchHook"}
+    - {type: equals, path: failures.0.cause_rule, value: econ-step-error}
+- id: economy-runaway-cap-is-a-parameter
+  tags: [economy, params, hand-computed]
+  title: "with the placeholder cap lowered to 10, only the +15 sale exceeds it (the -10 purchase is not above 10)"
+  input: {op: world_check, check: economy_smoke, style_patch: {ranges: {economy_max_abs_delta: {max: 10}}}}
+  checks:
+    - {type: list_equals, path: failed, items: [delta_within_cap]}
+    - {type: text_contains, path: failures.0.evidence.detail, text: "sell.coins"}
+- id: economy-delta-tolerance-is-a-parameter
+  tags: [economy, params, hand-computed]
+  title: "the doubled sale is +15 off: tolerance 10 still fails, tolerance 20 passes"
+  input: {op: world_check, check: economy_smoke, faults: [sell_doubles], style_patch: {settings: {economy_delta_tolerance: 10.0}}}
+  checks:
+    - {type: equals, path: verdict, value: fail}
+- id: economy-delta-tolerance-twenty-passes
+  tags: [economy, params, hand-computed]
+  input: {op: world_check, check: economy_smoke, faults: [sell_doubles], style_patch: {settings: {economy_delta_tolerance: 20.0}}}
+  checks:
+    - {type: equals, path: verdict, value: pass}
+- id: economy-failure-in-one-run-of-three-is-flaky
+  tags: [economy, flaky, aggregation]
+  input: {op: world_check, check: economy_smoke, faults_by_run: [[currency_bug], [], []]}
+  checks:
+    - {type: equals, path: verdict, value: flaky}
+- id: data-clean-roundtrip-passes
+  tags: [data, known-good]
+  title: "coins 777 and ore 12 are saved, reset to 0 / 0 and loaded back"
+  input: {op: world_check, check: data_roundtrip}
+  checks:
+    - {type: equals, path: verdict, value: pass}
+    - {type: text_contains, path: checked.0, text: "coins marker 777 -> after load 777; ore marker 12 -> after load 12"}
+    - {type: text_contains, path: checked.1, text: "no DataStore call"}
+- id: data-lost-value-is-caught
+  tags: [data, planted-fault]
+  title: "the save hook skips Ore: after load ore is 0, not 12"
+  input: {op: world_check, check: data_roundtrip, faults: [data_loses_value]}
+  checks:
+    - {type: equals, path: verdict, value: fail}
+    - {type: list_equals, path: failed, items: [values_roundtrip]}
+    - {type: text_contains, path: failures.0.evidence.detail, text: "did not return as saved: ore"}
+    - {type: equals, path: failures.0.cause_rule, value: data-mismatch}
+- id: data-switch-off-the-script-refuses-and-touches-nothing
+  tags: [data, refusal]
+  title: "test-mode switch off: the script declines before calling any hook; the verdict is refused, not fail"
+  input: {op: world_check, check: data_roundtrip, test_mode: false}
+  checks:
+    - {type: equals, path: verdict, value: refused}
+    - {type: text_contains, path: summary, text: "no data hook was called"}
+    - {type: text_contains, path: checked.0, text: "nothing was checked"}
+- id: data-unacknowledged-test-mode-refuses
+  tags: [data, refusal]
+  title: "the ack hook cannot be found: the game did not confirm test mode, so no hook is called"
+  input:
+    op: world_check
+    check: data_roundtrip
+    cfg_patch: [{set: data.test_mode.ack_hook, value: ServerScriptService.QA.NoSuchAck}]
+  checks:
+    - {type: equals, path: verdict, value: refused}
+    - {type: text_contains, path: summary, text: "did not acknowledge test mode"}
+- id: economy-style-range-catches-a-purchase-that-does-not-charge
+  tags: [economy, params, planted-fault, hand-computed]
+  title: "a step marked `range: spend` takes its bounds from style/ (placeholder -1000000..-1): a change of 0 is outside it"
+  input:
+    op: world_check
+    check: economy_smoke
+    faults: [currency_bug]
+    cfg_patch: [{set: economy.steps.2.expect.coins, value: {range: spend}}]
+  checks:
+    - {type: list_equals, path: failed, items: ["delta_as_expected[buy_upgrade.coins]"]}
+    - {type: text_contains, path: failures.0.evidence.expected, text: "range spend (-1000000..-1, PLACEHOLDER)"}
+- id: economy-style-range-passes-the-clean-sale
+  tags: [economy, params, known-good, hand-computed]
+  title: "range: gain (1..1000000) holds for the +15 sale"
+  input:
+    op: world_check
+    check: economy_smoke
+    cfg_patch: [{set: economy.steps.1.expect.coins, value: {range: gain}}]
+  checks: [{type: equals, path: verdict, value: pass}]
+- id: economy-wide-placeholder-range-cannot-see-a-doubled-sale
+  tags: [economy, params, honesty, hand-computed]
+  title: "+30 is inside 1..1000000, so the placeholder range passes the doubled sale: exact deltas are what catch it (this is why the ranges are placeholders to be replaced)"
+  input:
+    op: world_check
+    check: economy_smoke
+    faults: [sell_doubles]
+    cfg_patch: [{set: economy.steps.1.expect.coins, value: {range: gain}}]
+  checks: [{type: equals, path: verdict, value: pass}]

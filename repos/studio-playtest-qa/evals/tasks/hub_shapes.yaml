@@ -1,0 +1,77 @@
+# Accepted shapes of the raw execute_luau answer (all schema_unverified: written from the documented assumption, not from a real capture). Same boot result, same console, same verdict.
+- id: shape-result-mapping
+  tags: [parser, hub-shape, schema_unverified]
+  input:
+    op: judge_docs
+    check: boot
+    console: "10:00:00.000 Server started"
+    results:
+      - {"schema": "playqa.result/1", "check_id": "boot", "kind": "boot", "repeat_no": 1, "assertions": [], "measures": {"missing_services": [], "missing_paths": []}}
+  checks:
+    - {type: equals, path: verdict, value: pass}
+
+- id: shape-json-string
+  tags: [parser, hub-shape, schema_unverified]
+  input:
+    op: judge_docs
+    check: boot
+    console: "10:00:00.000 Server started"
+    results:
+      - "{\"schema\": \"playqa.result/1\", \"check_id\": \"boot\", \"kind\": \"boot\", \"repeat_no\": 1, \"assertions\": [], \"measures\": {\"missing_services\": [], \"missing_paths\": []}}"
+  checks:
+    - {type: equals, path: verdict, value: pass}
+
+- id: shape-wrapped-in-result-key
+  tags: [parser, hub-shape, schema_unverified]
+  input:
+    op: judge_docs
+    check: boot
+    console: "10:00:00.000 Server started"
+    results:
+      - {"result": "{\"schema\": \"playqa.result/1\", \"check_id\": \"boot\", \"kind\": \"boot\", \"repeat_no\": 1, \"assertions\": [], \"measures\": {\"missing_services\": [], \"missing_paths\": []}}"}
+  checks:
+    - {type: equals, path: verdict, value: pass}
+
+- id: shape-text-content-blocks
+  tags: [parser, hub-shape, schema_unverified]
+  input:
+    op: judge_docs
+    check: boot
+    console: "10:00:00.000 Server started"
+    results:
+      - [{"type": "text", "text": "PLAYQA_RESULT {\"schema\": \"playqa.result/1\", \"check_id\": \"boot\", \"kind\": \"boot\", \"repeat_no\": 1, \"assertions\": [], \"measures\": {\"missing_services\": [], \"missing_paths\": []}}"}]
+  checks:
+    - {type: equals, path: verdict, value: pass}
+
+- id: shape-printed-line-in-output
+  tags: [parser, hub-shape, schema_unverified]
+  input:
+    op: judge_docs
+    check: boot
+    console: "10:00:00.000 Server started"
+    results:
+      - "some print\nPLAYQA_RESULT {\"schema\": \"playqa.result/1\", \"check_id\": \"boot\", \"kind\": \"boot\", \"repeat_no\": 1, \"assertions\": [], \"measures\": {\"missing_services\": [], \"missing_paths\": []}}\n"
+  checks:
+    - {type: equals, path: verdict, value: pass}
+
+- id: shape-nested-output-content
+  tags: [parser, hub-shape, schema_unverified]
+  input:
+    op: judge_docs
+    check: boot
+    console: "10:00:00.000 Server started"
+    results:
+      - {"output": {"content": [{"type": "text", "text": "{\"schema\": \"playqa.result/1\", \"check_id\": \"boot\", \"kind\": \"boot\", \"repeat_no\": 1, \"assertions\": [], \"measures\": {\"missing_services\": [], \"missing_paths\": []}}"}]}}
+  checks:
+    - {type: equals, path: verdict, value: pass}
+
+- id: shape-hub-error-flag-is-inconclusive
+  tags: [parser, hub-shape, schema_unverified]
+  input:
+    op: judge_docs
+    check: boot
+    console: "10:00:00.000 Server started"
+    results:
+      - {"isError": true, "error": "execute_luau failed: no Studio"}
+  checks:
+    - {type: equals, path: verdict, value: inconclusive}

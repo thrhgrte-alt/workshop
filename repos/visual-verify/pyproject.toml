@@ -1,0 +1,26 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "visual-verify"
+version = "0.1.0"
+description = "Visual measurement and verification: instructions, tools, examples and evals that let a compatible AI agent do this work."
+readme = "README.md"
+requires-python = ">=3.10"
+license = {text = "MIT"}
+dependencies = ["guide-core>=0.1", "mcp>=1.2", "pyyaml>=6", "jsonschema>=4.18", "numpy>=1.24", "pillow>=10"]
+
+[project.optional-dependencies]
+dev = ["pytest>=7"]
+
+[project.scripts]
+visual-verify = "visualverify.__main__:main"
+visual-verify-mcp = "visualverify.server:main"
+
+[tool.setuptools.packages.find]
+include = ["visualverify*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"

@@ -1,0 +1,130 @@
+# Performance snapshot against a baseline, and aggregation over repeats. The baseline is taken from the CLEAN mock world: parts 6 (Ground, Spawn, 3 area targets, the character's root part),
+# scripts 3, memory 410.0 MB, frame 16.6 ms, identical at the start and after 5 minutes. Limits (PLACEHOLDERS): parts +10%, scripts +10%, memory +25%, frame +25%, growth over a run +20%.
+- id: perf-clean-run-matches-the-baseline
+  tags: [perf, known-good]
+  title: "8 of 8 comparable measures within their limits, memory growth 0%"
+  input: {op: world_check, check: perf_snapshot, baseline: clean, repeats: 1}
+  checks:
+    - {type: equals, path: verdict, value: pass}
+    - {type: text_contains, path: checked.2, text: "8 of 8 comparable measure(s) within their allowed increase over baseline 'default'"}
+    - {type: text_contains, path: checked.1, text: "memory growth over the run 0%"}
+- id: perf-part-bloat-is-caught
+  tags: [perf, planted-fault, hand-computed]
+  title: "3 extra parts: 9 against 6 is +50%, above the 10% limit, at the start and at the end"
+  input: {op: world_check, check: perf_snapshot, baseline: clean, setup: {add_parts: 3}, faults_by_run: [[], [], []]}
+  checks:
+    - {type: equals, path: verdict, value: fail}
+    - {type: list_equals, path: failed, items: ["within_baseline[part_count@start]", "within_baseline[part_count@end]"]}
+    - {type: text_contains, path: failures.0.evidence.detail, text: "6 -> 9 (50%"}
+    - {type: equals, path: failures.0.cause_rule, value: perf-parts}
+- id: perf-memory-leak-is-caught
+  tags: [perf, planted-fault, hand-computed]
+  title: "20 MB per minute for 5 minutes: 410 -> 510 is +24.39% over the run (limit 20%) while +24.39% against the baseline stays under its 25% limit"
+  input: {op: world_check, check: perf_snapshot, baseline: clean, setup: {leak_mb_per_min: 20}, repeats: 3}
+  checks:
+    - {type: equals, path: verdict, value: fail}
+    - {type: list_equals, path: failed, items: [growth_over_run]}
+    - {type: text_contains, path: failures.0.evidence.detail, text: "410 -> 510 MB"}
+    - {type: approx, path: failures.0.evidence.measured, value: 24.39, tol: 0.01}
+    - {type: equals, path: failures.0.cause_rule, value: perf-growth}
+- id: perf-slow-frames-are-caught
+  tags: [perf, planted-fault, hand-computed]
+  title: "22 ms against 16.6 ms is +32.53%, above the 25% limit"
+  input: {op: world_check, check: perf_snapshot, baseline: clean, setup: {frame_ms: 22}, repeats: 3}
+  checks:
+    - {type: list_equals, path: failed, items: ["within_baseline[frame_ms@start]", "within_baseline[frame_ms@end]"]}
+    - {type: equals, path: failures.0.cause_rule, value: perf-frame}
+- id: perf-limit-is-a-parameter
+  tags: [perf, params, hand-computed]
+  title: "with the placeholder part limit raised to 60% the +50% passes"
+  input: {op: world_check, check: perf_snapshot, baseline: clean, setup: {add_parts: 3}, repeats: 3, style_patch: {ranges: {perf_part_count_increase_pct: {max: 60.0}}}}
+  checks:
+    - {type: equals, path: verdict, value: pass}
+- id: perf-without-a-baseline-compares-nothing
+  tags: [perf, honesty]
+  title: "no stored baseline: the run is not called a pass; it says nothing was compared"
+  input: {op: world_check, check: perf_snapshot, repeats: 1}
+  checks:
+    - {type: equals, path: verdict, value: inconclusive}
+    - {type: text_contains, path: summary, text: "no baseline to compare against"}
+- id: perf-start-snapshot-alone-is-incomplete
+  tags: [perf, honesty]
+  input:
+    op: judge_docs
+    check: perf_snapshot
+    results:
+      - schema: playqa.result/1
+        check_id: perf_snapshot
+        kind: perf
+        repeat_no: 1
+        assertions: []
+        measures: {phase: start, part_count: 6, script_count: 3, memory_mb: 410.0, frame_ms: 16.6}
+  checks:
+    - {type: equals, path: verdict, value: inconclusive}
+- id: agg-stable-check-fails-on-one-failed-run
+  tags: [aggregation]
+  title: "spawn is not flaky: one failing run is a failure and the plan was 1 run"
+  input: {op: world_check, check: spawn, faults_by_run: [[spawn_stuck]]}
+  checks:
+    - {type: equals, path: verdict, value: fail}
+    - {type: equals, path: repeats.planned, value: 1}
+    - {type: equals, path: repeats.flaky_check, value: false}
+- id: agg-two-of-three-is-flaky-at-confirm-fraction-one
+  tags: [aggregation, flaky, hand-computed]
+  title: "2/3 = 0.67 < 1.0: flaky, not a failure"
+  input: {op: world_check, check: remotes, faults_by_run: [[remote_errors], [remote_errors], []]}
+  checks:
+    - {type: equals, path: verdict, value: flaky}
+    - {type: equals, path: repeats.failed, value: 2}
+- id: agg-two-of-three-fails-at-confirm-fraction-point-six
+  tags: [aggregation, flaky, params, hand-computed]
+  title: "2/3 = 0.67 >= 0.6: a failure"
+  input: {op: world_check, check: remotes, faults_by_run: [[remote_errors], [remote_errors], []], style_patch: {settings: {flaky_confirm_fail_fraction: 0.6}}}
+  checks:
+    - {type: equals, path: verdict, value: fail}
+- id: agg-two-of-two-with-three-planned-is-inconclusive
+  tags: [aggregation, flaky, hand-computed]
+  input: {op: world_check, check: remotes, faults_by_run: [[remote_errors], [remote_errors]]}
+  checks:
+    - {type: equals, path: verdict, value: inconclusive}
+- id: agg-two-of-two-with-two-planned-is-a-failure
+  tags: [aggregation, flaky, hand-computed]
+  input: {op: world_check, check: remotes, faults_by_run: [[remote_errors], [remote_errors]], planned: 2}
+  checks:
+    - {type: equals, path: verdict, value: fail}
+    - {type: equals, path: repeats.planned, value: 2}
+- id: agg-all-pass-with-fewer-runs-is-a-pass-with-a-note
+  tags: [aggregation, flaky]
+  input: {op: world_check, check: remotes, faults_by_run: [[]]}
+  checks:
+    - {type: equals, path: verdict, value: pass}
+    - {type: text_contains, path: notes, text: "ran 1 of 3 planned repeat(s)"}
+- id: agg-unreadable-answer-is-inconclusive-not-a-failure
+  tags: [aggregation, honesty, parser]
+  title: "a Luau error text instead of a result says nothing about the game"
+  input:
+    op: judge_docs
+    check: spawn
+    results: ["ServerScriptService.X:5: attempt to index nil with 'Character'"]
+  checks:
+    - {type: equals, path: verdict, value: inconclusive}
+    - {type: list_empty, path: failed}
+- id: agg-place-guard-error-is-refused
+  tags: [aggregation, refusal, parser]
+  input:
+    op: judge_docs
+    check: spawn
+    results: ["wrong place: this script is for demo_mine/main (PlaceId 0) but PlaceId 5 is open"]
+  checks:
+    - {type: equals, path: verdict, value: refused}
+- id: agg-result-of-another-check-is-inconclusive
+  tags: [aggregation, parser]
+  title: "a boot result handed in as a spawn result is not judged"
+  input:
+    op: judge_docs
+    check: spawn
+    results:
+      - {schema: playqa.result/1, check_id: boot, kind: boot, repeat_no: 1, assertions: [], measures: {}}
+  checks:
+    - {type: equals, path: verdict, value: inconclusive}
+    - {type: text_contains, path: notes, text: "not 'spawn'"}

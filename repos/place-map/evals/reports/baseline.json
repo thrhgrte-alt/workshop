@@ -1,0 +1,2612 @@
+{
+  "label": "baseline",
+  "mode": "solver",
+  "at": "2026-10-06T09:03:43+00:00",
+  "git_rev": "unknown",
+  "python": "3.11.15",
+  "meta": {},
+  "passed": 160,
+  "total": 160,
+  "tasks": [
+    {
+      "id": "collector-is-clean-read-only-and-guarded",
+      "passed": true,
+      "checks": [
+        {
+          "check": "mock_ok_or_skipped",
+          "passed": true,
+          "message": "mock status 'ran' (error: None)"
+        },
+        {
+          "check": "list_empty",
+          "passed": true,
+          "message": "lint=[] should be empty"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "read_only == True (got True)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "has_guard == True (got True)"
+        }
+      ]
+    },
+    {
+      "id": "collector-dumps-the-tree-with-positions",
+      "passed": true,
+      "checks": [
+        {
+          "check": "mock_ok_or_skipped",
+          "passed": true,
+          "message": "mock status 'ran' (error: None)"
+        },
+        {
+          "check": "list_equals",
+          "passed": true,
+          "message": "paths=['Workspace', 'Workspace/Vendors', 'Workspace/Vendors/Bob', 'Workspace/Vendors/Bob/Prompt']; expected exactly ['Workspace', 'Workspace/Vendors', 'Workspace/Vendors/Bob', 'Workspace/Vendors/Bob/Prompt']"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "positions.Workspace/Vendors/Bob == [1.0, 2.0, 3.0] (got [1.0, 2.0, 3.0])"
+        }
+      ]
+    },
+    {
+      "id": "collector-skips-secret-attributes",
+      "passed": true,
+      "checks": [
+        {
+          "check": "mock_ok_or_skipped",
+          "passed": true,
+          "message": "mock status 'ran' (error: None)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "attrs.Workspace/Thing == {'Note': 'hello', 'Price': 5} (got {'Note': 'hello', 'Price': 5})"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "meta.skipped.secrets == 2 (got 2)"
+        }
+      ]
+    },
+    {
+      "id": "collector-refuses-to-run-in-another-place",
+      "passed": true,
+      "checks": [
+        {
+          "check": "mock_ok_or_skipped",
+          "passed": true,
+          "message": "mock status 'ran' (error: [string \"generated\"]:10: wrong place: this script is for eval/place (Mini (SYNTHETIC)) but Some Other Place is open)"
+        },
+        {
+          "check": "error_contains",
+          "passed": true,
+          "message": "error should mention 'wrong place' (got '[string \"generated\"]:10: wrong place: this script is for eval/place (Mini (SYNTHETIC)) but Some Other Place is open')"
+        }
+      ]
+    },
+    {
+      "id": "collector-incremental-omits-known-sources",
+      "passed": true,
+      "checks": [
+        {
+          "check": "mock_ok_or_skipped",
+          "passed": true,
+          "message": "mock status 'ran' (error: None)"
+        },
+        {
+          "check": "list_equals",
+          "passed": true,
+          "message": "sources_sent=['Workspace/Other']; expected exactly ['Workspace/Other']"
+        }
+      ]
+    },
+    {
+      "id": "collector-sends-every-source-when-nothing-is-known",
+      "passed": true,
+      "checks": [
+        {
+          "check": "mock_ok_or_skipped",
+          "passed": true,
+          "message": "mock status 'ran' (error: None)"
+        },
+        {
+          "check": "list_equals",
+          "passed": true,
+          "message": "sources_sent=['Workspace/A', 'Workspace/B']; expected exactly ['Workspace/A', 'Workspace/B']"
+        }
+      ]
+    },
+    {
+      "id": "collector-fingerprint-matches-python-on-utf8",
+      "passed": true,
+      "checks": [
+        {
+          "check": "mock_ok_or_skipped",
+          "passed": true,
+          "message": "mock status 'ran' (error: None)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "fp_matches_python == True (got True)"
+        }
+      ]
+    },
+    {
+      "id": "collector-print-mode-chunks-and-parses-back",
+      "passed": true,
+      "checks": [
+        {
+          "check": "mock_ok_or_skipped",
+          "passed": true,
+          "message": "mock status 'ran' (error: None)"
+        },
+        {
+          "check": "greater",
+          "passed": true,
+          "message": "printed_lines=4 should be > 3"
+        },
+        {
+          "check": "list_contains",
+          "passed": true,
+          "message": "paths=['Workspace', 'Workspace/Many', 'Workspace/Many/Alpha', 'Workspace/Many/Beta', 'Workspace/Many/Delta', 'Workspace/Many/Gamma']; expected to contain ['Workspace/Many/Alpha', 'Workspace/Many/Delta']"
+        }
+      ]
+    },
+    {
+      "id": "collector-stops-at-its-instance-cap-and-says-so",
+      "passed": true,
+      "checks": [
+        {
+          "check": "mock_ok_or_skipped",
+          "passed": true,
+          "message": "mock status 'ran' (error: None)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "n_nodes == 3 (got 3)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "meta.truncated == True (got True)"
+        }
+      ]
+    },
+    {
+      "id": "collector-disambiguates-duplicate-names-and-escapes-slashes",
+      "passed": true,
+      "checks": [
+        {
+          "check": "mock_ok_or_skipped",
+          "passed": true,
+          "message": "mock status 'ran' (error: None)"
+        },
+        {
+          "check": "list_equals",
+          "passed": true,
+          "message": "paths=['Workspace', 'Workspace/A%2FB', 'Workspace/Rock', 'Workspace/Rock#2']; expected exactly ['Workspace', 'Workspace/A%2FB', 'Workspace/Rock', 'Workspace/Rock#2']"
+        }
+      ]
+    },
+    {
+      "id": "collector-counts-plain-leaves-over-its-cap-instead-of-listing-them",
+      "passed": true,
+      "checks": [
+        {
+          "check": "mock_ok_or_skipped",
+          "passed": true,
+          "message": "mock status 'ran' (error: None)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "n_nodes == 5 (got 5)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "meta.skipped.plain_leaves == 2 (got 2)"
+        }
+      ]
+    },
+    {
+      "id": "collector-rejects-a-root-with-a-newline",
+      "passed": true,
+      "checks": [
+        {
+          "check": "error_contains",
+          "passed": true,
+          "message": "error should mention 'refresh root' (got \"refresh root 'Workspace\\\\nloadstring(x)()' must be a path of 1-20 instance names such as Workspace/Vendors (printable characters, at most 100 per name)\")"
+        }
+      ]
+    },
+    {
+      "id": "collector-quotes-a-root-with-quotes-safely",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "error == None (got None)"
+        },
+        {
+          "check": "list_empty",
+          "passed": true,
+          "message": "lint=[] should be empty"
+        }
+      ]
+    },
+    {
+      "id": "collector-rejects-a-place-name-it-cannot-embed",
+      "passed": true,
+      "checks": [
+        {
+          "check": "error_contains",
+          "passed": true,
+          "message": "error should mention 'cannot be embedded' (got 'the registered studio_name has characters that cannot be embedded in the place guard and the place has no Roblox place id; use letters, digits, spaces and _ . ( ) - in studio_name or set roblox_place_')"
+        }
+      ]
+    },
+    {
+      "id": "diff-between-two-snapshots-of-the-same-place",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "steps.1.result.place_id == 'dive-and-mine' (got 'dive-and-mine')"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "steps.1.result.project_id == 'demo_mine' (got 'demo_mine')"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "steps.1.result.counts.scripts_added == 1 (got 1)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "steps.1.result.counts.scripts_removed == 2 (got 2)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "steps.1.result.counts.scripts_changed == 1 (got 1)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "steps.1.result.counts.instances_added == 2 (got 2)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "steps.1.result.counts.instances_removed == 5 (got 5)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "steps.1.result.counts.instances_changed == 1 (got 1)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "steps.1.result.remotes_added == ['ClaimDaily'] (got ['ClaimDaily'])"
+        },
+        {
+          "check": "list_equals",
+          "passed": true,
+          "message": "steps.1.result.scripts_added=['dive-and-mine::ServerScriptService/Handlers/DailyHandler']; expected exactly ['dive-and-mine::ServerScriptService/Handlers/DailyHandler']"
+        },
+        {
+          "check": "list_equals",
+          "passed": true,
+          "message": "steps.1.result.scripts_removed=['dive-and-mine::ServerScriptService/Services/AntiExploit', 'dive-and-mine::Workspace/Vendors/Zed/Brain']; expected exactly ['dive-and-mine::ServerScriptService/Services/AntiExploit', 'dive-and-mine::Workspace/Vendors/Zed/Brain']"
+        }
+      ]
+    },
+    {
+      "id": "diff-says-what-changed-inside-a-changed-script",
+      "passed": true,
+      "checks": [
+        {
+          "check": "pluck_equals",
+          "passed": true,
+          "message": "steps.1.result.scripts_changed[].path=['dive-and-mine::ReplicatedStorage/Modules/Economy']; expected exactly ['dive-and-mine::ReplicatedStorage/Modules/Economy']"
+        },
+        {
+          "check": "text_contains",
+          "passed": true,
+          "message": "steps.1.result.scripts_changed.0.what should mention 'refund' (got '[\\'content changed\\', \"functions +[\\'Economy.refund\\'] -[]\"]')"
+        },
+        {
+          "check": "pluck_equals",
+          "passed": true,
+          "message": "steps.1.result.instances_changed[].path=['dive-and-mine::Workspace/Vendors/Bob']; expected exactly ['dive-and-mine::Workspace/Vendors/Bob']"
+        },
+        {
+          "check": "text_contains",
+          "passed": true,
+          "message": "steps.1.result.instances_changed.0.what should mention 'moved' (got \"['attributes: Price', 'moved']\")"
+        }
+      ]
+    },
+    {
+      "id": "diff-needs-two-snapshots",
+      "passed": true,
+      "checks": [
+        {
+          "check": "refused",
+          "passed": true,
+          "message": "expected a refusal mentioning 'only one snapshot' (got ok=False, error='there is only one snapshot for this place, so there is no previous one (place demo_mine/dive-and-mine)')"
+        }
+      ]
+    },
+    {
+      "id": "diff-of-a-snapshot-with-itself-is-refused",
+      "passed": true,
+      "checks": [
+        {
+          "check": "refused",
+          "passed": true,
+          "message": "expected a refusal mentioning 'same snapshot' (got ok=False, error=\"'latest' and 'latest' are the same snapshot (snap-20261006T110000-9f693f); name two different snapshots (list_snapshots)\")"
+        }
+      ]
+    },
+    {
+      "id": "diff-identical-content-reports-no-differences",
+      "passed": true,
+      "checks": [
+        {
+          "check": "text_contains",
+          "passed": true,
+          "message": "steps.1.result.summary should mention 'no differences' (got 'no differences (snap-20261006T110000-9f693f -> snap-20261006T113000-9f693f)')"
+        }
+      ]
+    },
+    {
+      "id": "graph-what-breaks-if-economy-changes",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "result.breaks_if_changed == 10 (got 10)"
+        },
+        {
+          "check": "pluck_equals",
+          "passed": true,
+          "message": "result.requirers[].script=['dive-and-mine::ServerScriptService/Services/MiningService', 'dive-and-mine::ServerScriptService/Services/RebirthService', 'dive-and-mine::ServerScriptService/Services/SellService', 'dive-and-mine::ServerScriptService/Services/ShopService', 'dive-and-mine::ServerScriptService/Services/UpgradeService', 'dive-and-mine::ServerScriptService/Handlers/MineHandler', 'dive-and-mine::ServerScriptService/Main', 'dive-and-mine::ServerScriptService/Handlers/SellHandler', 'dive-and-mine::ServerScriptService/Handlers/PurchaseHandler', 'dive-and-mine::ServerScriptService/Handlers/EquipHandler']; expected exactly ['dive-and-mine::ServerScriptService/Services/ShopService', 'dive-and-mine::ServerScriptService/Services/MiningService', 'dive-and-mine::ServerScriptService/Services/SellService', 'dive-and-mine::ServerScriptService/Services/UpgradeService', 'dive-and-mine::ServerScriptService/Services/RebirthService', 'dive-and-mine::ServerScriptService/Main', 'dive-and-mine::ServerScriptService/Handlers/PurchaseHandler', 'dive-and-mine::ServerScriptService/Handlers/SellHandler', 'dive-and-mine::ServerScriptService/Handlers/MineHandler', 'dive-and-mine::ServerScriptService/Handlers/EquipHandler']"
+        }
+      ]
+    },
+    {
+      "id": "graph-direct-requirers-only-at-depth-one",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "result.breaks_if_changed == 5 (got 5)"
+        }
+      ]
+    },
+    {
+      "id": "graph-leaf-module-nothing-requires-signal-except-two",
+      "passed": true,
+      "checks": [
+        {
+          "check": "pluck_equals",
+          "passed": true,
+          "message": "result.requirers[].script=['dive-and-mine::StarterPlayer/StarterPlayerScripts/ClientMain', 'dive-and-mine::StarterPlayer/StarterPlayerScripts/InputController']; expected exactly ['dive-and-mine::StarterPlayer/StarterPlayerScripts/ClientMain', 'dive-and-mine::StarterPlayer/StarterPlayerScripts/InputController']"
+        }
+      ]
+    },
+    {
+      "id": "graph-who-fires-and-who-handles-update-cash",
+      "passed": true,
+      "checks": [
+        {
+          "check": "pluck_equals",
+          "passed": true,
+          "message": "result.fired_by[].script=['dive-and-mine::ServerScriptService/Services/SellService', 'dive-and-mine::ServerScriptService/Services/ShopService']; expected exactly ['dive-and-mine::ServerScriptService/Services/ShopService', 'dive-and-mine::ServerScriptService/Services/SellService']"
+        },
+        {
+          "check": "pluck_equals",
+          "passed": true,
+          "message": "result.handled_by[].script=['dive-and-mine::StarterGui/Hud/CashLabel/CashUpdater', 'dive-and-mine::StarterPlayer/StarterPlayerScripts/HudController']; expected exactly ['dive-and-mine::StarterPlayer/StarterPlayerScripts/HudController', 'dive-and-mine::StarterGui/Hud/CashLabel/CashUpdater']"
+        }
+      ]
+    },
+    {
+      "id": "graph-what-fires-purchase-item",
+      "passed": true,
+      "checks": [
+        {
+          "check": "list_equals",
+          "passed": true,
+          "message": "result.remotes.0.handled_by=['dive-and-mine::ServerScriptService/Handlers/PurchaseHandler']; expected exactly ['dive-and-mine::ServerScriptService/Handlers/PurchaseHandler']"
+        },
+        {
+          "check": "list_equals",
+          "passed": true,
+          "message": "result.remotes.0.fired_by=['dive-and-mine::StarterPlayer/StarterPlayerScripts/ShopUI', 'dive-and-mine::Workspace/Vendors/Bob/Brain', 'dive-and-mine::Workspace/Vendors/Zed/Brain']; expected exactly ['dive-and-mine::StarterPlayer/StarterPlayerScripts/ShopUI', 'dive-and-mine::Workspace/Vendors/Bob/Brain', 'dive-and-mine::Workspace/Vendors/Zed/Brain']"
+        },
+        {
+          "check": "list_equals",
+          "passed": true,
+          "message": "result.remotes.0.defined_at=['dive-and-mine::ReplicatedStorage/Remotes/PurchaseItem']; expected exactly ['dive-and-mine::ReplicatedStorage/Remotes/PurchaseItem']"
+        }
+      ]
+    },
+    {
+      "id": "graph-remotes-with-problems-are-flagged",
+      "passed": true,
+      "checks": [
+        {
+          "check": "pluck_equals",
+          "passed": true,
+          "message": "result.remotes[].name=['EquipTool', 'LegacyPing', 'SellOre', 'UnlockGate']; expected exactly ['EquipTool', 'LegacyPing', 'SellOre', 'UnlockGate']"
+        }
+      ]
+    },
+    {
+      "id": "graph-unknown-remote-lists-the-known-ones",
+      "passed": true,
+      "checks": [
+        {
+          "check": "refused",
+          "passed": true,
+          "message": "expected a refusal mentioning 'no remote named' (got ok=False, error=\"no remote named 'NoSuchRemote' in snap-20261006T110000-9f693f; known: ['CollectItem', 'EnterZone', 'EquipTool', 'GetStock', 'LegacyPing', 'MineNode', 'PurchaseItem', 'RequestSpawn', 'SellOre', 'Unlock\")"
+        }
+      ]
+    },
+    {
+      "id": "graph-shop-service-dependencies-to-depth-two",
+      "passed": true,
+      "checks": [
+        {
+          "check": "pluck_equals",
+          "passed": true,
+          "message": "result.modules[].module=['dive-and-mine::ReplicatedStorage/Modules/ShopData', 'dive-and-mine::ReplicatedStorage/Modules/Economy', 'dive-and-mine::ServerScriptService/Services/DataService', 'dive-and-mine::ReplicatedStorage/Modules/Config', 'dive-and-mine::ReplicatedStorage/Modules/Util']; expected exactly ['dive-and-mine::ReplicatedStorage/Modules/ShopData', 'dive-and-mine::ReplicatedStorage/Modules/Economy', 'dive-and-mine::ServerScriptService/Services/DataService', 'dive-and-mine::ReplicatedStorage/Modules/Config', 'dive-and-mine::ReplicatedStorage/Modules/Util']"
+        },
+        {
+          "check": "list_equals",
+          "passed": true,
+          "message": "result.remotes_fired=['UpdateCash']; expected exactly ['UpdateCash']"
+        },
+        {
+          "check": "list_equals",
+          "passed": true,
+          "message": "result.remotes_handled=['GetStock']; expected exactly ['GetStock']"
+        }
+      ]
+    },
+    {
+      "id": "graph-datastore-names-and-keys",
+      "passed": true,
+      "checks": [
+        {
+          "check": "list_equals",
+          "passed": true,
+          "message": "result.datastores=['PlayerData']; expected exactly ['PlayerData']"
+        },
+        {
+          "check": "list_equals",
+          "passed": true,
+          "message": "result.datastore_keys=['Player_*']; expected exactly ['Player_*']"
+        }
+      ]
+    },
+    {
+      "id": "graph-dependencies-of-a-non-script-are-refused",
+      "passed": true,
+      "checks": [
+        {
+          "check": "refused",
+          "passed": true,
+          "message": "expected a refusal mentioning 'not a script' (got ok=False, error=\"'Workspace/Vendors/Bob' is not a script in this snapshot\")"
+        }
+      ]
+    },
+    {
+      "id": "graph-summarize-area-counts-and-landmarks",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "result.instances == 12 (got 12)"
+        },
+        {
+          "check": "length",
+          "passed": true,
+          "message": "len(result.scripts)=2; expected 2"
+        },
+        {
+          "check": "pluck_equals",
+          "passed": true,
+          "message": "result.landmarks[].path=['dive-and-mine::Workspace/Vendors/Bob', 'dive-and-mine::Workspace/Vendors/Zed']; expected exactly ['dive-and-mine::Workspace/Vendors/Bob', 'dive-and-mine::Workspace/Vendors/Zed']"
+        }
+      ]
+    },
+    {
+      "id": "graph-path-info-for-a-vendor",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "result.class == 'Model' (got 'Model')"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "result.attributes == {'Stock': 10, 'Price': 50} (got {'Price': 50, 'Stock': 10})"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "result.roles.0.role == 'vendor' (got 'vendor')"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "result.roles.0.band == 'confident' (got 'confident')"
+        },
+        {
+          "check": "approx",
+          "passed": true,
+          "message": "result.roles.0.score=0.7619; expected 0.7619 +/- 0.0001"
+        }
+      ]
+    },
+    {
+      "id": "graph-path-info-for-a-script",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "result.script.kind == 'module' (got 'module')"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "result.script.remotes_fired == ['UpdateCash'] (got ['UpdateCash'])"
+        },
+        {
+          "check": "length",
+          "passed": true,
+          "message": "len(result.script.requires)=3; expected 3"
+        }
+      ]
+    },
+    {
+      "id": "graph-path-info-for-a-decoy-plays-no-role",
+      "passed": true,
+      "checks": [
+        {
+          "check": "list_empty",
+          "passed": true,
+          "message": "result.roles=[] should be empty"
+        },
+        {
+          "check": "text_contains",
+          "passed": true,
+          "message": "result.summary should mention 'plays no role' (got 'dive-and-mine::Workspace/Vendors/ShopSign is a Part; plays no role')"
+        }
+      ]
+    },
+    {
+      "id": "graph-path-info-missing-path-suggests-and-offers-refresh",
+      "passed": true,
+      "checks": [
+        {
+          "check": "refused",
+          "passed": true,
+          "message": "expected a refusal mentioning 'plan_refresh' (got ok=False, error=\"no instance at 'Workspace/Vendors/Bobb' in snapshot snap-20261006T110000-9f693f of dive-and-mine; similar: ['Workspace/Vendors/Bob', 'Workspace/Vendors/Bob/Humanoid', 'Workspace/Vendors/Bob/Prompt'] (\")"
+        }
+      ]
+    },
+    {
+      "id": "ingest-dry-run-writes-nothing",
+      "passed": true,
+      "checks": [
+        {
+          "check": "ok",
+          "passed": true,
+          "message": "all_ok=True should be true (error: 'None')"
+        },
+        {
+          "check": "list_empty",
+          "passed": true,
+          "message": "changed_files=[] should be empty"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "dry_run_flags == [True] (got [True])"
+        }
+      ]
+    },
+    {
+      "id": "ingest-apply-stores-once-and-is-idempotent",
+      "passed": true,
+      "checks": [
+        {
+          "check": "step_ok",
+          "passed": true,
+          "message": "step 0 should succeed (got None)"
+        },
+        {
+          "check": "step_ok",
+          "passed": true,
+          "message": "step 1 should succeed (got None)"
+        },
+        {
+          "check": "same",
+          "passed": true,
+          "message": "steps.0.result.snapshot_id='snap-20261006T113000-b3485d' should equal steps.1.result.snapshot_id='snap-20261006T113000-b3485d'"
+        },
+        {
+          "check": "text_contains",
+          "passed": true,
+          "message": "steps.2.result.summary should mention '2 snapshot(s)' (got '2 snapshot(s); 0 over the keep limit (3 older)')"
+        }
+      ]
+    },
+    {
+      "id": "ingest-refuses-data-collected-in-another-place-by-id",
+      "passed": true,
+      "checks": [
+        {
+          "check": "error_contains",
+          "passed": true,
+          "message": "error should mention 'refusing' (got \"refusing: the data was collected in the Studio place 'Demo Tycoon (SYNTHETIC)' but place 'role-lab' is 'Role Lab (SYNTHETIC)'. Ingest it into the place it came from (nothing was stored).\")"
+        },
+        {
+          "check": "refused",
+          "passed": true,
+          "message": "expected a refusal (got ok=False, error=\"refusing: the data was collected in the Studio place 'Demo Tycoon (SYNTHETIC)' but place 'role-lab' is 'Role Lab (SYNTHETIC)'. Ingest it into the place it came from (nothing was stored).\")"
+        }
+      ]
+    },
+    {
+      "id": "ingest-refuses-data-collected-in-another-place-by-name",
+      "passed": true,
+      "checks": [
+        {
+          "check": "refused",
+          "passed": true,
+          "message": "expected a refusal mentioning 'collected in the Studio place' (got ok=False, error=\"refusing: the data was collected in the Studio place 'Dive and Mine Hardcore (SYNTHETIC)' but place 'dive-and-mine' is 'Dive and Mine (SYNTHETIC)'. Ingest it into the place it came from (nothing was s\")"
+        }
+      ]
+    },
+    {
+      "id": "ingest-generic-tree-is-schema-unverified-and-unwrapped",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "format == 'generic-tree' (got 'generic-tree')"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "status == 'schema_unverified' (got 'schema_unverified')"
+        },
+        {
+          "check": "list_equals",
+          "passed": true,
+          "message": "paths=['Workspace', 'Workspace/Vendors', 'Workspace/Vendors/Bob', 'Workspace/Vendors/Bob/Prompt']; expected exactly ['Workspace', 'Workspace/Vendors', 'Workspace/Vendors/Bob', 'Workspace/Vendors/Bob/Prompt']"
+        },
+        {
+          "check": "text_contains",
+          "passed": true,
+          "message": "warnings should mention 'wrapped in 'result'' (got '[\"the input was wrapped in \\'result\\' (the hub\\'s real wrapper shape is unverified; unwrapped heuristically)\"]')"
+        }
+      ]
+    },
+    {
+      "id": "ingest-text-outline",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "format == 'text-outline' (got 'text-outline')"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "n_instances == 4 (got 4)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "attrs.Workspace/Vendors/Bob == {'Price': 5, 'Stock': 2} (got {'Price': 5, 'Stock': 2})"
+        }
+      ]
+    },
+    {
+      "id": "ingest-script-read-json-and-text-agree",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "kind == 'scripts' (got 'scripts')"
+        },
+        {
+          "check": "list_equals",
+          "passed": true,
+          "message": "script_paths=['ServerScriptService/Plots']; expected exactly ['ServerScriptService/Plots']"
+        }
+      ]
+    },
+    {
+      "id": "ingest-script-read-text-blocks",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "format == 'script_read-text' (got 'script_read-text')"
+        },
+        {
+          "check": "list_equals",
+          "passed": true,
+          "message": "script_paths=['ServerScriptService/Plots']; expected exactly ['ServerScriptService/Plots']"
+        }
+      ]
+    },
+    {
+      "id": "ingest-drops-secret-attributes-before-storing",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "attrs.Workspace/Door == {'Price': 5, 'Note': 'fine'} (got {'Price': 5, 'Note': 'fine'})"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "secrets_skipped == 2 (got 2)"
+        }
+      ]
+    },
+    {
+      "id": "ingest-refuses-input-with-nothing-recognisable",
+      "passed": true,
+      "checks": [
+        {
+          "check": "refused",
+          "passed": true,
+          "message": "expected a refusal mentioning 'nothing to store' (got ok=False, error='nothing to store: no instances were recognised in this input (skipped a node without a name; no instances were recognised in this input). See samples/README.md for the accepted shapes')"
+        }
+      ]
+    },
+    {
+      "id": "ingest-reuses-the-summary-cache-across-places",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "steps.0.result.summaries.new == 39 (got 39)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "steps.0.result.summaries.reused == 1 (got 1)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "steps.1.result.summaries.new == 2 (got 2)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "steps.1.result.summaries.reused == 37 (got 37)"
+        }
+      ]
+    },
+    {
+      "id": "ingest-unchanged-scripts-are-not-resummarised-and-changes-are-counted",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "steps.0.result.script_changes.scripts_changed == 1 (got 1)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "steps.0.result.script_changes.scripts_new == 1 (got 1)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "steps.0.result.script_changes.scripts_removed == 2 (got 2)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "steps.0.result.summaries.new == 2 (got 2)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "steps.0.result.summaries.reused == 37 (got 37)"
+        }
+      ]
+    },
+    {
+      "id": "ingest-partial-refresh-replaces-only-its-roots",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "steps.0.result.stats.instances == 122 (got 122)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "steps.0.result.stats.scripts == 38 (got 38)"
+        }
+      ]
+    },
+    {
+      "id": "ingest-flags-scripts-whose-source-was-not-received",
+      "passed": true,
+      "checks": [
+        {
+          "check": "ok",
+          "passed": true,
+          "message": "ok=True should be true (error: 'None')"
+        },
+        {
+          "check": "list_equals",
+          "passed": true,
+          "message": "result.scripts_needing_read=['ServerScriptService/Plots']; expected exactly ['ServerScriptService/Plots']"
+        },
+        {
+          "check": "text_contains",
+          "passed": true,
+          "message": "result.next should mention 'plan_refresh' (got 'some script sources were not received: plan_refresh with scripts=[...] reads them')"
+        }
+      ]
+    },
+    {
+      "id": "ingest-flags-a-stale-snapshot-and-offers-a-refresh",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "result.snapshot.stale == True (got True)"
+        },
+        {
+          "check": "text_contains",
+          "passed": true,
+          "message": "result.snapshot.offer should mention 'plan_refresh' (got 'snapshot is 73.0h old (stale after 24.0h): call plan_refresh to collect fresh data')"
+        },
+        {
+          "check": "text_contains",
+          "passed": true,
+          "message": "result.summary should mention 'STALE' (got 'exact_name: 1 selected, 1 near match(es) not selected (snapshot 73.0h old, STALE)')"
+        }
+      ]
+    },
+    {
+      "id": "ingest-fresh-snapshot-is-not-stale",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "result.snapshot.stale == False (got False)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "result.snapshot.age_hours == 1.0 (got 1.0)"
+        }
+      ]
+    },
+    {
+      "id": "ingest-refuses-a-file-outside-the-allowed-folders",
+      "passed": true,
+      "checks": [
+        {
+          "check": "refused",
+          "passed": true,
+          "message": "expected a refusal (got ok=False, error=\"'/etc/hostname' is outside the allowed directories (/tmp/placemap-eval-base-jzboio63, /home/user/workshop/repos/place-map/samples, /home/user/workshop/repos/place-map/examples). Set <PREFIX>_ALLOWED_P\")"
+        }
+      ]
+    },
+    {
+      "id": "ingest-needs-exactly-one-of-data-or-file",
+      "passed": true,
+      "checks": [
+        {
+          "check": "refused",
+          "passed": true,
+          "message": "expected a refusal mentioning 'exactly one of data' (got ok=False, error=\"pass exactly one of data (the hub's result) or file (a path to a saved result under workspace/, samples/ or examples/)\")"
+        }
+      ]
+    },
+    {
+      "id": "multi-cross-place-search-labels-every-hit-with-its-place",
+      "passed": true,
+      "checks": [
+        {
+          "check": "every_hit_has_place",
+          "passed": true,
+          "message": "6 hit(s); without their place prefix: []"
+        },
+        {
+          "check": "pluck_contains",
+          "passed": true,
+          "message": "result.hits[].path=['dive-and-mine::ReplicatedStorage/Modules/Economy', 'dive-and-mine-hardcore::ReplicatedStorage/Modules/Economy', 'dive-and-mine-hardcore::ServerScriptService/Services/MiningService', 'dive-and-mine::ServerScriptService/Services/MiningService', 'dive-and-mine-hardcore::ServerScriptService/Services/RebirthService', 'dive-and-mine::ServerScriptService/Services/RebirthService']; expected to contain ['dive-and-mine::ReplicatedStorage/Modules/Economy', 'dive-and-mine-hardcore::ReplicatedStorage/Modules/Economy']"
+        }
+      ]
+    },
+    {
+      "id": "multi-cross-place-search-never-leaves-the-project",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "result.places_searched == ['dive-and-mine', 'dive-and-mine-hardcore'] (got ['dive-and-mine', 'dive-and-mine-hardcore'])"
+        },
+        {
+          "check": "pluck_excludes",
+          "passed": true,
+          "message": "result.hits[].place=['dive-and-mine', 'dive-and-mine-hardcore', 'dive-and-mine', 'dive-and-mine-hardcore', 'dive-and-mine', 'dive-and-mine-hardcore', 'dive-and-mine', 'dive-and-mine-hardcore', 'dive-and-mine', 'dive-and-mine-hardcore']; must not contain ['tycoon-main']"
+        }
+      ]
+    },
+    {
+      "id": "multi-cross-place-search-refuses-a-place-of-another-project",
+      "passed": true,
+      "checks": [
+        {
+          "check": "refused",
+          "passed": true,
+          "message": "expected a refusal mentioning \"not in project 'demo_mine'\" (got ok=False, error=\"place(s) ['tycoon-main'] are not in project 'demo_mine' (places: ['dive-and-mine', 'dive-and-mine-hardcore'])\")"
+        }
+      ]
+    },
+    {
+      "id": "multi-places-without-a-snapshot-are-reported-not-guessed",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "result.places_without_snapshot == ['dive-and-mine', 'dive-and-mine-hardcore'] (got ['dive-and-mine', 'dive-and-mine-hardcore'])"
+        },
+        {
+          "check": "list_empty",
+          "passed": true,
+          "message": "result.hits=[] should be empty"
+        }
+      ]
+    },
+    {
+      "id": "multi-compare-places-remotes-modules-and-structure",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "result.remotes.only_b == ['Revive'] (got ['Revive'])"
+        },
+        {
+          "check": "list_empty",
+          "passed": true,
+          "message": "result.remotes.only_a=[] should be empty"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "result.modules.only_a == ['dive-and-mine::ServerScriptService/Services/LeaderboardService'] (got ['dive-and-mine::ServerScriptService/Services/LeaderboardService'])"
+        },
+        {
+          "check": "pluck_equals",
+          "passed": true,
+          "message": "result.modules.same_path_drifted[].path=['ReplicatedStorage/Modules/Economy']; expected exactly ['ReplicatedStorage/Modules/Economy']"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "result.modules.same_path_identical == 16 (got 16)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "result.structure.class_counts_differ.RemoteEvent == [11, 12] (got [11, 12])"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "result.structure.class_counts_differ.ModuleScript == [18, 17] (got [18, 17])"
+        }
+      ]
+    },
+    {
+      "id": "multi-compare-needs-two-different-places",
+      "passed": true,
+      "checks": [
+        {
+          "check": "refused",
+          "passed": true,
+          "message": "expected a refusal mentioning 'same place' (got ok=False, error='place_a and place_b are the same place')"
+        }
+      ]
+    },
+    {
+      "id": "multi-compare-refuses-without-a-project",
+      "passed": true,
+      "checks": [
+        {
+          "check": "refused",
+          "passed": true,
+          "message": "expected a refusal mentioning 'project_id' (got ok=False, error='compare_places needs project_id, place_a and place_b (it will not guess)')"
+        }
+      ]
+    },
+    {
+      "id": "multi-shared-code-finds-identical-copies-and-the-drifted-module",
+      "passed": true,
+      "checks": [
+        {
+          "check": "pluck_equals",
+          "passed": true,
+          "message": "result.drifted[].name=['Economy']; expected exactly ['Economy']"
+        },
+        {
+          "check": "length",
+          "passed": true,
+          "message": "len(result.drifted.0.variants)=2; expected 2"
+        },
+        {
+          "check": "pluck_contains",
+          "passed": true,
+          "message": "result.identical[].places=[['dive-and-mine', 'dive-and-mine-hardcore'], ['dive-and-mine', 'dive-and-mine-hardcore'], ['dive-and-mine', 'dive-and-mine-hardcore'], ['dive-and-mine', 'dive-and-mine-hardcore'], ['dive-and-mine', 'dive-and-mine-hardcore'], ['dive-and-mine', 'dive-and-mine-hardcore'], ['dive-and-mine', 'dive-and-mine-hardcore'], ['dive-and-mine', 'dive-and-mine-hardcore'], ['dive-and-mine', 'dive-and-mine-hardcore'], ['dive-and-mine', 'dive-and-mine-hardcore'], ['dive-and-mine', 'dive-and-mine-hardcore'], ['dive-and-mine', 'dive-and-mine-hardcore'], ['dive-and-mine', 'dive-and-mine-hardcore'], ['dive-and-mine', 'dive-and-mine-hardcore'], ['dive-and-mine', 'dive-and-mine-hardcore'], ['dive-and-mine', 'dive-and-mine-hardcore'], ['dive-and-mine', 'dive-and-mine-hardcore'], ['dive-and-mine', 'dive-and-mine-hardcore'], ['dive-and-mine', 'dive-and-mine-hardcore'], ['dive-and-mine', 'dive-and-mine-hardcore'], ['dive-and-mine', 'dive-and-mine-hardcore'], ['dive-and-mine', 'dive-and-mine-hardcore'], ['dive-and-mine', 'dive-and-mine-hardcore'], ['dive-and-mine', 'dive-and-mine-hardcore'], ['dive-and-mine', 'dive-and-mine-hardcore'], ['dive-and-mine', 'dive-and-mine-hardcore'], ['dive-and-mine', 'dive-and-mine-hardcore'], ['dive-and-mine', 'dive-and-mine-hardcore'], ['dive-and-mine', 'dive-and-mine-hardcore'], ['dive-and-mine', 'dive-and-mine-hardcore'], ['dive-and-mine', 'dive-and-mine-hardcore'], ['dive-and-mine', 'dive-and-mine-hardcore'], ['dive-and-mine', 'dive-and-mine-hardcore'], ['dive-and-mine', 'dive-and-mine-hardcore'], ['dive-and-mine', 'dive-and-mine-hardcore'], ['dive-and-mine', 'dive-and-mine-hardcore']]; expected to contain [['dive-and-mine', 'dive-and-mine-hardcore']]"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "result.places_searched == ['dive-and-mine', 'dive-and-mine-hardcore'] (got ['dive-and-mine', 'dive-and-mine-hardcore'])"
+        }
+      ]
+    },
+    {
+      "id": "multi-shared-code-reports-which-functions-drifted",
+      "passed": true,
+      "checks": [
+        {
+          "check": "not_empty",
+          "passed": true,
+          "message": "result.drifted.0.variants.0.hash='5b6f761ff20a' should not be empty"
+        },
+        {
+          "check": "pluck_equals",
+          "passed": true,
+          "message": "result.drifted.0.variants[].places=[['dive-and-mine-hardcore'], ['dive-and-mine']]; expected exactly [['dive-and-mine'], ['dive-and-mine-hardcore']]"
+        }
+      ]
+    },
+    {
+      "id": "multi-shared-code-does-not-mix-projects",
+      "passed": true,
+      "checks": [
+        {
+          "check": "pluck_excludes",
+          "passed": true,
+          "message": "result.drifted[].name=['Economy']; must not contain ['Util']"
+        },
+        {
+          "check": "text_excludes",
+          "passed": true,
+          "message": "result.identical must not mention 'tycoon-main' (got \"[{'hash': '0585cbb7566a', 'places': ['dive-and-mine', 'dive-and-mine-hardcore'], 'copies': ['dive-and-mine::ServerScriptService/Services/SellService', 'dive-and-mine-hardcore::ServerScriptService/Serv\")"
+        }
+      ]
+    },
+    {
+      "id": "multi-wrong-open-place-for-a-sibling-is-refused",
+      "passed": true,
+      "checks": [
+        {
+          "check": "refused",
+          "passed": true,
+          "message": "expected a refusal mentioning 'nothing was generated' (got ok=False, error='refusing: the open Studio instance(s) [\"\\'Dive and Mine Hardcore (SYNTHETIC)\\' (place_id 9000000002)\"] are not place \\'dive-and-mine\\' (expected name \\'Dive and Mine (SYNTHETIC)\\' or place id None). Open th')"
+        }
+      ]
+    },
+    {
+      "id": "multi-a-place-of-another-project-is-refused",
+      "passed": true,
+      "checks": [
+        {
+          "check": "refused",
+          "passed": true,
+          "message": "expected a refusal mentioning 'does not belong to project' (got ok=False, error=\"place 'role-lab' does not belong to project 'demo_mine'. Its places: ['dive-and-mine', 'dive-and-mine-hardcore']\")"
+        }
+      ]
+    },
+    {
+      "id": "multi-corrections-are-per-place-unless-marked-global",
+      "passed": true,
+      "checks": [
+        {
+          "check": "length",
+          "passed": true,
+          "message": "len(steps.2.result.corrections)=1; expected 1"
+        },
+        {
+          "check": "list_empty",
+          "passed": true,
+          "message": "steps.3.result.corrections=[] should be empty"
+        }
+      ]
+    },
+    {
+      "id": "multi-a-global-correction-reaches-every-place",
+      "passed": true,
+      "checks": [
+        {
+          "check": "length",
+          "passed": true,
+          "message": "len(steps.2.result.corrections)=1; expected 1"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "steps.2.result.corrections.0.scope == 'global' (got 'global')"
+        }
+      ]
+    },
+    {
+      "id": "refresh-refuses-without-the-open-studio-list",
+      "passed": true,
+      "checks": [
+        {
+          "check": "refused",
+          "passed": true,
+          "message": "expected a refusal mentioning 'list_roblox_studios' (got ok=False, error=\"cannot confirm the open Studio place: pass the output of the hub's list_roblox_studios as a list of {name, place_id, studio_id} and open place 'dive-and-mine' (Dive and Mine (SYNTHETIC)) in Studio. No\")"
+        }
+      ]
+    },
+    {
+      "id": "refresh-refuses-when-another-place-is-open-and-says-which",
+      "passed": true,
+      "checks": [
+        {
+          "check": "refused",
+          "passed": true,
+          "message": "expected a refusal mentioning \"are not place 'dive-and-mine'\" (got ok=False, error='refusing: the open Studio instance(s) [\"\\'Dive and Mine Hardcore (SYNTHETIC)\\' (place_id 9000000002)\"] are not place \\'dive-and-mine\\' (expected name \\'Dive and Mine (SYNTHETIC)\\' or place id None). Open th')"
+        },
+        {
+          "check": "error_contains",
+          "passed": true,
+          "message": "error should mention 'Hardcore' (got 'refusing: the open Studio instance(s) [\"\\'Dive and Mine Hardcore (SYNTHETIC)\\' (place_id 9000000002)\"] are not place \\'dive-and-mine\\' (expected name \\'Dive and Mine (SYNTHETIC)\\' or place id None). Open th')"
+        },
+        {
+          "check": "error_contains",
+          "passed": true,
+          "message": "error should mention 'nothing was generated' (got 'refusing: the open Studio instance(s) [\"\\'Dive and Mine Hardcore (SYNTHETIC)\\' (place_id 9000000002)\"] are not place \\'dive-and-mine\\' (expected name \\'Dive and Mine (SYNTHETIC)\\' or place id None). Open th')"
+        }
+      ]
+    },
+    {
+      "id": "refresh-matches-an-unpublished-place-by-name",
+      "passed": true,
+      "checks": [
+        {
+          "check": "ok",
+          "passed": true,
+          "message": "ok=True should be true (error: 'None')"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "result.studio.matched_by == 'name' (got 'name')"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "result.dry_run == True (got True)"
+        }
+      ]
+    },
+    {
+      "id": "refresh-matches-a-published-place-by-id",
+      "passed": true,
+      "checks": [
+        {
+          "check": "ok",
+          "passed": true,
+          "message": "ok=True should be true (error: 'None')"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "result.studio.matched_by == 'place_id' (got 'place_id')"
+        }
+      ]
+    },
+    {
+      "id": "refresh-returns-guarded-read-only-luau-for-the-hub",
+      "passed": true,
+      "checks": [
+        {
+          "check": "ok",
+          "passed": true,
+          "message": "ok=True should be true (error: 'None')"
+        },
+        {
+          "check": "text_contains",
+          "passed": true,
+          "message": "result.luau should mention 'wrong place' (got '-- place-map collector v1: READ-ONLY. Reads the instance tree and script sources and returns JSON (placemap-collect/1). Run it in Studio edit mode with execute_luau.\\nlocal EXPECTED_PLACE_ID = 0\\nlocal ')"
+        },
+        {
+          "check": "text_contains",
+          "passed": true,
+          "message": "result.luau should mention 'placemap-collect/1' (got '-- place-map collector v1: READ-ONLY. Reads the instance tree and script sources and returns JSON (placemap-collect/1). Run it in Studio edit mode with execute_luau.\\nlocal EXPECTED_PLACE_ID = 0\\nlocal ')"
+        },
+        {
+          "check": "text_excludes",
+          "passed": true,
+          "message": "result.luau must not mention 'Instance.new' (got '-- place-map collector v1: READ-ONLY. Reads the instance tree and script sources and returns JSON (placemap-collect/1). Run it in Studio edit mode with execute_luau.\\nlocal EXPECTED_PLACE_ID = 0\\nlocal ')"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "result.hub_calls.0.tool == 'roblox_studio_execute_luau' (got 'roblox_studio_execute_luau')"
+        },
+        {
+          "check": "text_contains",
+          "passed": true,
+          "message": "result.input_schema should mention 'schema_unverified' (got 'schema_unverified')"
+        }
+      ]
+    },
+    {
+      "id": "refresh-incremental-embeds-the-fingerprints-of-known-scripts",
+      "passed": true,
+      "checks": [
+        {
+          "check": "ok",
+          "passed": true,
+          "message": "ok=True should be true (error: 'None')"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "result.incremental_known_scripts == 40 (got 40)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "result.full == True (got True)"
+        }
+      ]
+    },
+    {
+      "id": "refresh-partial-roots-only-embed-their-scripts",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "result.full == False (got False)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "result.roots == ['Workspace/Vendors'] (got ['Workspace/Vendors'])"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "result.incremental_known_scripts == 2 (got 2)"
+        }
+      ]
+    },
+    {
+      "id": "refresh-without-a-place-id-never-guesses",
+      "passed": true,
+      "checks": [
+        {
+          "check": "refused",
+          "passed": true,
+          "message": "expected a refusal mentioning 'place_id is required' (got ok=False, error=\"place_id is required for project 'demo_mine' (places: ['dive-and-mine', 'dive-and-mine-hardcore']). The tool will not guess the place; pass place_id, or pass studios (the output of the hub's list_robl\")"
+        }
+      ]
+    },
+    {
+      "id": "refresh-rejects-a-root-that-could-inject-code",
+      "passed": true,
+      "checks": [
+        {
+          "check": "refused",
+          "passed": true,
+          "message": "expected a refusal mentioning 'refresh root' (got ok=False, error=\"refresh root 'Workspace\\\\nloadstring(x)()' must be a path of 1-20 instance names such as Workspace/Vendors (printable characters, at most 100 per name)\")"
+        }
+      ]
+    },
+    {
+      "id": "refresh-dry-run-records-nothing-and-apply-records-the-plan",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "steps.0.result.dry_run == True (got True)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "steps.1.result.dry_run == False (got False)"
+        },
+        {
+          "check": "list_contains",
+          "passed": true,
+          "message": "workspace_files=['projects/demo_mine/dive-and-mine-hardcore/ingest_journal.jsonl', 'projects/demo_mine/dive-and-mine-hardcore/snapshots/snap-20261006T110000-268092.json', 'projects/demo_mine/dive-and-mine/ingest_journal.jsonl', 'projects/demo_mine/dive-and-mine/snapshots/snap-20261006T110000-9f693f.json', 'projects/demo_roles/role-lab/ingest_journal.jsonl', 'projects/demo_roles/role-lab/refresh_plans.jsonl', 'projects/demo_roles/role-lab/snapshots/snap-20261006T110000-b3485d.json', 'projects/demo_tycoon/tycoon-main/ingest_journal.jsonl', 'projects/demo_tycoon/tycoon-main/snapshots/snap-20261006T110000-b00734.json', 'summary_cache/05/0585cbb7566abd014711143d326c1ec4703d67970fed5268d68f368760b014db.json', 'summary_cache/0c/0c06d92a3a5a3ac6a421db8f91daac9460c414fd870d16f987959b9fac018f94.json', 'summary_cache/10/102b4ccf03868ea00a7e9c55b51c61f4d0a7a42faa2fed4822208aa490ff2240.json', 'summary_cache/11/116be7d7c022a4c868c91bcd985d0f4f69e588b4ee936412f16b02620d94b158.json', 'summary_cache/14/1449b2638beaae8d31353bba38f53fb39ab318b6e08e6db6b400720c056102b7.json', 'summary_cache/1d/1dc370e1835b3451c3286c2cc81ebaa1e244933b96c2c65b31bced2390b30ee0.json', 'summary_cache/1f/1f66435ae54b72803303c3d9246bd86248ffdab1c8fb7f4fb75cb46601215e06.json', 'summary_cache/21/219d15871dfde9d3df97d1b2dec55c8ad716f2b958953276e1c31d8014297927.json', 'summary_cache/22/22de6817d2948074090c6c2c312232b0061608e242658fddb13f77917de5f1c1.json', 'summary_cache/26/26bb75b4bc40f8d935b9ff3483c0f94b1bb8dfdbaa881afa8dd2817a03395a00.json', 'summary_cache/27/27d399c4ee6c45c3cedb4647d77538c000b4762df7d85ce0181304d732fe0b95.json', 'summary_cache/29/29d73fb642bfc8352d38119ce03b15305b53f833e2337a07f327d0e0f0b27e8c.json', 'summary_cache/2b/2b0c17ae472a165f02ef8fa66aafd965831fce67e97a29fe5cae29911c9537d6.json', 'summary_cache/38/38fc48f958c2fcb872ece685d10379d9fb853f552f7443ab989eebd958a0ad94.json', 'summary_cache/3b/3b76f0056eb719a6c2088d94ee02208ab2ed2cf0c166354586713f2618c730ed.json', 'summary_cache/3d/3d585b03ccc9b9ff71dcf90311a6c5259a45b1a02f8171672aecc9bcc2b34f19.json', 'summary_cache/4a/4a97d26ac09332f915452a8ec5ed33b64a768fbbc2acb091b4a6274f43b80cb3.json', 'summary_cache/4f/4f4b4cc1ed4eed6b034fb024dccc57d0ae3a79556d01a7e2d7102bf73c49a1a8.json', 'summary_cache/54/54108d03e91a040e063d2d537cde1be16e748cea0b9425104df02fba439d7cf7.json', 'summary_cache/5b/5b49f779a489970e94529cd6aec46a8aa169e7ffb4bf511c5a263e2ee03576c1.json', 'summary_cache/5b/5b5a022c237ee9bb9a511a342a4a1b3882f65e98a7d7e90bced75d875b57adef.json', 'summary_cache/5b/5b6f761ff20a6f5b05a011d9df5483fc8b2efbf07ae23f038c719dd6ca165f2e.json', 'summary_cache/5c/5c69c198dabbfccefd5ff706b243ed74ce4c13d137a8cdec8a00512f69562823.json', 'summary_cache/5d/5d52693508add337ac17c2b120293049252ba653287bf79ad1df875a8fb3c40b.json', 'summary_cache/5e/5ed077bcecfa8eee4974fea84259b8c1114164f34010cd7bd1eb84cb6ae02762.json', 'summary_cache/64/640b99032183d17310fb5ab356d642842df7b62ed7421a2b4770b759a161203d.json', 'summary_cache/65/65f34786328f778f8d6d88c53ded9db855f10bd281dbffc4a8f2b1e97617038a.json', 'summary_cache/6c/6cca8150535084605c6d56d63888bb1d6473a3e04da24d3a7bc11525b8201c8d.json', 'summary_cache/73/73bc5ada0ea0dc8feba05a35c8721c2935898dfb4c003f7ad80d69f398f03bb3.json', 'summary_cache/7b/7beef55f215e264425fabe02c3ebd222b2ded4755b53a2d802153bbb3dde3c76.json', 'summary_cache/87/876c12ecfd872d661589c13cc704547c6475cc9cd020671bd0a4dab8d2f31d10.json', 'summary_cache/94/9469d4f9dbca17b3fcceea7c6dbff962676f2c72b0fa150a57746f8c0479e005.json', 'summary_cache/9f/9fc6ba44d0342d4f2cd7caa760154043420670a1af5b07d001bfd90857807afb.json', 'summary_cache/a5/a5402f8a309cd5711c186140d3555c94dc6f606f25ddafe69664262c70b95a51.json', 'summary_cache/a5/a5ad8ac4bb2e187675f9d07f103500964a7a0dcc72d904580ff8ce650cfecef8.json', 'summary_cache/a5/a5ca2e01b2ac6629010968cc054205ce4babe1df618fae334038df3946e9e76a.json', 'summary_cache/b0/b048fef1587c03b416e2687b80aa69a27153a901057e9e7c4865d698391f02ea.json', 'summary_cache/b7/b74f6d7951258a030366c37d040bc2fd1a710820372e143e75e0d02e0e3901fd.json', 'summary_cache/c2/c23decbbfb2d1a22157bc6dd7e7ebcf7638672ef75411471f451739c96f6d9f5.json', 'summary_cache/c4/c49ed5f092c0777c56b9098a745903c996b0fdde4c1507f831ff6a5a4f3397e8.json', 'summary_cache/cb/cb176e202cac12178ecd487f70de42cf3235a2d72245f874e1dc9709c0676b31.json', 'summary_cache/d6/d6b2c314796c3b5c869810e8200d3224e8a5ac233ffa19a2b3b480900dc48332.json', 'summary_cache/db/db32e115d4b56b268d7cd78a7257ba030b9f86d52d91e2dca2c7c9e04ad799ea.json', 'summary_cache/eb/eb2e2b5def68eb79ce98457f70619ae2d7fbf242bdd8ee505e77a495f7c00cd0.json', 'summary_cache/f2/f24c107eff55d54b4e2fff2683adfae5c4f0f5815a109e7e4c0671088edbd9cf.json', 'summary_cache/fd/fd3d450b0e73303cf6851d11d66a5ec672615995265f3b90f71c9411797dc622.json', 'summary_cache/ff/ff4058dbdf29df501c3c544e4b796360a90bc0d08a7b0e6c407452e45552ebad.json']; expected to contain ['projects/demo_roles/role-lab/refresh_plans.jsonl']"
+        }
+      ]
+    },
+    {
+      "id": "roles-formula-clamps-and-counts-negative-weights-against",
+      "passed": true,
+      "checks": [
+        {
+          "check": "approx",
+          "passed": true,
+          "message": "score=0.5; expected 0.5 +/- 0.0001"
+        }
+      ]
+    },
+    {
+      "id": "roles-formula-without-the-negative-feature",
+      "passed": true,
+      "checks": [
+        {
+          "check": "approx",
+          "passed": true,
+          "message": "score=0.75; expected 0.75 +/- 0.0001"
+        }
+      ]
+    },
+    {
+      "id": "roles-formula-never-goes-below-zero",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "score == 0.0 (got 0.0)"
+        }
+      ]
+    },
+    {
+      "id": "roles-feature-token-match-saturates-with-k",
+      "passed": true,
+      "checks": [
+        {
+          "check": "approx",
+          "passed": true,
+          "message": "features.attribute_keys_match=0.5; expected 0.5 +/- 0.0001"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "features.name_matches_synonyms == 0.0 (got 0.0)"
+        }
+      ]
+    },
+    {
+      "id": "roles-feature-token-match-splits-camel-case-and-plurals",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "features.name_matches_synonyms == 1.0 (got 1.0)"
+        }
+      ]
+    },
+    {
+      "id": "roles-feature-class-presence-looks-at-descendants",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "features.has_interaction == 1.0 (got 1.0)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "features.has_humanoid_or_model == 1.0 (got 1.0)"
+        }
+      ]
+    },
+    {
+      "id": "roles-feature-class-presence-is-zero-without-the-class",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "features.has_interaction == 0.0 (got 0.0)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "features.has_humanoid_or_model == 0.0 (got 0.0)"
+        }
+      ]
+    },
+    {
+      "id": "roles-feature-repetition-uses-the-damping-constant",
+      "passed": true,
+      "checks": [
+        {
+          "check": "approx",
+          "passed": true,
+          "message": "features.repeated_siblings=0.5; expected 0.5 +/- 0.0001"
+        }
+      ]
+    },
+    {
+      "id": "roles-feature-repetition-needs-name-similarity-above-the-threshold",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "features.repeated_siblings == 0.0 (got 0.0)"
+        }
+      ]
+    },
+    {
+      "id": "roles-feature-remote-refs-need-a-script-that-references-the-instance",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "features.script_fires_purchase_remote == 1.0 (got 1.0)"
+        }
+      ]
+    },
+    {
+      "id": "roles-feature-remote-refs-ignore-unrelated-remotes",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "features.script_fires_purchase_remote == 0.0 (got 0.0)"
+        }
+      ]
+    },
+    {
+      "id": "roles-feature-reference-density-is-normalised-by-the-median",
+      "passed": true,
+      "checks": [
+        {
+          "check": "approx",
+          "passed": true,
+          "message": "features.reference_density=0.6667; expected 0.6667 +/- 0.0001"
+        }
+      ]
+    },
+    {
+      "id": "roles-feature-reference-density-is-zero-when-nothing-mentions-it",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "features.reference_density == 0.0 (got 0.0)"
+        }
+      ]
+    },
+    {
+      "id": "roles-feature-proximity-uses-a-confident-landmark-of-another-role",
+      "passed": true,
+      "checks": [
+        {
+          "check": "approx",
+          "passed": true,
+          "message": "features.near_other_landmark=0.4; expected 0.4 +/- 0.001"
+        }
+      ]
+    },
+    {
+      "id": "roles-feature-proximity-is-zero-beyond-the-distance",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "features.near_other_landmark == 0.0 (got 0.0)"
+        }
+      ]
+    },
+    {
+      "id": "roles-per-project-synonyms-extend-the-defaults",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "features.name_matches_synonyms == 1.0 (got 1.0)"
+        }
+      ]
+    },
+    {
+      "id": "roles-without-the-project-synonyms-the-name-does-not-match",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "features.name_matches_synonyms == 0.0 (got 0.0)"
+        }
+      ]
+    },
+    {
+      "id": "roles-weird-names-are-found-by-structure",
+      "passed": true,
+      "checks": [
+        {
+          "check": "pluck_equals",
+          "passed": true,
+          "message": "result.selected[].path=['role-lab::Workspace/Npcs/Bob']; expected exactly ['role-lab::Workspace/Npcs/Bob']"
+        },
+        {
+          "check": "approx",
+          "passed": true,
+          "message": "result.selected.0.score=0.7619; expected 0.7619 +/- 0.0001"
+        }
+      ]
+    },
+    {
+      "id": "roles-collectibles-called-thing-are-found-by-structure",
+      "passed": true,
+      "checks": [
+        {
+          "check": "pluck_equals",
+          "passed": true,
+          "message": "result.selected[].path=['role-lab::Workspace/Loose/Thing1', 'role-lab::Workspace/Loose/Thing2', 'role-lab::Workspace/Loose/Thing3', 'role-lab::Workspace/Loose/Thing4', 'role-lab::Workspace/Loose/Thing5', 'role-lab::Workspace/Loose/Thing6']; expected exactly ['role-lab::Workspace/Loose/Thing1', 'role-lab::Workspace/Loose/Thing2', 'role-lab::Workspace/Loose/Thing3', 'role-lab::Workspace/Loose/Thing4', 'role-lab::Workspace/Loose/Thing5', 'role-lab::Workspace/Loose/Thing6']"
+        },
+        {
+          "check": "approx",
+          "passed": true,
+          "message": "result.selected.0.score=0.625; expected 0.625 +/- 0.0001"
+        }
+      ]
+    },
+    {
+      "id": "roles-decoys-with-matching-names-and-no-interaction-are-not-confident",
+      "passed": true,
+      "checks": [
+        {
+          "check": "list_empty",
+          "passed": true,
+          "message": "decoys_confident=[] should be empty"
+        }
+      ]
+    },
+    {
+      "id": "roles-decoy-shop-sign-plays-no-role",
+      "passed": true,
+      "checks": [
+        {
+          "check": "list_empty",
+          "passed": true,
+          "message": "result.roles=[] should be empty"
+        }
+      ]
+    },
+    {
+      "id": "roles-decoy-coin-pile-plays-no-role",
+      "passed": true,
+      "checks": [
+        {
+          "check": "list_empty",
+          "passed": true,
+          "message": "result.roles=[] should be empty"
+        }
+      ]
+    },
+    {
+      "id": "roles-an-npc-that-only-chats-is-not-a-vendor",
+      "passed": true,
+      "checks": [
+        {
+          "check": "list_empty",
+          "passed": true,
+          "message": "result.roles=[] should be empty"
+        }
+      ]
+    },
+    {
+      "id": "roles-a-folder-of-vendors-is-not-a-vendor",
+      "passed": true,
+      "checks": [
+        {
+          "check": "pluck_equals",
+          "passed": true,
+          "message": "result.selected[].path=['dive-and-mine::Workspace/Vendors/Bob', 'dive-and-mine::Workspace/Vendors/Zed']; expected exactly ['dive-and-mine::Workspace/Vendors/Bob', 'dive-and-mine::Workspace/Vendors/Zed']"
+        },
+        {
+          "check": "pluck_excludes",
+          "passed": true,
+          "message": "result.selected[].path=['dive-and-mine::Workspace/Vendors/Bob', 'dive-and-mine::Workspace/Vendors/Zed']; must not contain ['dive-and-mine::Workspace/Vendors', 'dive-and-mine::Workspace/Vendors/ShopSign', 'dive-and-mine::Workspace/Vendors/VendorStatue']"
+        }
+      ]
+    },
+    {
+      "id": "roles-the-vendors-names-the-role-not-the-folder",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "result.mode == 'role' (got 'role')"
+        },
+        {
+          "check": "text_contains",
+          "passed": true,
+          "message": "result.name_hint should mention 'Workspace/Vendors' (got '1 instance(s) are literally named like the request (e.g. dive-and-mine::Workspace/Vendors); name one by path if that is what you meant')"
+        }
+      ]
+    },
+    {
+      "id": "roles-borderline-candidates-are-not-selected-and-the-user-is-asked",
+      "passed": true,
+      "checks": [
+        {
+          "check": "pluck_equals",
+          "passed": true,
+          "message": "result.not_selected[].path=['role-lab::Workspace/Npcs/Carl']; expected exactly ['role-lab::Workspace/Npcs/Carl']"
+        },
+        {
+          "check": "approx",
+          "passed": true,
+          "message": "result.not_selected.0.score=0.6667; expected 0.6667 +/- 0.0001"
+        },
+        {
+          "check": "text_contains",
+          "passed": true,
+          "message": "result.ask should mention 'NOT selected' (got '1 borderline vendor candidate(s) were NOT selected: ask the user to confirm or reject them (label_landmark)')"
+        }
+      ]
+    },
+    {
+      "id": "roles-list-candidates-for-the-user-to-confirm",
+      "passed": true,
+      "checks": [
+        {
+          "check": "pluck_contains",
+          "passed": true,
+          "message": "result.candidates[].path=['role-lab::Workspace/Npcs/Carl', 'role-lab::Workspace/Start/Pad']; expected to contain ['role-lab::Workspace/Npcs/Carl']"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "result.candidates.0.role == 'vendor' (got 'vendor')"
+        }
+      ]
+    },
+    {
+      "id": "roles-proximity-to-a-confident-vendor-raises-a-spawn-score",
+      "passed": true,
+      "checks": [
+        {
+          "check": "approx",
+          "passed": true,
+          "message": "result.role_features.spawn.features.near_other_landmark=0.7764; expected 0.7764 +/- 0.001"
+        },
+        {
+          "check": "approx",
+          "passed": true,
+          "message": "result.role_features.spawn.score=0.6927; expected 0.6927 +/- 0.0001"
+        }
+      ]
+    },
+    {
+      "id": "roles-precision-and-recall-on-the-self-written-places",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "tp == 35 (got 35)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "fn == 2 (got 2)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "fp == 0 (got 0)"
+        },
+        {
+          "check": "greater",
+          "passed": true,
+          "message": "precision=1.0 should be > 0.99"
+        },
+        {
+          "check": "greater",
+          "passed": true,
+          "message": "recall=0.9459459459459459 should be > 0.9"
+        }
+      ]
+    },
+    {
+      "id": "roles-learning-dry-run-shows-the-bounded-weight-steps",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "result.dry_run == True (got True)"
+        },
+        {
+          "check": "length",
+          "passed": true,
+          "message": "len(result.weight_changes)=3; expected 3"
+        },
+        {
+          "check": "approx",
+          "passed": true,
+          "message": "result.weight_changes.0.delta=0.03333; expected 0.03333 +/- 2e-05"
+        },
+        {
+          "check": "approx",
+          "passed": true,
+          "message": "result.weight_changes.0.after=3.03333; expected 3.03333 +/- 2e-05"
+        }
+      ]
+    },
+    {
+      "id": "roles-dry-run-label-writes-nothing",
+      "passed": true,
+      "checks": [
+        {
+          "check": "list_empty",
+          "passed": true,
+          "message": "changed_files=[] should be empty"
+        }
+      ]
+    },
+    {
+      "id": "roles-confirming-a-candidate-selects-it-and-nudges-the-weights",
+      "passed": true,
+      "checks": [
+        {
+          "check": "step_ok",
+          "passed": true,
+          "message": "step 0 should succeed (got None)"
+        },
+        {
+          "check": "pluck_equals",
+          "passed": true,
+          "message": "steps.1.result.selected[].path=['role-lab::Workspace/Npcs/Bob', 'role-lab::Workspace/Npcs/Carl']; expected exactly ['role-lab::Workspace/Npcs/Bob', 'role-lab::Workspace/Npcs/Carl']"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "steps.1.result.selected.1.source == 'user_label' (got 'user_label')"
+        },
+        {
+          "check": "approx",
+          "passed": true,
+          "message": "steps.1.result.selected.0.score=0.7642; expected 0.7642 +/- 0.0001"
+        },
+        {
+          "check": "approx",
+          "passed": true,
+          "message": "steps.1.result.selected.1.score=0.6698; expected 0.6698 +/- 0.0001"
+        }
+      ]
+    },
+    {
+      "id": "roles-rejecting-a-confident-landmark-overrides-the-score",
+      "passed": true,
+      "checks": [
+        {
+          "check": "pluck_excludes",
+          "passed": true,
+          "message": "steps.1.result.selected[].path=[]; must not contain ['role-lab::Workspace/Npcs/Bob']"
+        },
+        {
+          "check": "pluck_equals",
+          "passed": true,
+          "message": "steps.1.result.rejected_by_user[].path=['role-lab::Workspace/Npcs/Bob']; expected exactly ['role-lab::Workspace/Npcs/Bob']"
+        },
+        {
+          "check": "approx",
+          "passed": true,
+          "message": "steps.2.result.roles.vendor.features.has_interaction.weight=2.92381; expected 2.92381 +/- 1e-05"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "steps.2.result.roles.vendor.features.has_interaction.source == 'project' (got 'project')"
+        }
+      ]
+    },
+    {
+      "id": "roles-undo-restores-the-previous-weights-exactly",
+      "passed": true,
+      "checks": [
+        {
+          "check": "step_ok",
+          "passed": true,
+          "message": "step 1 should succeed (got None)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "steps.2.result.roles.vendor.features.has_interaction.weight == 3.0 (got 3.0)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "steps.2.result.roles.vendor.features.has_interaction.source == 'default' (got 'default')"
+        },
+        {
+          "check": "pluck_equals",
+          "passed": true,
+          "message": "steps.3.result.selected[].path=['role-lab::Workspace/Npcs/Bob']; expected exactly ['role-lab::Workspace/Npcs/Bob']"
+        },
+        {
+          "check": "pluck_equals",
+          "passed": true,
+          "message": "steps.3.result.not_selected[].path=['role-lab::Workspace/Npcs/Carl']; expected exactly ['role-lab::Workspace/Npcs/Carl']"
+        }
+      ]
+    },
+    {
+      "id": "roles-a-label-is-undone-only-once",
+      "passed": true,
+      "checks": [
+        {
+          "check": "step_error_contains",
+          "passed": true,
+          "message": "step 2 should be refused mentioning 'already undone' (got \"label 'lbl-20261006T120000-39df86' was already undone\")"
+        }
+      ]
+    },
+    {
+      "id": "roles-learning-stays-inside-the-project",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "steps.1.result.roles.vendor.features.has_interaction.weight == 3.0 (got 3.0)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "steps.1.result.roles.vendor.features.has_interaction.source == 'default' (got 'default')"
+        }
+      ]
+    },
+    {
+      "id": "roles-learning-goes-global-only-when-the-user-marks-it",
+      "passed": true,
+      "checks": [
+        {
+          "check": "approx",
+          "passed": true,
+          "message": "steps.1.result.roles.vendor.features.has_interaction.weight=3.03333; expected 3.03333 +/- 2e-05"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "steps.1.result.roles.vendor.features.has_interaction.source == 'global' (got 'global')"
+        }
+      ]
+    },
+    {
+      "id": "roles-a-label-belongs-to-one-place",
+      "passed": true,
+      "checks": [
+        {
+          "check": "pluck_contains",
+          "passed": true,
+          "message": "steps.1.result.selected[].path=['dive-and-mine-hardcore::Workspace/Vendors/Bob', 'dive-and-mine-hardcore::Workspace/Vendors/Zed']; expected to contain ['dive-and-mine-hardcore::Workspace/Vendors/Bob']"
+        }
+      ]
+    },
+    {
+      "id": "roles-labels-need-a-named-person",
+      "passed": true,
+      "checks": [
+        {
+          "check": "refused",
+          "passed": true,
+          "message": "expected a refusal mentioning 'automatic labels are not allowed' (got ok=False, error='confirmed_by must name the person who gave the label (it is the approval recorded with the weight change); automatic labels are not allowed')"
+        }
+      ]
+    },
+    {
+      "id": "roles-labels-need-a-real-path-and-role",
+      "passed": true,
+      "checks": [
+        {
+          "check": "refused",
+          "passed": true,
+          "message": "expected a refusal mentioning 'no instance at' (got ok=False, error=\"no instance at 'Workspace/Nobody' in snapshot snap-20261006T110000-b3485d: refresh first, or fix the path\")"
+        }
+      ]
+    },
+    {
+      "id": "roles-a-label-for-a-path-of-another-place-is-refused",
+      "passed": true,
+      "checks": [
+        {
+          "check": "refused",
+          "passed": true,
+          "message": "expected a refusal mentioning 'belong to one place' (got ok=False, error=\"the path names place 'dive-and-mine' but this label is for 'role-lab': labels belong to one place\")"
+        }
+      ]
+    },
+    {
+      "id": "roles-an-alias-resolves-to-the-labelled-landmark",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "steps.1.result.mode == 'alias' (got 'alias')"
+        },
+        {
+          "check": "pluck_equals",
+          "passed": true,
+          "message": "steps.1.result.selected[].path=['role-lab::Workspace/Npcs/Carl']; expected exactly ['role-lab::Workspace/Npcs/Carl']"
+        }
+      ]
+    },
+    {
+      "id": "roles-the-confirmed-weights-do-not-change-precision-on-the-other-roles",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "tp == 36 (got 36)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "fn == 1 (got 1)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "fp == 0 (got 0)"
+        }
+      ]
+    },
+    {
+      "id": "roles-an-alias-word-names-the-role",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "result.mode == 'role' (got 'role')"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "result.role == 'upgradable_tool' (got 'upgradable_tool')"
+        },
+        {
+          "check": "pluck_equals",
+          "passed": true,
+          "message": "result.selected[].path=['dive-and-mine::StarterPack/Drill']; expected exactly ['dive-and-mine::StarterPack/Drill']"
+        }
+      ]
+    },
+    {
+      "id": "roles-words-that-are-only-part-of-a-role-name-are-not-a-role-request",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "result.mode == 'search' (got 'search')"
+        }
+      ]
+    },
+    {
+      "id": "ingest-a-bad-timestamp-is-refused-with-an-example",
+      "passed": true,
+      "checks": [
+        {
+          "check": "refused",
+          "passed": true,
+          "message": "expected a refusal mentioning 'ISO timestamp' (got ok=False, error=\"taken_at must be an ISO timestamp such as 2026-10-06T11:00:00+00:00 (got 'yesterday')\")"
+        }
+      ]
+    },
+    {
+      "id": "scan-requires-path-forms",
+      "passed": true,
+      "checks": [
+        {
+          "check": "list_equals",
+          "passed": true,
+          "message": "requires_chains=['@ReplicatedStorage/Modules/A', '@ReplicatedStorage/Modules/B', 'script/../../Sub/D', 'script/../C']; expected exactly ['@ReplicatedStorage/Modules/A', '@ReplicatedStorage/Modules/B', 'script/../../Sub/D', 'script/../C']"
+        }
+      ]
+    },
+    {
+      "id": "scan-require-by-asset-id-is-flagged",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "requires.0.asset_id == 123456789 (got 123456789)"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "requires.0.chain == None (got None)"
+        }
+      ]
+    },
+    {
+      "id": "scan-remotes-fired-and-handled",
+      "passed": true,
+      "checks": [
+        {
+          "check": "list_equals",
+          "passed": true,
+          "message": "fired=['Alpha', 'Beta', 'Delta', 'Gamma']; expected exactly ['Alpha', 'Beta', 'Delta', 'Gamma']"
+        },
+        {
+          "check": "list_equals",
+          "passed": true,
+          "message": "handled=['Epsilon', 'Eta', 'Zeta']; expected exactly ['Epsilon', 'Eta', 'Zeta']"
+        }
+      ]
+    },
+    {
+      "id": "scan-ignores-comments-and-strings",
+      "passed": true,
+      "checks": [
+        {
+          "check": "list_equals",
+          "passed": true,
+          "message": "fired=['Real']; expected exactly ['Real']"
+        },
+        {
+          "check": "list_empty",
+          "passed": true,
+          "message": "requires=[] should be empty"
+        }
+      ]
+    },
+    {
+      "id": "scan-datastore-names-and-keys",
+      "passed": true,
+      "checks": [
+        {
+          "check": "list_equals",
+          "passed": true,
+          "message": "datastores=['PlayerData']; expected exactly ['PlayerData']"
+        },
+        {
+          "check": "list_equals",
+          "passed": true,
+          "message": "datastore_keys=['<keyVar>', 'Player_*', 'settings']; expected exactly ['<keyVar>', 'Player_*', 'settings']"
+        }
+      ]
+    },
+    {
+      "id": "scan-secret-looking-strings-are-not-kept",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "secret_like_strings_skipped == 2 (got 2)"
+        },
+        {
+          "check": "text_excludes",
+          "passed": true,
+          "message": "all_text must not mention 'abcdefghijklmnop' (got '{\"analysis_version\": 2, \"lines\": 4, \"requires\": [], \"remotes_fired\": [], \"remotes_handled\": [], \"datastores\": [], \"datastore_keys\": [], \"services\": [], \"functions\": [], \"name_refs\": [\"hello\"], \"string')"
+        },
+        {
+          "check": "text_excludes",
+          "passed": true,
+          "message": "all_text must not mention 'ABCDEFGHIJKLMNOP' (got '{\"analysis_version\": 2, \"lines\": 4, \"requires\": [], \"remotes_fired\": [], \"remotes_handled\": [], \"datastores\": [], \"datastore_keys\": [], \"services\": [], \"functions\": [], \"name_refs\": [\"hello\"], \"string')"
+        }
+      ]
+    },
+    {
+      "id": "scan-resolves-local-aliases",
+      "passed": true,
+      "checks": [
+        {
+          "check": "list_equals",
+          "passed": true,
+          "message": "fired=['BuyItem']; expected exactly ['BuyItem']"
+        },
+        {
+          "check": "list_equals",
+          "passed": true,
+          "message": "handled=['BuyItem']; expected exactly ['BuyItem']"
+        }
+      ]
+    },
+    {
+      "id": "scan-summary-is-short-and-deterministic",
+      "passed": true,
+      "checks": [
+        {
+          "check": "text_contains",
+          "passed": true,
+          "message": "summary should mention 'Opens the shop.' (got 'Opens the shop. Script, 4 lines. Fires BuyItem.')"
+        },
+        {
+          "check": "text_contains",
+          "passed": true,
+          "message": "summary should mention 'Fires BuyItem.' (got 'Opens the shop. Script, 4 lines. Fires BuyItem.')"
+        },
+        {
+          "check": "less",
+          "passed": true,
+          "message": "lines=4 should be < 10"
+        }
+      ]
+    },
+    {
+      "id": "scope-every-tool-refuses-without-a-project",
+      "passed": true,
+      "checks": [
+        {
+          "check": "list_empty",
+          "passed": true,
+          "message": "not_refused=[] should be empty"
+        },
+        {
+          "check": "greater",
+          "passed": true,
+          "message": "checked=23 should be > 20"
+        }
+      ]
+    },
+    {
+      "id": "scope-every-read-tool-states-project-and-place-and-a-summary",
+      "passed": true,
+      "checks": [
+        {
+          "check": "list_empty",
+          "passed": true,
+          "message": "missing=[] should be empty"
+        }
+      ]
+    },
+    {
+      "id": "scope-newline-in-an-id-is-refused",
+      "passed": true,
+      "checks": [
+        {
+          "check": "refused",
+          "passed": true,
+          "message": "expected a refusal mentioning 'not a valid registry id' (got ok=False, error=\"place_id 'dive-and-mine\\\\n' is not a valid registry id (letters, digits, '.', '_', '-'; no whitespace or newline)\")"
+        }
+      ]
+    },
+    {
+      "id": "scope-unknown-project-lists-the-known-ones",
+      "passed": true,
+      "checks": [
+        {
+          "check": "refused",
+          "passed": true,
+          "message": "expected a refusal mentioning 'Known projects' (got ok=False, error=\"unknown project_id 'nonexistent'. Known projects: ['demo_mine', 'demo_roles', 'demo_tycoon']. Add it to projects.yaml first; the tool will not guess.\")"
+        }
+      ]
+    },
+    {
+      "id": "scope-list-places-reads-only-the-registry",
+      "passed": true,
+      "checks": [
+        {
+          "check": "length",
+          "passed": true,
+          "message": "len(result.places)=4; expected 4"
+        },
+        {
+          "check": "pluck_contains",
+          "passed": true,
+          "message": "result.places[].place_id=['dive-and-mine', 'dive-and-mine-hardcore', 'role-lab', 'tycoon-main']; expected to contain ['dive-and-mine', 'dive-and-mine-hardcore', 'role-lab', 'tycoon-main']"
+        }
+      ]
+    },
+    {
+      "id": "safety-the-tool-set-matches-the-spec",
+      "passed": true,
+      "checks": [
+        {
+          "check": "list_contains",
+          "passed": true,
+          "message": "read_only=['compare_places', 'diff_snapshots', 'find_across_places', 'find_in_place', 'find_past_corrections', 'find_shared_code', 'get_path_info', 'get_style_brief', 'list_candidates', 'list_places', 'list_remotes', 'list_roles', 'list_snapshots', 'show_dependencies', 'summarize_area', 'who_uses']; expected to contain ['find_in_place', 'get_path_info', 'who_uses', 'list_remotes', 'show_dependencies', 'summarize_area', 'diff_snapshots', 'find_past_corrections', 'find_across_places', 'compare_places', 'find_shared_code']"
+        },
+        {
+          "check": "list_contains",
+          "passed": true,
+          "message": "writers=['ingest_snapshot', 'label_landmark', 'plan_refresh', 'prune_snapshots', 'record_decision', 'record_run', 'undo_label']; expected to contain ['plan_refresh', 'ingest_snapshot', 'label_landmark', 'record_run', 'record_decision']"
+        },
+        {
+          "check": "list_excludes",
+          "passed": true,
+          "message": "read_only=['compare_places', 'diff_snapshots', 'find_across_places', 'find_in_place', 'find_past_corrections', 'find_shared_code', 'get_path_info', 'get_style_brief', 'list_candidates', 'list_places', 'list_remotes', 'list_roles', 'list_snapshots', 'show_dependencies', 'summarize_area', 'who_uses']; must not contain ['plan_refresh', 'ingest_snapshot', 'label_landmark', 'record_run', 'record_decision', 'undo_label', 'prune_snapshots']"
+        }
+      ]
+    },
+    {
+      "id": "safety-every-write-tool-defaults-to-dry-run",
+      "passed": true,
+      "checks": [
+        {
+          "check": "list_empty",
+          "passed": true,
+          "message": "writers_without_dry_run=[] should be empty"
+        },
+        {
+          "check": "list_empty",
+          "passed": true,
+          "message": "unlabelled=[] should be empty"
+        }
+      ]
+    },
+    {
+      "id": "safety-dry-runs-write-nothing",
+      "passed": true,
+      "checks": [
+        {
+          "check": "list_empty",
+          "passed": true,
+          "message": "changed_files=[] should be empty"
+        },
+        {
+          "check": "ok",
+          "passed": true,
+          "message": "all_ok=True should be true (error: 'None')"
+        }
+      ]
+    },
+    {
+      "id": "tokens-tool-descriptions-stay-short",
+      "passed": true,
+      "checks": [
+        {
+          "check": "less",
+          "passed": true,
+          "message": "max_description_chars=204 should be < 301"
+        }
+      ]
+    },
+    {
+      "id": "tokens-rarely-used-tools-sit-in-a-group-that-can-stay-disabled",
+      "passed": true,
+      "checks": [
+        {
+          "check": "list_equals",
+          "passed": true,
+          "message": "rare=['compare_places', 'find_shared_code', 'list_roles', 'list_snapshots', 'prune_snapshots', 'undo_label']; expected exactly ['compare_places', 'find_shared_code', 'list_roles', 'list_snapshots', 'prune_snapshots', 'undo_label']"
+        }
+      ]
+    },
+    {
+      "id": "tokens-typical-output-sizes-stay-inside-their-budgets",
+      "passed": true,
+      "checks": [
+        {
+          "check": "list_empty",
+          "passed": true,
+          "message": "over=[] should be empty"
+        },
+        {
+          "check": "greater",
+          "passed": true,
+          "message": "tools=18 should be > 15"
+        }
+      ]
+    },
+    {
+      "id": "determinism-same-question-same-answer",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "identical == True (got True)"
+        },
+        {
+          "check": "ok",
+          "passed": true,
+          "message": "ok=True should be true (error: 'None')"
+        }
+      ]
+    },
+    {
+      "id": "determinism-dependency-answers-are-stable",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "identical == True (got True)"
+        }
+      ]
+    },
+    {
+      "id": "prune-keeps-the-latest-and-a-few-older-snapshots",
+      "passed": true,
+      "checks": [
+        {
+          "check": "length",
+          "passed": true,
+          "message": "len(steps.2.result.would_delete)=1; expected 1"
+        },
+        {
+          "check": "length",
+          "passed": true,
+          "message": "len(steps.3.result.deleted)=1; expected 1"
+        },
+        {
+          "check": "text_contains",
+          "passed": true,
+          "message": "steps.4.result.summary should mention '2 snapshot(s)' (got '2 snapshot(s); 0 over the keep limit (3 older)')"
+        }
+      ]
+    },
+    {
+      "id": "search-where-is-bob-exact-path-only",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "result.mode == 'exact_name' (got 'exact_name')"
+        },
+        {
+          "check": "pluck_equals",
+          "passed": true,
+          "message": "result.selected[].path=['dive-and-mine::Workspace/Vendors/Bob']; expected exactly ['dive-and-mine::Workspace/Vendors/Bob']"
+        }
+      ]
+    },
+    {
+      "id": "search-near-matches-are-listed-as-not-selected",
+      "passed": true,
+      "checks": [
+        {
+          "check": "pluck_contains",
+          "passed": true,
+          "message": "result.not_selected[].path=['dive-and-mine::Workspace/Vendors/Zed']; expected to contain ['dive-and-mine::Workspace/Vendors/Zed']"
+        },
+        {
+          "check": "pluck_excludes",
+          "passed": true,
+          "message": "result.not_selected[].path=['dive-and-mine::Workspace/Vendors/Zed']; must not contain ['dive-and-mine::Workspace/Vendors/Bob']"
+        }
+      ]
+    },
+    {
+      "id": "search-a-path-is-exact",
+      "passed": true,
+      "checks": [
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "result.mode == 'path' (got 'path')"
+        },
+        {
+          "check": "pluck_equals",
+          "passed": true,
+          "message": "result.selected[].path=['dive-and-mine::ServerScriptService/Services/ShopService']; expected exactly ['dive-and-mine::ServerScriptService/Services/ShopService']"
+        }
+      ]
+    },
+    {
+      "id": "search-a-dotted-studio-path-is-understood",
+      "passed": true,
+      "checks": [
+        {
+          "check": "pluck_equals",
+          "passed": true,
+          "message": "result.selected[].path=['dive-and-mine::ReplicatedStorage/Modules/Economy']; expected exactly ['dive-and-mine::ReplicatedStorage/Modules/Economy']"
+        }
+      ]
+    },
+    {
+      "id": "search-a-path-of-another-place-is-refused",
+      "passed": true,
+      "checks": [
+        {
+          "check": "refused",
+          "passed": true,
+          "message": "expected a refusal mentioning 'find_across_places' (got ok=False, error=\"the path names place 'dive-and-mine-hardcore' but the active place is 'dive-and-mine'. find_in_place searches one place; use find_across_places to search several, or name the right place_id.\")"
+        }
+      ]
+    },
+    {
+      "id": "search-same-named-things-are-never-guessed",
+      "passed": true,
+      "checks": [
+        {
+          "check": "list_empty",
+          "passed": true,
+          "message": "result.selected=[] should be empty"
+        },
+        {
+          "check": "pluck_equals",
+          "passed": true,
+          "message": "result.not_selected[].path=['dive-and-mine::Workspace/Vendors/Bob/Brain', 'dive-and-mine::Workspace/Vendors/Zed/Brain']; expected exactly ['dive-and-mine::Workspace/Vendors/Bob/Brain', 'dive-and-mine::Workspace/Vendors/Zed/Brain']"
+        },
+        {
+          "check": "text_contains",
+          "passed": true,
+          "message": "result.ask should mention 'Which one' (got \"2 instances are named like 'Brain': none is selected. Which one? (use the path)\")"
+        }
+      ]
+    },
+    {
+      "id": "search-under-narrows-same-named-things",
+      "passed": true,
+      "checks": [
+        {
+          "check": "pluck_equals",
+          "passed": true,
+          "message": "result.selected[].path=['dive-and-mine::Workspace/Vendors/Zed/Brain']; expected exactly ['dive-and-mine::Workspace/Vendors/Zed/Brain']"
+        }
+      ]
+    },
+    {
+      "id": "search-text-finds-the-purchase-handler-first",
+      "passed": true,
+      "checks": [
+        {
+          "check": "top_hit",
+          "passed": true,
+          "message": "first hit is 'dive-and-mine::ServerScriptService/Handlers/PurchaseHandler'; expected 'dive-and-mine::ServerScriptService/Handlers/PurchaseHandler'"
+        }
+      ]
+    },
+    {
+      "id": "search-text-survives-a-misspelling",
+      "passed": true,
+      "checks": [
+        {
+          "check": "top_hit",
+          "passed": true,
+          "message": "first hit is 'dive-and-mine::ServerScriptService/Handlers/PurchaseHandler'; expected 'dive-and-mine::ServerScriptService/Handlers/PurchaseHandler'"
+        }
+      ]
+    },
+    {
+      "id": "search-kind-filter-limits-the-class",
+      "passed": true,
+      "checks": [
+        {
+          "check": "pluck_excludes",
+          "passed": true,
+          "message": "result.not_selected[].class=['Script', 'Script', 'Script', 'Script', 'Script', 'Script', 'Script', 'Script', 'Script', 'Script']; must not contain ['ModuleScript', 'Folder', 'Model']"
+        }
+      ]
+    },
+    {
+      "id": "search-empty-query-is-refused",
+      "passed": true,
+      "checks": [
+        {
+          "check": "refused",
+          "passed": true,
+          "message": "expected a refusal mentioning 'query is empty' (got ok=False, error='query is empty: name a path, a role, a landmark alias or text to search for')"
+        }
+      ]
+    },
+    {
+      "id": "search-without-any-snapshot-says-what-to-do",
+      "passed": true,
+      "checks": [
+        {
+          "check": "refused",
+          "passed": true,
+          "message": "expected a refusal mentioning 'plan_refresh' (got ok=False, error='no snapshot has been stored for this place yet: run plan_refresh, let the hub run the Luau, then ingest_snapshot (dry_run=false) (place demo_mine/dive-and-mine)')"
+        }
+      ]
+    },
+    {
+      "id": "search-unknown-role-lists-the-known-roles",
+      "passed": true,
+      "checks": [
+        {
+          "check": "refused",
+          "passed": true,
+          "message": "expected a refusal mentioning 'vendor' (got ok=False, error=\"unknown role 'wizard'. Known roles: ['collectible', 'currency_display', 'progression_gate', 'resource_node', 'spawn', 'upgradable_tool', 'vendor', 'zone']\")"
+        }
+      ]
+    },
+    {
+      "id": "search-active-place-comes-from-the-open-studio-not-a-guess",
+      "passed": true,
+      "checks": [
+        {
+          "check": "ok",
+          "passed": true,
+          "message": "ok=True should be true (error: 'None')"
+        },
+        {
+          "check": "equals",
+          "passed": true,
+          "message": "result.place_id == 'role-lab' (got 'role-lab')"
+        }
+      ]
+    },
+    {
+      "id": "search-without-place-or-matching-studio-is-refused",
+      "passed": true,
+      "checks": [
+        {
+          "check": "refused",
+          "passed": true,
+          "message": "expected a refusal mentioning 'cannot tell the active place' (got ok=False, error=\"cannot tell the active place: 0 of project 'demo_mine' places match the open Studio instances (places: ['dive-and-mine', 'dive-and-mine-hardcore']). Name the place with place_id.\")"
+        }
+      ]
+    },
+    {
+      "id": "search-results-carry-the-place-prefix",
+      "passed": true,
+      "checks": [
+        {
+          "check": "pluck_equals",
+          "passed": true,
+          "message": "result.selected[].path=['dive-and-mine::Workspace/Vendors/Bob', 'dive-and-mine::Workspace/Vendors/Zed']; expected exactly ['dive-and-mine::Workspace/Vendors/Bob', 'dive-and-mine::Workspace/Vendors/Zed']"
+        }
+      ]
+    }
+  ]
+}

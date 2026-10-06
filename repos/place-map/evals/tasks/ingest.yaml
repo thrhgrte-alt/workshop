@@ -1,0 +1,209 @@
+# Parsing hub output and storing snapshots. Every parser is schema_unverified: the shapes are documented in samples/README.md and the samples are SYNTHETIC.
+- id: ingest-dry-run-writes-nothing
+  tags: [ingest, dry-run, known-good]
+  input:
+    op: writes_nothing
+    calls:
+      - {tool: ingest_snapshot, args: {project_id: demo_tycoon, place_id: tycoon-main, file: samples/synthetic/collect-tycoon.json}}
+  checks:
+    - {type: ok, path: all_ok}
+    - {type: list_empty, path: changed_files}
+    - {type: equals, path: dry_run_flags, value: [true]}
+
+- id: ingest-apply-stores-once-and-is-idempotent
+  tags: [ingest, known-good]
+  input:
+    op: steps
+    steps:
+      - {tool: ingest_snapshot, args: {project_id: demo_roles, place_id: role-lab, file: examples/places/role-lab.collect.json, dry_run: false, taken_at: "2026-10-06T11:30:00+00:00"}}
+      - {tool: ingest_snapshot, args: {project_id: demo_roles, place_id: role-lab, file: examples/places/role-lab.collect.json, dry_run: false, taken_at: "2026-10-06T11:30:00+00:00"}}
+      - {tool: list_snapshots, args: {project_id: demo_roles, place_id: role-lab}}
+  checks:
+    - {type: step_ok, step: 0}
+    - {type: step_ok, step: 1}
+    - {type: same, a: steps.0.result.snapshot_id, b: steps.1.result.snapshot_id}
+    - {type: text_contains, path: steps.2.result.summary, text: "2 snapshot(s)"}
+
+- id: ingest-refuses-data-collected-in-another-place-by-id
+  tags: [ingest, scope, known-bad]
+  input:
+    op: tool
+    tool: ingest_snapshot
+    args: {project_id: demo_roles, place_id: role-lab, file: samples/synthetic/collect-tycoon.json, dry_run: false}
+  checks:
+    - {type: error_contains, text: "refusing"}
+    - {type: refused}
+
+- id: ingest-refuses-data-collected-in-another-place-by-name
+  tags: [ingest, scope, known-bad]
+  input:
+    op: tool
+    tool: ingest_snapshot
+    args: {project_id: demo_mine, place_id: dive-and-mine, file: examples/places/mine-hardcore.collect.json, dry_run: false}
+  checks:
+    - {type: refused, text: "collected in the Studio place"}
+
+- id: ingest-generic-tree-is-schema-unverified-and-unwrapped
+  tags: [ingest, schema-unverified, known-good]
+  input: {op: parse, file: samples/synthetic/tree-generic.json}
+  checks:
+    - {type: equals, path: format, value: generic-tree}
+    - {type: equals, path: status, value: schema_unverified}
+    - {type: list_equals, path: paths, items: [Workspace, Workspace/Vendors, Workspace/Vendors/Bob, Workspace/Vendors/Bob/Prompt]}
+    - {type: text_contains, path: warnings, text: "wrapped in 'result'"}
+
+- id: ingest-text-outline
+  tags: [ingest, schema-unverified, known-good]
+  input: {op: parse, file: samples/synthetic/tree-outline.txt}
+  checks:
+    - {type: equals, path: format, value: text-outline}
+    - {type: equals, path: n_instances, value: 4}
+    - {type: equals, path: "attrs.Workspace/Vendors/Bob", value: {Price: 5, Stock: 2}}
+
+- id: ingest-script-read-json-and-text-agree
+  tags: [ingest, schema-unverified, known-good]
+  input: {op: parse, file: samples/synthetic/script-read.json}
+  checks:
+    - {type: equals, path: kind, value: scripts}
+    - {type: list_equals, path: script_paths, items: [ServerScriptService/Plots]}
+
+- id: ingest-script-read-text-blocks
+  tags: [ingest, schema-unverified, known-good]
+  input: {op: parse, file: samples/synthetic/script-read.txt}
+  checks:
+    - {type: equals, path: format, value: script_read-text}
+    - {type: list_equals, path: script_paths, items: [ServerScriptService/Plots]}
+
+- id: ingest-drops-secret-attributes-before-storing
+  tags: [ingest, secrets, known-bad]
+  input:
+    op: parse
+    data:
+      format: placemap-collect/1
+      collector_version: 1
+      place: {name: Mini, place_id: 0}
+      roots: [Workspace]
+      full: true
+      nodes:
+        - {p: Workspace, c: Workspace, n: 1}
+        - {p: Workspace/Door, c: Part, n: 0, a: {Price: 5, ApiToken: abcdef, Webhook: "https://example.invalid/x", Note: fine}}
+  checks:
+    - {type: equals, path: "attrs.Workspace/Door", value: {Price: 5, Note: fine}}
+    - {type: equals, path: secrets_skipped, value: 2}
+
+- id: ingest-refuses-input-with-nothing-recognisable
+  tags: [ingest, known-bad]
+  input:
+    op: tool
+    tool: ingest_snapshot
+    args: {project_id: demo_roles, place_id: role-lab, data: {nothing: here}, dry_run: false}
+  checks:
+    - {type: refused, text: "nothing to store"}
+
+- id: ingest-reuses-the-summary-cache-across-places
+  tags: [ingest, cache, known-good]
+  input:
+    op: steps
+    world: empty
+    steps:
+      - {tool: ingest_snapshot, args: {project_id: demo_mine, place_id: dive-and-mine, file: examples/places/mine-main.collect.json, dry_run: false, taken_at: "2026-10-06T11:00:00+00:00"}}
+      - {tool: ingest_snapshot, args: {project_id: demo_mine, place_id: dive-and-mine-hardcore, file: examples/places/mine-hardcore.collect.json, dry_run: false, taken_at: "2026-10-06T11:00:00+00:00"}}
+  checks:
+    # main: 40 scripts, the two vendor Brain scripts are identical -> 39 analyses, 1 reused. hardcore: 39 scripts; only Economy (drifted) and ReviveHandler are new -> 2 new, 37 reused.
+    - {type: equals, path: steps.0.result.summaries.new, value: 39}
+    - {type: equals, path: steps.0.result.summaries.reused, value: 1}
+    - {type: equals, path: steps.1.result.summaries.new, value: 2}
+    - {type: equals, path: steps.1.result.summaries.reused, value: 37}
+
+- id: ingest-unchanged-scripts-are-not-resummarised-and-changes-are-counted
+  tags: [ingest, cache, diff, known-good]
+  input:
+    op: steps
+    steps:
+      - {tool: ingest_snapshot, args: {project_id: demo_mine, place_id: dive-and-mine, file: examples/places/mine-main.v2.collect.json, dry_run: false, taken_at: "2026-10-06T11:30:00+00:00"}}
+  checks:
+    # v2 vs main: Economy changed (+refund), DailyHandler added, Zed's Brain and AntiExploit removed. New analyses: Economy and DailyHandler only.
+    - {type: equals, path: steps.0.result.script_changes.scripts_changed, value: 1}
+    - {type: equals, path: steps.0.result.script_changes.scripts_new, value: 1}
+    - {type: equals, path: steps.0.result.script_changes.scripts_removed, value: 2}
+    - {type: equals, path: steps.0.result.summaries.new, value: 2}
+    - {type: equals, path: steps.0.result.summaries.reused, value: 37}
+
+- id: ingest-partial-refresh-replaces-only-its-roots
+  tags: [ingest, partial, known-good]
+  input:
+    op: steps
+    steps:
+      - tool: ingest_snapshot
+        args:
+          project_id: demo_mine
+          place_id: dive-and-mine
+          dry_run: false
+          taken_at: "2026-10-06T11:30:00+00:00"
+          data:
+            format: placemap-collect/1
+            collector_version: 1
+            place: {name: "Dive and Mine (SYNTHETIC)", place_id: 0}
+            roots: [Workspace/Vendors]
+            full: false
+            nodes:
+              - {p: Workspace/Vendors, c: Folder, n: 1}
+              - {p: Workspace/Vendors/Bob, c: Model, n: 0}
+  checks:
+    # main has 132 instances; Workspace/Vendors and everything under it is 12 of them (Vendors, Bob+3 children, Zed+3 children, ShopSign, VendorStatue, Head). 132 - 12 + 2 = 122; the two Brain scripts go: 38 scripts.
+    - {type: equals, path: steps.0.result.stats.instances, value: 122}
+    - {type: equals, path: steps.0.result.stats.scripts, value: 38}
+
+- id: ingest-flags-scripts-whose-source-was-not-received
+  tags: [ingest, known-bad]
+  input:
+    op: tool
+    tool: ingest_snapshot
+    args:
+      project_id: demo_tycoon
+      place_id: tycoon-main
+      taken_at: "2026-10-06T11:30:00+00:00"
+      data:
+        format: placemap-collect/1
+        collector_version: 1
+        place: {name: "Demo Tycoon (SYNTHETIC)", place_id: 9000000001}
+        roots: [ServerScriptService]
+        full: true
+        nodes:
+          - {p: ServerScriptService, c: ServerScriptService, n: 1}
+          - {p: ServerScriptService/Plots, c: Script, n: 0, s: {fp: "3:abc", len: 3}}
+  checks:
+    - {type: ok}
+    - {type: list_equals, path: result.scripts_needing_read, items: [ServerScriptService/Plots]}
+    - {type: text_contains, path: result.next, text: "plan_refresh"}
+
+- id: ingest-flags-a-stale-snapshot-and-offers-a-refresh
+  tags: [ingest, stale, known-good]
+  input:
+    op: tool
+    now: "2026-10-09T12:00:00+00:00"
+    tool: find_in_place
+    args: {query: Bob, project_id: demo_mine, place_id: dive-and-mine}
+  checks:
+    - {type: equals, path: result.snapshot.stale, value: true}
+    - {type: text_contains, path: result.snapshot.offer, text: plan_refresh}
+    - {type: text_contains, path: result.summary, text: STALE}
+
+- id: ingest-fresh-snapshot-is-not-stale
+  tags: [ingest, stale, known-good]
+  input: {op: tool, tool: find_in_place, args: {query: Bob, project_id: demo_mine, place_id: dive-and-mine}}
+  checks:
+    - {type: equals, path: result.snapshot.stale, value: false}
+    - {type: equals, path: result.snapshot.age_hours, value: 1.0}
+
+- id: ingest-refuses-a-file-outside-the-allowed-folders
+  tags: [ingest, safety, known-bad]
+  input: {op: tool, tool: ingest_snapshot, args: {project_id: demo_roles, place_id: role-lab, file: /etc/hostname}}
+  checks:
+    - {type: refused}
+
+- id: ingest-needs-exactly-one-of-data-or-file
+  tags: [ingest, known-bad]
+  input: {op: tool, tool: ingest_snapshot, args: {project_id: demo_roles, place_id: role-lab}}
+  checks:
+    - {type: refused, text: "exactly one of data"}

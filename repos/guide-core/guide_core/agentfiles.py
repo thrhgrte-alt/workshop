@@ -46,7 +46,7 @@ def validate_skill(skill_dir: Path) -> list[str]:
     except ValueError as exc:
         return [f"{f}: {exc}"]
     name = meta.get("name")
-    if not isinstance(name, str) or not 1 <= len(name) <= 64 or not NAME_RE.match(name):
+    if not isinstance(name, str) or not 1 <= len(name) <= 64 or not NAME_RE.fullmatch(name):
         problems.append(f"{f}: 'name' must be 1-64 chars of lowercase letters, digits and single hyphens")
     elif name != Path(skill_dir).name:
         problems.append(f"{f}: 'name' ({name}) must match the directory name ({Path(skill_dir).name})")

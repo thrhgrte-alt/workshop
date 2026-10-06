@@ -1,0 +1,267 @@
+# Generic landmark roles, part 2: the synthetic places. 'Bob' (a vendor with an ordinary name), 'Thing1' (a collectible with an ordinary name) and decoys whose NAME matches a synonym but that have no interaction.
+# Ground truth is what the author of the fixture intended (examples/places/ground_truth.json). All of this is self-written: it shows the tool agrees with the author, not real-world precision.
+- id: roles-weird-names-are-found-by-structure
+  tags: [roles, structure, known-good]
+  # role-lab Bob: interaction 3 + humanoid/model 1 + purchase remote 3 + attributes (Price, Stock; k=2) 1 = 8 of sum|w| 10.5 -> 0.7619 >= 0.75 (confident).
+  input: {op: tool, tool: find_in_place, args: {query: vendors, role: vendor, project_id: demo_roles, place_id: role-lab}}
+  checks:
+    - {type: pluck_equals, path: result.selected, field: path, items: ["role-lab::Workspace/Npcs/Bob"]}
+    - {type: approx, path: result.selected.0.score, value: 0.7619, tol: 0.0001}
+
+- id: roles-collectibles-called-thing-are-found-by-structure
+  tags: [roles, structure, known-good]
+  # role-lab Thing1..Thing6: interaction 2.5 + repetition 2.5*5/(5+3)=1.5625 + remote (GrabIt referenced through the Loose folder) 2.0 + attributes (Value; k=2) 0.5 = 6.5625 of 10.5 -> 0.625 >= 0.6.
+  input: {op: tool, tool: find_in_place, args: {query: collectibles, role: collectible, project_id: demo_roles, place_id: role-lab}}
+  checks:
+    - {type: pluck_equals, path: result.selected, field: path, items: [
+        "role-lab::Workspace/Loose/Thing1", "role-lab::Workspace/Loose/Thing2", "role-lab::Workspace/Loose/Thing3", "role-lab::Workspace/Loose/Thing4",
+        "role-lab::Workspace/Loose/Thing5", "role-lab::Workspace/Loose/Thing6"]}
+    - {type: approx, path: result.selected.0.score, value: 0.625, tol: 0.0001}
+
+- id: roles-decoys-with-matching-names-and-no-interaction-are-not-confident
+  tags: [roles, decoy, known-bad]
+  # ShopSign (name matches 'shop': 1.5), VendorStatue (name 1.5 + model 1.0), CoinPile1..3 (name 'coin', repeated, no interaction) all score far below the 0.45 candidate band.
+  input: {op: pr}
+  checks:
+    - {type: list_empty, path: decoys_confident}
+
+- id: roles-decoy-shop-sign-plays-no-role
+  tags: [roles, decoy, known-bad]
+  input: {op: tool, tool: get_path_info, args: {path: Workspace/Npcs/ShopSign, project_id: demo_roles, place_id: role-lab}}
+  checks:
+    - {type: list_empty, path: result.roles}
+
+- id: roles-decoy-coin-pile-plays-no-role
+  tags: [roles, decoy, known-bad]
+  input: {op: tool, tool: get_path_info, args: {path: Workspace/Decor/CoinPile1, project_id: demo_roles, place_id: role-lab}}
+  checks:
+    - {type: list_empty, path: result.roles}
+
+- id: roles-an-npc-that-only-chats-is-not-a-vendor
+  tags: [roles, decoy, known-bad]
+  # Alice has an interaction and a humanoid but only a chatter remote: (3 + 1)/10.5 = 0.381, below the candidate band.
+  input: {op: tool, tool: get_path_info, args: {path: Workspace/Npcs/Alice, project_id: demo_roles, place_id: role-lab}}
+  checks:
+    - {type: list_empty, path: result.roles}
+
+- id: roles-a-folder-of-vendors-is-not-a-vendor
+  tags: [roles, container, known-bad]
+  input: {op: tool, tool: find_in_place, args: {query: vendors, role: vendor, project_id: demo_mine, place_id: dive-and-mine}}
+  checks:
+    - {type: pluck_equals, path: result.selected, field: path, items: ["dive-and-mine::Workspace/Vendors/Bob", "dive-and-mine::Workspace/Vendors/Zed"]}
+    - {type: pluck_excludes, path: result.selected, field: path, items: ["dive-and-mine::Workspace/Vendors", "dive-and-mine::Workspace/Vendors/ShopSign", "dive-and-mine::Workspace/Vendors/VendorStatue"]}
+
+- id: roles-the-vendors-names-the-role-not-the-folder
+  tags: [roles, literal, known-good]
+  input: {op: tool, tool: find_in_place, args: {query: the vendors, project_id: demo_mine, place_id: dive-and-mine}}
+  checks:
+    - {type: equals, path: result.mode, value: role}
+    - {type: text_contains, path: result.name_hint, text: "Workspace/Vendors"}
+
+- id: roles-borderline-candidates-are-not-selected-and-the-user-is-asked
+  tags: [roles, borderline, known-good]
+  # Carl: interaction 3 + humanoid/model 1 + purchase remote 3 = 7 of 10.5 -> 0.6667: a candidate (>= 0.45) but not confident (< 0.75).
+  input: {op: tool, tool: find_in_place, args: {query: vendors, role: vendor, project_id: demo_roles, place_id: role-lab}}
+  checks:
+    - {type: pluck_equals, path: result.not_selected, field: path, items: ["role-lab::Workspace/Npcs/Carl"]}
+    - {type: approx, path: result.not_selected.0.score, value: 0.6667, tol: 0.0001}
+    - {type: text_contains, path: result.ask, text: "NOT selected"}
+
+- id: roles-list-candidates-for-the-user-to-confirm
+  tags: [roles, borderline, known-good]
+  input: {op: tool, tool: list_candidates, args: {project_id: demo_roles, place_id: role-lab}}
+  checks:
+    - {type: pluck_contains, path: result.candidates, field: path, items: ["role-lab::Workspace/Npcs/Carl"]}
+    - {type: equals, path: result.candidates.0.role, value: vendor}
+
+- id: roles-proximity-to-a-confident-vendor-raises-a-spawn-score
+  tags: [roles, proximity, known-good]
+  # Lobby (0,0,0) and Bob (10,0,5): distance sqrt(125) = 11.18, f = 1 - 11.18/50 = 0.7764. spawn: class 4 + name 1.5 + 0.5*0.7764 = 5.8882 of 8.5 -> 0.6927.
+  input: {op: tool, tool: get_path_info, args: {path: Workspace/Spawns/Lobby, detail: true, project_id: demo_mine, place_id: dive-and-mine}}
+  checks:
+    - {type: approx, path: result.role_features.spawn.features.near_other_landmark, value: 0.7764, tol: 0.001}
+    - {type: approx, path: result.role_features.spawn.score, value: 0.6927, tol: 0.0001}
+
+- id: roles-precision-and-recall-on-the-self-written-places
+  tags: [roles, precision-recall, self-written]
+  # Ground truth: mine-main 28 landmarks (2 vendors, 12 nodes, 8 collectibles, 2 spawns, zone, currency display, gate, tool) + role-lab 9 (Bob, Carl, 6 Things, Pad).
+  # By hand: every mine-main landmark scores above its band; in role-lab Carl (0.6667 < 0.75) and the Pad spawn (4 + 0.5*0.98 of 8.5 = 0.5282 < 0.6) stay borderline -> 35 tp, 2 fn, 0 fp.
+  input: {op: pr}
+  checks:
+    - {type: equals, path: tp, value: 35}
+    - {type: equals, path: fn, value: 2}
+    - {type: equals, path: fp, value: 0}
+    - {type: greater, path: precision, than: 0.99}
+    - {type: greater, path: recall, than: 0.9}
+
+- id: roles-learning-dry-run-shows-the-bounded-weight-steps
+  tags: [roles, learning, dry-run, known-good]
+  # w <- w + 0.1 * (1 - 0.6667) * f: three features have f=1 so each weight rises by 0.0333.
+  input: {op: tool, tool: label_landmark, args: {path: Workspace/Npcs/Carl, role: vendor, label: confirm, project_id: demo_roles, place_id: role-lab}}
+  checks:
+    - {type: equals, path: result.dry_run, value: true}
+    - {type: length, path: result.weight_changes, n: 3}
+    - {type: approx, path: result.weight_changes.0.delta, value: 0.03333, tol: 0.00002}
+    - {type: approx, path: result.weight_changes.0.after, value: 3.03333, tol: 0.00002}
+
+- id: roles-dry-run-label-writes-nothing
+  tags: [roles, learning, dry-run, known-good]
+  input:
+    op: writes_nothing
+    calls:
+      - {tool: label_landmark, args: {path: Workspace/Npcs/Carl, role: vendor, label: confirm, project_id: demo_roles, place_id: role-lab}}
+  checks:
+    - {type: list_empty, path: changed_files}
+
+- id: roles-confirming-a-candidate-selects-it-and-nudges-the-weights
+  tags: [roles, learning, known-good]
+  # After the confirm: weights 3.03333 / 1.03333 / 3.03333 (+0.1 on the sum). Bob: (3.03333+1.03333+3.03333+1)/(10.5+0.1) = 8.1/10.6 = 0.7642. Carl is selected by the user label with score 0.6698.
+  input:
+    op: steps
+    steps:
+      - {tool: label_landmark, args: {path: Workspace/Npcs/Carl, role: vendor, label: confirm, confirmed_by: tester, dry_run: false, project_id: demo_roles, place_id: role-lab}}
+      - {tool: find_in_place, args: {query: vendors, role: vendor, project_id: demo_roles, place_id: role-lab}}
+  checks:
+    - {type: step_ok, step: 0}
+    - {type: pluck_equals, path: steps.1.result.selected, field: path, items: ["role-lab::Workspace/Npcs/Bob", "role-lab::Workspace/Npcs/Carl"]}
+    - {type: equals, path: steps.1.result.selected.1.source, value: user_label}
+    - {type: approx, path: steps.1.result.selected.0.score, value: 0.7642, tol: 0.0001}
+    - {type: approx, path: steps.1.result.selected.1.score, value: 0.6698, tol: 0.0001}
+
+- id: roles-rejecting-a-confident-landmark-overrides-the-score
+  tags: [roles, learning, precedence, known-good]
+  # Explicit user label beats the score: Bob (0.7619, confident) is rejected, so he is not selected, and every f=1 weight drops by 0.1*0.7619 = 0.07619 (3 -> 2.92381).
+  input:
+    op: steps
+    steps:
+      - {tool: label_landmark, args: {path: Workspace/Npcs/Bob, role: vendor, label: reject, confirmed_by: tester, dry_run: false, project_id: demo_roles, place_id: role-lab}}
+      - {tool: find_in_place, args: {query: vendors, role: vendor, project_id: demo_roles, place_id: role-lab}}
+      - {tool: list_roles, args: {role: vendor, project_id: demo_roles, place_id: role-lab}}
+  checks:
+    - {type: pluck_excludes, path: steps.1.result.selected, field: path, items: ["role-lab::Workspace/Npcs/Bob"]}
+    - {type: pluck_equals, path: steps.1.result.rejected_by_user, field: path, items: ["role-lab::Workspace/Npcs/Bob"]}
+    - {type: approx, path: steps.2.result.roles.vendor.features.has_interaction.weight, value: 2.92381, tol: 0.00001}
+    - {type: equals, path: steps.2.result.roles.vendor.features.has_interaction.source, value: project}
+
+- id: roles-undo-restores-the-previous-weights-exactly
+  tags: [roles, learning, undo, known-good]
+  input:
+    op: steps
+    steps:
+      - {tool: label_landmark, args: {path: Workspace/Npcs/Carl, role: vendor, label: confirm, confirmed_by: tester, dry_run: false, project_id: demo_roles, place_id: role-lab}}
+      - {tool: undo_label, args: {label_id: "$ref:steps.0.result.label_id", confirmed_by: tester, dry_run: false, project_id: demo_roles, place_id: role-lab}}
+      - {tool: list_roles, args: {role: vendor, project_id: demo_roles, place_id: role-lab}}
+      - {tool: find_in_place, args: {query: vendors, role: vendor, project_id: demo_roles, place_id: role-lab}}
+  checks:
+    - {type: step_ok, step: 1}
+    - {type: equals, path: steps.2.result.roles.vendor.features.has_interaction.weight, value: 3.0}
+    - {type: equals, path: steps.2.result.roles.vendor.features.has_interaction.source, value: default}
+    - {type: pluck_equals, path: steps.3.result.selected, field: path, items: ["role-lab::Workspace/Npcs/Bob"]}
+    - {type: pluck_equals, path: steps.3.result.not_selected, field: path, items: ["role-lab::Workspace/Npcs/Carl"]}
+
+- id: roles-a-label-is-undone-only-once
+  tags: [roles, learning, undo, known-bad]
+  input:
+    op: steps
+    steps:
+      - {tool: label_landmark, args: {path: Workspace/Npcs/Carl, role: vendor, label: confirm, confirmed_by: tester, dry_run: false, project_id: demo_roles, place_id: role-lab}}
+      - {tool: undo_label, args: {label_id: "$ref:steps.0.result.label_id", confirmed_by: tester, dry_run: false, project_id: demo_roles, place_id: role-lab}}
+      - {tool: undo_label, args: {label_id: "$ref:steps.0.result.label_id", confirmed_by: tester, dry_run: false, project_id: demo_roles, place_id: role-lab}}
+  checks:
+    - {type: step_error_contains, step: 2, text: "already undone"}
+
+- id: roles-learning-stays-inside-the-project
+  tags: [roles, learning, scope, known-good]
+  input:
+    op: steps
+    steps:
+      - {tool: label_landmark, args: {path: Workspace/Npcs/Carl, role: vendor, label: confirm, confirmed_by: tester, dry_run: false, project_id: demo_roles, place_id: role-lab}}
+      - {tool: list_roles, args: {role: vendor, project_id: demo_mine, place_id: dive-and-mine}}
+  checks:
+    - {type: equals, path: steps.1.result.roles.vendor.features.has_interaction.weight, value: 3.0}
+    - {type: equals, path: steps.1.result.roles.vendor.features.has_interaction.source, value: default}
+
+- id: roles-learning-goes-global-only-when-the-user-marks-it
+  tags: [roles, learning, scope, known-good]
+  input:
+    op: steps
+    steps:
+      - {tool: label_landmark, args: {path: Workspace/Npcs/Carl, role: vendor, label: confirm, confirmed_by: tester, mark_global: true, dry_run: false, project_id: demo_roles, place_id: role-lab}}
+      - {tool: list_roles, args: {role: vendor, project_id: demo_mine, place_id: dive-and-mine}}
+  checks:
+    - {type: approx, path: steps.1.result.roles.vendor.features.has_interaction.weight, value: 3.03333, tol: 0.00002}
+    - {type: equals, path: steps.1.result.roles.vendor.features.has_interaction.source, value: global}
+
+- id: roles-a-label-belongs-to-one-place
+  tags: [roles, learning, scope, known-good]
+  # Rejecting Bob in dive-and-mine does not hide Bob in the sibling place (the label is per place; only the weights are per project).
+  input:
+    op: steps
+    steps:
+      - {tool: label_landmark, args: {path: Workspace/Vendors/Bob, role: vendor, label: reject, confirmed_by: tester, dry_run: false, project_id: demo_mine, place_id: dive-and-mine}}
+      - {tool: find_in_place, args: {query: vendors, role: vendor, project_id: demo_mine, place_id: dive-and-mine-hardcore}}
+  checks:
+    - {type: pluck_contains, path: steps.1.result.selected, field: path, items: ["dive-and-mine-hardcore::Workspace/Vendors/Bob"]}
+
+- id: roles-labels-need-a-named-person
+  tags: [roles, learning, known-bad]
+  input: {op: tool, tool: label_landmark, args: {path: Workspace/Npcs/Carl, role: vendor, label: confirm, confirmed_by: auto, dry_run: false, project_id: demo_roles, place_id: role-lab}}
+  checks:
+    - {type: refused, text: "automatic labels are not allowed"}
+
+- id: roles-labels-need-a-real-path-and-role
+  tags: [roles, learning, known-bad]
+  input: {op: tool, tool: label_landmark, args: {path: Workspace/Nobody, role: vendor, label: confirm, project_id: demo_roles, place_id: role-lab}}
+  checks:
+    - {type: refused, text: "no instance at"}
+
+- id: roles-a-label-for-a-path-of-another-place-is-refused
+  tags: [roles, learning, scope, known-bad]
+  input: {op: tool, tool: label_landmark, args: {path: "dive-and-mine::Workspace/Vendors/Bob", role: vendor, label: confirm, project_id: demo_roles, place_id: role-lab}}
+  checks:
+    - {type: refused, text: "belong to one place"}
+
+- id: roles-an-alias-resolves-to-the-labelled-landmark
+  tags: [roles, labels, known-good]
+  input:
+    op: steps
+    steps:
+      - {tool: label_landmark, args: {path: Workspace/Npcs/Carl, role: vendor, label: confirm, alias: the second shopkeeper, confirmed_by: tester, dry_run: false, project_id: demo_roles, place_id: role-lab}}
+      - {tool: find_in_place, args: {query: the second shopkeeper, project_id: demo_roles, place_id: role-lab}}
+  checks:
+    - {type: equals, path: steps.1.result.mode, value: alias}
+    - {type: pluck_equals, path: steps.1.result.selected, field: path, items: ["role-lab::Workspace/Npcs/Carl"]}
+
+- id: roles-the-confirmed-weights-do-not-change-precision-on-the-other-roles
+  tags: [roles, learning, regression, known-good]
+  # After confirming Carl, the self-written set still has no false positives and now finds Carl too: tp 36, fn 1.
+  input:
+    op: pr_after_steps
+    steps:
+      - {tool: label_landmark, args: {path: Workspace/Npcs/Carl, role: vendor, label: confirm, confirmed_by: tester, dry_run: false, project_id: demo_roles, place_id: role-lab}}
+  checks:
+    - {type: equals, path: tp, value: 36}
+    - {type: equals, path: fn, value: 1}
+    - {type: equals, path: fp, value: 0}
+
+- id: roles-an-alias-word-names-the-role
+  tags: [roles, literal, known-good]
+  # 'the tools' is the alias 'tool' of upgradable_tool (plural ignored); StarterPack/Drill is the only instance that plays it.
+  input: {op: tool, tool: find_in_place, args: {query: the tools, project_id: demo_mine, place_id: dive-and-mine}}
+  checks:
+    - {type: equals, path: result.mode, value: role}
+    - {type: equals, path: result.role, value: upgradable_tool}
+    - {type: pluck_equals, path: result.selected, field: path, items: ["dive-and-mine::StarterPack/Drill"]}
+
+- id: roles-words-that-are-only-part-of-a-role-name-are-not-a-role-request
+  tags: [roles, literal, known-bad]
+  # 'upgrade' is neither the role id's words nor an alias, so it is searched as text, not widened to every upgradable tool.
+  input: {op: tool, tool: find_in_place, args: {query: upgrade, project_id: demo_mine, place_id: dive-and-mine}}
+  checks:
+    - {type: equals, path: result.mode, value: search}
+
+- id: ingest-a-bad-timestamp-is-refused-with-an-example
+  tags: [ingest, known-bad]
+  input: {op: tool, tool: ingest_snapshot, args: {project_id: demo_roles, place_id: role-lab, file: examples/places/role-lab.collect.json, taken_at: yesterday}}
+  checks:
+    - {type: refused, text: "ISO timestamp"}

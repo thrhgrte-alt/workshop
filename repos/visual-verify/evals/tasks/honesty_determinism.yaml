@@ -1,0 +1,194 @@
+# What the answers say (and never say), that the same input gives the same output, and the shape of the tool list.
+- id: honest-measure-image-wording
+  tags: [honesty]
+  input:
+    op: engine
+    tool: measure_image
+    images:
+      img: {gen: bands, size: [90, 60], colors: [[0, 0, 0], [128, 128, 128], [255, 255, 255]], axis: x}
+    args: {path: "@img"}
+  checks:
+    - {type: no_verdict_words}
+    - {type: first_key}
+    - {type: set_has, path: out.not_measured, items: [taste, anatomy, perspective]}
+    - {type: text_has, path: summary, text: "placeholder"}
+    - {type: text_has, path: summary, text: "not measured"}
+
+- id: honest-compare-wording
+  tags: [honesty]
+  input:
+    op: engine
+    tool: compare_to_reference
+    images:
+      ref: {gen: rect, size: [100, 100], bg: [200, 200, 200], fg: [30, 30, 30], box: [20, 20, 60, 60]}
+      cand: {gen: rect, size: [100, 100], bg: [200, 200, 200], fg: [30, 30, 30], box: [20, 20, 60, 60]}
+    args: {candidate: "@cand", reference: "@ref"}
+  checks:
+    - {type: no_verdict_words}
+    - {type: first_key}
+    - {type: set_has, path: out.not_measured, items: [taste, anatomy, perspective]}
+    - {type: text_has, path: summary, text: "none failed"}
+
+- id: honest-silhouette-wording
+  tags: [honesty]
+  input:
+    op: engine
+    tool: silhouette_iou
+    images:
+      ref: {gen: rect, size: [100, 100], bg: [200, 200, 200], fg: [30, 30, 30], box: [20, 20, 60, 60]}
+      cand: {gen: rect, size: [100, 100], bg: [200, 200, 200], fg: [30, 30, 30], box: [30, 20, 70, 60]}
+    args: {candidate: "@cand", reference: "@ref"}
+  checks:
+    - {type: no_verdict_words}
+    - {type: first_key}
+    - {type: set_has, path: out.not_measured, items: [taste, anatomy, perspective]}
+    - {type: text_has, path: out.not_measured.4, text: "plain background"}
+
+- id: honest-tiling-wording
+  tags: [honesty]
+  input:
+    op: engine
+    tool: check_tiling
+    images:
+      img: {gen: smooth_tile, size: [128, 128], seed: 7}
+    args: {path: "@img"}
+  checks:
+    - {type: no_verdict_words}
+    - {type: first_key}
+    - {type: set_has, path: out.not_measured, items: [taste, anatomy, perspective]}
+
+- id: honest-pbr-wording
+  tags: [honesty]
+  input:
+    op: engine
+    tool: check_pbr_ranges
+    images:
+      alb: {gen: solid, size: [32, 32], color: [128, 128, 128]}
+    args: {albedo: "@alb"}
+  checks:
+    - {type: no_verdict_words}
+    - {type: first_key}
+    - {type: set_has, path: out.not_measured, items: [taste, anatomy, perspective]}
+
+- id: honest-diff-wording
+  tags: [honesty]
+  input:
+    op: engine
+    tool: diff_images
+    images:
+      a: {gen: solid, size: [32, 32], color: [100, 100, 100]}
+      b: {gen: solid, size: [32, 32], color: [100, 100, 100]}
+    args: {before: "@a", after: "@b"}
+  checks:
+    - {type: no_verdict_words}
+    - {type: first_key}
+    - {type: set_has, path: out.not_measured, items: [taste, anatomy, perspective]}
+
+- id: honest-palette-wording
+  tags: [honesty]
+  input:
+    op: engine
+    tool: palette_distance
+    images:
+      img: {gen: solid, size: [32, 32], color: [255, 0, 0]}
+    args: {path: "@img", target_palette: ["#ff0000"]}
+  checks:
+    - {type: no_verdict_words}
+    - {type: first_key}
+    - {type: set_has, path: out.not_measured, items: [taste, anatomy, perspective]}
+
+- id: honest-findings-are-capped-at-the-limit
+  tags: [honesty, token-discipline]
+  # a normal map of albedo colours with every texture limit lowered to nothing fails 3+ checks; capping to 2 shows 2 findings and says how many were left out
+  input:
+    op: engine
+    tool: check_pbr_ranges
+    overrides: {limits.findings_cap: 2}
+    images:
+      nrm: {gen: solid, size: [16, 16], color: [200, 100, 50]}
+    args: {normal: "@nrm"}
+  checks:
+    - {type: is, path: out.findings.1.check, value: normal.bad_length_fraction}
+    - {type: len_at_most, path: out.findings, n: 2}
+    - {type: is, path: out.more_findings, value: 1}
+
+- id: det-measure-image-twice-is-identical
+  tags: [determinism]
+  input:
+    op: determinism
+    tool: measure_image
+    images:
+      img: {gen: white_noise, size: [96, 96], seed: 4}
+    args: {path: "@img"}
+  checks:
+    - {type: is, path: identical, value: true}
+
+- id: det-compare-twice-is-identical
+  tags: [determinism]
+  input:
+    op: determinism
+    tool: compare_to_reference
+    images:
+      ref: {gen: ellipse, size: [100, 100], bg: [255, 255, 255], fg: [0, 0, 0], box: [20, 20, 80, 80]}
+      cand: {gen: rect, size: [100, 100], bg: [255, 255, 255], fg: [0, 0, 0], box: [20, 20, 80, 80]}
+    args: {candidate: "@cand", reference: "@ref"}
+  checks:
+    - {type: is, path: identical, value: true}
+
+- id: det-tiling-twice-is-identical
+  tags: [determinism]
+  input:
+    op: determinism
+    tool: check_tiling
+    images:
+      img: {gen: smooth_crop, size: [128, 128], seed: 9}
+    args: {path: "@img"}
+  checks:
+    - {type: is, path: identical, value: true}
+
+- id: det-pbr-twice-is-identical
+  tags: [determinism]
+  input:
+    op: determinism
+    tool: check_pbr_ranges
+    images:
+      nrm: {gen: normal_noisy, size: [64, 64], seed: 3, tilt: 0.4}
+      rough: {gen: gray_noise, size: [64, 64], seed: 8, mean: 0.4, amp: 0.3}
+    args: {normal: "@nrm", roughness: "@rough"}
+  checks:
+    - {type: is, path: identical, value: true}
+
+- id: det-diff-twice-is-identical
+  tags: [determinism]
+  input:
+    op: determinism
+    tool: diff_images
+    images:
+      a: {gen: white_noise, size: [64, 64], seed: 1}
+      b: {gen: white_noise, size: [64, 64], seed: 2}
+    args: {before: "@a", after: "@b"}
+  checks:
+    - {type: is, path: identical, value: true}
+
+- id: det-seeded-generators-differ-by-seed-only
+  tags: [determinism]
+  # the generator is the only source of randomness in the evals and it is seeded: same seed, same pixels; the measurements differ between seeds
+  input:
+    op: engine
+    tool: measure_image
+    images:
+      a: {gen: white_noise, size: [48, 48], seed: 1}
+    args: {path: "@a", dimensions: [value]}
+  checks:
+    - {type: row_range, id: value.contrast, min: 0.8, max: 1.0}
+
+- id: tools-names-labels-and-no-unscoped-search
+  tags: [tools, scope]
+  input:
+    op: tools_seq
+    steps: []
+  checks:
+    - {type: set_has, path: read_only, items: [measure_image, compare_to_reference, silhouette_iou, palette_distance, check_tiling, check_pbr_ranges, diff_images, get_style_brief, find_past_corrections]}
+    - {type: set_has, path: writers, items: [save_target_profile, render_diff_image, record_run, record_decision, promote_run, ingest_capture]}
+    - {type: set_lacks, path: tool_names, items: [search_library]}
+    - {type: set_lacks, path: read_only, items: [save_target_profile, render_diff_image, record_run, record_decision, promote_run, ingest_capture]}

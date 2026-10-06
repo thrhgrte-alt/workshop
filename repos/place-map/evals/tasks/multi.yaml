@@ -1,0 +1,119 @@
+# Several places. dive-and-mine and dive-and-mine-hardcore are two places of one project that share a module (Economy) which has DRIFTED (hardcore doubles costs); demo_tycoon is another project.
+- id: multi-cross-place-search-labels-every-hit-with-its-place
+  tags: [multi, known-good]
+  input: {op: tool, tool: find_across_places, args: {query: Economy, project_id: demo_mine, k: 3}}
+  checks:
+    - {type: every_hit_has_place}
+    - {type: pluck_contains, path: result.hits, field: path, items: ["dive-and-mine::ReplicatedStorage/Modules/Economy", "dive-and-mine-hardcore::ReplicatedStorage/Modules/Economy"]}
+
+- id: multi-cross-place-search-never-leaves-the-project
+  tags: [multi, scope, known-bad]
+  # 'Plots' only exists in the tycoon project.
+  input: {op: tool, tool: find_across_places, args: {query: Plots, project_id: demo_mine}}
+  checks:
+    - {type: equals, path: result.places_searched, value: [dive-and-mine, dive-and-mine-hardcore]}
+    - {type: pluck_excludes, path: result.hits, field: place, items: [tycoon-main]}
+
+- id: multi-cross-place-search-refuses-a-place-of-another-project
+  tags: [multi, scope, known-bad]
+  input: {op: tool, tool: find_across_places, args: {query: Economy, project_id: demo_mine, place_ids: [tycoon-main]}}
+  checks:
+    - {type: refused, text: "not in project 'demo_mine'"}
+
+- id: multi-places-without-a-snapshot-are-reported-not-guessed
+  tags: [multi, known-bad]
+  input: {op: tool, world: empty, tool: find_across_places, args: {query: Economy, project_id: demo_mine}}
+  checks:
+    - {type: equals, path: result.places_without_snapshot, value: [dive-and-mine, dive-and-mine-hardcore]}
+    - {type: list_empty, path: result.hits}
+
+- id: multi-compare-places-remotes-modules-and-structure
+  tags: [multi, known-good]
+  # hardcore has the extra remote Revive and lacks LeaderboardService; Economy differs; RemoteEvent count 11 -> 12 and ModuleScript count 18 -> 17 (counted from scripts/make_examples.py).
+  input: {op: tool, tool: compare_places, args: {project_id: demo_mine, place_a: dive-and-mine, place_b: dive-and-mine-hardcore}}
+  checks:
+    - {type: equals, path: result.remotes.only_b, value: [Revive]}
+    - {type: list_empty, path: result.remotes.only_a}
+    - {type: equals, path: result.modules.only_a, value: ["dive-and-mine::ServerScriptService/Services/LeaderboardService"]}
+    - {type: pluck_equals, path: result.modules.same_path_drifted, field: path, items: [ReplicatedStorage/Modules/Economy]}
+    - {type: equals, path: result.modules.same_path_identical, value: 16}
+    - {type: equals, path: "result.structure.class_counts_differ.RemoteEvent", value: [11, 12]}
+    - {type: equals, path: "result.structure.class_counts_differ.ModuleScript", value: [18, 17]}
+
+- id: multi-compare-needs-two-different-places
+  tags: [multi, known-bad]
+  input: {op: tool, tool: compare_places, args: {project_id: demo_mine, place_a: dive-and-mine, place_b: dive-and-mine}}
+  checks:
+    - {type: refused, text: "same place"}
+
+- id: multi-compare-refuses-without-a-project
+  tags: [multi, scope, known-bad]
+  input: {op: tool, tool: compare_places, args: {place_a: dive-and-mine, place_b: dive-and-mine-hardcore}}
+  checks:
+    - {type: refused, text: project_id}
+
+- id: multi-shared-code-finds-identical-copies-and-the-drifted-module
+  tags: [multi, drift, known-good]
+  input: {op: tool, tool: find_shared_code, args: {project_id: demo_mine, detail: true}}
+  checks:
+    - {type: pluck_equals, path: result.drifted, field: name, items: [Economy]}
+    - {type: length, path: result.drifted.0.variants, n: 2}
+    - {type: pluck_contains, path: result.identical, field: places, items: [[dive-and-mine, dive-and-mine-hardcore]]}
+    - {type: equals, path: result.places_searched, value: [dive-and-mine, dive-and-mine-hardcore]}
+
+- id: multi-shared-code-reports-which-functions-drifted
+  tags: [multi, drift, known-good]
+  # Both Economy copies define cost and sell, so the structural difference is empty: the drift is in the bodies (hardcore doubles the cost), which only the content hash shows.
+  input: {op: tool, tool: find_shared_code, args: {project_id: demo_mine, detail: true}}
+  checks:
+    - {type: not_empty, path: result.drifted.0.variants.0.hash}
+    - {type: pluck_equals, path: result.drifted.0.variants, field: places, items: [[dive-and-mine], [dive-and-mine-hardcore]]}
+
+- id: multi-shared-code-does-not-mix-projects
+  tags: [multi, scope, known-bad]
+  # The tycoon project also has modules named Util and Economy; they must not show up as copies or drift of the mining game's modules.
+  input: {op: tool, tool: find_shared_code, args: {project_id: demo_mine, detail: true}}
+  checks:
+    - {type: pluck_excludes, path: result.drifted, field: name, items: [Util]}
+    - {type: text_excludes, path: result.identical, text: tycoon-main}
+
+- id: multi-wrong-open-place-for-a-sibling-is-refused
+  tags: [multi, scope, wrong-place, known-bad]
+  # The hardcore place is open in Studio but the request names dive-and-mine.
+  input:
+    op: tool
+    tool: plan_refresh
+    args: {project_id: demo_mine, place_id: dive-and-mine, studios: [{name: "Dive and Mine Hardcore (SYNTHETIC)", place_id: 9000000002, studio_id: s1}]}
+  checks:
+    - {type: refused, text: "nothing was generated"}
+
+- id: multi-a-place-of-another-project-is-refused
+  tags: [multi, scope, known-bad]
+  input: {op: tool, tool: find_in_place, args: {query: Bob, project_id: demo_mine, place_id: role-lab}}
+  checks:
+    - {type: refused, text: "does not belong to project"}
+
+- id: multi-corrections-are-per-place-unless-marked-global
+  tags: [multi, feedback, scope, known-good]
+  input:
+    op: steps
+    steps:
+      - {tool: record_run, args: {request: "where is the vendor npc", project_id: demo_mine, place_id: dive-and-mine}}
+      - {tool: record_decision, args: {run_id: "$ref:steps.0.result.run_id", decision: reject, reason: "meant Zed not Bob", corrections: [{dimension: landmark, note: "the vendor npc is Zed"}], project_id: demo_mine, place_id: dive-and-mine}}
+      - {tool: find_past_corrections, args: {request: "vendor npc", project_id: demo_mine, place_id: dive-and-mine}}
+      - {tool: find_past_corrections, args: {request: "vendor npc", project_id: demo_mine, place_id: dive-and-mine-hardcore}}
+  checks:
+    - {type: length, path: steps.2.result.corrections, n: 1}
+    - {type: list_empty, path: steps.3.result.corrections}
+
+- id: multi-a-global-correction-reaches-every-place
+  tags: [multi, feedback, scope, known-good]
+  input:
+    op: steps
+    steps:
+      - {tool: record_run, args: {request: "how are vendor scripts structured", project_id: demo_mine, place_id: dive-and-mine, is_global: true}}
+      - {tool: record_decision, args: {run_id: "$ref:steps.0.result.run_id", decision: revise, reason: "vendor scripts fire the purchase remote to the client", corrections: [{dimension: role, note: "vendor scripts fire a purchase remote"}], project_id: demo_mine, place_id: dive-and-mine, is_global: true}}
+      - {tool: find_past_corrections, args: {request: "vendor scripts", project_id: demo_roles, place_id: role-lab}}
+  checks:
+    - {type: length, path: steps.2.result.corrections, n: 1}
+    - {type: equals, path: steps.2.result.corrections.0.scope, value: global}

@@ -1,0 +1,21 @@
+version: 1
+checks:
+  - id: perf_snapshot
+    kind: perf
+    title: "Performance snapshot: part count, script count, memory and frame time at the start and after N minutes, against a stored baseline"
+    context: server
+    session: own
+    flaky: true
+    config_section: performance
+    settings: [perf_default_minutes, perf_frame_samples]
+    ranges: [perf_part_count_increase_pct, perf_script_count_increase_pct, perf_memory_increase_pct, perf_frame_ms_increase_pct, perf_memory_growth_pct_over_run]
+    assertions:
+      - {id: snapshot_taken, title: "the start and end snapshots both carry the measures", source: script}
+      - {id: within_baseline, title: "each measure stays within its allowed increase over the stored baseline", source: tool}
+      - {id: growth_over_run, title: "memory growth between the start and the end snapshot stays within the allowed percent", source: tool}
+    not_checked:
+      - "the experience on a device other than this Studio session"
+      - "network, replication or server-side cost on a live server"
+      - "any measure not in the snapshot"
+    verify_against_current_docs: true
+    notes: "Stats:GetTotalMemoryUsageMb and the frame-time sampling must be verified against the current Roblox docs. Without a stored baseline the check reports the numbers and says nothing was compared."

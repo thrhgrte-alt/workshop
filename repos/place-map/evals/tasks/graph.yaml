@@ -1,0 +1,119 @@
+# Dependency graph, remotes, dependencies. Expected sets are derived from the require lists written in scripts/make_examples.py:
+#   Economy is required directly by ShopService, MiningService, SellService, UpgradeService, RebirthService; those are required by Main (all five) and by the handler of each
+#   (PurchaseHandler -> ShopService, SellHandler -> SellService, MineHandler -> MiningService, EquipHandler -> UpgradeService). 5 + Main + 4 handlers = 10.
+- id: graph-what-breaks-if-economy-changes
+  tags: [graph, known-good]
+  input: {op: tool, tool: who_uses, args: {path: ReplicatedStorage/Modules/Economy, project_id: demo_mine, place_id: dive-and-mine}}
+  checks:
+    - {type: equals, path: result.breaks_if_changed, value: 10}
+    - {type: pluck_equals, path: result.requirers, field: script, items: [
+        "dive-and-mine::ServerScriptService/Services/ShopService", "dive-and-mine::ServerScriptService/Services/MiningService", "dive-and-mine::ServerScriptService/Services/SellService",
+        "dive-and-mine::ServerScriptService/Services/UpgradeService", "dive-and-mine::ServerScriptService/Services/RebirthService", "dive-and-mine::ServerScriptService/Main",
+        "dive-and-mine::ServerScriptService/Handlers/PurchaseHandler", "dive-and-mine::ServerScriptService/Handlers/SellHandler", "dive-and-mine::ServerScriptService/Handlers/MineHandler",
+        "dive-and-mine::ServerScriptService/Handlers/EquipHandler"]}
+
+- id: graph-direct-requirers-only-at-depth-one
+  tags: [graph, known-good]
+  input: {op: tool, tool: who_uses, args: {path: ReplicatedStorage/Modules/Economy, depth: 1, project_id: demo_mine, place_id: dive-and-mine}}
+  checks:
+    - {type: equals, path: result.breaks_if_changed, value: 5}
+
+- id: graph-leaf-module-nothing-requires-signal-except-two
+  tags: [graph, known-good]
+  # Signal is required by ClientMain and InputController (client scripts) and nothing else.
+  input: {op: tool, tool: who_uses, args: {path: ReplicatedStorage/Modules/Signal, depth: 1, project_id: demo_mine, place_id: dive-and-mine}}
+  checks:
+    - {type: pluck_equals, path: result.requirers, field: script, items: ["dive-and-mine::StarterPlayer/StarterPlayerScripts/ClientMain", "dive-and-mine::StarterPlayer/StarterPlayerScripts/InputController"]}
+
+- id: graph-who-fires-and-who-handles-update-cash
+  tags: [graph, remotes, known-good]
+  input: {op: tool, tool: who_uses, args: {path: ReplicatedStorage/Remotes/UpdateCash, project_id: demo_mine, place_id: dive-and-mine}}
+  checks:
+    - {type: pluck_equals, path: result.fired_by, field: script, items: ["dive-and-mine::ServerScriptService/Services/ShopService", "dive-and-mine::ServerScriptService/Services/SellService"]}
+    - {type: pluck_equals, path: result.handled_by, field: script, items: ["dive-and-mine::StarterPlayer/StarterPlayerScripts/HudController", "dive-and-mine::StarterGui/Hud/CashLabel/CashUpdater"]}
+
+- id: graph-what-fires-purchase-item
+  tags: [graph, remotes, known-good]
+  input: {op: tool, tool: list_remotes, args: {name: PurchaseItem, project_id: demo_mine, place_id: dive-and-mine, detail: true}}
+  checks:
+    # fired by the client ShopUI (FireServer) and by both vendor Brain scripts (FireClient); handled by PurchaseHandler
+    - {type: list_equals, path: result.remotes.0.handled_by, items: ["dive-and-mine::ServerScriptService/Handlers/PurchaseHandler"]}
+    - {type: list_equals, path: result.remotes.0.fired_by, items: ["dive-and-mine::StarterPlayer/StarterPlayerScripts/ShopUI", "dive-and-mine::Workspace/Vendors/Bob/Brain", "dive-and-mine::Workspace/Vendors/Zed/Brain"]}
+    - {type: list_equals, path: result.remotes.0.defined_at, items: ["dive-and-mine::ReplicatedStorage/Remotes/PurchaseItem"]}
+
+- id: graph-remotes-with-problems-are-flagged
+  tags: [graph, remotes, known-bad]
+  # EquipTool, SellOre and UnlockGate are handled but never fired; LegacyPing is defined and never used.
+  input: {op: tool, tool: list_remotes, args: {only_issues: true, project_id: demo_mine, place_id: dive-and-mine}}
+  checks:
+    - {type: pluck_equals, path: result.remotes, field: name, items: [EquipTool, LegacyPing, SellOre, UnlockGate]}
+
+- id: graph-unknown-remote-lists-the-known-ones
+  tags: [graph, remotes, known-bad]
+  input: {op: tool, tool: list_remotes, args: {name: NoSuchRemote, project_id: demo_mine, place_id: dive-and-mine}}
+  checks:
+    - {type: refused, text: "no remote named"}
+
+- id: graph-shop-service-dependencies-to-depth-two
+  tags: [graph, known-good]
+  # ShopService requires ShopData, Economy, DataService; those require Config, Util (Economy: Config + Util, DataService: Util + Config, ShopData: Config).
+  input: {op: tool, tool: show_dependencies, args: {path: ServerScriptService/Services/ShopService, project_id: demo_mine, place_id: dive-and-mine}}
+  checks:
+    - {type: pluck_equals, path: result.modules, field: module, items: [
+        "dive-and-mine::ReplicatedStorage/Modules/ShopData", "dive-and-mine::ReplicatedStorage/Modules/Economy", "dive-and-mine::ServerScriptService/Services/DataService",
+        "dive-and-mine::ReplicatedStorage/Modules/Config", "dive-and-mine::ReplicatedStorage/Modules/Util"]}
+    - {type: list_equals, path: result.remotes_fired, items: [UpdateCash]}
+    - {type: list_equals, path: result.remotes_handled, items: [GetStock]}
+
+- id: graph-datastore-names-and-keys
+  tags: [graph, datastore, known-good]
+  input: {op: tool, tool: show_dependencies, args: {path: ServerScriptService/Services/DataService, depth: 1, project_id: demo_mine, place_id: dive-and-mine}}
+  checks:
+    - {type: list_equals, path: result.datastores, items: [PlayerData]}
+    - {type: list_equals, path: result.datastore_keys, items: ["Player_*"]}
+
+- id: graph-dependencies-of-a-non-script-are-refused
+  tags: [graph, known-bad]
+  input: {op: tool, tool: show_dependencies, args: {path: Workspace/Vendors/Bob, project_id: demo_mine, place_id: dive-and-mine}}
+  checks:
+    - {type: refused, text: "not a script"}
+
+- id: graph-summarize-area-counts-and-landmarks
+  tags: [graph, summary, known-good]
+  # Workspace/Vendors holds 12 instances (see ingest-partial-refresh...), 2 scripts (the Brain scripts) and the two vendors.
+  input: {op: tool, tool: summarize_area, args: {path: Workspace/Vendors, project_id: demo_mine, place_id: dive-and-mine}}
+  checks:
+    - {type: equals, path: result.instances, value: 12}
+    - {type: length, path: result.scripts, n: 2}
+    - {type: pluck_equals, path: result.landmarks, field: path, items: ["dive-and-mine::Workspace/Vendors/Bob", "dive-and-mine::Workspace/Vendors/Zed"]}
+
+- id: graph-path-info-for-a-vendor
+  tags: [graph, path-info, known-good]
+  input: {op: tool, tool: get_path_info, args: {path: Workspace/Vendors/Bob, project_id: demo_mine, place_id: dive-and-mine}}
+  checks:
+    - {type: equals, path: result.class, value: Model}
+    - {type: equals, path: result.attributes, value: {Stock: 10, Price: 50}}
+    - {type: equals, path: result.roles.0.role, value: vendor}
+    - {type: equals, path: result.roles.0.band, value: confident}
+    - {type: approx, path: result.roles.0.score, value: 0.7619, tol: 0.0001}
+
+- id: graph-path-info-for-a-script
+  tags: [graph, path-info, known-good]
+  input: {op: tool, tool: get_path_info, args: {path: ServerScriptService/Services/ShopService, project_id: demo_mine, place_id: dive-and-mine}}
+  checks:
+    - {type: equals, path: result.script.kind, value: module}
+    - {type: equals, path: result.script.remotes_fired, value: [UpdateCash]}
+    - {type: length, path: result.script.requires, n: 3}
+
+- id: graph-path-info-for-a-decoy-plays-no-role
+  tags: [graph, path-info, decoy, known-bad]
+  input: {op: tool, tool: get_path_info, args: {path: Workspace/Vendors/ShopSign, project_id: demo_mine, place_id: dive-and-mine}}
+  checks:
+    - {type: list_empty, path: result.roles}
+    - {type: text_contains, path: result.summary, text: "plays no role"}
+
+- id: graph-path-info-missing-path-suggests-and-offers-refresh
+  tags: [graph, path-info, known-bad]
+  input: {op: tool, tool: get_path_info, args: {path: Workspace/Vendors/Bobb, project_id: demo_mine, place_id: dive-and-mine}}
+  checks:
+    - {type: refused, text: plan_refresh}

@@ -1,0 +1,24 @@
+# How answers from place-map are phrased. Machine-readable; the human companion is STYLE.md. Nothing here is a Roblox limit.
+version: 1
+name: place-map answers
+summary: >
+  One-line verdict first (what was found, in which place, how old the snapshot is), then results ranked and capped at 10, details only on request. Every path carries its place
+  prefix. A request that names a thing returns that exact path only; near matches are listed as 'not selected' and the user is asked. Scores and the top features that explain them
+  are quoted from the tool, never recomputed.
+traits:
+  verdict_first: "the first field of every result is a one-line summary that includes the snapshot age and a STALE flag when it is stale"
+  literal_naming: "name a thing -> exact path only; near matches are 'not selected'; several same-named things -> ask"
+  place_prefix: "every returned path is prefixed place_id::, so a path from one place can never be mistaken for another"
+  roles_by_structure: "roles come from structure (interaction objects, remotes, attributes, repetition); names are hints; weights are placeholders until the user labels"
+  honesty: "state schema_unverified parsers and placeholder numbers; self-written evals only show the tool agrees with itself"
+constraints:
+  - {id: P1, severity: must,   rule: "Never widen a match: report only what the role resolution or exact lookup selected."}
+  - {id: P2, severity: must,   rule: "Quote scores and snapshot times from tool results; never estimate them."}
+  - {id: P3, severity: must,   rule: "Ask the user to confirm borderline candidates; only record a label with the user's explicit word."}
+  - {id: P4, severity: should, rule: "Offer plan_refresh when a snapshot is stale or a path is missing."}
+  - {id: P5, severity: should, rule: "Use find_in_place for the active place; use find_across_places only when the user asks about several places."}
+exclusions:
+  - "guessing which place is meant"
+  - "claiming a role from a name alone"
+  - "pasting whole scripts into the conversation"
+correction_dimensions: [role, landmark, naming, search, summary, scope]

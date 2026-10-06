@@ -1,0 +1,23 @@
+version: 1
+checks:
+  - id: economy_smoke
+    kind: economy
+    title: "Economy smoke test: scripted mine / sell / buy steps change the watched values as the config expects"
+    context: server
+    session: own
+    flaky: true
+    config_section: economy
+    settings: [economy_settle_seconds, economy_delta_tolerance]
+    ranges: [economy_max_abs_delta, economy_min_balance]
+    assertions:
+      - {id: values_found, title: "every watched value exists under the player", source: script}
+      - {id: step_ran, title: "the step's action ran without raising", source: script}
+      - {id: delta_as_expected, title: "each watched value changed by the configured delta, range or sign", source: tool}
+      - {id: balance_not_negative, title: "no watched currency is below the minimum balance after the step", source: tool}
+      - {id: delta_within_cap, title: "no watched value moved by more than the runaway cap", source: tool}
+    not_checked:
+      - "pacing, price balance or whether the numbers are fun (that is roblox-economy-balancer's job)"
+      - "any action not listed as a step"
+      - "monetisation, rebirths or boosts unless a step covers them"
+    verify_against_current_docs: false
+    notes: "An exact delta comes from the place's playtest.yaml (the user knows the price). `range: gain|spend|unchanged` takes its bounds from style/style.yaml (economy_expect_*): PLACEHOLDERS, the user has not supplied pacing, and wide enough that they cannot catch a doubled sale."

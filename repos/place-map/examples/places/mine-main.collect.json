@@ -1,0 +1,1157 @@
+{
+ "collector_version": 1,
+ "format": "placemap-collect/1",
+ "full": true,
+ "nodes": [
+  {
+   "c": "ReplicatedFirst",
+   "n": 1,
+   "p": "ReplicatedFirst"
+  },
+  {
+   "c": "LocalScript",
+   "n": 0,
+   "p": "ReplicatedFirst/Loading",
+   "s": {
+    "fp": "83:b223a4fb",
+    "len": 83,
+    "src": "-- Loading screen.\ngame:GetService(\"ReplicatedFirst\"):RemoveDefaultLoadingScreen()\n"
+   }
+  },
+  {
+   "c": "ReplicatedStorage",
+   "n": 2,
+   "p": "ReplicatedStorage"
+  },
+  {
+   "c": "Folder",
+   "n": 10,
+   "p": "ReplicatedStorage/Modules"
+  },
+  {
+   "c": "ModuleScript",
+   "n": 0,
+   "p": "ReplicatedStorage/Modules/Config",
+   "s": {
+    "fp": "76:9470900c",
+    "len": 76,
+    "src": "-- Game configuration constants.\nreturn {StartingCash = 100, MaxLevel = 50}\n"
+   }
+  },
+  {
+   "c": "ModuleScript",
+   "n": 0,
+   "p": "ReplicatedStorage/Modules/Economy",
+   "s": {
+    "fp": "278:5611e586",
+    "len": 278,
+    "src": "local RS = game:GetService(\"ReplicatedStorage\")\nlocal Config = require(RS.Modules.Config)\nlocal Util = require(RS.Modules.Util)\n-- Currency maths.\nlocal Economy = {}\nfunction Economy.cost(base, level) return base * level end\nfunction Economy.sell(v) return v end\nreturn Economy\n"
+   }
+  },
+  {
+   "c": "ModuleScript",
+   "n": 0,
+   "p": "ReplicatedStorage/Modules/Formatter",
+   "s": {
+    "fp": "228:40351bbc",
+    "len": 228,
+    "src": "local RS = game:GetService(\"ReplicatedStorage\")\nlocal Util = require(RS.Modules.Util)\n-- Formats numbers for the HUD.\nlocal Formatter = {}\nfunction Formatter.short(n) return tostring(Util.clamp(n, 0, 1e12)) end\nreturn Formatter\n"
+   }
+  },
+  {
+   "c": "ModuleScript",
+   "n": 0,
+   "p": "ReplicatedStorage/Modules/GateData",
+   "s": {
+    "fp": "141:f292725c",
+    "len": 141,
+    "src": "local RS = game:GetService(\"ReplicatedStorage\")\nlocal Config = require(RS.Modules.Config)\n-- Gate requirements.\nreturn {Door1 = {Level = 5}}\n"
+   }
+  },
+  {
+   "c": "ModuleScript",
+   "n": 0,
+   "p": "ReplicatedStorage/Modules/OreData",
+   "s": {
+    "fp": "136:df0ba013",
+    "len": 136,
+    "src": "local RS = game:GetService(\"ReplicatedStorage\")\nlocal Config = require(RS.Modules.Config)\n-- Ore values.\nreturn {Common = 1, Rare = 10}\n"
+   }
+  },
+  {
+   "c": "ModuleScript",
+   "n": 0,
+   "p": "ReplicatedStorage/Modules/ShopData",
+   "s": {
+    "fp": "166:5072514e",
+    "len": 166,
+    "src": "local RS = game:GetService(\"ReplicatedStorage\")\nlocal Config = require(RS.Modules.Config)\n-- Item catalogue.\nreturn {Items = {Basic = {Price = Config.StartingCash}}}\n"
+   }
+  },
+  {
+   "c": "ModuleScript",
+   "n": 0,
+   "p": "ReplicatedStorage/Modules/Signal",
+   "s": {
+    "fp": "115:2b0b1da5",
+    "len": 115,
+    "src": "-- Minimal signal class.\nlocal Signal = {}\nfunction Signal.new() return setmetatable({}, Signal) end\nreturn Signal\n"
+   }
+  },
+  {
+   "c": "ModuleScript",
+   "n": 0,
+   "p": "ReplicatedStorage/Modules/ToolStats",
+   "s": {
+    "fp": "149:dbd6ef63",
+    "len": 149,
+    "src": "local RS = game:GetService(\"ReplicatedStorage\")\nlocal Config = require(RS.Modules.Config)\n-- Per level tool stats.\nreturn {Levels = Config.MaxLevel}\n"
+   }
+  },
+  {
+   "c": "ModuleScript",
+   "n": 0,
+   "p": "ReplicatedStorage/Modules/Util",
+   "s": {
+    "fp": "146:9aadca55",
+    "len": 146,
+    "src": "-- Small helpers shared by server and client.\nlocal Util = {}\nfunction Util.clamp(x, lo, hi) return math.max(lo, math.min(hi, x)) end\nreturn Util\n"
+   }
+  },
+  {
+   "c": "ModuleScript",
+   "n": 0,
+   "p": "ReplicatedStorage/Modules/ZoneData",
+   "s": {
+    "fp": "139:8d37c188",
+    "len": 139,
+    "src": "local RS = game:GetService(\"ReplicatedStorage\")\nlocal Config = require(RS.Modules.Config)\n-- Zone rules.\nreturn {Shallow = {MinLevel = 1}}\n"
+   }
+  },
+  {
+   "c": "Folder",
+   "n": 12,
+   "p": "ReplicatedStorage/Remotes"
+  },
+  {
+   "c": "RemoteEvent",
+   "n": 0,
+   "p": "ReplicatedStorage/Remotes/CollectItem"
+  },
+  {
+   "c": "RemoteEvent",
+   "n": 0,
+   "p": "ReplicatedStorage/Remotes/EnterZone"
+  },
+  {
+   "c": "RemoteEvent",
+   "n": 0,
+   "p": "ReplicatedStorage/Remotes/EquipTool"
+  },
+  {
+   "c": "RemoteFunction",
+   "n": 0,
+   "p": "ReplicatedStorage/Remotes/GetStock"
+  },
+  {
+   "c": "RemoteEvent",
+   "n": 0,
+   "p": "ReplicatedStorage/Remotes/LegacyPing"
+  },
+  {
+   "c": "RemoteEvent",
+   "n": 0,
+   "p": "ReplicatedStorage/Remotes/MineNode"
+  },
+  {
+   "c": "RemoteEvent",
+   "n": 0,
+   "p": "ReplicatedStorage/Remotes/PurchaseItem"
+  },
+  {
+   "c": "RemoteEvent",
+   "n": 0,
+   "p": "ReplicatedStorage/Remotes/RequestSpawn"
+  },
+  {
+   "c": "RemoteEvent",
+   "n": 0,
+   "p": "ReplicatedStorage/Remotes/SellOre"
+  },
+  {
+   "c": "RemoteEvent",
+   "n": 0,
+   "p": "ReplicatedStorage/Remotes/UnlockGate"
+  },
+  {
+   "c": "RemoteEvent",
+   "n": 0,
+   "p": "ReplicatedStorage/Remotes/UpdateCash"
+  },
+  {
+   "c": "RemoteEvent",
+   "n": 0,
+   "p": "ReplicatedStorage/Remotes/UpgradeTool"
+  },
+  {
+   "c": "ServerScriptService",
+   "n": 3,
+   "p": "ServerScriptService"
+  },
+  {
+   "c": "Folder",
+   "n": 8,
+   "p": "ServerScriptService/Handlers"
+  },
+  {
+   "c": "Script",
+   "n": 0,
+   "p": "ServerScriptService/Handlers/CollectHandler",
+   "rc": "Server",
+   "s": {
+    "fp": "362:730f5d1b",
+    "len": 362,
+    "src": "-- Awards collectibles.\nlocal RS = game:GetService(\"ReplicatedStorage\")\nlocal Remotes = RS:WaitForChild(\"Remotes\")\nlocal DataService = require(script.Parent.Parent.Services.DataService)\nlocal Config = require(RS.Modules.Config)\nlocal things = workspace:WaitForChild(\"Things\")\nRemotes:WaitForChild(\"CollectItem\").OnServerEvent:Connect(function(player, item) end)\n"
+   }
+  },
+  {
+   "c": "Script",
+   "n": 0,
+   "p": "ServerScriptService/Handlers/EquipHandler",
+   "rc": "Server",
+   "s": {
+    "fp": "369:3a04f9fc",
+    "len": 369,
+    "src": "-- Wires remotes to the UpgradeService.\nlocal RS = game:GetService(\"ReplicatedStorage\")\nlocal Remotes = RS:WaitForChild(\"Remotes\")\nlocal Service = require(script.Parent.Parent.Services.UpgradeService)\nRemotes:WaitForChild(\"EquipTool\").OnServerEvent:Connect(function(player, ...) end)\nRemotes:WaitForChild(\"UpgradeTool\").OnServerEvent:Connect(function(player, ...) end)\n"
+   }
+  },
+  {
+   "c": "Script",
+   "n": 0,
+   "p": "ServerScriptService/Handlers/GateHandler",
+   "rc": "Server",
+   "s": {
+    "fp": "367:7ccd1895",
+    "len": 367,
+    "src": "-- Opens progression gates.\nlocal RS = game:GetService(\"ReplicatedStorage\")\nlocal Remotes = RS:WaitForChild(\"Remotes\")\nlocal gates = workspace:WaitForChild(\"Gates\")\nlocal GateData = require(RS.Modules.GateData)\nlocal DataService = require(script.Parent.Parent.Services.DataService)\nRemotes:WaitForChild(\"UnlockGate\").OnServerEvent:Connect(function(player, gate) end)\n"
+   }
+  },
+  {
+   "c": "Script",
+   "n": 0,
+   "p": "ServerScriptService/Handlers/MineHandler",
+   "rc": "Server",
+   "s": {
+    "fp": "281:2a540902",
+    "len": 281,
+    "src": "-- Wires remotes to the MiningService.\nlocal RS = game:GetService(\"ReplicatedStorage\")\nlocal Remotes = RS:WaitForChild(\"Remotes\")\nlocal Service = require(script.Parent.Parent.Services.MiningService)\nRemotes:WaitForChild(\"MineNode\").OnServerEvent:Connect(function(player, ...) end)\n"
+   }
+  },
+  {
+   "c": "Script",
+   "n": 0,
+   "p": "ServerScriptService/Handlers/PurchaseHandler",
+   "rc": "Server",
+   "s": {
+    "fp": "281:5b4284b4",
+    "len": 281,
+    "src": "-- Wires remotes to the ShopService.\nlocal RS = game:GetService(\"ReplicatedStorage\")\nlocal Remotes = RS:WaitForChild(\"Remotes\")\nlocal Service = require(script.Parent.Parent.Services.ShopService)\nRemotes:WaitForChild(\"PurchaseItem\").OnServerEvent:Connect(function(player, ...) end)\n"
+   }
+  },
+  {
+   "c": "Script",
+   "n": 0,
+   "p": "ServerScriptService/Handlers/SellHandler",
+   "rc": "Server",
+   "s": {
+    "fp": "276:ea952981",
+    "len": 276,
+    "src": "-- Wires remotes to the SellService.\nlocal RS = game:GetService(\"ReplicatedStorage\")\nlocal Remotes = RS:WaitForChild(\"Remotes\")\nlocal Service = require(script.Parent.Parent.Services.SellService)\nRemotes:WaitForChild(\"SellOre\").OnServerEvent:Connect(function(player, ...) end)\n"
+   }
+  },
+  {
+   "c": "Script",
+   "n": 0,
+   "p": "ServerScriptService/Handlers/SpawnHandler",
+   "rc": "Server",
+   "s": {
+    "fp": "243:7a17a75b",
+    "len": 243,
+    "src": "-- Places players at spawns.\nlocal RS = game:GetService(\"ReplicatedStorage\")\nlocal Remotes = RS:WaitForChild(\"Remotes\")\nlocal Config = require(RS.Modules.Config)\nRemotes:WaitForChild(\"RequestSpawn\").OnServerEvent:Connect(function(player) end)\n"
+   }
+  },
+  {
+   "c": "Script",
+   "n": 0,
+   "p": "ServerScriptService/Handlers/ZoneHandler",
+   "rc": "Server",
+   "s": {
+    "fp": "314:cbc7a3d3",
+    "len": 314,
+    "src": "-- Checks zone entry.\nlocal RS = game:GetService(\"ReplicatedStorage\")\nlocal Remotes = RS:WaitForChild(\"Remotes\")\nlocal ZoneData = require(RS.Modules.ZoneData)\nlocal DataService = require(script.Parent.Parent.Services.DataService)\nRemotes:WaitForChild(\"EnterZone\").OnServerEvent:Connect(function(player, zone) end)\n"
+   }
+  },
+  {
+   "c": "Script",
+   "n": 0,
+   "p": "ServerScriptService/Main",
+   "rc": "Server",
+   "s": {
+    "fp": "581:13f862e5",
+    "len": 581,
+    "src": "--!strict\n-- Server entry point: starts every service.\nlocal RS = game:GetService(\"ReplicatedStorage\")\nlocal DataService = require(script.Parent.Services.DataService)\nlocal ShopService = require(script.Parent.Services.ShopService)\nlocal MiningService = require(script.Parent.Services.MiningService)\nlocal SellService = require(script.Parent.Services.SellService)\nlocal UpgradeService = require(script.Parent.Services.UpgradeService)\nlocal RebirthService = require(script.Parent.Services.RebirthService)\nlocal LeaderboardService = require(script.Parent.Services.LeaderboardService)\n"
+   }
+  },
+  {
+   "c": "Folder",
+   "n": 8,
+   "p": "ServerScriptService/Services"
+  },
+  {
+   "c": "ModuleScript",
+   "n": 0,
+   "p": "ServerScriptService/Services/AntiExploit",
+   "s": {
+    "fp": "160:fed090f6",
+    "len": 160,
+    "src": "local RS = game:GetService(\"ReplicatedStorage\")\nlocal Config = require(RS.Modules.Config)\nlocal Util = require(RS.Modules.Util)\n-- Rate limit checks.\nreturn {}\n"
+   }
+  },
+  {
+   "c": "ModuleScript",
+   "n": 0,
+   "p": "ServerScriptService/Services/DataService",
+   "s": {
+    "fp": "461:d275218c",
+    "len": 461,
+    "src": "local RS = game:GetService(\"ReplicatedStorage\")\nlocal Util = require(RS.Modules.Util)\nlocal Config = require(RS.Modules.Config)\n-- Saves and loads player data.\nlocal DSS = game:GetService(\"DataStoreService\")\nlocal store = DSS:GetDataStore(\"PlayerData\")\nlocal D = {}\nfunction D.load(player) return store:GetAsync(\"Player_\" .. player.UserId) end\nfunction D.save(player, data) store:UpdateAsync(\"Player_\" .. player.UserId, function() return data end) end\nreturn D\n"
+   }
+  },
+  {
+   "c": "ModuleScript",
+   "n": 0,
+   "p": "ServerScriptService/Services/LeaderboardService",
+   "s": {
+    "fp": "199:f9545e78",
+    "len": 199,
+    "src": "local RS = game:GetService(\"ReplicatedStorage\")\nlocal Util = require(RS.Modules.Util)\n-- Top cash leaderboard.\nlocal ds = game:GetService(\"DataStoreService\"):GetOrderedDataStore(\"TopCash\")\nreturn {}\n"
+   }
+  },
+  {
+   "c": "ModuleScript",
+   "n": 0,
+   "p": "ServerScriptService/Services/MiningService",
+   "s": {
+    "fp": "339:f3fa4d75",
+    "len": 339,
+    "src": "local RS = game:GetService(\"ReplicatedStorage\")\nlocal Remotes = RS:WaitForChild(\"Remotes\")\nlocal OreData = require(RS.Modules.OreData)\nlocal Economy = require(RS.Modules.Economy)\nlocal DataService = require(script.Parent.DataService)\n-- Handles mining results.\nlocal M = {}\nfunction M.mine(player, node) return OreData.Common end\nreturn M\n"
+   }
+  },
+  {
+   "c": "ModuleScript",
+   "n": 0,
+   "p": "ServerScriptService/Services/RebirthService",
+   "s": {
+    "fp": "217:5832f056",
+    "len": 217,
+    "src": "local RS = game:GetService(\"ReplicatedStorage\")\nlocal Economy = require(RS.Modules.Economy)\nlocal Config = require(RS.Modules.Config)\nlocal DataService = require(script.Parent.DataService)\n-- Rebirth logic.\nreturn {}\n"
+   }
+  },
+  {
+   "c": "ModuleScript",
+   "n": 0,
+   "p": "ServerScriptService/Services/SellService",
+   "s": {
+    "fp": "365:31136c26",
+    "len": 365,
+    "src": "local RS = game:GetService(\"ReplicatedStorage\")\nlocal Remotes = RS:WaitForChild(\"Remotes\")\nlocal Economy = require(RS.Modules.Economy)\nlocal DataService = require(script.Parent.DataService)\n-- Sells ore for cash.\nlocal S = {}\nlocal Cash = Remotes:WaitForChild(\"UpdateCash\")\nfunction S.sell(player, amount) Cash:FireClient(player, Economy.sell(amount)) end\nreturn S\n"
+   }
+  },
+  {
+   "c": "ModuleScript",
+   "n": 0,
+   "p": "ServerScriptService/Services/ShopService",
+   "s": {
+    "fp": "538:7dff12d0",
+    "len": 538,
+    "src": "local RS = game:GetService(\"ReplicatedStorage\")\nlocal Remotes = RS:WaitForChild(\"Remotes\")\nlocal ShopData = require(RS.Modules.ShopData)\nlocal Economy = require(RS.Modules.Economy)\nlocal DataService = require(script.Parent.DataService)\n-- Sells items to players.\nlocal Shop = {}\nlocal Cash = Remotes:WaitForChild(\"UpdateCash\")\nlocal Stock = Remotes:WaitForChild(\"GetStock\")\nStock.OnServerInvoke = function(player) return ShopData.Items end\nfunction Shop.purchase(player, item)\n\tCash:FireClient(player, Economy.cost(1, 1))\nend\nreturn Shop\n"
+   }
+  },
+  {
+   "c": "ModuleScript",
+   "n": 0,
+   "p": "ServerScriptService/Services/UpgradeService",
+   "s": {
+    "fp": "476:66654fcc",
+    "len": 476,
+    "src": "local RS = game:GetService(\"ReplicatedStorage\")\nlocal Remotes = RS:WaitForChild(\"Remotes\")\nlocal ToolStats = require(RS.Modules.ToolStats)\nlocal Economy = require(RS.Modules.Economy)\nlocal DataService = require(script.Parent.DataService)\n-- Upgrades and equips tools.\nlocal U = {}\nlocal Up = Remotes:WaitForChild(\"UpgradeTool\")\nfunction U.upgrade(player) local tool = game:GetService(\"StarterPack\"):FindFirstChild(\"Drill\") Up:FireClient(player, ToolStats.Levels) end\nreturn U\n"
+   }
+  },
+  {
+   "c": "ServerStorage",
+   "n": 1,
+   "p": "ServerStorage"
+  },
+  {
+   "c": "Folder",
+   "n": 1,
+   "p": "ServerStorage/Tools"
+  },
+  {
+   "c": "Script",
+   "n": 0,
+   "p": "ServerStorage/Tools/ToolGiver",
+   "rc": "Server",
+   "s": {
+    "fp": "95:2efe3c80",
+    "len": 95,
+    "src": "-- Gives the starter tool.\nlocal tool = game:GetService(\"StarterPack\"):FindFirstChild(\"Drill\")\n"
+   }
+  },
+  {
+   "c": "StarterGui",
+   "n": 1,
+   "p": "StarterGui"
+  },
+  {
+   "c": "Folder",
+   "n": 2,
+   "p": "StarterGui/Hud"
+  },
+  {
+   "a": {
+    "Currency": "Cash"
+   },
+   "c": "TextLabel",
+   "n": 1,
+   "p": "StarterGui/Hud/CashLabel"
+  },
+  {
+   "c": "LocalScript",
+   "n": 0,
+   "p": "StarterGui/Hud/CashLabel/CashUpdater",
+   "s": {
+    "fp": "188:b16f1e51",
+    "len": 188,
+    "src": "local RS = game:GetService(\"ReplicatedStorage\")\nlocal Remotes = RS:WaitForChild(\"Remotes\")\nRemotes.UpdateCash.OnClientEvent:Connect(function(cash) script.Parent.Text = tostring(cash) end)\n"
+   }
+  },
+  {
+   "c": "TextLabel",
+   "n": 0,
+   "p": "StarterGui/Hud/TitleLabel"
+  },
+  {
+   "c": "StarterPack",
+   "n": 1,
+   "p": "StarterPack"
+  },
+  {
+   "a": {
+    "Damage": 3,
+    "Level": 1
+   },
+   "c": "Tool",
+   "n": 1,
+   "p": "StarterPack/Drill"
+  },
+  {
+   "c": "Part",
+   "n": 0,
+   "p": "StarterPack/Drill/Handle"
+  },
+  {
+   "c": "StarterPlayer",
+   "n": 1,
+   "p": "StarterPlayer"
+  },
+  {
+   "c": "Folder",
+   "n": 6,
+   "p": "StarterPlayer/StarterPlayerScripts"
+  },
+  {
+   "c": "LocalScript",
+   "n": 0,
+   "p": "StarterPlayer/StarterPlayerScripts/ClientMain",
+   "s": {
+    "fp": "215:31ec32d",
+    "len": 215,
+    "src": "local RS = game:GetService(\"ReplicatedStorage\")\nlocal Remotes = RS:WaitForChild(\"Remotes\")\nlocal Formatter = require(RS.Modules.Formatter)\nlocal Signal = require(RS.Modules.Signal)\nRemotes.RequestSpawn:FireServer()\n"
+   }
+  },
+  {
+   "c": "LocalScript",
+   "n": 0,
+   "p": "StarterPlayer/StarterPlayerScripts/CollectClient",
+   "s": {
+    "fp": "132:1a8d19ec",
+    "len": 132,
+    "src": "local RS = game:GetService(\"ReplicatedStorage\")\nlocal Remotes = RS:WaitForChild(\"Remotes\")\nRemotes.CollectItem:FireServer(\"Thing1\")\n"
+   }
+  },
+  {
+   "c": "LocalScript",
+   "n": 0,
+   "p": "StarterPlayer/StarterPlayerScripts/HudController",
+   "s": {
+    "fp": "229:7bea4114",
+    "len": 229,
+    "src": "local RS = game:GetService(\"ReplicatedStorage\")\nlocal Remotes = RS:WaitForChild(\"Remotes\")\nlocal Formatter = require(RS.Modules.Formatter)\nRemotes.UpdateCash.OnClientEvent:Connect(function(cash) print(Formatter.short(cash)) end)\n"
+   }
+  },
+  {
+   "c": "LocalScript",
+   "n": 0,
+   "p": "StarterPlayer/StarterPlayerScripts/InputController",
+   "s": {
+    "fp": "109:8813c69c",
+    "len": 109,
+    "src": "local RS = game:GetService(\"ReplicatedStorage\")\nlocal Signal = require(RS.Modules.Signal)\n-- Keyboard input.\n"
+   }
+  },
+  {
+   "c": "LocalScript",
+   "n": 0,
+   "p": "StarterPlayer/StarterPlayerScripts/MineClient",
+   "s": {
+    "fp": "128:a58ec229",
+    "len": 128,
+    "src": "local RS = game:GetService(\"ReplicatedStorage\")\nlocal Remotes = RS:WaitForChild(\"Remotes\")\nRemotes.MineNode:FireServer(\"Node1\")\n"
+   }
+  },
+  {
+   "c": "LocalScript",
+   "n": 0,
+   "p": "StarterPlayer/StarterPlayerScripts/ShopUI",
+   "s": {
+    "fp": "340:1675a79c",
+    "len": 340,
+    "src": "local RS = game:GetService(\"ReplicatedStorage\")\nlocal Remotes = RS:WaitForChild(\"Remotes\")\nlocal ShopData = require(RS.Modules.ShopData)\nlocal Formatter = require(RS.Modules.Formatter)\nlocal Buy = Remotes:WaitForChild(\"PurchaseItem\")\nlocal Stock = Remotes:WaitForChild(\"GetStock\")\nlocal items = Stock:InvokeServer()\nBuy:FireServer(\"Basic\")\n"
+   }
+  },
+  {
+   "c": "Workspace",
+   "n": 6,
+   "p": "Workspace"
+  },
+  {
+   "c": "Folder",
+   "n": 13,
+   "p": "Workspace/Deposits"
+  },
+  {
+   "c": "Script",
+   "n": 0,
+   "p": "Workspace/Deposits/DepositController",
+   "rc": "Server",
+   "s": {
+    "fp": "119:dc03e164",
+    "len": 119,
+    "src": "-- Regenerates deposits.\nlocal folder = workspace:WaitForChild(\"Deposits\")\nfolder.ChildRemoved:Connect(function() end)\n"
+   }
+  },
+  {
+   "a": {
+    "Health": 100,
+    "Value": 5
+   },
+   "c": "Part",
+   "n": 1,
+   "p": "Workspace/Deposits/Node1",
+   "v": [
+    106.0,
+    -20.0,
+    40.0
+   ]
+  },
+  {
+   "c": "ClickDetector",
+   "n": 0,
+   "p": "Workspace/Deposits/Node1/ClickDetector"
+  },
+  {
+   "a": {
+    "Health": 100,
+    "Value": 5
+   },
+   "c": "Part",
+   "n": 1,
+   "p": "Workspace/Deposits/Node10",
+   "v": [
+    160.0,
+    -20.0,
+    40.0
+   ]
+  },
+  {
+   "c": "ClickDetector",
+   "n": 0,
+   "p": "Workspace/Deposits/Node10/ClickDetector"
+  },
+  {
+   "a": {
+    "Health": 100,
+    "Value": 5
+   },
+   "c": "Part",
+   "n": 1,
+   "p": "Workspace/Deposits/Node11",
+   "v": [
+    166.0,
+    -20.0,
+    40.0
+   ]
+  },
+  {
+   "c": "ClickDetector",
+   "n": 0,
+   "p": "Workspace/Deposits/Node11/ClickDetector"
+  },
+  {
+   "a": {
+    "Health": 100,
+    "Value": 5
+   },
+   "c": "Part",
+   "n": 1,
+   "p": "Workspace/Deposits/Node12",
+   "v": [
+    172.0,
+    -20.0,
+    40.0
+   ]
+  },
+  {
+   "c": "ClickDetector",
+   "n": 0,
+   "p": "Workspace/Deposits/Node12/ClickDetector"
+  },
+  {
+   "a": {
+    "Health": 100,
+    "Value": 5
+   },
+   "c": "Part",
+   "n": 1,
+   "p": "Workspace/Deposits/Node2",
+   "v": [
+    112.0,
+    -20.0,
+    40.0
+   ]
+  },
+  {
+   "c": "ClickDetector",
+   "n": 0,
+   "p": "Workspace/Deposits/Node2/ClickDetector"
+  },
+  {
+   "a": {
+    "Health": 100,
+    "Value": 5
+   },
+   "c": "Part",
+   "n": 1,
+   "p": "Workspace/Deposits/Node3",
+   "v": [
+    118.0,
+    -20.0,
+    40.0
+   ]
+  },
+  {
+   "c": "ClickDetector",
+   "n": 0,
+   "p": "Workspace/Deposits/Node3/ClickDetector"
+  },
+  {
+   "a": {
+    "Health": 100,
+    "Value": 5
+   },
+   "c": "Part",
+   "n": 1,
+   "p": "Workspace/Deposits/Node4",
+   "v": [
+    124.0,
+    -20.0,
+    40.0
+   ]
+  },
+  {
+   "c": "ClickDetector",
+   "n": 0,
+   "p": "Workspace/Deposits/Node4/ClickDetector"
+  },
+  {
+   "a": {
+    "Health": 100,
+    "Value": 5
+   },
+   "c": "Part",
+   "n": 1,
+   "p": "Workspace/Deposits/Node5",
+   "v": [
+    130.0,
+    -20.0,
+    40.0
+   ]
+  },
+  {
+   "c": "ClickDetector",
+   "n": 0,
+   "p": "Workspace/Deposits/Node5/ClickDetector"
+  },
+  {
+   "a": {
+    "Health": 100,
+    "Value": 5
+   },
+   "c": "Part",
+   "n": 1,
+   "p": "Workspace/Deposits/Node6",
+   "v": [
+    136.0,
+    -20.0,
+    40.0
+   ]
+  },
+  {
+   "c": "ClickDetector",
+   "n": 0,
+   "p": "Workspace/Deposits/Node6/ClickDetector"
+  },
+  {
+   "a": {
+    "Health": 100,
+    "Value": 5
+   },
+   "c": "Part",
+   "n": 1,
+   "p": "Workspace/Deposits/Node7",
+   "v": [
+    142.0,
+    -20.0,
+    40.0
+   ]
+  },
+  {
+   "c": "ClickDetector",
+   "n": 0,
+   "p": "Workspace/Deposits/Node7/ClickDetector"
+  },
+  {
+   "a": {
+    "Health": 100,
+    "Value": 5
+   },
+   "c": "Part",
+   "n": 1,
+   "p": "Workspace/Deposits/Node8",
+   "v": [
+    148.0,
+    -20.0,
+    40.0
+   ]
+  },
+  {
+   "c": "ClickDetector",
+   "n": 0,
+   "p": "Workspace/Deposits/Node8/ClickDetector"
+  },
+  {
+   "a": {
+    "Health": 100,
+    "Value": 5
+   },
+   "c": "Part",
+   "n": 1,
+   "p": "Workspace/Deposits/Node9",
+   "v": [
+    154.0,
+    -20.0,
+    40.0
+   ]
+  },
+  {
+   "c": "ClickDetector",
+   "n": 0,
+   "p": "Workspace/Deposits/Node9/ClickDetector"
+  },
+  {
+   "c": "Folder",
+   "n": 1,
+   "p": "Workspace/Gates"
+  },
+  {
+   "a": {
+    "Locked": true,
+    "RequiredLevel": 5
+   },
+   "c": "Part",
+   "n": 2,
+   "p": "Workspace/Gates/Door1",
+   "v": [
+    300.0,
+    0.0,
+    0.0
+   ]
+  },
+  {
+   "c": "Part",
+   "n": 0,
+   "p": "Workspace/Gates/Door1/Barrier",
+   "v": [
+    300.0,
+    0.0,
+    1.0
+   ]
+  },
+  {
+   "c": "ProximityPrompt",
+   "n": 0,
+   "p": "Workspace/Gates/Door1/ProximityPrompt"
+  },
+  {
+   "c": "Folder",
+   "n": 2,
+   "p": "Workspace/Spawns"
+  },
+  {
+   "a": {
+    "Checkpoint": 1
+   },
+   "c": "SpawnLocation",
+   "n": 0,
+   "p": "Workspace/Spawns/CheckpointA",
+   "v": [
+    200.0,
+    -10.0,
+    40.0
+   ]
+  },
+  {
+   "c": "SpawnLocation",
+   "n": 0,
+   "p": "Workspace/Spawns/Lobby",
+   "v": [
+    0.0,
+    0.0,
+    0.0
+   ]
+  },
+  {
+   "c": "Folder",
+   "n": 8,
+   "p": "Workspace/Things"
+  },
+  {
+   "a": {
+    "Value": 1
+   },
+   "c": "Part",
+   "n": 1,
+   "p": "Workspace/Things/Thing1",
+   "v": [
+    -34.0,
+    2.0,
+    -10.0
+   ]
+  },
+  {
+   "c": "ClickDetector",
+   "n": 0,
+   "p": "Workspace/Things/Thing1/ClickDetector"
+  },
+  {
+   "a": {
+    "Value": 1
+   },
+   "c": "Part",
+   "n": 1,
+   "p": "Workspace/Things/Thing2",
+   "v": [
+    -38.0,
+    2.0,
+    -10.0
+   ]
+  },
+  {
+   "c": "ClickDetector",
+   "n": 0,
+   "p": "Workspace/Things/Thing2/ClickDetector"
+  },
+  {
+   "a": {
+    "Value": 1
+   },
+   "c": "Part",
+   "n": 1,
+   "p": "Workspace/Things/Thing3",
+   "v": [
+    -42.0,
+    2.0,
+    -10.0
+   ]
+  },
+  {
+   "c": "ClickDetector",
+   "n": 0,
+   "p": "Workspace/Things/Thing3/ClickDetector"
+  },
+  {
+   "a": {
+    "Value": 1
+   },
+   "c": "Part",
+   "n": 1,
+   "p": "Workspace/Things/Thing4",
+   "v": [
+    -46.0,
+    2.0,
+    -10.0
+   ]
+  },
+  {
+   "c": "ClickDetector",
+   "n": 0,
+   "p": "Workspace/Things/Thing4/ClickDetector"
+  },
+  {
+   "a": {
+    "Value": 1
+   },
+   "c": "Part",
+   "n": 1,
+   "p": "Workspace/Things/Thing5",
+   "v": [
+    -50.0,
+    2.0,
+    -10.0
+   ]
+  },
+  {
+   "c": "ClickDetector",
+   "n": 0,
+   "p": "Workspace/Things/Thing5/ClickDetector"
+  },
+  {
+   "a": {
+    "Value": 1
+   },
+   "c": "Part",
+   "n": 1,
+   "p": "Workspace/Things/Thing6",
+   "v": [
+    -54.0,
+    2.0,
+    -10.0
+   ]
+  },
+  {
+   "c": "ClickDetector",
+   "n": 0,
+   "p": "Workspace/Things/Thing6/ClickDetector"
+  },
+  {
+   "a": {
+    "Value": 1
+   },
+   "c": "Part",
+   "n": 1,
+   "p": "Workspace/Things/Thing7",
+   "v": [
+    -58.0,
+    2.0,
+    -10.0
+   ]
+  },
+  {
+   "c": "ClickDetector",
+   "n": 0,
+   "p": "Workspace/Things/Thing7/ClickDetector"
+  },
+  {
+   "a": {
+    "Value": 1
+   },
+   "c": "Part",
+   "n": 1,
+   "p": "Workspace/Things/Thing8",
+   "v": [
+    -62.0,
+    2.0,
+    -10.0
+   ]
+  },
+  {
+   "c": "ClickDetector",
+   "n": 0,
+   "p": "Workspace/Things/Thing8/ClickDetector"
+  },
+  {
+   "c": "Folder",
+   "n": 4,
+   "p": "Workspace/Vendors"
+  },
+  {
+   "a": {
+    "Price": 50,
+    "Stock": 10
+   },
+   "c": "Model",
+   "n": 3,
+   "p": "Workspace/Vendors/Bob",
+   "v": [
+    10.0,
+    0.0,
+    5.0
+   ]
+  },
+  {
+   "c": "Script",
+   "n": 0,
+   "p": "Workspace/Vendors/Bob/Brain",
+   "rc": "Server",
+   "s": {
+    "fp": "290:8ff4e0c3",
+    "len": 290,
+    "src": "-- Opens the shop for the player who triggers the prompt.\nlocal RS = game:GetService(\"ReplicatedStorage\")\nlocal Remotes = RS:WaitForChild(\"Remotes\")\nlocal Buy = Remotes:WaitForChild(\"PurchaseItem\")\nscript.Parent.Prompt.Triggered:Connect(function(player) Buy:FireClient(player, \"open\") end)\n"
+   }
+  },
+  {
+   "c": "Humanoid",
+   "n": 0,
+   "p": "Workspace/Vendors/Bob/Humanoid"
+  },
+  {
+   "a": {
+    "ActionText": "Talk"
+   },
+   "c": "ProximityPrompt",
+   "n": 0,
+   "p": "Workspace/Vendors/Bob/Prompt"
+  },
+  {
+   "c": "Part",
+   "n": 0,
+   "p": "Workspace/Vendors/ShopSign",
+   "v": [
+    12.0,
+    5.0,
+    5.0
+   ]
+  },
+  {
+   "c": "Model",
+   "n": 1,
+   "p": "Workspace/Vendors/VendorStatue",
+   "v": [
+    14.0,
+    0.0,
+    5.0
+   ]
+  },
+  {
+   "c": "Part",
+   "n": 0,
+   "p": "Workspace/Vendors/VendorStatue/Head",
+   "v": [
+    14.0,
+    3.0,
+    5.0
+   ]
+  },
+  {
+   "a": {
+    "Price": 50,
+    "Stock": 10
+   },
+   "c": "Model",
+   "n": 3,
+   "p": "Workspace/Vendors/Zed",
+   "v": [
+    500.0,
+    0.0,
+    500.0
+   ]
+  },
+  {
+   "c": "Script",
+   "n": 0,
+   "p": "Workspace/Vendors/Zed/Brain",
+   "rc": "Server",
+   "s": {
+    "fp": "290:8ff4e0c3",
+    "len": 290,
+    "src": "-- Opens the shop for the player who triggers the prompt.\nlocal RS = game:GetService(\"ReplicatedStorage\")\nlocal Remotes = RS:WaitForChild(\"Remotes\")\nlocal Buy = Remotes:WaitForChild(\"PurchaseItem\")\nscript.Parent.Prompt.Triggered:Connect(function(player) Buy:FireClient(player, \"open\") end)\n"
+   }
+  },
+  {
+   "c": "Humanoid",
+   "n": 0,
+   "p": "Workspace/Vendors/Zed/Humanoid"
+  },
+  {
+   "a": {
+    "ActionText": "Talk"
+   },
+   "c": "ProximityPrompt",
+   "n": 0,
+   "p": "Workspace/Vendors/Zed/Prompt"
+  },
+  {
+   "c": "Folder",
+   "n": 1,
+   "p": "Workspace/Zones"
+  },
+  {
+   "a": {
+    "MinLevel": 1,
+    "ZoneName": "Shallow"
+   },
+   "c": "Part",
+   "n": 1,
+   "p": "Workspace/Zones/MineZone",
+   "v": [
+    120.0,
+    -20.0,
+    40.0
+   ]
+  },
+  {
+   "c": "Script",
+   "n": 0,
+   "p": "Workspace/Zones/MineZone/ZoneScript",
+   "rc": "Server",
+   "s": {
+    "fp": "230:68d4fe1c",
+    "len": 230,
+    "src": "-- Reports entry into the zone.\nlocal RS = game:GetService(\"ReplicatedStorage\")\nlocal Remotes = RS:WaitForChild(\"Remotes\")\nlocal zone = script.Parent\nzone.Touched:Connect(function(hit) Remotes.EnterZone:FireServer(zone.Name) end)\n"
+   }
+  }
+ ],
+ "place": {
+  "name": "Dive and Mine (SYNTHETIC)",
+  "place_id": 0
+ },
+ "roots": [
+  "ReplicatedFirst",
+  "ReplicatedStorage",
+  "ServerScriptService",
+  "ServerStorage",
+  "StarterGui",
+  "StarterPack",
+  "StarterPlayer",
+  "Workspace"
+ ],
+ "skipped": {
+  "instances": 0,
+  "plain_leaves": 0,
+  "secrets": 0,
+  "sources": 0
+ },
+ "taken_unix": 1790000000,
+ "truncated": false
+}

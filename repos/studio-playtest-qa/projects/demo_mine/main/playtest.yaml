@@ -1,0 +1,43 @@
+# SYNTHETIC playtest config for demo_mine/main. Every path, price and marker below is invented to match the fake world in playqa/domain/mockworld.py.
+# The hooks under ServerScriptService.QA (Mine, Sell, Buy, SaveData, LoadData, DataIsTestMode) are test hooks a game would have to provide itself.
+version: 1
+synthetic: true
+boot:
+  expected_services: [Workspace, ReplicatedStorage, ServerScriptService, Players]
+  expected_paths: [Workspace.Map, ReplicatedStorage.Remotes, ServerScriptService.Systems]
+  use_log_service: true
+spawn:
+  spawn_path: Workspace.Map.Spawn
+  invalid_surface_names: [Lava, KillBrick]
+reachability:
+  spawn_path: Workspace.Map.Spawn
+  hops: false
+  areas:
+    - {name: Shop, path: Workspace.Map.Shop}
+    - {name: MineEntrance, path: Workspace.Map.MineEntrance}
+    - {name: Vault, path: Workspace.Map.Vault}
+remotes:
+  items:
+    - {id: BuyUpgrade, path: ReplicatedStorage.Remotes.BuyUpgrade, class: RemoteFunction, valid_args: [["PickaxeII"]],
+       bad_inputs: [{label: unknown_item, args: ["NoSuchItem"]}]}
+    - {id: Ping, path: ReplicatedStorage.Remotes.Ping, class: RemoteFunction, valid_args: [["hello"]]}
+    - {id: EquipTool, path: ReplicatedStorage.Remotes.EquipTool, class: RemoteEvent, valid_args: [["PickaxeI"]]}
+economy:
+  player_values:
+    coins: {path: leaderstats.Coins, currency: true}
+    ore: {path: leaderstats.Ore}
+  steps:
+    - {id: mine, action: {kind: bindable, path: ServerScriptService.QA.Mine, times: 3}, expect: {ore: {delta: 3}, coins: {delta: 0}}}
+    - {id: sell, action: {kind: bindable, path: ServerScriptService.QA.Sell}, expect: {ore: {delta: -3}, coins: {delta: 15}}}
+    - {id: buy_upgrade, action: {kind: bindable, path: ServerScriptService.QA.Buy, args: ["PickaxeII"]}, expect: {coins: {delta: -10}}}
+    - {id: buy_too_expensive, action: {kind: bindable, path: ServerScriptService.QA.Buy, args: ["DiamondPick"]}, expect: {coins: {delta: 0}}}
+data:
+  test_mode: {switch: ReplicatedStorage.QA.TestMode, ack_hook: ServerScriptService.QA.DataIsTestMode}
+  save_hook: ServerScriptService.QA.SaveData
+  load_hook: ServerScriptService.QA.LoadData
+  values:
+    coins: {path: leaderstats.Coins, marker: 777}
+    ore: {path: leaderstats.Ore, marker: 12}
+performance:
+  minutes: 5
+  baseline: default

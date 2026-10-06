@@ -1,0 +1,56 @@
+# diff_snapshots between mine-main (stored first) and mine-main.v2 (stored 30 minutes later). v2 differs from main in exactly these ways (see scripts/make_examples.py):
+#   Economy gains refund(); DailyHandler and the ClaimDaily remote are added; vendor Zed (with its Humanoid, Prompt and Brain) and AntiExploit are removed; Bob moves and Price changes 50 -> 60.
+- id: diff-between-two-snapshots-of-the-same-place
+  tags: [diff, known-good]
+  input:
+    op: steps
+    steps:
+      - {tool: ingest_snapshot, args: {project_id: demo_mine, place_id: dive-and-mine, file: examples/places/mine-main.v2.collect.json, dry_run: false, taken_at: "2026-10-06T11:30:00+00:00"}}
+      - {tool: diff_snapshots, args: {project_id: demo_mine, place_id: dive-and-mine, detail: true}}
+  checks:
+    - {type: equals, path: steps.1.result.place_id, value: dive-and-mine}
+    - {type: equals, path: steps.1.result.project_id, value: demo_mine}
+    - {type: equals, path: steps.1.result.counts.scripts_added, value: 1}
+    - {type: equals, path: steps.1.result.counts.scripts_removed, value: 2}
+    - {type: equals, path: steps.1.result.counts.scripts_changed, value: 1}
+    - {type: equals, path: steps.1.result.counts.instances_added, value: 2}
+    - {type: equals, path: steps.1.result.counts.instances_removed, value: 5}
+    - {type: equals, path: steps.1.result.counts.instances_changed, value: 1}
+    - {type: equals, path: steps.1.result.remotes_added, value: [ClaimDaily]}
+    - {type: list_equals, path: steps.1.result.scripts_added, items: ["dive-and-mine::ServerScriptService/Handlers/DailyHandler"]}
+    - {type: list_equals, path: steps.1.result.scripts_removed, items: ["dive-and-mine::Workspace/Vendors/Zed/Brain", "dive-and-mine::ServerScriptService/Services/AntiExploit"]}
+
+- id: diff-says-what-changed-inside-a-changed-script
+  tags: [diff, known-good]
+  input:
+    op: steps
+    steps:
+      - {tool: ingest_snapshot, args: {project_id: demo_mine, place_id: dive-and-mine, file: examples/places/mine-main.v2.collect.json, dry_run: false, taken_at: "2026-10-06T11:30:00+00:00"}}
+      - {tool: diff_snapshots, args: {project_id: demo_mine, place_id: dive-and-mine, detail: true}}
+  checks:
+    - {type: pluck_equals, path: steps.1.result.scripts_changed, field: path, items: ["dive-and-mine::ReplicatedStorage/Modules/Economy"]}
+    - {type: text_contains, path: steps.1.result.scripts_changed.0.what, text: refund}
+    - {type: pluck_equals, path: steps.1.result.instances_changed, field: path, items: ["dive-and-mine::Workspace/Vendors/Bob"]}
+    - {type: text_contains, path: steps.1.result.instances_changed.0.what, text: moved}
+
+- id: diff-needs-two-snapshots
+  tags: [diff, known-bad]
+  input: {op: tool, tool: diff_snapshots, args: {project_id: demo_mine, place_id: dive-and-mine}}
+  checks:
+    - {type: refused, text: "only one snapshot"}
+
+- id: diff-of-a-snapshot-with-itself-is-refused
+  tags: [diff, known-bad]
+  input: {op: tool, tool: diff_snapshots, args: {project_id: demo_mine, place_id: dive-and-mine, a: latest, b: latest}}
+  checks:
+    - {type: refused, text: "same snapshot"}
+
+- id: diff-identical-content-reports-no-differences
+  tags: [diff, known-good]
+  input:
+    op: steps
+    steps:
+      - {tool: ingest_snapshot, args: {project_id: demo_mine, place_id: dive-and-mine, file: examples/places/mine-main.collect.json, dry_run: false, taken_at: "2026-10-06T11:30:00+00:00"}}
+      - {tool: diff_snapshots, args: {project_id: demo_mine, place_id: dive-and-mine}}
+  checks:
+    - {type: text_contains, path: steps.1.result.summary, text: "no differences"}

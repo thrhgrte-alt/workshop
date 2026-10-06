@@ -1,0 +1,14 @@
+{
+  "mcpServers": {
+    "visual-verify": {
+      "command": "python",
+      "args": [
+        "-m",
+        "visualverify.server"
+      ],
+      "env": {
+        "VISUALVERIFY_ROOT": "/ABSOLUTE/PATH/TO/visual-verify"
+      }
+    }
+  }
+}

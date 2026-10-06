@@ -1,0 +1,2585 @@
+{
+  "label": "baseline",
+  "self_written": {
+    "label": "baseline.self_written",
+    "mode": "solver",
+    "at": "2026-10-06T08:59:47+00:00",
+    "git_rev": "unknown",
+    "python": "3.11.15",
+    "meta": {},
+    "passed": 153,
+    "total": 153,
+    "tasks": [
+      {
+        "id": "boot-clean-passes",
+        "passed": true,
+        "checks": [
+          {
+            "check": "equals",
+            "passed": true,
+            "message": "verdict == 'pass' (got 'pass')"
+          },
+          {
+            "check": "list_empty",
+            "passed": true,
+            "message": "failed=[] should be empty"
+          },
+          {
+            "check": "equals",
+            "passed": true,
+            "message": "lint_clean == True (got True)"
+          },
+          {
+            "check": "text_contains",
+            "passed": true,
+            "message": "checked.0 should mention '4 of 4 expected services exist' (got '4 of 4 expected services exist (Workspace, ReplicatedStorage, ServerScriptService, Players)')"
+          },
+          {
+            "check": "text_contains",
+            "passed": true,
+            "message": "checked.1 should mention '3 of 3 expected paths exist' (got '3 of 3 expected paths exist (Workspace.Map, ReplicatedStorage.Remotes, ServerScriptService.Systems)')"
+          },
+          {
+            "check": "text_contains",
+            "passed": true,
+            "message": "checked.3 should mention '0 error(s) and 0 warning(s)' (got 'console: 5 line(s) read, 0 error(s) and 0 warning(s) in the first 10 s from the first time stamp')"
+          }
+        ]
+      },
+      {
+        "id": "boot-script-error-is-caught",
+        "passed": true,
+        "checks": [
+          {
+            "check": "equals",
+            "passed": true,
+            "message": "verdict == 'fail' (got 'fail')"
+          },
+          {
+            "check": "list_equals",
+            "passed": true,
+            "message": "failed=['console_no_errors', 'log_service_clean']; expected exactly ['console_no_errors', 'log_service_clean']"
+          },
+          {
+            "check": "text_contains",
+            "passed": true,
+            "message": "failures.0.evidence.log_lines.0 should mention 'attempt to index nil with 'Spawn'' (got \"ServerScriptService.Boot:12: attempt to index nil with 'Spawn'\")"
+          },
+          {
+            "check": "equals",
+            "passed": true,
+            "message": "failures.0.cause_rule == 'boot-nil-index' (got 'boot-nil-index')"
+          },
+          {
+            "check": "equals",
+            "passed": true,
+            "message": "failures.1.evidence.measured == 1 (got 1)"
+          }
+        ]
+      },
+      {
+        "id": "boot-warning-is-caught",
+        "passed": true,
+        "checks": [
+          {
+            "check": "equals",
+            "passed": true,
+            "message": "verdict == 'fail' (got 'fail')"
+          },
+          {
+            "check": "list_equals",
+            "passed": true,
+            "message": "failed=['console_no_warnings']; expected exactly ['console_no_warnings']"
+          },
+          {
+            "check": "equals",
+            "passed": true,
+            "message": "failures.0.cause_rule == 'boot-warning' (got 'boot-warning')"
+          },
+          {
+            "check": "text_contains",
+            "passed": true,
+            "message": "failures.0.evidence.detail should mention 'Infinite yield possible' (got '1 warning line(s) in the first 10 s from the first time stamp; first: Infinite yield possible on \\'Workspace.Map:WaitForChild(\"Gate\")\\'')"
+          }
+        ]
+      },
+      {
+        "id": "boot-missing-folder-is-caught",
+        "passed": true,
+        "checks": [
+          {
+            "check": "equals",
+            "passed": true,
+            "message": "verdict == 'fail' (got 'fail')"
+          },
+          {
+            "check": "list_equals",
+            "passed": true,
+            "message": "failed=['paths_exist']; expected exactly ['paths_exist']"
+          },
+          {
+            "check": "text_contains",
+            "passed": true,
+            "message": "failures.0.evidence.detail should mention 'ServerScriptService.Systems' (got 'missing: ServerScriptService.Systems')"
+          },
+          {
+            "check": "equals",
+            "passed": true,
+            "message": "failures.0.cause_rule == 'boot-missing-path' (got 'boot-missing-path')"
+          }
+        ]
+      },
+      {
+        "id": "boot-error-found-in-entries-list-format",
+        "passed": true,
+        "checks": [
+          {
+            "check": "equals",
+            "passed": true,
+            "message": "verdict == 'fail' (got 'fail')"
+          },
+          {
+            "check": "list_contains",
+            "passed": true,
+            "message": "failed=['console_no_errors', 'log_service_clean']; expected to contain ['console_no_errors']"
+          }
+        ]
+      },
+      {
+        "id": "boot-without-console-passes-only-with-log-service-evidence",
+        "passed": true,
+        "checks": [
+          {
+            "check": "equals",
+            "passed": true,
+            "message": "verdict == 'pass' (got 'pass')"
+          },
+          {
+            "check": "text_contains",
+            "passed": true,
+            "message": "report.not_checked.3 should mention 'console: no console_log was supplied' (got 'console: no console_log was supplied (run get_console_output and pass its text); the boot window was NOT read from the console')"
+          }
+        ]
+      },
+      {
+        "id": "boot-without-any-error-evidence-is-inconclusive",
+        "passed": true,
+        "checks": [
+          {
+            "check": "equals",
+            "passed": true,
+            "message": "verdict == 'inconclusive' (got 'inconclusive')"
+          },
+          {
+            "check": "text_contains",
+            "passed": true,
+            "message": "summary should mention 'INCONCLUSIVE boot' (got 'INCONCLUSIVE boot: no console and no LogService evidence about errors: a boot check cannot pass on folder existence alone; pass the console text as console_log')"
+          }
+        ]
+      },
+      {
+        "id": "boot-error-after-the-window-does-not-count",
+        "passed": true,
+        "checks": [
+          {
+            "check": "equals",
+            "passed": true,
+            "message": "lines_read == 3 (got 3)"
+          },
+          {
+            "check": "equals",
+            "passed": true,
+            "message": "lines_in_window == 2 (got 2)"
+          },
+          {
+            "check": "equals",
+            "passed": true,
+            "message": "errors == 0 (got 0)"
+          },
+          {
+            "check": "equals",
+            "passed": true,
+            "message": "warnings == 1 (got 1)"
+          },
+          {
+            "check": "equals",
+            "passed": true,
+            "message": "window_applied == True (got True)"
+          }
+        ]
+      },
+      {
+        "id": "console-stack-trace-is-one-error",
+        "passed": true,
+        "checks": [
+          {
+            "check": "equals",
+            "passed": true,
+            "message": "lines_read == 4 (got 4)"
+          },
+          {
+            "check": "equals",
+            "passed": true,
+            "message": "errors == 1 (got 1)"
+          },
+          {
+            "check": "equals",
+            "passed": true,
+            "message": "findings.0.script == 'ServerScriptService.Boot' (got 'ServerScriptService.Boot')"
+          },
+          {
+            "check": "equals",
+            "passed": true,
+            "message": "findings.0.line == 12 (got 12)"
+          }
+        ]
+      },
+      {
+        "id": "console-without-timestamps-cannot-apply-a-window",
+        "passed": true,
+        "checks": [
+          {
+            "check": "equals",
+            "passed": true,
+            "message": "window_applied == False (got False)"
+          },
+          {
+            "check": "equals",
+            "passed": true,
+            "message": "errors == 1 (got 1)"
+          },
+          {
+            "check": "equals",
+            "passed": true,
+            "message": "warnings == 1 (got 1)"
+          },
+          {
+            "check": "text_contains",
+            "passed": true,
+            "message": "notes should mention 'no time stamps' (got \"['schema_unverified', 'read as text lines', 'some levels were inferred from message patterns (heuristic)', 'no time stamps in the log: the window cannot be appl\")"
+          }
+        ]
+      },
+      {
+        "id": "console-level-field-wins-over-patterns",
+        "passed": true,
+        "checks": [
+          {
+            "check": "equals",
+            "passed": true,
+            "message": "errors == 1 (got 1)"
+          },
+          {
+            "check": "equals",
+            "passed": true,
+            "message": "warnings == 1 (got 1)"
+          },
+          {
+            "check": "equals",
+            "passed": true,
+            "message": "findings.0.level_source == 'type_field' (got 'type_field')"
+          }
+        ]
+      },
+      {
+        "id": "console-ignore-patterns-are-counted-not-hidden",
+        "passed": true,
+        "checks": [
+          {
+            "check": "equals",
+            "passed": true,
+            "message": "errors == 1 (got 1)"
+          },
+          {
+            "check": "equals",
+            "passed": true,
+            "message": "ignored == 1 (got 1)"
+          }
+        ]
+      },
+      {
+        "id": "console-marker-cuts-one-check-run",
+        "passed": true,
+        "checks": [
+          {
+            "check": "equals",
+            "passed": true,
+            "message": "marker_found == True (got True)"
+          },
+          {
+            "check": "equals",
+            "passed": true,
+            "message": "lines_in_window == 1 (got 1)"
+          },
+          {
+            "check": "equals",
+            "passed": true,
+            "message": "errors == 1 (got 1)"
+          },
+          {
+            "check": "equals",
+            "passed": true,
+            "message": "findings.0.script == 'ServerScriptService.A' (got 'ServerScriptService.A')"
+          }
+        ]
+      },
+      {
+        "id": "console-own-result-line-is-never-an-error",
+        "passed": true,
+        "checks": [
+          {
+            "check": "equals",
+            "passed": true,
+            "message": "errors == 0 (got 0)"
+          }
+        ]
+      },
+      {
+        "id": "console-findings-are-ranked-and-capped-at-ten",
+        "passed": true,
+        "checks": [
+          {
+            "check": "equals",
+            "passed": true,
+            "message": "errors == 12 (got 12)"
+          },
+          {
+            "check": "equals",
+            "passed": true,
+            "message": "distinct == 12 (got 12)"
+          },
+          {
+            "check": "equals",
+            "passed": true,
+            "message": "more_findings == 2 (got 2)"
+          },
+          {
+            "check": "less",
+            "passed": true,
+            "message": "findings.9.first_line_no=10 should be < 11"
+          }
+        ]
+      },
+      {
+        "id": "budget-list-checks",
+        "passed": true,
+        "checks": [
+          {
+            "check": "step_ok",
+            "passed": true,
+            "message": "step 0 should succeed (got None)"
+          },
+          {
+            "check": "less",
+            "passed": true,
+            "message": "steps.0.chars=1227 should be < 1500"
+          }
+        ]
+      },
+      {
+        "id": "budget-plan-playtest",
+        "passed": true,
+        "checks": [
+          {
+            "check": "step_ok",
+            "passed": true,
+            "message": "step 0 should succeed (got None)"
+          },
+          {
+            "check": "less",
+            "passed": true,
+            "message": "steps.0.chars=4068 should be < 4600"
+          }
+        ]
+      },
+      {
+        "id": "budget-parse-console-log",
+        "passed": true,
+        "checks": [
+          {
+            "check": "step_ok",
+            "passed": true,
+            "message": "step 0 should succeed (got None)"
+          },
+          {
+            "check": "less",
+            "passed": true,
+            "message": "steps.0.chars=520 should be < 650"
+          }
+        ]
+      },
+      {
+        "id": "budget-compare-baseline",
+        "passed": true,
+        "checks": [
+          {
+            "check": "step_ok",
+            "passed": true,
+            "message": "step 1 should succeed (got None)"
+          },
+          {
+            "check": "less",
+            "passed": true,
+            "message": "steps.1.chars=498 should be < 620"
+          }
+        ]
+      },
+      {
+        "id": "budget-explain-failure",
+        "passed": true,
+        "checks": [
+          {
+            "check": "step_ok",
+            "passed": true,
+            "message": "step 0 should succeed (got None)"
+          },
+          {
+            "check": "less",
+            "passed": true,
+            "message": "steps.0.chars=2798 should be < 3300"
+          }
+        ]
+      },
+      {
+        "id": "budget-explain-failure-pass",
+        "passed": true,
+        "checks": [
+          {
+            "check": "step_ok",
+            "passed": true,
+            "message": "step 0 should succeed (got None)"
+          },
+          {
+            "check": "less",
+            "passed": true,
+            "message": "steps.0.chars=1221 should be < 1500"
+          }
+        ]
+      },
+      {
+        "id": "budget-find-past-corrections",
+        "passed": true,
+        "checks": [
+          {
+            "check": "step_ok",
+            "passed": true,
+            "message": "step 0 should succeed (got None)"
+          },
+          {
+            "check": "less",
+            "passed": true,
+            "message": "steps.0.chars=164 should be < 320"
+          }
+        ]
+      },
+      {
+        "id": "budget-generate-check-script",
+        "passed": true,
+        "checks": [
+          {
+            "check": "step_ok",
+            "passed": true,
+            "message": "step 0 should succeed (got None)"
+          },
+          {
+            "check": "less",
+            "passed": true,
+            "message": "steps.0.chars=635 should be < 800"
+          }
+        ]
+      },
+      {
+        "id": "budget-generate-check-script-real",
+        "passed": true,
+        "checks": [
+          {
+            "check": "step_ok",
+            "passed": true,
+            "message": "step 0 should succeed (got None)"
+          },
+          {
+            "check": "less",
+            "passed": true,
+            "message": "steps.0.chars=7139 should be < 8600"
+          }
+        ]
+      },
+      {
+        "id": "budget-save-baseline",
+        "passed": true,
+        "checks": [
+          {
+            "check": "step_ok",
+            "passed": true,
+            "message": "step 0 should succeed (got None)"
+          },
+          {
+            "check": "less",
+            "passed": true,
+            "message": "steps.0.chars=507 should be < 650"
+          }
+        ]
+      },
+      {
+        "id": "budget-record-result",
+        "passed": true,
+        "checks": [
+          {
+            "check": "step_ok",
+            "passed": true,
+            "message": "step 0 should succeed (got None)"
+          },
+          {
+            "check": "less",
+            "passed": true,
+            "message": "steps.0.chars=520 should be < 650"
+          }
+        ]
+      },
+      {
+        "id": "budget-record-run",
+        "passed": true,
+        "checks": [
+          {
+            "check": "step_ok",
+            "passed": true,
+            "message": "step 0 should succeed (got None)"
+          },
+          {
+            "check": "less",
+            "passed": true,
+            "message": "steps.0.chars=304 should be < 400"
+          }
+        ]
+      },
+      {
+        "id": "budget-record-decision",
+        "passed": true,
+        "checks": [
+          {
+            "check": "step_ok",
+            "passed": true,
+            "message": "step 1 should succeed (got None)"
+          },
+          {
+            "check": "less",
+            "passed": true,
+            "message": "steps.1.chars=343 should be < 450"
+          }
+        ]
+      },
+      {
+        "id": "budget-promote-run",
+        "passed": true,
+        "checks": [
+          {
+            "check": "step_ok",
+            "passed": true,
+            "message": "step 1 should succeed (got None)"
+          },
+          {
+            "check": "less",
+            "passed": true,
+            "message": "steps.1.chars=362 should be < 450"
+          }
+        ]
+      },
+      {
+        "id": "evidence-boot-failure-is-complete",
+        "passed": true,
+        "checks": [
+          {
+            "check": "every_failure_has_evidence",
+            "passed": true,
+            "message": "2 failure(s); incomplete evidence/cause on []"
+          },
+          {
+            "check": "equals",
+            "passed": true,
+            "message": "failures.0.evidence.screenshots.0 == 'shots/s1.png' (got 'shots/s1.png')"
+          }
+        ]
+      },
+      {
+        "id": "evidence-reachability-failure-is-complete",
+        "passed": true,
+        "checks": [
+          {
+            "check": "every_failure_has_evidence",
+            "passed": true,
+            "message": "1 failure(s); incomplete evidence/cause on []"
+          }
+        ]
+      },
+      {
+        "id": "evidence-remote-failure-is-complete",
+        "passed": true,
+        "checks": [
+          {
+            "check": "every_failure_has_evidence",
+            "passed": true,
+            "message": "2 failure(s); incomplete evidence/cause on []"
+          }
+        ]
+      },
+      {
+        "id": "evidence-economy-failure-is-complete",
+        "passed": true,
+        "checks": [
+          {
+            "check": "every_failure_has_evidence",
+            "passed": true,
+            "message": "1 failure(s); incomplete evidence/cause on []"
+          }
+        ]
+      },
+      {
+        "id": "evidence-spawn-failure-is-complete",
+        "passed": true,
+        "checks": [
+          {
+            "check": "every_failure_has_evidence",
+            "passed": true,
+            "message": "1 failure(s); incomplete evidence/cause on []"
+          }
+        ]
+      },
+      {
+        "id": "evidence-data-failure-is-complete",
+        "passed": true,
+        "checks": [
+          {
+            "check": "every_failure_has_evidence",
+            "passed": true,
+            "message": "1 failure(s); incomplete evidence/cause on []"
+          }
+        ]
+      },
+      {
+        "id": "evidence-without-a-screenshot-says-so",
+        "passed": true,
+        "checks": [
+          {
+            "check": "list_empty",
+            "passed": true,
+            "message": "failures.0.evidence.screenshots=[] should be empty"
+          },
+          {
+            "check": "text_contains",
+            "passed": true,
+            "message": "report.screenshots_note should mention 'no screenshot path was supplied' (got 'no screenshot path was supplied for some failures: the plan captures one with screen_capture on failure; pass its saved path as screenshots')"
+          }
+        ]
+      },
+      {
+        "id": "evidence-cause-is-labelled-a-heuristic",
+        "passed": true,
+        "checks": [
+          {
+            "check": "text_contains",
+            "passed": true,
+            "message": "report.cause_note should mention 'not a verified diagnosis' (got 'most_likely_cause is a heuristic reading of the evidence (rule id in cause_rule), not a verified diagnosis')"
+          }
+        ]
+      },
+      {
+        "id": "evidence-pass-states-what-was-and-was-not-checked",
+        "passed": true,
+        "checks": [
+          {
+            "check": "text_contains",
+            "passed": true,
+            "message": "report.not_checked.0 should mention 'jumping, climbing' (got 'jumping, climbing or any movement the Roblox pathfinder does not model')"
+          },
+          {
+            "check": "text_contains",
+            "passed": true,
+            "message": "checked.0 should mention 'usable = Success with at least 2 waypoints' (got 'flood fill from the spawn over 3 pathfinding result(s), direct paths from the spawn only: 3 of 3 named area(s) reached (Shop, MineEntrance, Vault); usable = Suc')"
+          }
+        ]
+      },
+      {
+        "id": "evidence-hub-parser-status-is-stated",
+        "passed": true,
+        "checks": [
+          {
+            "check": "equals",
+            "passed": true,
+            "message": "report.input_status == 'schema_unverified' (got 'schema_unverified')"
+          }
+        ]
+      },
+      {
+        "id": "gen-every-check-passes-the-lint-and-is-guarded",
+        "passed": true,
+        "checks": [
+          {
+            "check": "list_empty",
+            "passed": true,
+            "message": "lint=[] should be empty"
+          },
+          {
+            "check": "text_contains",
+            "passed": true,
+            "message": "luau should mention 'wrong place' (got '-- playqa generated check script (playqa.result/1). check: boot  repeat: 1  place: demo_mine/main\\n-- Runs only in the open Studio session. No network, no data-s')"
+          },
+          {
+            "check": "text_contains",
+            "passed": true,
+            "message": "luau should mention 'PLAYQA_MARK' (got '-- playqa generated check script (playqa.result/1). check: boot  repeat: 1  place: demo_mine/main\\n-- Runs only in the open Studio session. No network, no data-s')"
+          }
+        ]
+      },
+      {
+        "id": "gen-remotes-script-passes-the-lint",
+        "passed": true,
+        "checks": [
+          {
+            "check": "list_empty",
+            "passed": true,
+            "message": "lint=[] should be empty"
+          },
+          {
+            "check": "text_contains",
+            "passed": true,
+            "message": "luau should mention 'PLAYQA_PROBE' (got '-- playqa generated check script (playqa.result/1). check: remotes  repeat: 1  place: demo_mine/main\\n-- Runs only in the open Studio session. No network, no dat')"
+          }
+        ]
+      },
+      {
+        "id": "gen-economy-script-passes-the-lint",
+        "passed": true,
+        "checks": [
+          {
+            "check": "list_empty",
+            "passed": true,
+            "message": "lint=[] should be empty"
+          }
+        ]
+      },
+      {
+        "id": "gen-reachability-script-passes-the-lint",
+        "passed": true,
+        "checks": [
+          {
+            "check": "list_empty",
+            "passed": true,
+            "message": "lint=[] should be empty"
+          },
+          {
+            "check": "text_contains",
+            "passed": true,
+            "message": "luau should mention 'CreatePath' (got '-- playqa generated check script (playqa.result/1). check: reachability  repeat: 1  place: demo_mine/main\\n-- Runs only in the open Studio session. No network, n')"
+          }
+        ]
+      },
+      {
+        "id": "gen-spawn-script-passes-the-lint",
+        "passed": true,
+        "checks": [
+          {
+            "check": "list_empty",
+            "passed": true,
+            "message": "lint=[] should be empty"
+          }
+        ]
+      },
+      {
+        "id": "gen-perf-script-needs-a-phase",
+        "passed": true,
+        "checks": [
+          {
+            "check": "error_contains",
+            "passed": true,
+            "message": "error should mention 'phase 'start' or 'end'' (got \"a performance script needs phase 'start' or 'end'\")"
+          }
+        ]
+      },
+      {
+        "id": "gen-perf-end-script-passes-the-lint",
+        "passed": true,
+        "checks": [
+          {
+            "check": "list_empty",
+            "passed": true,
+            "message": "lint=[] should be empty"
+          },
+          {
+            "check": "text_contains",
+            "passed": true,
+            "message": "luau should mention '\"end\"' (got '-- playqa generated check script (playqa.result/1). check: perf_snapshot  repeat: 1  place: demo_mine/main\\n-- Runs only in the open Studio session. No network, ')"
+          }
+        ]
+      },
+      {
+        "id": "gen-repeat-number-is-bounded",
+        "passed": true,
+        "checks": [
+          {
+            "check": "error_contains",
+            "passed": true,
+            "message": "error should mention 'repeat_no must be a whole number from 1 to 99' (got 'repeat_no must be a whole number from 1 to 99')"
+          }
+        ]
+      },
+      {
+        "id": "gen-path-with-a-trailing-newline-is-refused",
+        "passed": true,
+        "checks": [
+          {
+            "check": "error_contains",
+            "passed": true,
+            "message": "error should mention 'must be a dotted path' (got \"path 'Workspace.Map\\n' must be a dotted path of plain names such as ReplicatedStorage.Config (letters, digits, underscore)\")"
+          }
+        ]
+      },
+      {
+        "id": "gen-path-with-a-quote-is-refused",
+        "passed": true,
+        "checks": [
+          {
+            "check": "error_contains",
+            "passed": true,
+            "message": "error should mention 'must be a dotted path' (got 'path \\'Workspace.Map\"] .. game:Shutdown() --\\' must be a dotted path of plain names such as ReplicatedStorage.Config (letters, digits, underscore)')"
+          }
+        ]
+      },
+      {
+        "id": "gen-forbidden-token-inside-a-value-is-caught-by-the-lint",
+        "passed": true,
+        "checks": [
+          {
+            "check": "error_contains",
+            "passed": true,
+            "message": "error should mention 'forbidden token 'DataStoreService'' (got \"generated Luau failed the safety lint: forbidden token 'DataStoreService'\")"
+          }
+        ]
+      },
+      {
+        "id": "gen-string-with-a-newline-is-refused",
+        "passed": true,
+        "checks": [
+          {
+            "check": "error_contains",
+            "passed": true,
+            "message": "error should mention 'control characters' (got 'control characters (including newlines) cannot be embedded in a generated string')"
+          }
+        ]
+      },
+      {
+        "id": "gen-same-input-same-script",
+        "passed": true,
+        "checks": [
+          {
+            "check": "same",
+            "passed": true,
+            "message": "steps.0.result.sha256='735f2eeaa0ef8ca9' vs steps.1.result.sha256='735f2eeaa0ef8ca9'"
+          }
+        ]
+      },
+      {
+        "id": "learning-nothing-learned-means-the-shipped-values",
+        "passed": true,
+        "checks": [
+          {
+            "check": "approx",
+            "passed": true,
+            "message": "values.setting__boot_window_seconds=10.0; expected 10.0 +/- 1e-06"
+          },
+          {
+            "check": "approx",
+            "passed": true,
+            "message": "values.threshold__perf_part_count_increase_pct__max=10.0; expected 10.0 +/- 1e-06"
+          },
+          {
+            "check": "equals",
+            "passed": true,
+            "message": "values.threshold__reach_min_waypoints__min == 2 (got 2)"
+          }
+        ]
+      },
+      {
+        "id": "learning-approved-steps-change-a-verdict-and-nothing-else",
+        "passed": true,
+        "checks": [
+          {
+            "check": "list_empty",
+            "passed": true,
+            "message": "errors=[] should be empty"
+          },
+          {
+            "check": "approx",
+            "passed": true,
+            "message": "values.threshold__perf_part_count_increase_pct__max=50.0; expected 50.0 +/- 1e-06"
+          },
+          {
+            "check": "equals",
+            "passed": true,
+            "message": "verdict == 'pass' (got 'pass')"
+          }
+        ]
+      },
+      {
+        "id": "learning-learned-repeat-count-changes-when-a-failure-is-called",
+        "passed": true,
+        "checks": [
+          {
+            "check": "equals",
+            "passed": true,
+            "message": "verdict == 'fail' (got 'fail')"
+          },
+          {
+            "check": "equals",
+            "passed": true,
+            "message": "values.setting__flaky_repeats == 2 (got 2)"
+          }
+        ]
+      },
+      {
+        "id": "learning-a-locked-limit-cannot-be-changed",
+        "passed": true,
+        "checks": [
+          {
+            "check": "equals",
+            "passed": true,
+            "message": "errors.0.type == 'LockedParameter' (got 'LockedParameter')"
+          }
+        ]
+      },
+      {
+        "id": "learning-steps-are-bounded",
+        "passed": true,
+        "checks": [
+          {
+            "check": "equals",
+            "passed": true,
+            "message": "errors.0.type == 'StepTooLarge' (got 'StepTooLarge')"
+          }
+        ]
+      },
+      {
+        "id": "learning-values-stay-inside-their-range",
+        "passed": true,
+        "checks": [
+          {
+            "check": "equals",
+            "passed": true,
+            "message": "errors.0.type == 'OutOfRange' (got 'OutOfRange')"
+          }
+        ]
+      },
+      {
+        "id": "learning-rollback-restores-the-shipped-value",
+        "passed": true,
+        "checks": [
+          {
+            "check": "approx",
+            "passed": true,
+            "message": "values.setting__boot_window_seconds=10.0; expected 10.0 +/- 1e-06"
+          }
+        ]
+      },
+      {
+        "id": "learning-in-one-place-does-not-leak-to-another",
+        "passed": true,
+        "checks": [
+          {
+            "check": "approx",
+            "passed": true,
+            "message": "values.setting__boot_window_seconds=10.0; expected 10.0 +/- 1e-06"
+          }
+        ]
+      },
+      {
+        "id": "learning-explicit-number-in-the-place-config-wins",
+        "passed": true,
+        "checks": [
+          {
+            "check": "approx",
+            "passed": true,
+            "message": "values.setting__boot_window_seconds=15.0; expected 15.0 +/- 1e-06"
+          }
+        ]
+      },
+      {
+        "id": "gen-phase-with-a-path-is-refused",
+        "passed": true,
+        "checks": [
+          {
+            "check": "step_error_contains",
+            "passed": true,
+            "message": "step 0 should be refused mentioning 'phase must be 'start' or 'end'' (got \"phase must be 'start' or 'end' (only the performance check has phases)\")"
+          },
+          {
+            "check": "list_empty",
+            "passed": true,
+            "message": "wrote=[] should be empty"
+          }
+        ]
+      },
+      {
+        "id": "baseline-name-with-a-path-is-refused",
+        "passed": true,
+        "checks": [
+          {
+            "check": "step_error_contains",
+            "passed": true,
+            "message": "step 0 should be refused mentioning 'baseline_name must match' (got 'baseline_name must match [A-Za-z][A-Za-z0-9_]{0,39}')"
+          }
+        ]
+      },
+      {
+        "id": "console-too-large-is-refused-with-advice",
+        "passed": true,
+        "checks": [
+          {
+            "check": "step_error_contains",
+            "passed": true,
+            "message": "step 0 should be refused mentioning 'above the 5,000,000 limit' (got 'console_log is 5,000,001 characters, above the 5,000,000 limit: pass the part around the boot window or one check')"
+          }
+        ]
+      },
+      {
+        "id": "shape-result-mapping",
+        "passed": true,
+        "checks": [
+          {
+            "check": "equals",
+            "passed": true,
+            "message": "verdict == 'pass' (got 'pass')"
+          }
+        ]
+      },
+      {
+        "id": "shape-json-string",
+        "passed": true,
+        "checks": [
+          {
+            "check": "equals",
+            "passed": true,
+            "message": "verdict == 'pass' (got 'pass')"
+          }
+        ]
+      },
+      {
+        "id": "shape-wrapped-in-result-key",
+        "passed": true,
+        "checks": [
+          {
+            "check": "equals",
+            "passed": true,
+            "message": "verdict == 'pass' (got 'pass')"
+          }
+        ]
+      },
+      {
+        "id": "shape-text-content-blocks",
+        "passed": true,
+        "checks": [
+          {
+            "check": "equals",
+            "passed": true,
+            "message": "verdict == 'pass' (got 'pass')"
+          }
+        ]
+      },
+      {
+        "id": "shape-printed-line-in-output",
+        "passed": true,
+        "checks": [
+          {
+            "check": "equals",
+            "passed": true,
+            "message": "verdict == 'pass' (got 'pass')"
+          }
+        ]
+      },
+      {
+        "id": "shape-nested-output-content",
+        "passed": true,
+        "checks": [
+          {
+            "check": "equals",
+            "passed": true,
+            "message": "verdict == 'pass' (got 'pass')"
+          }
+        ]
+      },
+      {
+        "id": "shape-hub-error-flag-is-inconclusive",
+        "passed": true,
+        "checks": [
+          {
+            "check": "equals",
+            "passed": true,
+            "message": "verdict == 'inconclusive' (got 'inconclusive')"
+          }
+        ]
+      },
+      {
+        "id": "perf-clean-run-matches-the-baseline",
+        "passed": true,
+        "checks": [
+          {
+            "check": "equals",
+            "passed": true,
+            "message": "verdict == 'pass' (got 'pass')"
+          },
+          {
+            "check": "text_contains",
+            "passed": true,
+            "message": "checked.2 should mention '8 of 8 comparable measure(s) within their allowed increase over baseline 'default'' (got \"8 of 8 comparable measure(s) within their allowed increase over baseline 'default' (taken 2026-01-01T00:00:00+00:00)\")"
+          },
+          {
+            "check": "text_contains",
+            "passed": true,
+            "message": "checked.1 should mention 'memory growth over the run 0%' (got 'memory growth over the run 0% (allowed 20%)')"
+          }
+        ]
+      },
+      {
+        "id": "perf-part-bloat-is-caught",
+        "passed": true,
+        "checks": [
+          {
+            "check": "equals",
+            "passed": true,
+            "message": "verdict == 'fail' (got 'fail')"
+          },
+          {
+            "check": "list_equals",
+            "passed": true,
+            "message": "failed=['within_baseline[part_count@end]', 'within_baseline[part_count@start]']; expected exactly ['within_baseline[part_count@end]', 'within_baseline[part_count@start]']"
+          },
+          {
+            "check": "text_contains",
+            "passed": true,
+            "message": "failures.0.evidence.detail should mention '6 -> 9 (50%' (got 'part_count@start: 6 -> 9 (50%, allowed 10%)')"
+          },
+          {
+            "check": "equals",
+            "passed": true,
+            "message": "failures.0.cause_rule == 'perf-parts' (got 'perf-parts')"
+          }
+        ]
+      },
+      {
+        "id": "perf-memory-leak-is-caught",
+        "passed": true,
+        "checks": [
+          {
+            "check": "equals",
+            "passed": true,
+            "message": "verdict == 'fail' (got 'fail')"
+          },
+          {
+            "check": "list_equals",
+            "passed": true,
+            "message": "failed=['growth_over_run']; expected exactly ['growth_over_run']"
+          },
+          {
+            "check": "text_contains",
+            "passed": true,
+            "message": "failures.0.evidence.detail should mention '410 -> 510 MB' (got 'memory 410 -> 510 MB between the snapshots (24.39%, allowed 20%)')"
+          },
+          {
+            "check": "approx",
+            "passed": true,
+            "message": "failures.0.evidence.measured=24.39; expected 24.39 +/- 0.01"
+          },
+          {
+            "check": "equals",
+            "passed": true,
+            "message": "failures.0.cause_rule == 'perf-growth' (got 'perf-growth')"
+          }
+        ]
+      },
+      {
+        "id": "perf-slow-frames-are-caught",
+        "passed": true,
+        "checks": [
+          {
+            "check": "list_equals",
+            "passed": true,
+            "message": "failed=['within_baseline[frame_ms@end]', 'within_baseline[frame_ms@start]']; expected exactly ['within_baseline[frame_ms@end]', 'within_baseline[frame_ms@start]']"
+          },
+          {
+            "check": "equals",
+            "passed": true,
+            "message": "failures.0.cause_rule == 'perf-frame' (got 'perf-frame')"
+          }
+        ]
+      },
+      {
+        "id": "perf-limit-is-a-parameter",
+        "passed": true,
+        "checks": [
+          {
+            "check": "equals",
+            "passed": true,
+            "message": "verdict == 'pass' (got 'pass')"
+          }
+        ]
+      },
+      {
+        "id": "perf-without-a-baseline-compares-nothing",
+        "passed": true,
+        "checks": [
+          {
+            "check": "equals",
+            "passed": true,
+            "message": "verdict == 'inconclusive' (got 'inconclusive')"
+          },
+          {
+            "check": "text_contains",
+            "passed": true,
+            "message": "summary should mention 'no baseline to compare against' (got 'INCONCLUSIVE perf_snapshot: only the growth over the run was judged; there is no baseline to compare against')"
+          }
+        ]
+      },
+      {
+        "id": "perf-start-snapshot-alone-is-incomplete",
+        "passed": true,
+        "checks": [
+          {
+            "check": "equals",
+            "passed": true,
+            "message": "verdict == 'inconclusive' (got 'inconclusive')"
+          }
+        ]
+      },
+      {
+        "id": "agg-stable-check-fails-on-one-failed-run",
+        "passed": true,
+        "checks": [
+          {
+            "check": "equals",
+            "passed": true,
+            "message": "verdict == 'fail' (got 'fail')"
+          },
+          {
+            "check": "equals",
+            "passed": true,
+            "message": "repeats.planned == 1 (got 1)"
+          },
+          {
+            "check": "equals",
+            "passed": true,
+            "message": "repeats.flaky_check == False (got False)"
+          }
+        ]
+      },
+      {
+        "id": "agg-two-of-three-is-flaky-at-confirm-fraction-one",
+        "passed": true,
+        "checks": [
+          {
+            "check": "equals",
+            "passed": true,
+            "message": "verdict == 'flaky' (got 'flaky')"
+          },
+          {
+            "check": "equals",
+            "passed": true,
+            "message": "repeats.failed == 2 (got 2)"
+          }
+        ]
+      },
+      {
+        "id": "agg-two-of-three-fails-at-confirm-fraction-point-six",
+        "passed": true,
+        "checks": [
+          {
+            "check": "equals",
+            "passed": true,
+            "message": "verdict == 'fail' (got 'fail')"
+          }
+        ]
+      },
+      {
+        "id": "agg-two-of-two-with-three-planned-is-inconclusive",
+        "passed": true,
+        "checks": [
+          {
+            "check": "equals",
+            "passed": true,
+            "message": "verdict == 'inconclusive' (got 'inconclusive')"
+          }
+        ]
+      },
+      {
+        "id": "agg-two-of-two-with-two-planned-is-a-failure",
+        "passed": true,
+        "checks": [
+          {
+            "check": "equals",
+            "passed": true,
+            "message": "verdict == 'fail' (got 'fail')"
+          },
+          {
+            "check": "equals",
+            "passed": true,
+            "message": "repeats.planned == 2 (got 2)"
+          }
+        ]
+      },
+      {
+        "id": "agg-all-pass-with-fewer-runs-is-a-pass-with-a-note",
+        "passed": true,
+        "checks": [
+          {
+            "check": "equals",
+            "passed": true,
+            "message": "verdict == 'pass' (got 'pass')"
+          },
+          {
+            "check": "text_contains",
+            "passed": true,
+            "message": "notes should mention 'ran 1 of 3 planned repeat(s)' (got \"['ran 1 of 3 planned repeat(s); all passed']\")"
+          }
+        ]
+      },
+      {
+        "id": "agg-unreadable-answer-is-inconclusive-not-a-failure",
+        "passed": true,
+        "checks": [
+          {
+            "check": "equals",
+            "passed": true,
+            "message": "verdict == 'inconclusive' (got 'inconclusive')"
+          },
+          {
+            "check": "list_empty",
+            "passed": true,
+            "message": "failed=[] should be empty"
+          }
+        ]
+      },
+      {
+        "id": "agg-place-guard-error-is-refused",
+        "passed": true,
+        "checks": [
+          {
+            "check": "equals",
+            "passed": true,
+            "message": "verdict == 'refused' (got 'refused')"
+          }
+        ]
+      },
+      {
+        "id": "agg-result-of-another-check-is-inconclusive",
+        "passed": true,
+        "checks": [
+          {
+            "check": "equals",
+            "passed": true,
+            "message": "verdict == 'inconclusive' (got 'inconclusive')"
+          },
+          {
+            "check": "text_contains",
+            "passed": true,
+            "message": "notes should mention 'not 'spawn'' (got '[\"unreadable or mismatched result: result is for check \\'boot\\'/\\'boot\\', not \\'spawn\\'/\\'spawn\\'\", \"script/answer problem in run 1: unreadable or mismatched result: re')"
+          }
+        ]
+      },
+      {
+        "id": "remotes-clean-passes",
+        "passed": true,
+        "checks": [
+          {
+            "check": "equals",
+            "passed": true,
+            "message": "verdict == 'pass' (got 'pass')"
+          },
+          {
+            "check": "equals",
+            "passed": true,
+            "message": "repeats.conclusive == 3 (got 3)"
+          },
+          {
+            "check": "list_empty",
+            "passed": true,
+            "message": "failed=[] should be empty"
+          },
+          {
+            "check": "text_contains",
+            "passed": true,
+            "message": "checked.0 should mention 'BuyUpgrade (RemoteFunction, 1 valid + 7 bad)' (got 'remotes probed: BuyUpgrade (RemoteFunction, 1 valid + 7 bad); Ping (RemoteFunction, 1 valid + 6 bad); EquipTool (RemoteEvent, 1 valid + 6 bad)')"
+          },
+          {
+            "check": "text_contains",
+            "passed": true,
+            "message": "checked.0 should mention 'EquipTool (RemoteEvent, 1 valid + 6 bad)' (got 'remotes probed: BuyUpgrade (RemoteFunction, 1 valid + 7 bad); Ping (RemoteFunction, 1 valid + 6 bad); EquipTool (RemoteEvent, 1 valid + 6 bad)')"
+          }
+        ]
+      },
+      {
+        "id": "remotes-erroring-handler-is-caught",
+        "passed": true,
+        "checks": [
+          {
+            "check": "equals",
+            "passed": true,
+            "message": "verdict == 'fail' (got 'fail')"
+          },
+          {
+            "check": "equals",
+            "passed": true,
+            "message": "repeats.failed == 3 (got 3)"
+          },
+          {
+            "check": "list_equals",
+            "passed": true,
+            "message": "failed=['bad_input_no_error[BuyUpgrade]', 'valid_call_no_error[BuyUpgrade]']; expected exactly ['bad_input_no_error[BuyUpgrade]', 'valid_call_no_error[BuyUpgrade]']"
+          },
+          {
+            "check": "text_contains",
+            "passed": true,
+            "message": "failures.0.evidence.log_lines.0 should mention 'BuyUpgrade:12: attempt to index nil with 'Cost'' (got \"ServerScriptService.Remotes.BuyUpgrade:12: attempt to index nil with 'Cost'\")"
+          },
+          {
+            "check": "equals",
+            "passed": true,
+            "message": "failures.0.cause_rule == 'remote-handler-threw' (got 'remote-handler-threw')"
+          },
+          {
+            "check": "equals",
+            "passed": true,
+            "message": "failures.1.cause_rule == 'remote-bad-input-threw' (got 'remote-bad-input-threw')"
+          }
+        ]
+      },
+      {
+        "id": "remotes-accepting-bad-input-is-caught",
+        "passed": true,
+        "checks": [
+          {
+            "check": "list_equals",
+            "passed": true,
+            "message": "failed=['bad_input_rejected[BuyUpgrade]']; expected exactly ['bad_input_rejected[BuyUpgrade]']"
+          },
+          {
+            "check": "text_contains",
+            "passed": true,
+            "message": "failures.0.evidence.detail should mention '0 of 7 bad input(s) rejected' (got 'BuyUpgrade: 0 of 7 bad input(s) rejected; accepted: unknown_item, wrong_type_number, wrong_type_table, nan_number, inf_number, negative_number, huge_string')"
+          },
+          {
+            "check": "equals",
+            "passed": true,
+            "message": "failures.0.cause_rule == 'remote-accepted-bad' (got 'remote-accepted-bad')"
+          }
+        ]
+      },
+      {
+        "id": "remotes-event-error-is-seen-only-through-the-console",
+        "passed": true,
+        "checks": [
+          {
+            "check": "list_equals",
+            "passed": true,
+            "message": "failed=['bad_input_no_error[EquipTool]']; expected exactly ['bad_input_no_error[EquipTool]']"
+          },
+          {
+            "check": "text_contains",
+            "passed": true,
+            "message": "failures.0.evidence.detail should mention '5 of 6 bad input(s)' (got 'EquipTool: 5 of 6 bad input(s) raised or logged an error (wrong_type_number, wrong_type_table, nan_number, inf_number): ServerScriptService.Remotes.EquipTool:7:')"
+          }
+        ]
+      },
+      {
+        "id": "remotes-event-error-without-console-is-a-stated-blind-spot",
+        "passed": true,
+        "checks": [
+          {
+            "check": "equals",
+            "passed": true,
+            "message": "verdict == 'pass' (got 'pass')"
+          },
+          {
+            "check": "text_contains",
+            "passed": true,
+            "message": "report.not_checked.3 should mention 'NOT seen' (got 'console: no console_log was supplied, so errors a handler logged on the server are NOT seen; only what the calls returned or raised was read')"
+          }
+        ]
+      },
+      {
+        "id": "remotes-one-failed-run-of-three-is-flaky-not-a-failure",
+        "passed": true,
+        "checks": [
+          {
+            "check": "equals",
+            "passed": true,
+            "message": "verdict == 'flaky' (got 'flaky')"
+          },
+          {
+            "check": "equals",
+            "passed": true,
+            "message": "repeats.failed == 1 (got 1)"
+          },
+          {
+            "check": "equals",
+            "passed": true,
+            "message": "repeats.conclusive == 3 (got 3)"
+          },
+          {
+            "check": "text_contains",
+            "passed": true,
+            "message": "summary should mention 'FLAKY remotes (1 of 3 runs failed)' (got 'FLAKY remotes (1 of 3 runs failed): 2 assertion(s) failed; first valid_call_no_error[BuyUpgrade]: BuyUpgrade: a valid call raised or logged an error: ServerScri')"
+          }
+        ]
+      },
+      {
+        "id": "remotes-one-failed-run-of-one-is-inconclusive",
+        "passed": true,
+        "checks": [
+          {
+            "check": "equals",
+            "passed": true,
+            "message": "verdict == 'inconclusive' (got 'inconclusive')"
+          },
+          {
+            "check": "text_contains",
+            "passed": true,
+            "message": "summary should mention 're-run it until 3 run(s) exist' (got 'INCONCLUSIVE remotes: 1 of 1 run(s) failed, but this check is flaky: re-run it until 3 run(s) exist before calling a failure')"
+          }
+        ]
+      },
+      {
+        "id": "economy-clean-passes",
+        "passed": true,
+        "checks": [
+          {
+            "check": "equals",
+            "passed": true,
+            "message": "verdict == 'pass' (got 'pass')"
+          },
+          {
+            "check": "equals",
+            "passed": true,
+            "message": "repeats.conclusive == 3 (got 3)"
+          },
+          {
+            "check": "text_contains",
+            "passed": true,
+            "message": "checked.0 should mention 'mine: ore +3, coins +0; sell: ore -3, coins +15; buy_upgrade: coins -10; buy_too_expensive: coins +0' (got 'steps (change as measured): mine: ore +3, coins +0; sell: ore -3, coins +15; buy_upgrade: coins -10; buy_too_expensive: coins +0')"
+          }
+        ]
+      },
+      {
+        "id": "economy-currency-bug-is-caught",
+        "passed": true,
+        "checks": [
+          {
+            "check": "equals",
+            "passed": true,
+            "message": "verdict == 'fail' (got 'fail')"
+          },
+          {
+            "check": "list_equals",
+            "passed": true,
+            "message": "failed=['delta_as_expected[buy_upgrade.coins]']; expected exactly ['delta_as_expected[buy_upgrade.coins]']"
+          },
+          {
+            "check": "equals",
+            "passed": true,
+            "message": "failures.0.evidence.measured == 0 (got 0)"
+          },
+          {
+            "check": "text_contains",
+            "passed": true,
+            "message": "failures.0.evidence.detail should mention 'coins went 15 -> 15' (got 'buy_upgrade: coins went 15 -> 15 (change +0, expected -10)')"
+          },
+          {
+            "check": "equals",
+            "passed": true,
+            "message": "failures.0.cause_rule == 'econ-not-applied' (got 'econ-not-applied')"
+          }
+        ]
+      },
+      {
+        "id": "economy-doubled-sale-is-caught",
+        "passed": true,
+        "checks": [
+          {
+            "check": "list_equals",
+            "passed": true,
+            "message": "failed=['delta_as_expected[sell.coins]']; expected exactly ['delta_as_expected[sell.coins]']"
+          },
+          {
+            "check": "equals",
+            "passed": true,
+            "message": "failures.0.evidence.measured == 30 (got 30)"
+          },
+          {
+            "check": "equals",
+            "passed": true,
+            "message": "failures.0.ratio == 2.0 (got 2.0)"
+          },
+          {
+            "check": "equals",
+            "passed": true,
+            "message": "failures.0.cause_rule == 'econ-doubled' (got 'econ-doubled')"
+          }
+        ]
+      },
+      {
+        "id": "economy-purchase-without-funds-goes-negative",
+        "passed": true,
+        "checks": [
+          {
+            "check": "list_equals",
+            "passed": true,
+            "message": "failed=['balance_not_negative', 'delta_as_expected[buy_too_expensive.coins]']; expected exactly ['balance_not_negative', 'delta_as_expected[buy_too_expensive.coins]']"
+          },
+          {
+            "check": "equals",
+            "passed": true,
+            "message": "failures.0.evidence.measured == -40 (got -40)"
+          },
+          {
+            "check": "equals",
+            "passed": true,
+            "message": "failures.0.cause_rule == 'econ-unexpected-change' (got 'econ-unexpected-change')"
+          }
+        ]
+      },
+      {
+        "id": "economy-missing-hook-fails-the-step",
+        "passed": true,
+        "checks": [
+          {
+            "check": "equals",
+            "passed": true,
+            "message": "verdict == 'fail' (got 'fail')"
+          },
+          {
+            "check": "list_contains",
+            "passed": true,
+            "message": "failed=['delta_as_expected[buy_upgrade.coins]', 'delta_as_expected[sell.coins]', 'delta_as_expected[sell.ore]', 'step_ran[sell]']; expected to contain ['step_ran[sell]']"
+          },
+          {
+            "check": "text_contains",
+            "passed": true,
+            "message": "failures.0.evidence.detail should mention 'action instance not found: ServerScriptService.QA.NoSuchHook' (got 'action instance not found: ServerScriptService.QA.NoSuchHook')"
+          },
+          {
+            "check": "equals",
+            "passed": true,
+            "message": "failures.0.cause_rule == 'econ-step-error' (got 'econ-step-error')"
+          }
+        ]
+      },
+      {
+        "id": "economy-runaway-cap-is-a-parameter",
+        "passed": true,
+        "checks": [
+          {
+            "check": "list_equals",
+            "passed": true,
+            "message": "failed=['delta_within_cap']; expected exactly ['delta_within_cap']"
+          },
+          {
+            "check": "text_contains",
+            "passed": true,
+            "message": "failures.0.evidence.detail should mention 'sell.coins' (got 'beyond the cap: sell.coins')"
+          }
+        ]
+      },
+      {
+        "id": "economy-delta-tolerance-is-a-parameter",
+        "passed": true,
+        "checks": [
+          {
+            "check": "equals",
+            "passed": true,
+            "message": "verdict == 'fail' (got 'fail')"
+          }
+        ]
+      },
+      {
+        "id": "economy-delta-tolerance-twenty-passes",
+        "passed": true,
+        "checks": [
+          {
+            "check": "equals",
+            "passed": true,
+            "message": "verdict == 'pass' (got 'pass')"
+          }
+        ]
+      },
+      {
+        "id": "economy-failure-in-one-run-of-three-is-flaky",
+        "passed": true,
+        "checks": [
+          {
+            "check": "equals",
+            "passed": true,
+            "message": "verdict == 'flaky' (got 'flaky')"
+          }
+        ]
+      },
+      {
+        "id": "data-clean-roundtrip-passes",
+        "passed": true,
+        "checks": [
+          {
+            "check": "equals",
+            "passed": true,
+            "message": "verdict == 'pass' (got 'pass')"
+          },
+          {
+            "check": "text_contains",
+            "passed": true,
+            "message": "checked.0 should mention 'coins marker 777 -> after load 777; ore marker 12 -> after load 12' (got 'TEST MODE round trip (save, reset, load): coins marker 777 -> after load 777; ore marker 12 -> after load 12')"
+          },
+          {
+            "check": "text_contains",
+            "passed": true,
+            "message": "checked.1 should mention 'no DataStore call' (got 'the switch is on and (when configured) the game acknowledged it before any hook was called; the script contains no DataStore call')"
+          }
+        ]
+      },
+      {
+        "id": "data-lost-value-is-caught",
+        "passed": true,
+        "checks": [
+          {
+            "check": "equals",
+            "passed": true,
+            "message": "verdict == 'fail' (got 'fail')"
+          },
+          {
+            "check": "list_equals",
+            "passed": true,
+            "message": "failed=['values_roundtrip']; expected exactly ['values_roundtrip']"
+          },
+          {
+            "check": "text_contains",
+            "passed": true,
+            "message": "failures.0.evidence.detail should mention 'did not return as saved: ore' (got 'did not return as saved: ore')"
+          },
+          {
+            "check": "equals",
+            "passed": true,
+            "message": "failures.0.cause_rule == 'data-mismatch' (got 'data-mismatch')"
+          }
+        ]
+      },
+      {
+        "id": "data-switch-off-the-script-refuses-and-touches-nothing",
+        "passed": true,
+        "checks": [
+          {
+            "check": "equals",
+            "passed": true,
+            "message": "verdict == 'refused' (got 'refused')"
+          },
+          {
+            "check": "text_contains",
+            "passed": true,
+            "message": "summary should mention 'no data hook was called' (got 'REFUSED data_roundtrip: test-mode switch ReplicatedStorage.QA.TestMode is missing or off; no data hook was called')"
+          },
+          {
+            "check": "text_contains",
+            "passed": true,
+            "message": "checked.0 should mention 'nothing was checked' (got 'nothing was checked: the script declined to run')"
+          }
+        ]
+      },
+      {
+        "id": "data-unacknowledged-test-mode-refuses",
+        "passed": true,
+        "checks": [
+          {
+            "check": "equals",
+            "passed": true,
+            "message": "verdict == 'refused' (got 'refused')"
+          },
+          {
+            "check": "text_contains",
+            "passed": true,
+            "message": "summary should mention 'did not acknowledge test mode' (got 'REFUSED data_roundtrip: the game did not acknowledge test mode; no data hook was called')"
+          }
+        ]
+      },
+      {
+        "id": "economy-style-range-catches-a-purchase-that-does-not-charge",
+        "passed": true,
+        "checks": [
+          {
+            "check": "list_equals",
+            "passed": true,
+            "message": "failed=['delta_as_expected[buy_upgrade.coins]']; expected exactly ['delta_as_expected[buy_upgrade.coins]']"
+          },
+          {
+            "check": "text_contains",
+            "passed": true,
+            "message": "failures.0.evidence.expected should mention 'range spend (-1000000..-1, PLACEHOLDER)' (got 'range spend (-1000000..-1, PLACEHOLDER)')"
+          }
+        ]
+      },
+      {
+        "id": "economy-style-range-passes-the-clean-sale",
+        "passed": true,
+        "checks": [
+          {
+            "check": "equals",
+            "passed": true,
+            "message": "verdict == 'pass' (got 'pass')"
+          }
+        ]
+      },
+      {
+        "id": "economy-wide-placeholder-range-cannot-see-a-doubled-sale",
+        "passed": true,
+        "checks": [
+          {
+            "check": "equals",
+            "passed": true,
+            "message": "verdict == 'pass' (got 'pass')"
+          }
+        ]
+      },
+      {
+        "id": "scope-missing-both-is-refused",
+        "passed": true,
+        "checks": [
+          {
+            "check": "step_error_contains",
+            "passed": true,
+            "message": "step 0 should be refused mentioning 'missing project_id and place_id' (got \"missing project_id and place_id: every tool needs both so that checks, baselines and feedback are never mixed between places. Known places: ['demo_mine/main', 'demo_obby/main', 'demo_tycoon/main']\")"
+          },
+          {
+            "check": "step_error_contains",
+            "passed": true,
+            "message": "step 0 should be refused mentioning 'demo_mine/main' (got \"missing project_id and place_id: every tool needs both so that checks, baselines and feedback are never mixed between places. Known places: ['demo_mine/main', 'demo_obby/main', 'demo_tycoon/main']\")"
+          }
+        ]
+      },
+      {
+        "id": "scope-missing-place-is-refused",
+        "passed": true,
+        "checks": [
+          {
+            "check": "step_error_contains",
+            "passed": true,
+            "message": "step 0 should be refused mentioning 'missing place_id' (got \"missing place_id for project 'demo_mine': this tool is place-specific and will not guess one. Known places: ['demo_mine/main', 'demo_obby/main', 'demo_tycoon/main']\")"
+          },
+          {
+            "check": "step_error_contains",
+            "passed": true,
+            "message": "step 0 should be refused mentioning 'will not guess' (got \"missing place_id for project 'demo_mine': this tool is place-specific and will not guess one. Known places: ['demo_mine/main', 'demo_obby/main', 'demo_tycoon/main']\")"
+          }
+        ]
+      },
+      {
+        "id": "scope-missing-project-is-refused",
+        "passed": true,
+        "checks": [
+          {
+            "check": "step_error_contains",
+            "passed": true,
+            "message": "step 0 should be refused mentioning 'missing project_id' (got \"missing project_id (got only place_id 'main'): every tool needs both and will not guess the project. Known places: ['demo_mine/main', 'demo_obby/main', 'demo_tycoon/main']\")"
+          }
+        ]
+      },
+      {
+        "id": "scope-unknown-place-is-refused",
+        "passed": true,
+        "checks": [
+          {
+            "check": "step_error_contains",
+            "passed": true,
+            "message": "step 0 should be refused mentioning 'does not belong to project 'demo_mine'' (got \"place 'nowhere' does not belong to project 'demo_mine'. Its places: ['main']\")"
+          }
+        ]
+      },
+      {
+        "id": "scope-unknown-project-is-refused",
+        "passed": true,
+        "checks": [
+          {
+            "check": "step_error_contains",
+            "passed": true,
+            "message": "step 0 should be refused mentioning 'Known projects' (got \"unknown project_id 'ghost_game'. Known projects: ['demo_mine', 'demo_tycoon', 'demo_obby']. Add it to projects.yaml first; the tool will not guess.\")"
+          },
+          {
+            "check": "step_error_contains",
+            "passed": true,
+            "message": "step 0 should be refused mentioning 'demo_mine' (got \"unknown project_id 'ghost_game'. Known projects: ['demo_mine', 'demo_tycoon', 'demo_obby']. Add it to projects.yaml first; the tool will not guess.\")"
+          }
+        ]
+      },
+      {
+        "id": "scope-path-tricks-are-just-unknown-projects",
+        "passed": true,
+        "checks": [
+          {
+            "check": "step_error_contains",
+            "passed": true,
+            "message": "step 0 should be refused mentioning 'unknown project_id' (got \"unknown project_id '../../etc'. Known projects: ['demo_mine', 'demo_tycoon', 'demo_obby']. Add it to projects.yaml first; the tool will not guess.\")"
+          },
+          {
+            "check": "list_empty",
+            "passed": true,
+            "message": "wrote=[] should be empty"
+          }
+        ]
+      },
+      {
+        "id": "scope-every-tool-refuses-without-scope",
+        "passed": true,
+        "checks": [
+          {
+            "check": "list_empty",
+            "passed": true,
+            "message": "not_refused=[] should be empty"
+          },
+          {
+            "check": "equals",
+            "passed": true,
+            "message": "checked == 12 (got 12)"
+          }
+        ]
+      },
+      {
+        "id": "scope-every-report-states-project-and-place",
+        "passed": true,
+        "checks": [
+          {
+            "check": "list_empty",
+            "passed": true,
+            "message": "missing=[] should be empty"
+          }
+        ]
+      },
+      {
+        "id": "studio-wrong-open-place-refuses-the-plan",
+        "passed": true,
+        "checks": [
+          {
+            "check": "step_error_contains",
+            "passed": true,
+            "message": "step 0 should be refused mentioning 'refusing: the open Studio instance(s)' (got 'refusing: the open Studio instance(s) [\"\\'Demo Tycoon (SYNTHETIC)\\' (place_id 9000000001)\"] are not place \\'demo_mine/main\\' (expected name \\'Demo Mine Main (SYNTHETIC)\\' or place id None). Open the right p')"
+          },
+          {
+            "check": "step_error_contains",
+            "passed": true,
+            "message": "step 0 should be refused mentioning 'are not place 'demo_mine/main'' (got 'refusing: the open Studio instance(s) [\"\\'Demo Tycoon (SYNTHETIC)\\' (place_id 9000000001)\"] are not place \\'demo_mine/main\\' (expected name \\'Demo Mine Main (SYNTHETIC)\\' or place id None). Open the right p')"
+          },
+          {
+            "check": "list_empty",
+            "passed": true,
+            "message": "wrote=[] should be empty"
+          }
+        ]
+      },
+      {
+        "id": "studio-wrong-open-place-refuses-the-script",
+        "passed": true,
+        "checks": [
+          {
+            "check": "step_error_contains",
+            "passed": true,
+            "message": "step 0 should be refused mentioning 'Nothing was generated' (got 'refusing: the open Studio instance(s) [\"\\'Some Other Game\\' (place_id 5)\"] are not place \\'demo_mine/main\\' (expected name \\'Demo Mine Main (SYNTHETIC)\\' or place id None). Open the right place; nothing was')"
+          },
+          {
+            "check": "list_empty",
+            "passed": true,
+            "message": "wrote=[] should be empty"
+          }
+        ]
+      },
+      {
+        "id": "studio-missing-list-is-refused",
+        "passed": true,
+        "checks": [
+          {
+            "check": "step_error_contains",
+            "passed": true,
+            "message": "step 0 should be refused mentioning 'cannot confirm the open Studio place' (got \"cannot confirm the open Studio place: pass the output of the hub's list_roblox_studios as a list of {name, place_id, studio_id} and open place 'demo_mine/main' (Demo Mine Main (SYNTHETIC)) in Studio. \")"
+          },
+          {
+            "check": "step_error_contains",
+            "passed": true,
+            "message": "step 1 should be refused mentioning 'cannot confirm the open Studio place' (got \"cannot confirm the open Studio place: pass the output of the hub's list_roblox_studios as a list of {name, place_id, studio_id} and open place 'demo_mine/main' (Demo Mine Main (SYNTHETIC)) in Studio. \")"
+          }
+        ]
+      },
+      {
+        "id": "studio-two-matching-instances-are-refused",
+        "passed": true,
+        "checks": [
+          {
+            "check": "step_error_contains",
+            "passed": true,
+            "message": "step 0 should be refused mentioning '2 open Studio instances match' (got \"refusing: 2 open Studio instances match place 'demo_mine/main'; close the extra ones so the target is unambiguous.\")"
+          }
+        ]
+      },
+      {
+        "id": "studio-published-place-is-matched-by-id-not-by-title",
+        "passed": true,
+        "checks": [
+          {
+            "check": "step_ok",
+            "passed": true,
+            "message": "step 0 should succeed (got None)"
+          },
+          {
+            "check": "equals",
+            "passed": true,
+            "message": "steps.0.result.studio.matched_by == 'place_id' (got 'place_id')"
+          },
+          {
+            "check": "text_contains",
+            "passed": true,
+            "message": "steps.0.result.summary should mention 'plan: 3 check(s)' (got 'plan: 3 check(s), 7 script run(s) in 5 play session(s) for demo_tycoon/main; open Studio matched by place_id. Flaky checks (economy_smoke x3, remotes x3) get th')"
+          },
+          {
+            "check": "equals",
+            "passed": true,
+            "message": "steps.0.result.skipped.0.check == 'data_roundtrip' (got 'data_roundtrip')"
+          }
+        ]
+      },
+      {
+        "id": "data-check-without-test-mode-switch-is-refused",
+        "passed": true,
+        "checks": [
+          {
+            "check": "step_error_contains",
+            "passed": true,
+            "message": "step 0 should be refused mentioning 'refusing to generate a data check' (got \"refusing to generate a data check: the test-mode switch (data.test_mode.switch) is missing. A data check runs only in TEST MODE; declare the switch (a BoolValue or an 'Enabled' attribute that your dat\")"
+          },
+          {
+            "check": "step_error_contains",
+            "passed": true,
+            "message": "step 0 should be refused mentioning 'test-mode switch' (got \"refusing to generate a data check: the test-mode switch (data.test_mode.switch) is missing. A data check runs only in TEST MODE; declare the switch (a BoolValue or an 'Enabled' attribute that your dat\")"
+          },
+          {
+            "check": "list_empty",
+            "passed": true,
+            "message": "wrote=[] should be empty"
+          }
+        ]
+      },
+      {
+        "id": "data-check-named-in-a-plan-without-switch-is-refused",
+        "passed": true,
+        "checks": [
+          {
+            "check": "step_error_contains",
+            "passed": true,
+            "message": "step 0 should be refused mentioning 'refusing to generate a data check' (got \"refusing to generate a data check: the test-mode switch (data.test_mode.switch) is missing. A data check runs only in TEST MODE; declare the switch (a BoolValue or an 'Enabled' attribute that your dat\")"
+          }
+        ]
+      },
+      {
+        "id": "data-check-switch_deleted-from-config-is-refused",
+        "passed": true,
+        "checks": [
+          {
+            "check": "error_contains",
+            "passed": true,
+            "message": "error should mention '(data.test_mode.switch) is missing' (got 'refusing to generate a data check: the test-mode switch (data.test_mode.switch) is missing. A data check runs only in TEST MODE; declare the switch (a BoolValue')"
+          }
+        ]
+      },
+      {
+        "id": "data-check-with-the-switch-generates-and-enforces-it-in-the-script",
+        "passed": true,
+        "checks": [
+          {
+            "check": "list_empty",
+            "passed": true,
+            "message": "lint=[] should be empty"
+          },
+          {
+            "check": "text_contains",
+            "passed": true,
+            "message": "luau should mention 'test-mode switch' (got '-- playqa generated check script (playqa.result/1). check: data_roundtrip  repeat: 1  place: demo_mine/main\\n-- Runs only in the open Studio session. No network,')"
+          },
+          {
+            "check": "text_contains",
+            "passed": true,
+            "message": "luau should mention 'result.refused' (got '-- playqa generated check script (playqa.result/1). check: data_roundtrip  repeat: 1  place: demo_mine/main\\n-- Runs only in the open Studio session. No network,')"
+          },
+          {
+            "check": "text_excludes",
+            "passed": true,
+            "message": "luau must not mention 'DataStore' (got '-- playqa generated check script (playqa.result/1). check: data_roundtrip  repeat: 1  place: demo_mine/main\\n-- Runs only in the open Studio session. No network,')"
+          }
+        ]
+      },
+      {
+        "id": "unconfigured-check-is-refused",
+        "passed": true,
+        "checks": [
+          {
+            "check": "step_error_contains",
+            "passed": true,
+            "message": "step 0 should be refused mentioning 'no 'remotes' section' (got \"this place has no 'remotes' section in its playtest.yaml, so check 'remotes' cannot be generated\")"
+          }
+        ]
+      },
+      {
+        "id": "unknown-check-is-refused",
+        "passed": true,
+        "checks": [
+          {
+            "check": "step_error_contains",
+            "passed": true,
+            "message": "step 0 should be refused mentioning 'unknown check 'teleport'' (got \"unknown check 'teleport'. Known: ['boot', 'data_roundtrip', 'economy_smoke', 'perf_snapshot', 'reachability', 'remotes', 'spawn']\")"
+          }
+        ]
+      },
+      {
+        "id": "list-checks-demo-mine-all-seven-three-flaky",
+        "passed": true,
+        "checks": [
+          {
+            "check": "text_contains",
+            "passed": true,
+            "message": "steps.0.result.summary should mention '7 checks in the library; 7 can run' (got '7 checks in the library; 7 can run for demo_mine/main (3 flaky: re-run 3x before a failure is called). Every threshold is a PLACEHOLDER; hub-output parsers are ')"
+          },
+          {
+            "check": "text_contains",
+            "passed": true,
+            "message": "steps.0.result.summary should mention '(3 flaky: re-run 3x' (got '7 checks in the library; 7 can run for demo_mine/main (3 flaky: re-run 3x before a failure is called). Every threshold is a PLACEHOLDER; hub-output parsers are ')"
+          }
+        ]
+      },
+      {
+        "id": "list-checks-demo-obby-only-the-configured-three",
+        "passed": true,
+        "checks": [
+          {
+            "check": "text_contains",
+            "passed": true,
+            "message": "steps.0.result.summary should mention '3 can run' (got '7 checks in the library; 3 can run for demo_obby/main (0 flaky: re-run 3x before a failure is called). Every threshold is a PLACEHOLDER; hub-output parsers are ')"
+          },
+          {
+            "check": "text_contains",
+            "passed": true,
+            "message": "steps.0.result.checks.5.why_not should mention 'no 'remotes' section' (got \"no 'remotes' section in playtest.yaml\")"
+          }
+        ]
+      },
+      {
+        "id": "list-checks-demo-tycoon-explains-why-data-cannot-run",
+        "passed": true,
+        "checks": [
+          {
+            "check": "equals",
+            "passed": true,
+            "message": "steps.0.result.checks.1.id == 'data_roundtrip' (got 'data_roundtrip')"
+          },
+          {
+            "check": "equals",
+            "passed": true,
+            "message": "steps.0.result.checks.1.runnable == False (got False)"
+          },
+          {
+            "check": "text_contains",
+            "passed": true,
+            "message": "steps.0.result.checks.1.why_not should mention 'refused' (got \"refused: the test-mode switch (data.test_mode.switch) is missing. A data check runs only in TEST MODE; declare the switch (a BoolValue or an 'Enabled' attribute\")"
+          }
+        ]
+      },
+      {
+        "id": "dry-runs-write-nothing",
+        "passed": true,
+        "checks": [
+          {
+            "check": "list_empty",
+            "passed": true,
+            "message": "wrote=[] should be empty"
+          },
+          {
+            "check": "equals",
+            "passed": true,
+            "message": "steps.0.result.dry_run == True (got True)"
+          },
+          {
+            "check": "equals",
+            "passed": true,
+            "message": "steps.2.result.verdict == 'pass' (got 'pass')"
+          }
+        ]
+      },
+      {
+        "id": "real-writes-go-to-the-place-folder",
+        "passed": true,
+        "checks": [
+          {
+            "check": "list_contains",
+            "passed": true,
+            "message": "wrote=['projects/demo_mine/main/output/scripts/boot-1.luau', 'projects/demo_mine/main/results/results.jsonl']; expected to contain ['projects/demo_mine/main/output/scripts/boot-1.luau', 'projects/demo_mine/main/results/results.jsonl']"
+          },
+          {
+            "check": "text_contains",
+            "passed": true,
+            "message": "steps.0.result.luau should mention 'PLAYQA_MARK' (got '-- playqa generated check script (playqa.result/1). check: boot  repeat: 1  place: demo_mine/main\\n-- Runs only in the open Studio session. No network, no data-s')"
+          }
+        ]
+      },
+      {
+        "id": "corrections-stay-in-their-place-unless-marked-global",
+        "passed": true,
+        "checks": [
+          {
+            "check": "text_contains",
+            "passed": true,
+            "message": "steps.2.result.summary should mention '1 correction(s) for demo_mine/main' (got '1 correction(s) for demo_mine/main (including global ones)')"
+          },
+          {
+            "check": "text_contains",
+            "passed": true,
+            "message": "steps.3.result.summary should mention '0 correction(s) for demo_tycoon/main' (got '0 correction(s) for demo_tycoon/main (including global ones)')"
+          },
+          {
+            "check": "text_contains",
+            "passed": true,
+            "message": "steps.5.result.summary should mention '1 correction(s) for demo_tycoon/main' (got '1 correction(s) for demo_tycoon/main (including global ones)')"
+          }
+        ]
+      },
+      {
+        "id": "decision-with-an-unknown-dimension-is-refused",
+        "passed": true,
+        "checks": [
+          {
+            "check": "step_error_contains",
+            "passed": true,
+            "message": "step 1 should be refused mentioning 'unknown correction dimension 'vibes'' (got \"unknown correction dimension 'vibes'. Allowed: ['boot', 'spawn', 'reachability', 'remotes', 'economy', 'data', 'performance', 'flaky', 'cause', 'evidence', 'threshold', 'other']\")"
+          }
+        ]
+      },
+      {
+        "id": "decision-for-an-unknown-run-is-refused-even-as-a-dry-run",
+        "passed": true,
+        "checks": [
+          {
+            "check": "step_error_contains",
+            "passed": true,
+            "message": "step 0 should be refused mentioning 'unknown run_id' (got \"unknown run_id 'run-nope': save the run first with record_run(dry_run=false)\")"
+          }
+        ]
+      },
+      {
+        "id": "promote-with-an-unknown-kind-is-refused",
+        "passed": true,
+        "checks": [
+          {
+            "check": "step_error_contains",
+            "passed": true,
+            "message": "step 1 should be refused mentioning 'kind must be one of' (got \"kind must be one of ['check_result', 'baseline', 'failure_case']\")"
+          }
+        ]
+      },
+      {
+        "id": "spawn-clean-passes",
+        "passed": true,
+        "checks": [
+          {
+            "check": "equals",
+            "passed": true,
+            "message": "verdict == 'pass' (got 'pass')"
+          },
+          {
+            "check": "list_empty",
+            "passed": true,
+            "message": "failed=[] should be empty"
+          },
+          {
+            "check": "text_contains",
+            "passed": true,
+            "message": "checked.0 should mention 'appeared after 0 s at (0, 3, 0)' (got 'the character appeared after 0 s at (0, 3, 0)')"
+          },
+          {
+            "check": "text_contains",
+            "passed": true,
+            "message": "checked.3 should mention 'not stuck: moved 8 of 8 studs (needs 4)' (got 'not stuck: moved 8 of 8 studs (needs 4)')"
+          }
+        ]
+      },
+      {
+        "id": "spawn-stuck-character-is-caught",
+        "passed": true,
+        "checks": [
+          {
+            "check": "equals",
+            "passed": true,
+            "message": "verdict == 'fail' (got 'fail')"
+          },
+          {
+            "check": "list_equals",
+            "passed": true,
+            "message": "failed=['not_stuck']; expected exactly ['not_stuck']"
+          },
+          {
+            "check": "equals",
+            "passed": true,
+            "message": "failures.0.evidence.measured == 0 (got 0.0)"
+          },
+          {
+            "check": "equals",
+            "passed": true,
+            "message": "failures.0.cause_rule == 'spawn-stuck' (got 'spawn-stuck')"
+          }
+        ]
+      },
+      {
+        "id": "spawn-on-lava-is-caught",
+        "passed": true,
+        "checks": [
+          {
+            "check": "list_equals",
+            "passed": true,
+            "message": "failed=['floor_valid']; expected exactly ['floor_valid']"
+          },
+          {
+            "check": "text_contains",
+            "passed": true,
+            "message": "failures.0.evidence.detail should mention 'Workspace.Map.Lava' (got 'standing on Workspace.Map.Lava')"
+          },
+          {
+            "check": "equals",
+            "passed": true,
+            "message": "failures.0.cause_rule == 'spawn-bad-surface' (got 'spawn-bad-surface')"
+          }
+        ]
+      },
+      {
+        "id": "spawn-below-the-world-is-caught",
+        "passed": true,
+        "checks": [
+          {
+            "check": "list_equals",
+            "passed": true,
+            "message": "failed=['above_void', 'floor_found']; expected exactly ['above_void', 'floor_found']"
+          },
+          {
+            "check": "text_contains",
+            "passed": true,
+            "message": "failures.0.evidence.detail should mention '-80' (got 'y = -80.0')"
+          }
+        ]
+      },
+      {
+        "id": "spawn-without-a-character-is-caught",
+        "passed": true,
+        "checks": [
+          {
+            "check": "equals",
+            "passed": true,
+            "message": "verdict == 'fail' (got 'fail')"
+          },
+          {
+            "check": "list_equals",
+            "passed": true,
+            "message": "failed=['character_spawned']; expected exactly ['character_spawned']"
+          },
+          {
+            "check": "equals",
+            "passed": true,
+            "message": "failures.0.cause_rule == 'spawn-no-character' (got 'spawn-no-character')"
+          }
+        ]
+      },
+      {
+        "id": "reach-clean-passes",
+        "passed": true,
+        "checks": [
+          {
+            "check": "equals",
+            "passed": true,
+            "message": "verdict == 'pass' (got 'pass')"
+          },
+          {
+            "check": "list_empty",
+            "passed": true,
+            "message": "failed=[] should be empty"
+          },
+          {
+            "check": "text_contains",
+            "passed": true,
+            "message": "checked.0 should mention '3 of 3 named area(s) reached (Shop, MineEntrance, Vault)' (got 'flood fill from the spawn over 3 pathfinding result(s), direct paths from the spawn only: 3 of 3 named area(s) reached (Shop, MineEntrance, Vault); usable = Suc')"
+          }
+        ]
+      },
+      {
+        "id": "reach-unreachable-room-is-caught",
+        "passed": true,
+        "checks": [
+          {
+            "check": "equals",
+            "passed": true,
+            "message": "verdict == 'fail' (got 'fail')"
+          },
+          {
+            "check": "list_equals",
+            "passed": true,
+            "message": "failed=['area_reachable[Vault]']; expected exactly ['area_reachable[Vault]']"
+          },
+          {
+            "check": "text_contains",
+            "passed": true,
+            "message": "failures.0.evidence.detail should mention 'spawn->Vault: status NoPath' (got 'not reached from the spawn (spawn->Vault: status NoPath)')"
+          },
+          {
+            "check": "equals",
+            "passed": true,
+            "message": "failures.0.cause_rule == 'reach-no-path' (got 'reach-no-path')"
+          },
+          {
+            "check": "text_contains",
+            "passed": true,
+            "message": "checked.0 should mention '2 of 3 named area(s) reached' (got 'flood fill from the spawn over 3 pathfinding result(s), direct paths from the spawn only: 2 of 3 named area(s) reached (Shop, MineEntrance, Vault); usable = Suc')"
+          }
+        ]
+      },
+      {
+        "id": "reach-path-that-stops-short-is-caught",
+        "passed": true,
+        "checks": [
+          {
+            "check": "list_equals",
+            "passed": true,
+            "message": "failed=['path_ends_at_target[Shop]']; expected exactly ['path_ends_at_target[Shop]']"
+          },
+          {
+            "check": "equals",
+            "passed": true,
+            "message": "failures.0.evidence.measured == 9 (got 9.0)"
+          },
+          {
+            "check": "equals",
+            "passed": true,
+            "message": "failures.0.cause_rule == 'reach-end-gap' (got 'reach-end-gap')"
+          }
+        ]
+      },
+      {
+        "id": "reach-flood-fill-follows-hops",
+        "passed": true,
+        "checks": [
+          {
+            "check": "equals",
+            "passed": true,
+            "message": "verdict == 'pass' (got 'pass')"
+          },
+          {
+            "check": "text_contains",
+            "passed": true,
+            "message": "checked.0 should mention '2 of 2 named area(s) reached (A, B)' (got 'flood fill from the spawn over 3 pathfinding result(s), with hops through other areas: 2 of 2 named area(s) reached (A, B); usable = Success with at least 2 way')"
+          },
+          {
+            "check": "text_contains",
+            "passed": true,
+            "message": "checked.0 should mention 'with hops through other areas' (got 'flood fill from the spawn over 3 pathfinding result(s), with hops through other areas: 2 of 2 named area(s) reached (A, B); usable = Success with at least 2 way')"
+          }
+        ]
+      },
+      {
+        "id": "reach-without-the-hop-edge-b-is-unreachable",
+        "passed": true,
+        "checks": [
+          {
+            "check": "equals",
+            "passed": true,
+            "message": "verdict == 'fail' (got 'fail')"
+          },
+          {
+            "check": "list_equals",
+            "passed": true,
+            "message": "failed=['area_reachable[B]']; expected exactly ['area_reachable[B]']"
+          },
+          {
+            "check": "equals",
+            "passed": true,
+            "message": "failures.0.cause_rule == 'reach-no-path' (got 'reach-no-path')"
+          }
+        ]
+      },
+      {
+        "id": "reach-one-waypoint-success-is-not-a-route",
+        "passed": true,
+        "checks": [
+          {
+            "check": "list_equals",
+            "passed": true,
+            "message": "failed=['area_reachable[A]']; expected exactly ['area_reachable[A]']"
+          },
+          {
+            "check": "text_contains",
+            "passed": true,
+            "message": "failures.0.evidence.detail should mention 'Success with 1 waypoint(s), fewer than 2' (got 'not reached from the spawn (spawn->A: Success with 1 waypoint(s), fewer than 2)')"
+          },
+          {
+            "check": "equals",
+            "passed": true,
+            "message": "failures.0.cause_rule == 'reach-generic' (got 'reach-generic')"
+          }
+        ]
+      },
+      {
+        "id": "reach-start-inside-a-part-is-explained",
+        "passed": true,
+        "checks": [
+          {
+            "check": "equals",
+            "passed": true,
+            "message": "failures.0.cause_rule == 'reach-fail-start' (got 'reach-fail-start')"
+          }
+        ]
+      },
+      {
+        "id": "reach-end-gap-boundary-4-passes-401-fails",
+        "passed": true,
+        "checks": [
+          {
+            "check": "list_equals",
+            "passed": true,
+            "message": "failed=['path_ends_at_target[B]']; expected exactly ['path_ends_at_target[B]']"
+          }
+        ]
+      },
+      {
+        "id": "reach-end-gap-limit-can-be-widened",
+        "passed": true,
+        "checks": [
+          {
+            "check": "equals",
+            "passed": true,
+            "message": "verdict == 'pass' (got 'pass')"
+          }
+        ]
+      },
+      {
+        "id": "reach-too-many-areas-is-refused",
+        "passed": true,
+        "checks": [
+          {
+            "check": "error_contains",
+            "passed": true,
+            "message": "error should mention 'reach_max_nodes=12' (got '12 areas plus the spawn exceed reach_max_nodes=12; split the areas over two runs or raise the setting')"
+          }
+        ]
+      }
+    ]
+  },
+  "real": {
+    "label": "baseline.real",
+    "mode": "solver",
+    "at": "2026-10-06T08:59:47+00:00",
+    "git_rev": "unknown",
+    "python": "3.11.15",
+    "meta": {},
+    "passed": 0,
+    "total": 0,
+    "tasks": []
+  },
+  "real_count": 0
+}

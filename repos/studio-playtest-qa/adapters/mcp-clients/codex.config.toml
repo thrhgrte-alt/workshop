@@ -1,0 +1,4 @@
+[mcp_servers.studio-playtest-qa]
+command = "python"
+args = ["-m", "playqa.server"]
+env = { PLAYQA_ROOT = "/ABSOLUTE/PATH/TO/studio-playtest-qa" }

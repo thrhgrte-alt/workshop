@@ -1,0 +1,292 @@
+# Palette, value structure and edge evals on generated images. "hand" tasks carry the arithmetic in a comment.
+- id: pal-identical-colours-distance-zero
+  tags: [palette, known-good, hand-computed]
+  # two flat halves; the target holds exactly those two colours (#c81e1e = 200,30,30 and #1e1ec8 = 30,30,200): both chamfer directions are 0
+  input:
+    op: engine
+    tool: palette_distance
+    images:
+      img: {gen: bands, size: [100, 100], colors: [[200, 30, 30], [30, 30, 200]], axis: x}
+    args: {path: "@img", target_palette: ["#c81e1e", "#1e1ec8"]}
+  checks:
+    - {type: row, id: palette.distance, passed: true, value: 0.0, tol: 1.0e-3}
+    - {type: is, path: measured.dominant, value: ["#1e1ec8 0.500", "#c81e1e 0.500"]}
+
+- id: pal-near-colours-pass
+  tags: [palette, known-good]
+  # target colours are each 4 levels away per channel from the image's: well under one just-noticeable-difference scale of the limit (25)
+  input:
+    op: engine
+    tool: palette_distance
+    images:
+      img: {gen: bands, size: [100, 100], colors: [[200, 30, 30], [30, 30, 200]], axis: x}
+    args: {path: "@img", target_palette: ["#c42222", "#2222c4"]}
+  checks:
+    - {type: row, id: palette.distance, passed: true}
+    - {type: row_range, id: palette.distance, min: 0.5, max: 6.0}
+
+- id: pal-far-colours-fail
+  tags: [palette, known-bad]
+  input:
+    op: engine
+    pin_defaults: true
+    tool: palette_distance
+    images:
+      img: {gen: bands, size: [100, 100], colors: [[200, 30, 30], [30, 30, 200]], axis: x}
+    args: {path: "@img", target_palette: ["#e8d820", "#20c030"]}
+  checks:
+    - {type: row, id: palette.distance, passed: false, limit: 25.0}
+    - {type: row_range, id: palette.distance, min: 50.0, max: 300.0}
+    - {type: text_has, path: summary, text: "FAILED 1"}
+
+- id: pal-red-vs-blue-is-delta-e-176.31
+  tags: [palette, known-bad, hand-computed]
+  # sRGB red = Lab (53.2408, 80.0925, 67.2032), sRGB blue = Lab (32.2970, 79.1875, -107.8602) (D65). Delta-E76 = sqrt(20.9438^2 + 0.905^2 + 175.0634^2) = 176.314
+  input:
+    op: engine
+    pin_defaults: true
+    tool: palette_distance
+    images:
+      img: {gen: solid, size: [32, 32], color: [255, 0, 0]}
+    args: {path: "@img", target_palette: ["#0000ff"]}
+  checks:
+    - {type: row, id: palette.distance, passed: false, value: 176.314, tol: 0.05}
+    - {type: approx, path: measured.image_to_target, value: 176.31, tol: 0.05}
+    - {type: approx, path: measured.target_to_image, value: 176.31, tol: 0.05}
+
+- id: pal-target-weights-change-the-answer
+  tags: [palette, hand-computed]
+  # image: half red, half blue. Targets red and green with weights [1, 0]. target_to_image = 0 (red is present, green has weight 0).
+  # image_to_target = 0.5*dE(red,red)=0 + 0.5*min(dE(blue,red)=176.31, dE(blue,green)=258.7) = 88.157. distance = (88.157 + 0)/2 = 44.08
+  input:
+    op: engine
+    tool: palette_distance
+    images:
+      img: {gen: bands, size: [100, 100], colors: [[255, 0, 0], [0, 0, 255]], axis: x}
+    args: {path: "@img", target_palette: ["#ff0000", "#00ff00"], weights: [1, 0]}
+  checks:
+    - {type: approx, path: measured.target_to_image, value: 0.0, tol: 0.01}
+    - {type: approx, path: measured.image_to_target, value: 88.157, tol: 0.05}
+    - {type: row, id: palette.distance, passed: false, value: 44.08, tol: 0.05}
+
+- id: pal-bad-hex-is-refused
+  tags: [palette, refusal]
+  input:
+    op: tools_seq
+    images:
+      img: {gen: solid, size: [16, 16], color: [10, 10, 10]}
+    steps:
+      - {tool: palette_distance, args: {path: "@img", project_id: demo-stylized-obby, target_palette: ["#12345"]}}
+  checks:
+    - {type: step_error, step: 0, text: "not a hex colour"}
+
+- id: pal-needs-exactly-one-target
+  tags: [palette, refusal]
+  input:
+    op: tools_seq
+    images:
+      img: {gen: solid, size: [16, 16], color: [10, 10, 10]}
+    steps:
+      - {tool: palette_distance, args: {path: "@img", project_id: demo-stylized-obby}}
+      - {tool: palette_distance, args: {path: "@img", project_id: demo-stylized-obby, target_palette: ["#000000"], profile: p}}
+  checks:
+    - {type: step_error, step: 0, text: "exactly one of target_palette"}
+    - {type: step_error, step: 1, text: "exactly one of target_palette"}
+
+- id: pal-shares-of-four-equal-bands
+  tags: [palette, hand-computed]
+  # four vertical bands of 25 px: each colour holds exactly 0.25 of the pixels
+  input:
+    op: engine
+    tool: measure_image
+    detail: true
+    images:
+      img: {gen: bands, size: [100, 100], colors: [[255, 0, 0], [0, 255, 0], [0, 0, 255], [255, 255, 0]], axis: x}
+    args: {path: "@img", dimensions: [palette]}
+  checks:
+    - {type: len_at_most, path: detail.dominant, n: 4}
+    - {type: is, path: "detail.dominant.0.share", value: 0.25}
+    - {type: is, path: "detail.dominant.3.share", value: 0.25}
+    - {type: is, path: measured.saturation.mean, value: 1.0}
+
+- id: pal-saturation-and-value-of-solid-colour
+  tags: [palette, hand-computed]
+  # (200, 100, 50): V = 200/255 = 0.784314, S = (200-50)/200 = 0.75
+  input:
+    op: engine
+    tool: measure_image
+    images:
+      img: {gen: solid, size: [16, 16], color: [200, 100, 50]}
+    args: {path: "@img", dimensions: [palette]}
+  checks:
+    - {type: approx, path: measured.saturation.mean, value: 0.75, tol: 1.0e-4}
+    - {type: approx, path: measured.value.mean, value: 0.784314, tol: 1.0e-4}
+
+- id: val-three-equal-bands-fill-all-levels
+  tags: [value, known-good, hand-computed]
+  # bands 0, 128, 255 of 30 px each (90 px wide): 128/255 = 0.502 is mid (0.33..0.66): shares 1/3 each; p5 = 0, p95 = 1: contrast 1
+  input:
+    op: engine
+    tool: measure_image
+    images:
+      img: {gen: bands, size: [90, 60], colors: [[0, 0, 0], [128, 128, 128], [255, 255, 255]], axis: x}
+    args: {path: "@img", dimensions: [value]}
+  checks:
+    - {type: approx, path: measured.levels3.dark, value: 0.333333, tol: 1.0e-4}
+    - {type: approx, path: measured.levels3.mid, value: 0.333333, tol: 1.0e-4}
+    - {type: approx, path: measured.levels3.light, value: 0.333333, tol: 1.0e-4}
+    - {type: row, id: value.contrast, passed: true, value: 1.0}
+    - {type: row, id: value.level_min_share, passed: true}
+
+- id: val-low-contrast-halves-fail
+  tags: [value, known-bad, hand-computed]
+  # halves of 110 and 130: p5 = 110/255, p95 = 130/255, contrast = 20/255 = 0.078431 < 0.35; both levels are 'mid' so dark and light shares are 0
+  input:
+    op: engine
+    pin_defaults: true
+    tool: measure_image
+    images:
+      img: {gen: bands, size: [100, 100], colors: [[110, 110, 110], [130, 130, 130]], axis: x}
+    args: {path: "@img", dimensions: [value]}
+  checks:
+    - {type: row, id: value.contrast, passed: false, value: 0.078431, tol: 1.0e-4, limit: 0.35}
+    - {type: row, id: value.level_min_share, passed: false, value: 0.0}
+
+- id: val-two-levels-only-fails-level-share
+  tags: [value, known-bad, hand-computed]
+  # black and white halves: contrast 1.0 passes, but the mid level holds 0 of the pixels (< 0.05)
+  input:
+    op: engine
+    pin_defaults: true
+    tool: measure_image
+    images:
+      img: {gen: bands, size: [100, 100], colors: [[0, 0, 0], [255, 255, 255]], axis: x}
+    args: {path: "@img", dimensions: [value]}
+  checks:
+    - {type: row, id: value.contrast, passed: true}
+    - {type: row, id: value.level_min_share, passed: false, value: 0.0, limit: 0.05}
+    - {type: text_has, path: out.findings.0.note, text: "'mid' level holds 0.0%"}
+
+- id: val-five-level-map-equal-bands
+  tags: [value, hand-computed]
+  # grays 25, 75, 125, 175, 225 (/255 = 0.098, 0.294, 0.490, 0.686, 0.882) fall one in each 0.2-wide level: 0.2 each
+  input:
+    op: engine
+    tool: measure_image
+    images:
+      img: {gen: bands, size: [100, 100], colors: [[25, 25, 25], [75, 75, 75], [125, 125, 125], [175, 175, 175], [225, 225, 225]], axis: x}
+    args: {path: "@img", dimensions: [value], levels: 5}
+  checks:
+    - {type: list_approx, path: measured.levels5, value: [0.2, 0.2, 0.2, 0.2, 0.2], tol: 1.0e-6}
+
+- id: val-levels-must-be-3-or-5
+  tags: [value, refusal]
+  input:
+    op: tools_seq
+    images:
+      img: {gen: solid, size: [16, 16], color: [10, 10, 10]}
+    steps:
+      - {tool: measure_image, args: {path: "@img", project_id: demo-stylized-obby, levels: 4}}
+  checks:
+    - {type: step_error, step: 0, text: "levels must be 3 or 5"}
+
+- id: val-transparent-pixels-are-excluded
+  tags: [value, palette, hand-computed]
+  # RGBA: a 40x40 box of (200,200,200) opaque on a transparent background of (0,0,0,0). Statistics use only the opaque pixels: luminance mean = 200/255 = 0.784314
+  input:
+    op: engine
+    tool: measure_image
+    images:
+      img: {gen: rect, size: [100, 100], bg: [0, 0, 0], fg: [200, 200, 200], box: [20, 20, 60, 60], alpha: true}
+    args: {path: "@img", dimensions: [value]}
+  checks:
+    - {type: approx, path: measured.luminance.mean, value: 0.784314, tol: 1.0e-4}
+    - {type: approx, path: measured.transparent_fraction, value: 0.84, tol: 1.0e-6}
+    - {type: text_has, path: warnings.0, text: "transparent"}
+
+- id: edge-vertical-step-density-0.02
+  tags: [edges, known-good, hand-computed]
+  # black | white step between columns 49 and 50. Central-difference gradient is 0.5 at columns 49 and 50 (>0.08): 2 columns x 100 rows = 200 of 10000 = 0.02.
+  # The edge pixels sit in 4x4 grid columns 1 and 2 (x 25..49 and 50..74) of all 4 rows: 8 equal cells: entropy ln 8 / ln 16 = 0.75
+  input:
+    op: engine
+    tool: measure_image
+    images:
+      img: {gen: vstep, size: [100, 100], left: [0, 0, 0], right: [255, 255, 255], x: 50}
+    args: {path: "@img", dimensions: [edges]}
+  checks:
+    - {type: row, id: edges.density_min, passed: true, value: 0.02}
+    - {type: row, id: edges.density_max, passed: true, value: 0.02}
+    - {type: row, id: edges.distribution, passed: true, value: 0.75, tol: 1.0e-6}
+
+- id: edge-flat-image-is-too-flat
+  tags: [edges, known-bad, hand-computed]
+  # a solid image has gradient 0 everywhere: density 0 < 0.01; no edge pixels, so the distribution is not measurable (skipped, not passed)
+  input:
+    op: engine
+    tool: measure_image
+    images:
+      img: {gen: solid, size: [64, 64], color: [120, 120, 120]}
+    args: {path: "@img", dimensions: [edges]}
+  checks:
+    - {type: row, id: edges.density_min, passed: false, value: 0.0}
+    - {type: row, id: edges.density_max, passed: true}
+    - {type: skipped, id: edges.distribution}
+    - {type: text_has, path: rows.0.note, text: "too flat"}
+
+- id: edge-white-noise-is-too-noisy
+  tags: [edges, known-bad]
+  # independent random gray per pixel (seed 11): almost every gradient is above 0.08
+  input:
+    op: engine
+    tool: measure_image
+    images:
+      img: {gen: white_noise, size: [64, 64], seed: 11}
+    args: {path: "@img", dimensions: [edges]}
+  checks:
+    - {type: row, id: edges.density_max, passed: false, limit: 0.35}
+    - {type: row_range, id: edges.density_max, min: 0.8, max: 1.0}
+
+- id: edge-detail-in-one-corner-has-zero-distribution
+  tags: [edges, known-bad, hand-computed]
+  # a 6x6 white square at (2..7) on black. Pixels with a central-difference gradient > 0.08: x-gradient at columns 1,2,7,8 of rows 2..7 (24 px), y-gradient at rows 1,2,7,8
+  # of columns 2..7 (24 px), 4 pixels in both: 44 edge pixels = 0.0044 of 10000 (too flat for the 0.01 limit). All lie in grid cell (0, 0) (x, y < 25): entropy 0
+  input:
+    op: engine
+    pin_defaults: true
+    tool: measure_image
+    images:
+      img: {gen: blob_corner, size: [100, 100], bg: [0, 0, 0], fg: [255, 255, 255], box: [2, 2, 8, 8]}
+    args: {path: "@img", dimensions: [edges]}
+  checks:
+    - {type: row, id: edges.distribution, passed: false, value: 0.0, limit: 0.4}
+    - {type: row, id: edges.density_min, passed: false, value: 0.0044}
+
+- id: edge-profile-range-replaces-thresholds
+  tags: [edges, profile]
+  # the vertical step has density 0.02: inside a profile range [0.015, 0.03] it passes, inside [0.05, 0.10] it is 'too flat' (and the limit says it came from the profile)
+  input:
+    op: engine
+    tool: measure_image
+    images:
+      img: {gen: vstep, size: [100, 100], left: [0, 0, 0], right: [255, 255, 255], x: 50}
+    profiles:
+      inside: {schema: "visualverify-profile/1", name: inside, ranges: {edge_density: [0.015, 0.03]}}
+    args: {path: "@img", dimensions: [edges], profile: inside}
+  checks:
+    - {type: row, id: edges.density, passed: true, value: 0.02}
+
+- id: edge-profile-range-out-of-range-fails
+  tags: [edges, profile, known-bad]
+  input:
+    op: engine
+    tool: measure_image
+    images:
+      img: {gen: vstep, size: [100, 100], left: [0, 0, 0], right: [255, 255, 255], x: 50}
+    profiles:
+      outside: {schema: "visualverify-profile/1", name: outside, ranges: {edge_density: [0.05, 0.10]}}
+    args: {path: "@img", dimensions: [edges], profile: outside}
+  checks:
+    - {type: row, id: edges.density, passed: false, value: 0.02}
+    - {type: text_has, path: rows.0.note, text: "too flat"}
+    - {type: text_has, path: out.findings.0.check, text: edges.density}

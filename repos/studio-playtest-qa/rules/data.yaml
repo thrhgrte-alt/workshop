@@ -1,0 +1,23 @@
+version: 1
+checks:
+  - id: data_roundtrip
+    kind: data
+    title: "Data: save and reload round trip in TEST MODE (never live data)"
+    context: server
+    session: own
+    flaky: false
+    config_section: data
+    requires_test_mode: true
+    settings: [data_settle_seconds]
+    ranges: []
+    assertions:
+      - {id: test_mode_on, title: "the test-mode switch exists and is on", source: script}
+      - {id: test_mode_acknowledged, title: "the game's test-mode acknowledgement hook (when configured) answers true", source: script}
+      - {id: hooks_ran, title: "the save and load hooks ran without raising", source: script}
+      - {id: values_roundtrip, title: "every watched value returned to its saved marker after reset and load", source: script}
+    not_checked:
+      - "that the game's data layer really redirects to a test store while the switch is on (this tool cannot see inside the game)"
+      - "live DataStore behaviour, throttling, session locking or migration"
+      - "players other than the first"
+    verify_against_current_docs: false
+    notes: "The generator REFUSES this check unless the place's playtest.yaml declares data.test_mode.switch, and the script refuses at run time unless the switch is on. The script contains no DataStore call (the shared Luau lint forbids it)."

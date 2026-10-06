@@ -1,0 +1,30 @@
+version: 1
+name: "Visual verification (PLACEHOLDER defaults)"
+summary: >
+  Numbers about renders, screenshots and textures, with the limits they were compared with. The limits in style/thresholds.yaml are PLACEHOLDERS chosen by the
+  builder: replace them by saving a target profile from a reference you approve, and by recording your accept/reject decisions so they can be tuned toward what you
+  accept. These checks say nothing about taste, anatomy or perspective.
+placeholder: true
+traits:
+  silhouette: "Overlap (IoU), centroid and bounding-box offset of the subject mask against a reference mask; assumes a plain background or alpha"
+  palette: "Dominant colours (deterministic k-means in sRGB) and their CIE76 delta-E distance to a target palette; saturation and value ranges"
+  value_structure: "Luminance histogram, contrast (95th minus 5th percentile) and a 3 or 5 level value map, on sRGB-encoded luminance"
+  edges: "Edge pixel density (gradient above a cut-off) and how evenly it spreads over a 4x4 grid: flat, noisy, or concentrated"
+  tiling: "Seam ratio across the wrap-around edge and the strongest repeat inside the tile, at full resolution"
+  texture_sanity: "Albedo luminance bounds, roughness and metalness range and grayscale-ness, normal-map unit length and +Z"
+  before_after: "MAE, RMSE, PSNR, changed-pixel fraction and region, plus a side-by-side or difference image"
+constraints:
+  - {id: numbers-with-limits, severity: must, rule: "Report every measured number WITH the limit it was compared with and whether it passed."}
+  - {id: no-taste, severity: must, rule: "Never say an image looks good or bad. Say what was measured and what was not (taste, anatomy, perspective)."}
+  - {id: local-only, severity: must, rule: "Reference images stay on this machine; nothing is uploaded. Profiles store numbers, not pixels."}
+  - {id: same-input-same-output, severity: must, rule: "No randomness. If a number changes, the input or a threshold changed."}
+  - {id: placeholders-until-replaced, severity: should, rule: "Say that thresholds are placeholders until the user's own profile or decisions replace them."}
+  - {id: plain-background-for-masks, severity: should, rule: "Silhouette masks need a plain background or alpha; on a busy background say the mask is unreliable."}
+exclusions:
+  - "Calling a result good, nice or correct on the strength of these numbers"
+  - "Uploading or sharing a user's reference image"
+  - "Judging anatomy, perspective, lighting realism or whether the subject is the right object"
+correction_dimensions: [silhouette, palette, value, edges, tiling, texture, diff, other]
+ranges:
+  edge_density: {min: 0.01, max: 0.35, note: "mirrors style/thresholds.yaml edges.density_min/max (placeholder)"}
+  contrast: {min: 0.35, note: "mirrors style/thresholds.yaml value.contrast_min (placeholder)"}

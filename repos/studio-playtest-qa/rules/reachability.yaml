@@ -1,0 +1,23 @@
+version: 1
+checks:
+  - id: reachability
+    kind: reachability
+    title: "Reachability: from the spawn every named area is reachable (pathfinding results from Studio, flood fill over them)"
+    context: server
+    session: shared
+    flaky: false
+    config_section: reachability
+    settings: [reach_max_nodes, agent_radius, agent_height]
+    ranges: [reach_min_waypoints, reach_end_gap_studs]
+    assertions:
+      - {id: spawn_resolved, title: "the spawn point resolves to a position", source: script}
+      - {id: areas_resolved, title: "every named area resolves to an instance with a position", source: script}
+      - {id: area_reachable, title: "each named area is reached by the flood fill over Success paths", source: tool}
+      - {id: path_ends_at_target, title: "each Success path ends within the end gap of the area's target point", source: tool}
+    not_checked:
+      - "jumping, climbing or any movement the Roblox pathfinder does not model"
+      - "doors that open only after a game event"
+      - "areas that are not listed in the place's playtest.yaml"
+      - "that a human can find the route"
+    verify_against_current_docs: true
+    notes: "Path status names (Success, NoPath, ClosestNoPath, ClosestOutOfRange, FailStartNotEmpty, FailFinishNotEmpty) and the agent parameter names must be verified against the current Roblox docs."

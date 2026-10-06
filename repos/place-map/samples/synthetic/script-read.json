@@ -1,0 +1,6 @@
+[
+ {
+  "path": "ServerScriptService/Plots",
+  "source": "-- Assigns plots.\nreturn 1\n"
+ }
+]

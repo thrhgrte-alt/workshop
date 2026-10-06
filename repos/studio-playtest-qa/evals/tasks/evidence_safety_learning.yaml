@@ -1,0 +1,193 @@
+# Evidence in every failure, generated-Luau safety, and the learning parameters.
+- id: evidence-boot-failure-is-complete
+  tags: [evidence, planted-fault]
+  input: {op: world_check, check: boot, faults: [boot_error], screenshots: ["shots/s1.png"]}
+  checks: [{type: every_failure_has_evidence}, {type: equals, path: failures.0.evidence.screenshots.0, value: "shots/s1.png"}]
+- id: evidence-reachability-failure-is-complete
+  tags: [evidence, planted-fault]
+  input: {op: world_check, check: reachability, faults: [unreachable_room]}
+  checks: [{type: every_failure_has_evidence}]
+- id: evidence-remote-failure-is-complete
+  tags: [evidence, planted-fault]
+  input: {op: world_check, check: remotes, faults: [remote_errors]}
+  checks: [{type: every_failure_has_evidence}]
+- id: evidence-economy-failure-is-complete
+  tags: [evidence, planted-fault]
+  input: {op: world_check, check: economy_smoke, faults: [currency_bug]}
+  checks: [{type: every_failure_has_evidence}]
+- id: evidence-spawn-failure-is-complete
+  tags: [evidence, planted-fault]
+  input: {op: world_check, check: spawn, faults: [spawn_stuck]}
+  checks: [{type: every_failure_has_evidence}]
+- id: evidence-data-failure-is-complete
+  tags: [evidence, planted-fault]
+  input: {op: world_check, check: data_roundtrip, faults: [data_loses_value]}
+  checks: [{type: every_failure_has_evidence}]
+- id: evidence-without-a-screenshot-says-so
+  tags: [evidence, honesty]
+  input: {op: world_check, check: spawn, faults: [spawn_stuck]}
+  checks:
+    - {type: list_empty, path: failures.0.evidence.screenshots}
+    - {type: text_contains, path: report.screenshots_note, text: "no screenshot path was supplied"}
+- id: evidence-cause-is-labelled-a-heuristic
+  tags: [evidence, honesty]
+  input: {op: world_check, check: reachability, faults: [unreachable_room]}
+  checks: [{type: text_contains, path: report.cause_note, text: "not a verified diagnosis"}]
+- id: evidence-pass-states-what-was-and-was-not-checked
+  tags: [evidence, honesty, known-good]
+  input: {op: world_check, check: reachability}
+  checks:
+    - {type: text_contains, path: report.not_checked.0, text: "jumping, climbing"}
+    - {type: text_contains, path: checked.0, text: "usable = Success with at least 2 waypoints"}
+- id: evidence-hub-parser-status-is-stated
+  tags: [honesty, schema_unverified]
+  input: {op: world_check, check: boot}
+  checks: [{type: equals, path: report.input_status, value: schema_unverified}]
+- id: gen-every-check-passes-the-lint-and-is-guarded
+  tags: [safety, lint]
+  title: "the boot script carries the place guard, the markers and exactly one JSONEncode"
+  input: {op: gen_script, check: boot}
+  checks:
+    - {type: list_empty, path: lint}
+    - {type: text_contains, path: luau, text: "wrong place"}
+    - {type: text_contains, path: luau, text: "PLAYQA_MARK"}
+- id: gen-remotes-script-passes-the-lint
+  tags: [safety, lint]
+  input: {op: gen_script, check: remotes}
+  checks: [{type: list_empty, path: lint}, {type: text_contains, path: luau, text: "PLAYQA_PROBE"}]
+- id: gen-economy-script-passes-the-lint
+  tags: [safety, lint]
+  input: {op: gen_script, check: economy_smoke}
+  checks: [{type: list_empty, path: lint}]
+- id: gen-reachability-script-passes-the-lint
+  tags: [safety, lint]
+  input: {op: gen_script, check: reachability}
+  checks: [{type: list_empty, path: lint}, {type: text_contains, path: luau, text: "CreatePath"}]
+- id: gen-spawn-script-passes-the-lint
+  tags: [safety, lint]
+  input: {op: gen_script, check: spawn}
+  checks: [{type: list_empty, path: lint}]
+- id: gen-perf-script-needs-a-phase
+  tags: [safety, refusal]
+  input: {op: gen_script, check: perf_snapshot}
+  checks: [{type: error_contains, text: "phase 'start' or 'end'"}]
+- id: gen-perf-end-script-passes-the-lint
+  tags: [safety, lint]
+  input: {op: gen_script, check: perf_snapshot, phase: end}
+  checks: [{type: list_empty, path: lint}, {type: text_contains, path: luau, text: "\"end\""}]
+- id: gen-repeat-number-is-bounded
+  tags: [safety, refusal]
+  input: {op: gen_script, check: boot, repeat_no: 100}
+  checks: [{type: error_contains, text: "repeat_no must be a whole number from 1 to 99"}]
+- id: gen-path-with-a-trailing-newline-is-refused
+  tags: [safety, injection]
+  title: "fullmatch, not match with $: 'Workspace.Map\\n' must not become part of a generated path"
+  input: {op: gen_script, check: boot, cfg_patch: [{set: boot.expected_paths, value: ["Workspace.Map\n"]}]}
+  checks: [{type: error_contains, text: "must be a dotted path"}]
+- id: gen-path-with-a-quote-is-refused
+  tags: [safety, injection]
+  input: {op: gen_script, check: boot, cfg_patch: [{set: boot.expected_paths, value: ["Workspace.Map\"] .. game:Shutdown() --"]}]}
+  checks: [{type: error_contains, text: "must be a dotted path"}]
+- id: gen-forbidden-token-inside-a-value-is-caught-by-the-lint
+  tags: [safety, lint]
+  title: "a probe argument that spells a forbidden service name makes the generated Luau fail the shared lint, so no script is returned"
+  input: {op: gen_script, check: remotes, cfg_patch: [{set: remotes.items.1.valid_args, value: [["DataStoreService"]]}]}
+  checks: [{type: error_contains, text: "forbidden token 'DataStoreService'"}]
+- id: gen-string-with-a-newline-is-refused
+  tags: [safety, injection]
+  input: {op: gen_script, check: remotes, cfg_patch: [{set: remotes.items.1.valid_args, value: [["a\nb"]]}]}
+  checks: [{type: error_contains, text: "control characters"}]
+- id: gen-same-input-same-script
+  tags: [safety, determinism]
+  input:
+    op: tools_seq
+    steps:
+      - {tool: generate_check_script, args: {project_id: demo_mine, place_id: main, check_id: economy_smoke, studios: [{name: "Demo Mine Main (SYNTHETIC)", place_id: 0, studio_id: s}]}}
+      - {tool: generate_check_script, args: {project_id: demo_mine, place_id: main, check_id: economy_smoke, studios: [{name: "Demo Mine Main (SYNTHETIC)", place_id: 0, studio_id: s}]}}
+  checks: [{type: same, a: steps.0.result.sha256, b: steps.1.result.sha256}]
+- id: learning-nothing-learned-means-the-shipped-values
+  tags: [learning, params]
+  input: {op: learning, show: [setting.boot_window_seconds, threshold.perf_part_count_increase_pct.max, threshold.reach_min_waypoints.min], steps: []}
+  checks:
+    - {type: approx, path: values.setting__boot_window_seconds, value: 10.0}
+    - {type: approx, path: values.threshold__perf_part_count_increase_pct__max, value: 10.0}
+    - {type: equals, path: values.threshold__reach_min_waypoints__min, value: 2}
+- id: learning-approved-steps-change-a-verdict-and-nothing-else
+  tags: [learning, params, hand-computed]
+  title: "the part limit 10 -> 50 in 8 approved steps of 5: the +50% bloat (9 vs 6 parts) now passes"
+  input:
+    op: learning
+    show: [threshold.perf_part_count_increase_pct.max]
+    steps:
+      - {do: update, name: threshold.perf_part_count_increase_pct.max, value: 15.0, scope: demo_mine/main}
+      - {do: update, name: threshold.perf_part_count_increase_pct.max, value: 20.0, scope: demo_mine/main}
+      - {do: update, name: threshold.perf_part_count_increase_pct.max, value: 25.0, scope: demo_mine/main}
+      - {do: update, name: threshold.perf_part_count_increase_pct.max, value: 30.0, scope: demo_mine/main}
+      - {do: update, name: threshold.perf_part_count_increase_pct.max, value: 35.0, scope: demo_mine/main}
+      - {do: update, name: threshold.perf_part_count_increase_pct.max, value: 40.0, scope: demo_mine/main}
+      - {do: update, name: threshold.perf_part_count_increase_pct.max, value: 45.0, scope: demo_mine/main}
+      - {do: update, name: threshold.perf_part_count_increase_pct.max, value: 50.0, scope: demo_mine/main}
+    world: {check: perf_snapshot, baseline: clean, setup: {add_parts: 3}, repeats: 3}
+  checks:
+    - {type: list_empty, path: errors}
+    - {type: approx, path: values.threshold__perf_part_count_increase_pct__max, value: 50.0}
+    - {type: equals, path: verdict, value: pass}
+- id: learning-learned-repeat-count-changes-when-a-failure-is-called
+  tags: [learning, params, flaky, hand-computed]
+  title: "N 3 -> 2: two failing runs of two are a FAIL (with the shipped N = 3 they are inconclusive)"
+  input:
+    op: learning
+    show: [setting.flaky_repeats]
+    steps: [{do: update, name: setting.flaky_repeats, value: 2, scope: demo_mine/main}]
+    world: {check: remotes, faults_by_run: [[remote_errors], [remote_errors]]}
+  checks: [{type: equals, path: verdict, value: fail}, {type: equals, path: values.setting__flaky_repeats, value: 2}]
+- id: learning-a-locked-limit-cannot-be-changed
+  tags: [learning, params, refusal]
+  input: {op: learning, steps: [{do: update, name: threshold.boot_error_lines.max, value: 1, scope: demo_mine/main}]}
+  checks: [{type: equals, path: errors.0.type, value: LockedParameter}]
+- id: learning-steps-are-bounded
+  tags: [learning, params, refusal]
+  input: {op: learning, steps: [{do: update, name: setting.flaky_repeats, value: 6, scope: demo_mine/main}]}
+  checks: [{type: equals, path: errors.0.type, value: StepTooLarge}]
+- id: learning-values-stay-inside-their-range
+  tags: [learning, params, refusal]
+  title: "N cannot go below 2: 3 -> 2 is allowed, 2 -> 1 is out of range"
+  input: {op: learning, steps: [{do: update, name: setting.flaky_repeats, value: 2, scope: demo_mine/main}, {do: update, name: setting.flaky_repeats, value: 1, scope: demo_mine/main}]}
+  checks: [{type: equals, path: errors.0.type, value: OutOfRange}]
+- id: learning-rollback-restores-the-shipped-value
+  tags: [learning, params]
+  input:
+    op: learning
+    show: [setting.boot_window_seconds]
+    steps: [{do: update, name: setting.boot_window_seconds, value: 15.0, scope: demo_mine/main}, {do: rollback, name: setting.boot_window_seconds, scope: demo_mine/main}]
+  checks: [{type: approx, path: values.setting__boot_window_seconds, value: 10.0}]
+- id: learning-in-one-place-does-not-leak-to-another
+  tags: [learning, params, isolation]
+  input:
+    op: learning
+    place: demo_mine/main
+    show: [setting.boot_window_seconds]
+    steps: [{do: update, name: setting.boot_window_seconds, value: 15.0, scope: demo_tycoon/main}]
+  checks: [{type: approx, path: values.setting__boot_window_seconds, value: 10.0}]
+- id: learning-explicit-number-in-the-place-config-wins
+  tags: [learning, params]
+  title: "demo_obby's playtest.yaml says boot_window_seconds: 15; a learned 12 does not override the user's own number"
+  input:
+    op: learning
+    place: demo_obby/main
+    show: [setting.boot_window_seconds]
+    steps: [{do: update, name: setting.boot_window_seconds, value: 12.0, scope: demo_obby/main}]
+  checks: [{type: approx, path: values.setting__boot_window_seconds, value: 15.0}]
+- id: gen-phase-with-a-path-is-refused
+  tags: [safety, refusal, injection]
+  title: "the phase ends up in the saved file name: anything but start/end is refused before a path is built"
+  input: {op: tools_seq, steps: [{tool: generate_check_script, args: {project_id: demo_mine, place_id: main, check_id: boot, phase: "../../../evil", dry_run: false, studios: [{name: "Demo Mine Main (SYNTHETIC)", place_id: 0, studio_id: s}]}}]}
+  checks: [{type: step_error_contains, step: 0, text: "phase must be 'start' or 'end'"}, {type: list_empty, path: wrote}]
+- id: baseline-name-with-a-path-is-refused
+  tags: [safety, refusal, injection]
+  input: {op: tools_seq, steps: [{tool: compare_baseline, args: {project_id: demo_mine, place_id: main, baseline_name: "../x", results: ["$perf:"]}}]}
+  checks: [{type: step_error_contains, step: 0, text: "baseline_name must match"}]
+- id: console-too-large-is-refused-with-advice
+  tags: [parser, refusal]
+  input: {op: tools_seq, steps: [{tool: parse_console_log, args: {project_id: demo_mine, place_id: main, console_log: "$big:"}}]}
+  checks: [{type: step_error_contains, step: 0, text: "above the 5,000,000 limit"}]

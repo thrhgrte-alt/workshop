@@ -1,0 +1,5 @@
+# SYNTHETIC per-project overlay for demo-pixel-brawler: shows how a project layers its own traits and exclusions on the global style.
+traits:
+  edges: "Hard pixel edges are expected: high edge density is normal for this project (the placeholder limit still applies until you change it)"
+exclusions:
+  - "Smoothing or anti-aliasing a pixel-art result before measuring it"
